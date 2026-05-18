@@ -1,0 +1,17 @@
+{
+  "_readme": "Manual price overrides. Add entries per coinId → retailerId. Set price to null to show a search link only. Retailer IDs: ramint, auspost, ebay, downies, maxstearn, coinxchange_buy, prospect, mintcoinshop",
+  "_example": {
+    "s1_bluey": {
+      "ramint": {
+        "price": 29.00,
+        "available": true,
+        "url": "https://eshop.ramint.gov.au/your-product-url-here"
+      },
+      "downies": {
+        "price": null,
+        "available": true,
+        "url": "https://www.downies.com/search?type=product&q=2024+Bluey+Dollarbuck"
+      }
+    }
+  }
+}
