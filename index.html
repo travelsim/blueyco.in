@@ -342,7 +342,8 @@
 </main>
 
 <footer>
-  eBay AU sold prices via RapidAPI · CoinXchange market listings · Prices in AUD · Not financial advice · Built for collectors
+  eBay AU sold prices via RapidAPI · CoinXchange market listings · Prices in AUD · Not financial advice · Built for collectors<br><br>
+  <small>Some links on this site are affiliate links through the eBay Partner Network (EPN). We may earn a commission if you make a purchase through these links, at no extra cost to you.</small>
 </footer>
 
 <script>
@@ -659,7 +660,7 @@ function buildCard(coin) {
       const href = safeUrl(p.link);
       if (href) {
         const a = el('a', 'view-ebay', '↗');
-        a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer';
+        a.href = href; a.target = '_blank'; a.rel = 'sponsored noopener noreferrer';
         row.append(a);
       }
       salesList.append(row);

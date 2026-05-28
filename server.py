@@ -17,6 +17,31 @@ RAPIDAPI_URL  = f'https://{RAPIDAPI_HOST}/findCompletedItems'
 EBAY_LIVE_HOST = 'real-time-ebay.p.rapidapi.com'
 EBAY_LIVE_URL  = f'https://{EBAY_LIVE_HOST}/search'
 
+# eBay Partner Network (EPN) affiliate config
+# Set EPN_CAMPAIGN_ID env var after signing up at https://partnernetwork.ebay.com/
+EPN_CAMPAIGN_ID = os.environ.get('EPN_CAMPAIGN_ID', '')
+EPN_TRACKING_ID = 'blueycoin'
+
+def affiliate_url(raw_url: str, coin_id: str = '', source: str = 'ebay') -> str:
+    """Wrap an eBay AU URL with EPN affiliate tracking parameters.
+
+    Returns the original URL unchanged if no campaign is configured or the
+    URL is not an eBay AU link.
+    """
+    if not raw_url or not raw_url.startswith('https://www.ebay.com.au'):
+        return raw_url
+    if not EPN_CAMPAIGN_ID:
+        return raw_url
+    custom_id = f'blueycoin-{source}-{coin_id}' if coin_id else 'blueycoin'
+    separator = '&' if '?' in raw_url else '?'
+    return (
+        f"{raw_url}{separator}"
+        f"mkrid=705-53470-19255-0&siteid=15"
+        f"&campid={EPN_CAMPAIGN_ID}"
+        f"&customid={custom_id}"
+        f"&toolid=10001&mkevt=1"
+    )
+
 CACHE_FILE         = 'ebay_cache.json'
 MANUAL_PRICES_FILE = 'retailer_prices.json'
 REFRESH_SECS       = 14 * 24 * 3600   # 2 weeks
@@ -490,7 +515,7 @@ def _coinxchange_buy_options(retailer, keywords):
     } for l in listings[:3]]
 
 
-def _ebay_live_options(retailer, keywords):
+def _ebay_live_options(retailer, keywords, coin_id=''):
     """
     Fetch active eBay AU Buy It Now listings via RapidAPI real-time-ebay.
     Falls back to a search link if the API call fails or returns no results.
@@ -544,7 +569,7 @@ def _ebay_live_options(retailer, keywords):
                 'name':        retailer['name'],
                 'price':       price,
                 'available':   available,
-                'url':         safe_link,
+                'url':         affiliate_url(safe_link, coin_id=coin_id, source='ebay_buy'),
                 'link_only':   False,
                 'subtitle':    condition[:40] if condition else None,
             })
@@ -555,11 +580,13 @@ def _ebay_live_options(retailer, keywords):
     return sorted(items, key=lambda x: x['price'])[:3]
 
 
-def _link_only_option(retailer, keywords):
+def _link_only_option(retailer, keywords, coin_id=''):
     q = urllib.parse.quote(keywords)
+    raw_url = retailer['search_url'].replace('{q}', q)
+    aff_url = affiliate_url(raw_url, coin_id=coin_id, source='ebay_search')
     return [{'retailer_id': retailer['id'], 'name': retailer['name'],
               'price': None, 'available': True,
-              'url': retailer['search_url'].replace('{q}', q), 'link_only': True}]
+              'url': aff_url, 'link_only': True}]
 
 
 def _load_manual():
@@ -628,14 +655,14 @@ def get_buy_options(coin_id, keywords):
                 elif r['type'] == 'coinxchange':
                     results = _coinxchange_buy_options(r, keywords)
                 elif r['type'] == 'ebay_live':
-                    results = _ebay_live_options(r, keywords)
+                    results = _ebay_live_options(r, keywords, coin_id=coin_id)
                 else:
                     results = []
             except Exception as e:
                 print(f'Buy-panel scrape fail [{rid}]: {e}')
                 results = []
 
-            options.extend(results[:3] if results else _link_only_option(r, keywords))
+            options.extend(results[:3] if results else _link_only_option(r, keywords, coin_id=coin_id))
 
         priced    = sorted([o for o in options if not o['link_only'] and o['price'] is not None],
                            key=lambda x: x['price'])
@@ -708,6 +735,31 @@ class Handler(BaseHTTPRequestHandler):
         self.do_GET()
 
     def do_POST(self):
+        if self.path == '/api/affiliate-redirect':
+            length = int(self.headers.get('Content-Length', 0))
+            if length > MAX_BODY_BYTES:
+                self._json(413, {'error': 'Request body too large.'})
+                return
+            try:
+                self.connection.settimeout(5)
+                try:
+                    raw = self.rfile.read(length)
+                finally:
+                    self.connection.settimeout(None)
+                body = json.loads(raw)
+            except (json.JSONDecodeError, ValueError):
+                self._json(400, {'error': 'Invalid JSON.'})
+                return
+            except OSError:
+                self._json(400, {'error': 'Request read timed out.'})
+                return
+            url = str(body.get('url', ''))
+            coin_id = str(body.get('coinId', ''))
+            source = str(body.get('source', 'ebay'))
+            aff = affiliate_url(url, coin_id=coin_id, source=source)
+            self._json(200, {'url': aff, 'is_affiliate': aff != url})
+            return
+
         if self.path != '/api/buy-options':
             self.send_response(404)
             self.end_headers()
