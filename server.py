@@ -51,6 +51,17 @@ COINS = [
     {'id': 's3_granny',     'ebay_kw': '2026 $2 Bluey Granny Mobile privy mark uncirculated',   'search': '2026 Bluey Granny Mobile privy mark'},
     {'id': 's3_till_bluey', 'ebay_kw': '2026 $2 Bluey coloured till coin circulation',          'search': '2026 Bluey till coin'},
     {'id': 's3_till_bingo', 'ebay_kw': '2026 $2 Bingo coloured till coin circulation',          'search': '2026 Bingo till coin'},
+    # ── Series 1 tube-set privy mark coins (new) ──
+    {'id': 's1_mumdad',      'ebay_kw': '2024 $1 Bluey Mum & Dad Dollarbuck tube set unc',         'search': '2024 Bluey Mum and Dad tube set'},
+    {'id': 's1_muffinsocks', 'ebay_kw': '2024 $1 Bluey Muffin & Socks Dollarbuck tube set unc',    'search': '2024 Bluey Muffin Socks tube set'},
+    {'id': 's1_radfrisky',   'ebay_kw': '2024 $1 Bluey Rad & Frisky Dollarbuck tube set unc',      'search': '2024 Bluey Rad Frisky tube set'},
+    {'id': 's1_stripetrixie','ebay_kw': '2024 $1 Bluey Stripe Trixie Nana Dollarbuck tube set unc','search': '2024 Bluey Stripe Trixie tube set'},
+    {'id': 's1_blueyfriends','ebay_kw': '2024 $1 Bluey Bluey & Friends Dollarbuck tube set unc',   'search': '2024 Bluey friends tube set'},
+    {'id': 's1_bingofriends','ebay_kw': '2024 $1 Bluey Bingo & Friends Dollarbuck tube set unc',   'search': '2024 Bluey Bingo friends tube set'},
+    {'id': 's1_tube_set',    'ebay_kw': '2024 $1 Bluey 10 coin tube folder set',                   'search': '2024 Bluey 10 coin tube folder set'},
+    # ── Series 3 PNCs (new) ──
+    {'id': 's3_pnc_bluey',  'ebay_kw': '2026 $2 Bluey For Real Life PNC AusPost',                  'search': '2026 Bluey For Real Life PNC'},
+    {'id': 's3_pnc_bingo',  'ebay_kw': '2026 $2 Bingo Hooray PNC AusPost',                         'search': '2026 Bingo Hooray PNC'},
 ]
 COIN_BY_ID = {c['id']: c for c in COINS}
 
