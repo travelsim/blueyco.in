@@ -87,9 +87,10 @@ RETAILERS = [
 ]
 
 # ── IN-MEMORY STATE ──────────────────────────────────────────────────────────
-_lock      = threading.Lock()
-_cache     = {}   # coinId → {'ebay': {...}, 'coinxchange': {...}}
-_buy_cache = {}   # coinId → {'options': [...], 'fetchedAt': float}
+_lock       = threading.Lock()
+_cache      = {}   # coinId → {'ebay': {...}, 'coinxchange': {...}}
+_buy_cache  = {}   # coinId → {'options': [...], 'fetchedAt': float}
+_start_time = time.monotonic()  # for health check uptime
 
 # ── BUY-OPTIONS CONCURRENCY CONTROLS ─────────────────────────────────────────
 # Hard cap on simultaneous retailer fan-outs. Each scrape can hold a thread for
@@ -659,6 +660,14 @@ class Handler(BaseHTTPRequestHandler):
             with _lock:
                 snapshot = dict(_cache)
             self._json(200, snapshot)
+            return
+
+        if self.path in ('/health', '/healthz'):
+            self._json(200, {
+                'status': 'ok',
+                'cache_count': len(_cache),
+                'uptime_seconds': int(time.monotonic() - _start_time),
+            })
             return
 
         entry = STATIC_FILES.get(self.path)
