@@ -1,9 +1,6 @@
 [project]
-name = "bluey-coin-tracker"
-version = "2.0.0"
-description = "Bluey Coin Tracker — eBay AU sold prices and retailer buy options for Royal Australian Mint Bluey collectable coins"
+name = "repl-nix-workspace"
+version = "0.1.0"
+description = "Add your description here"
 requires-python = ">=3.11"
 dependencies = []
-authors = [
-    {name = "James Love", email = "james@travelsim.com"},
-]

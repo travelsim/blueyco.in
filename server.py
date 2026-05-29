@@ -164,6 +164,19 @@ def _load_cache():
     try:
         with open(CACHE_FILE, 'r') as f:
             data = json.load(f)
+        # Normalize fetchedAt to float — some entries may have string timestamps
+        # from manual edits or older cache formats.
+        for coin_id, sources in data.items():
+            if not isinstance(sources, dict):
+                continue
+            for source, entry in sources.items():
+                if isinstance(entry, dict) and 'fetchedAt' in entry:
+                    ts = entry['fetchedAt']
+                    if isinstance(ts, str):
+                        try:
+                            entry['fetchedAt'] = float(ts)
+                        except ValueError:
+                            entry['fetchedAt'] = 0.0  # force re-fetch
         with _lock:
             _cache.update(data)
         print(f'Cache loaded: {len(data)} coins')
@@ -388,6 +401,28 @@ def _summarise(listings):
     }
 
 
+# ── ADAPTIVE REFRESH FREQUENCY ────────────────────────────────────────────────
+def _salty_refresh_secs(coin_id):
+    """Adaptive refresh interval based on eBay sales volume.
+
+    Hot coins (50+ completed sales): refresh every 6 hours.
+    Active coins (10–49 sales):      refresh every 24 hours.
+    Quiet coins (<10 sales):         refresh every 7 days.
+    Coins with no data yet:          refresh every 7 days (catch-up mode).
+    """
+    with _lock:
+        entry = _cache.get(coin_id, {}).get('ebay')
+    if not entry:
+        return 7 * 24 * 3600
+    total = entry.get('total_results', 0)
+    if total >= 50:
+        return 6 * 3600
+    elif total >= 10:
+        return 24 * 3600
+    else:
+        return 7 * 24 * 3600
+
+
 # ── NEEDS-REFRESH HELPER ──────────────────────────────────────────────────────
 def _stale(coin_id, source):
     with _lock:
@@ -400,7 +435,8 @@ def _stale(coin_id, source):
             ts = float(ts)
         except ValueError:
             return True
-    return (time.time() - ts) > REFRESH_SECS
+    refresh_secs = _salty_refresh_secs(coin_id) if source == 'ebay' else REFRESH_SECS
+    return (time.time() - ts) > refresh_secs
 
 
 # ── BACKGROUND REFRESH THREAD ─────────────────────────────────────────────────
