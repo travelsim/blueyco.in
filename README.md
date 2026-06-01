@@ -1,30 +1,17 @@
-## Bluey Coin Tracker
+## Blueyco.in
 
-Royal Australian Mint Bluey coins — eBay sold prices + retailer links.
+**The home for Bluey coin collectors.**
 
-This is the **static Vercel** version of the tracker.
+Blueyco.in is a growing ecosystem for fans and collectors of Royal Australian Mint Bluey coins.
 
-### Deployment
+### Current Subdomains
 
-Deployed as a pure static site on Vercel:
+- **blueyco.in** — Main brand site & public coin explorer
+- **value.blueyco.in** — Live values + personal portfolio dashboard
+- **collect.blueyco.in** — My Collection & Wishlist
+- **buy.blueyco.in** — Deal Hunter + premium custom framing shop
+- **blog.blueyco.in** — Deep Bluey content, behind-the-scenes analysis, RAM ballots, ABC links & podcasts
 
-1. The site is served directly from this repo.
-2. Data comes from two JSON files:
-   - `ebay_cache.json` — Recent eBay AU sold prices
-   - `retailer_prices.json` — Manual retailer prices and buy links
+This repository (`blueycoin`) currently powers the static parts of the experience.
 
-### Updating Prices
-
-To refresh the data:
-
-1. Update `ebay_cache.json` and/or `retailer_prices.json` locally
-2. Commit and push
-3. Vercel will automatically redeploy
-
-The full dynamic Python scraper (live fetching + background server) lives in the separate `blueyco.in` repository and is kept untouched.
-
-### Tech
-
-- Pure static HTML + vanilla JavaScript
-- Hosted on Vercel
-- No backend required for viewing prices
+The dynamic scraping & backend systems live in the separate `blueyco.in` repository (intentionally kept untouched for now).
