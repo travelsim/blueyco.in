@@ -1,16 +1,12 @@
-# Cache files
-ebay_cache.json
-retailer_prices.json
-
-# Python
-__pycache__/
-*.pyc
-*.pyo
-
-# Environment
-.env
-*.local
-
 # OS
 .DS_Store
 Thumbs.db
+
+# Editor
+.idea/
+.vscode/
+*.swp
+
+# Local overrides
+.env
+*.local
