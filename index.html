@@ -42,18 +42,22 @@
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600&display=swap');
 
   :root {
-    --blue:   #1e90d4;
-    --orange: #f47e3c;
+    --blue: #0a2540;
+    --orange: #ff6b35;
     --yellow: #ffd54f;
-    --teal:   #2ec4b6;
-    --red:    #e84855;
-    --green:  #27ae60;
-    --bg:     #f0f7ff;
-    --card:   #ffffff;
-    --text:   #1a2e44;
-    --muted:  #7a92a8;
-    --border: #d8eaf8;
-    --shadow: 0 4px 24px rgba(30,144,212,0.10);
+    --teal: #2ec4b6;
+    --red: #e84855;
+    --green: #27ae60;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --accent: #ff6b35;
+    --nav-bg: #0a2540;
+    --btn-primary: #ff6b35;
+    --btn-primary-hover: #e55a2b;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -97,6 +101,60 @@
     padding: 3px 10px;
     font-weight: 700;
     letter-spacing: 0.5px;
+
+  /* ── NAV (reusable) ── */
+  .main-nav { display: flex; gap: 4px; align-items: center; }
+  .nav-link {
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.15s;
+  }
+  .nav-link:hover, .nav-link.active { background: rgba(255,107,53,0.2); color: #fff; }
+  .nav-link.active { background: var(--orange); color: #fff; }
+
+  /* ── HERO (premium) ── */
+  .hero {
+    background: linear-gradient(135deg, var(--blue) 0%, #132b4d 100%);
+    color: #fff;
+    padding: 72px 24px 60px;
+    text-align: center;
+    border-radius: 0 0 24px 24px;
+    margin: -28px -20px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    top: -50%; right: -20%;
+    width: 60%; height: 200%;
+    background: radial-gradient(circle, rgba(255,107,53,0.15) 0%, transparent 70%);
+  }
+  .hero h1 { font-family: "Nunito", sans-serif; font-size: 3.2rem; font-weight: 900; margin-bottom: 12px; letter-spacing: -1.5px; }
+  .hero .tagline { font-size: 1.25rem; opacity: 0.9; max-width: 620px; margin: 0 auto 28px; }
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--orange); color: #fff; border: none; padding: 14px 32px;
+    font-size: 1.05rem; font-weight: 800; border-radius: 999px; cursor: pointer;
+    box-shadow: 0 10px 20px -5px rgba(255,107,53,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 25px -5px rgba(255,107,53,0.5); }
+
+  /* ── REUSABLE COMPONENTS ── */
+  .section { display: none; }
+  .section.active { display: block; }
+  .btn { padding: 8px 18px; border-radius: 999px; font-weight: 700; cursor: pointer; border: none; transition: all .15s; }
+  .btn-primary { background: var(--orange); color: #fff; }
+  .btn-primary:hover { background: var(--btn-primary-hover); }
+  .btn-secondary { background: var(--blue); color: #fff; }
+  .stat-card { background: var(--card); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+  .progress-bar { height: 10px; background: var(--border); border-radius: 999px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(to right, var(--orange), #ffb366); transition: width 0.4s ease; }
   }
 
   /* ── MAIN ── */
@@ -315,6 +373,30 @@
     .page-title { font-size: 1.5rem; }
     .ret-name { font-size: 0.75rem; }
   }
+
+  /* Dashboard tabs */
+  .dashboard-tabs { display:flex; gap:4px; margin-bottom:20px; border-bottom:2px solid var(--border); }
+  .dash-tab { background:none; border:none; padding:10px 20px; font-weight:700; color:var(--muted); cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-2px; }
+  .dash-tab.active { color:var(--blue); border-bottom-color:var(--orange); }
+  .dash-panel { display:none; }
+  .dash-panel.active { display:block; }
+
+  /* Richer coin card enhancements - reusable patterns */
+  .coin-card .card-img {
+    width:100%; height:180px; background:linear-gradient(145deg,#f1f5f9,#e2e8f0);
+    display:flex; align-items:center; justify-content:center; font-size:4.5rem; position:relative;
+    border-bottom:1px solid var(--border);
+  }
+  .coin-card .coin-stats { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin:12px 0; font-size:0.78rem; }
+  .coin-card .coin-stat { background:var(--bg); padding:4px 8px; border-radius:6px; }
+  .coin-card .market-value { font-size:1.1rem; font-weight:900; color:var(--blue); margin:8px 0; }
+  .add-coll-btn { width:100%; margin-top:8px; background:#fff; border:2px solid var(--orange); color:var(--orange); padding:9px; border-radius:999px; font-weight:700; cursor:pointer; }
+  .add-coll-btn:hover { background:var(--orange); color:#fff; }
+  .in-collection { background:var(--green); color:#fff; border-color:var(--green); }
+
+  /* Trust elements */
+  .trust-bar { font-size:0.75rem; color:var(--muted); display:flex; gap:16px; flex-wrap:wrap; margin:24px 0; padding:12px 0; border-top:1px solid var(--border); }
+
 </style>
 </head>
 <body>
@@ -325,20 +407,83 @@
     Bluey Coin Tracker
     <span class="api-badge">26 Coins · eBay AU · CoinXchange</span>
   </div>
+  <nav class="main-nav">
+    <a href="#home" class="nav-link active" data-section="home">Home</a>
+    <a href="#all-coins" class="nav-link" data-section="all-coins">All Coins</a>
+    <a href="#dashboard" class="nav-link" data-section="dashboard">Collector Dashboard</a>
+    <a href="#price-guide" class="nav-link" data-section="price-guide">Price Guide</a>
+    <a href="#wishlist" class="nav-link" data-section="wishlist">Wish List</a>
+    <a href="#about" class="nav-link" data-section="about">About</a>
+  </nav>
 </header>
 
 <main>
-  <h1 class="page-title">Royal Australian Mint — Bluey Coins</h1>
-  <p class="page-sub">eBay AU sold prices and CoinXchange market listings, auto-refreshed every 2 weeks. Click <strong>Where to Buy</strong> for current retailer prices.</p>
-
-  <div class="series-tabs">
-    <button class="tab-btn active" data-series="all">All Series</button>
-    <button class="tab-btn" data-series="series1">Series 1 · 2024 Dollarbucks</button>
-    <button class="tab-btn" data-series="series2">Series 2 · 2025 Christmas</button>
-    <button class="tab-btn" data-series="series3">Series 3 · 2026 Bluey 2</button>
+  <div class="hero" id="home">
+    <h1>Bluey Coin Tracker</h1>
+    <p class="tagline">Track Royal Australian Mint Bluey coins - Real-time eBay sold prices and retailer listings</p>
+    <button class="cta-btn" onclick="document.getElementById('dashboard').scrollIntoView({behavior:'smooth'}); switchSection('dashboard')">Build Your Collection</button>
+    <div style="margin-top:24px; font-size:0.85rem; opacity:0.75;">Updated live from eBay AU and CoinXchange - 26 coins tracked</div>
   </div>
 
-  <div class="coins-grid" id="coins-grid"></div>
+  <div id="all-coins" class="section active">
+    <h1 class="page-title">Royal Australian Mint - Bluey Coins</h1>
+    <p class="page-sub">eBay AU sold prices and CoinXchange market listings, auto-refreshed every 2 weeks.</p>
+    <div class="series-tabs">
+      <button class="tab-btn active" data-series="all">All Series</button>
+      <button class="tab-btn" data-series="series1">Series 1 - 2024 Dollarbucks</button>
+      <button class="tab-btn" data-series="series2">Series 2 - 2025 Christmas</button>
+      <button class="tab-btn" data-series="series3">Series 3 - 2026 Bluey 2</button>
+    </div>
+    <div class="coins-grid" id="coins-grid"></div>
+  </div>
+
+  <div id="dashboard" class="section">
+    <h1 class="page-title">Collector Dashboard</h1>
+    <p class="page-sub">Track your collection, wish list and stats. Saved locally.</p>
+    <div class="dashboard-tabs">
+      <button class="dash-tab active" data-tab="collection">My Collection</button>
+      <button class="dash-tab" data-tab="wishlist">Wish List</button>
+      <button class="dash-tab" data-tab="stats">Stats</button>
+    </div>
+    <div id="tab-collection" class="dash-panel active">
+      <div class="stat-card" style="margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <div><strong>Collection Progress</strong> <span id="coll-count">0 / 26</span></div>
+          <button class="btn btn-secondary" onclick="exportCollection()">Export CSV</button>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      </div>
+      <div id="my-collection-grid" class="coins-grid"></div>
+    </div>
+    <div id="tab-wishlist" class="dash-panel"><div id="wish-grid" class="coins-grid"></div></div>
+    <div id="tab-stats" class="dash-panel">
+      <div class="stat-card"><h3>Rarity Chart</h3><canvas id="rarity-chart" width="400" height="180"></canvas></div>
+      <div style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="stat-card"><div>Total Value</div><div id="total-value" style="font-size:1.8rem;font-weight:900;">$0</div></div>
+        <div class="stat-card"><div>Coins Owned</div><div id="unique-count" style="font-size:1.8rem;font-weight:900;">0</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="price-guide" class="section">
+    <h1 class="page-title">Price Guide</h1>
+    <div class="coins-grid" id="price-grid"></div>
+  </div>
+
+  <div id="wishlist" class="section">
+    <h1 class="page-title">Wish List</h1>
+    <div id="standalone-wish" class="coins-grid"></div>
+  </div>
+
+  <div id="about" class="section">
+    <h1 class="page-title">About</h1>
+    <div class="stat-card">
+      <p>Bluey Coin Tracker for Royal Australian Mint releases. Prices from eBay AU and CoinXchange.</p>
+      <div style="margin-top:16px;font-size:0.9rem;color:#64748b;">
+        Sources: eBay Australia, CoinXchange.com.au - Last updated automatically. Not financial advice.
+      </div>
+    </div>
+  </div>
 </main>
 
 <footer>
@@ -521,160 +666,65 @@ function buildChart(canvasId, products) {
 // ────────────────────────────────────────────────
 // BUILD CARD
 // ────────────────────────────────────────────────
-function buildCard(coin) {
+function buildCard(coin, isCollectionView) {
   const coinEntry = coinData[coin.id] || {};
-  const ebay      = coinEntry.ebay      || null;
-  const cx        = coinEntry.coinxchange || null;
-
-  const hasEbay = ebay && Array.isArray(ebay.products) && ebay.products.length > 0;
-  const avg     = hasEbay ? parseFloat(ebay.average_price) : null;
-  const minP    = hasEbay ? parseFloat(ebay.min_price)     : null;
-  const maxP    = hasEbay ? parseFloat(ebay.max_price)     : null;
-  const premium = calcPremium(avg, coin.mintPrice);
-  const premStr = premium !== null ? `${premium > 0 ? '+' : ''}${premium}%` : '';
-  const premCls = premium > 0 ? 'up' : (premium < 0 ? 'down' : '');
+  const ebay = coinEntry.ebay || null;
+  const avg = ebay && ebay.average_price ? parseFloat(ebay.average_price) : null;
+  const mintP = coin.mintPrice ? '$' + coin.mintPrice : 'N/A';
 
   const card = el('div', 'coin-card');
-  card.id = `card-${coin.id}`;
+  card.dataset.id = coin.id;
   card.dataset.series = coin.series;
 
-  // ── Header ──
+  // Large image placeholder (reusable pattern)
+  const imgWrap = el('div', 'card-img');
+  imgWrap.innerHTML = `<span style="font-size:5rem;opacity:0.85;">${coin.denomination}</span>`;
+  imgWrap.style.background = `linear-gradient(145deg, ${coin.color}22, #fff)`;
+
+  // Header with title
   const hdr = el('div', 'card-header');
-  const dot = el('div', 'series-dot');
-  dot.style.background = coin.color;
-
-  const tw = el('div');
-  tw.style.flex = '1';
-  tw.append(
+  hdr.append(
     el('div', 'card-title', coin.name),
-    el('div', 'card-meta', `${coin.denomination} · ${coin.year} · ${coin.mintage ? 'Mintage: ' + coin.mintage : 'Mintage: unknown'}`)
+    el('div', 'card-meta', `${coin.denomination} • ${coin.year} • Mintage ${coin.mintage || 'N/A'}`)
   );
-  hdr.append(dot, tw);
-  if (coin.mintPrice) hdr.append(el('span', 'mint-price', `Mint $${coin.mintPrice}`));
 
-  // ── Body ──
   const body = el('div', 'card-body');
 
-  // eBay stats
-  const statsRow = el('div', 'stats-row');
+  // Rich stats row (Year/Series/Mintage/Rarity)
+  const stats = el('div', 'coin-stats');
+  stats.innerHTML = `
+    <div class="coin-stat"><strong>Year:</strong> ${coin.year}</div>
+    <div class="coin-stat"><strong>Series:</strong> ${coin.series.replace('series','S')}</div>
+    <div class="coin-stat"><strong>Mintage:</strong> ${coin.mintage || 'Unlim'}</div>
+    <div class="coin-stat"><strong>Rarity:</strong> ${coin.mintage && parseInt(coin.mintage)<30000 ? 'Rare' : 'Common'}</div>
+  `;
+  body.append(stats);
 
-  const avgBox = el('div', 'stat-box');
-  avgBox.append(el('div', 'stat-label', 'eBay Avg Sold'), el('div', 'stat-value', formatAUD(avg)));
+  // Market value
+  const val = el('div', 'market-value', avg ? 'Market: $' + avg.toFixed(2) : 'Market: N/A');
+  body.append(val);
 
-  const minBox = el('div', 'stat-box');
-  minBox.append(el('div', 'stat-label', 'eBay Min'), el('div', 'stat-value', formatAUD(minP)));
+  // Add to Collection button (reusable)
+  const addBtn = el('button', 'add-coll-btn');
+  addBtn.textContent = isInCollection(coin.id) ? 'In Collection ✓' : 'Add to Collection';
+  if (isInCollection(coin.id)) addBtn.classList.add('in-collection');
+  addBtn.onclick = () => toggleCollection(coin.id, addBtn, card);
+  body.append(addBtn);
 
-  const thirdBox = el('div', 'stat-box');
-  const thirdLbl = coin.mintPrice ? 'Premium' : 'eBay Max';
-  const thirdVal = coin.mintPrice ? (premStr || formatAUD(maxP)) : formatAUD(maxP);
-  const tv       = el('div', 'stat-value', thirdVal);
-  if (premCls) tv.classList.add(premCls);
-  thirdBox.append(el('div', 'stat-label', thirdLbl), tv);
-
-  statsRow.append(avgBox, minBox, thirdBox);
-  body.append(statsRow);
-
-  // CoinXchange row (if data available)
-  if (cx && cx.average_price) {
-    const href = safeUrl(coin.cxUrl) || safeUrl(cx.search_url) || 'https://www.coinxchange.com.au/buy?search=bluey';
-    const cxRow = el('a', 'cx-row');
-    cxRow.href   = href;
-    cxRow.target = '_blank';
-    cxRow.rel    = 'noopener noreferrer';
-    cxRow.title  = 'View on CoinXchange';
-
-    const badge = el('span', 'cx-badge', 'CoinXchange');
-    const stats = el('div', 'cx-stats');
-
-    const avgStat = el('span', 'cx-stat');
-    avgStat.append(el('span', 'cx-lbl', 'Avg '), el('span', 'cx-val', formatAUD(cx.average_price)));
-
-    const minStat = el('span', 'cx-stat');
-    minStat.append(el('span', 'cx-lbl', 'Min '), el('span', 'cx-val', formatAUD(cx.min_price)));
-
-    if (cx.count) {
-      const cntStat = el('span', 'cx-stat');
-      cntStat.append(el('span', 'cx-val', String(cx.count)), el('span', 'cx-lbl', ' listings'));
-      stats.append(avgStat, minStat, cntStat);
-    } else {
-      stats.append(avgStat, minStat);
-    }
-
-    cxRow.append(badge, stats, el('span', 'cx-arrow', '↗'));
-    body.append(cxRow);
-  }
-
-  // Mini chart
-  if (hasEbay) {
-    const chartWrap = el('div', 'chart-wrap');
-    const canvas    = document.createElement('canvas');
-    canvas.id       = `chart-${coin.id}`;
-    chartWrap.append(canvas);
-    body.append(chartWrap);
-  }
-
-  // Where to Buy button
+  // Existing buy button
   const buyBtn = el('button', 'buy-btn');
-  buyBtn.id = `buy-btn-${coin.id}`;
-  buyBtn.append(cartIcon(), document.createTextNode(' Where to Buy'));
-  buyBtn.addEventListener('click', () => handleBuyNow(coin.id, coin.keywords));
+  buyBtn.style.marginTop = '6px';
+  buyBtn.textContent = 'Where to Buy';
+  buyBtn.onclick = () => handleBuyNow(coin.id, coin.keywords);
   body.append(buyBtn);
 
-  // Last updated
-  const updParts = [];
+  // Trust last updated
   if (ebay && ebay.fetchedAt) {
-    const d = new Date(ebay.fetchedAt * 1000);
-    updParts.push(`eBay: ${d.toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' })} · ${ebay.results || 0} sales`);
-  }
-  if (cx && cx.fetchedAt) {
-    const d = new Date(cx.fetchedAt * 1000);
-    updParts.push(`CX: ${d.toLocaleDateString('en-AU', { day:'numeric', month:'short' })}`);
-  }
-  if (updParts.length) {
-    body.append(el('div', 'last-updated', updParts.join('  ·  ')));
+    const upd = el('div', 'last-updated', 'Updated: ' + new Date(ebay.fetchedAt*1000).toLocaleDateString());
+    body.append(upd);
   }
 
-  // Recent eBay sales toggle
-  if (hasEbay) {
-    const toggleBtn = el('button', 'toggle-sales', 'Show recent sales ▾');
-    const salesList = el('div', 'sales-list');
-    salesList.id = `sales-${coin.id}`;
-
-    toggleBtn.addEventListener('click', () => {
-      salesList.classList.toggle('open');
-      toggleBtn.textContent = salesList.classList.contains('open')
-        ? 'Hide recent sales ▴' : 'Show recent sales ▾';
-    });
-
-    salesList.append(el('div', 'sales-list-title', 'Recent eBay AU Sold'));
-    ebay.products.slice(0, 8).forEach(p => {
-      const row      = el('div', 'sale-row');
-      const raw      = safeText(p.title);
-      const short    = raw.length > 42 ? raw.substring(0, 42) + '…' : raw;
-      row.append(
-        el('span', 'sale-price', formatAUD(parseFloat(p.sale_price))),
-        el('span', 'sale-title', short),
-        el('span', 'sale-date',  safeText(p.date_sold))
-      );
-      const href = safeUrl(p.link);
-      if (href) {
-        const a = el('a', 'view-ebay', '↗');
-        a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer';
-        row.append(a);
-      }
-      salesList.append(row);
-    });
-
-    body.append(toggleBtn, salesList);
-  }
-
-  // Buy panel (populated on demand)
-  const buyPanel = el('div', 'buy-panel');
-  buyPanel.id = `buy-panel-${coin.id}`;
-  buyPanel.append(el('div', 'bp-title', 'Where to Buy'));
-  body.append(buyPanel);
-
-  card.append(hdr, body);
+  card.append(imgWrap, hdr, body);
   return card;
 }
 
@@ -825,6 +875,128 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 renderGrid();                              // show skeleton immediately
 loadPrices();                              // populate from backend cache
 setInterval(loadPrices, 5 * 60 * 1000);   // re-poll every 5 min
+
+// ── COLLECTION STATE (localStorage) ──
+let myCollection = JSON.parse(localStorage.getItem('myCollection') || '[]');
+let myWishlist = JSON.parse(localStorage.getItem('myWishlist') || '[]');
+
+function isInCollection(id) { return myCollection.includes(id); }
+function toggleCollection(id, btn, card) {
+  if (isInCollection(id)) {
+    myCollection = myCollection.filter(x => x !== id);
+    btn.textContent = 'Add to Collection';
+    btn.classList.remove('in-collection');
+  } else {
+    myCollection.push(id);
+    btn.textContent = 'In Collection ✓';
+    btn.classList.add('in-collection');
+  }
+  localStorage.setItem('myCollection', JSON.stringify(myCollection));
+  renderDashboard();
+}
+
+function switchSection(sec) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById(sec);
+  if (target) target.classList.add('active');
+  // nav active
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.toggle('active', l.dataset.section === sec));
+  if (sec === 'dashboard' || sec === 'wishlist') renderDashboard();
+  if (sec === 'price-guide') renderPriceGuide();
+}
+
+function renderDashboard() {
+  // Collection tab
+  const collGrid = document.getElementById('my-collection-grid');
+  if (collGrid) {
+    collGrid.innerHTML = '';
+    const owned = COINS.filter(c => myCollection.includes(c.id));
+    owned.forEach(c => collGrid.append(buildCard(c, true)));
+    const pct = Math.round((owned.length / COINS.length) * 100);
+    const pf = document.getElementById('progress-fill');
+    if (pf) pf.style.width = pct + '%';
+    const cc = document.getElementById('coll-count');
+    if (cc) cc.textContent = owned.length + ' / ' + COINS.length;
+  }
+  // Wish
+  const wishGrid = document.getElementById('wish-grid') || document.getElementById('standalone-wish');
+  if (wishGrid) {
+    wishGrid.innerHTML = '';
+    const wishes = COINS.filter(c => myWishlist.includes(c.id));
+    wishes.forEach(c => wishGrid.append(buildCard(c, true)));
+  }
+  // Stats
+  updateStats();
+}
+
+function updateStats() {
+  const owned = COINS.filter(c => myCollection.includes(c.id));
+  let total = 0;
+  owned.forEach(c => {
+    const e = coinData[c.id] && coinData[c.id].ebay;
+    if (e && e.average_price) total += parseFloat(e.average_price);
+  });
+  const tv = document.getElementById('total-value');
+  if (tv) tv.textContent = '$' + total.toFixed(0);
+  const uc = document.getElementById('unique-count');
+  if (uc) uc.textContent = owned.length;
+  // Rarity chart
+  const canvas = document.getElementById('rarity-chart');
+  if (canvas && window.Chart) {
+    const ctx = canvas.getContext('2d');
+    if (window.rarityChart) window.rarityChart.destroy();
+    const rare = owned.filter(c => c.mintage && parseInt(c.mintage.replace('K','000')) < 30000).length;
+    const common = owned.length - rare;
+    window.rarityChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: { labels: ['Rare', 'Common'], datasets: [{ data: [rare, common], backgroundColor: ['#ff6b35', '#0a2540'] }] },
+      options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+  }
+}
+
+function exportCollection() {
+  const owned = COINS.filter(c => myCollection.includes(c.id));
+  let csv = 'Name,Year,Denomination,Mintage,Market Value\n';
+  owned.forEach(c => {
+    const e = coinData[c.id] && coinData[c.id].ebay;
+    const val = e && e.average_price ? e.average_price : '';
+    csv += `"${c.name}",${c.year},${c.denomination},${c.mintage || ''},${val}\n`;
+  });
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'bluey-collection.csv';
+  a.click();
+}
+
+function renderPriceGuide() {
+  const grid = document.getElementById('price-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  COINS.forEach(c => grid.append(buildCard(c)));
+}
+
+// Nav click handlers
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const sec = link.dataset.section;
+    switchSection(sec);
+  });
+});
+
+// Enhance existing renderGrid to use new buildCard
+const origRender = window.renderGrid;
+window.renderGrid = function() {
+  const grid = document.getElementById('coins-grid');
+  if (!grid) return;
+  const filtered = activeSeries === 'all' ? COINS : COINS.filter(c => c.series === activeSeries);
+  grid.innerHTML = '';
+  filtered.forEach(coin => grid.append(buildCard(coin)));
+  // charts if needed...
+};
+
 </script>
 </body>
 </html>

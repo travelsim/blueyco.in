@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:;">
+<title>Bluey Coin Tracker — Royal Australian Mint Prices &amp; Where to Buy</title>
+<meta name="description" content="Track eBay sold prices and live retailer listings for Royal Australian Mint Bluey coins — Dollarbucks, Christmas series, and 2026 $2 collection. Updated automatically every 2 weeks.">
+<meta name="keywords" content="Bluey coin, Royal Australian Mint, Bluey Dollarbuck, Bluey $2 coin, Bluey Christmas coin, Australian collectable coins, eBay sold prices, where to buy Bluey coin">
+<meta name="robots" content="index, follow">
+<link rel="canonical" id="canonical-url">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bluey Coin Tracker — Royal Australian Mint Prices &amp; Where to Buy">
+<meta property="og:description" content="Track eBay sold prices and live retailer listings for Royal Australian Mint Bluey coins. Dollarbucks, Christmas series, and the 2026 $2 collection — auto-refreshed every 2 weeks.">
+<meta property="og:url" id="og-url" content="">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Bluey Coin Tracker">
+<meta name="twitter:description" content="eBay sold prices and live retailer buy options for Royal Australian Mint Bluey coins, auto-refreshed every 2 weeks.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Bluey Coin Tracker",
+  "description": "Track eBay sold prices and live retailer listings for Royal Australian Mint Bluey collectable coins.",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" }
+}
+</script>
+<script>
+  (function(){
+    var origin = window.location.origin + '/';
+    var c = document.getElementById('canonical-url');
+    if (c) c.href = origin;
+    var og = document.getElementById('og-url');
+    if (og) og.setAttribute('content', origin);
+  })();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw==" crossorigin="anonymous"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600&display=swap');
+
+  :root {
+    --blue:   #0a2540;
+    --orange: #ff6b35;
+    --yellow: #ffd54f;
+    --teal:   #2ec4b6;
+    --red:    #e84855;
+    --green:  #27ae60;
+    --bg:     #f8fafc;
+    --card:   #ffffff;
+    --text:   #0f172a;
+    --muted:  #64748b;
+    --border: #e2e8f0;
+    --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --accent: #ff6b35;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--blue);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    box-shadow: 0 2px 12px rgba(30,144,212,0.25);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 1.4rem;
+    color: #fff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-paw { font-size: 1.6rem; }
+  .api-badge {
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── MAIN ── */
+  main { max-width: 1200px; margin: 0 auto; padding: 28px 20px 60px; }
+
+  .page-title {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 1.9rem;
+    color: var(--blue);
+    margin-bottom: 6px;
+  }
+  .page-sub { color: var(--muted); font-size: 0.92rem; margin-bottom: 24px; }
+
+  /* ── SERIES TABS ── */
+  .series-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+  .tab-btn {
+    padding: 8px 20px;
+    border-radius: 24px;
+    border: 2px solid var(--border);
+    background: var(--card);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--muted);
+    transition: all 0.18s;
+  }
+  .tab-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .tab-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+  /* ── COIN GRID ── */
+  .coins-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 20px;
+  }
+
+  /* ── COIN CARD ── */
+  .coin-card {
+    background: var(--card);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    border: 1.5px solid var(--border);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .coin-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(30,144,212,0.15); }
+
+  .card-header {
+    padding: 16px 18px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .series-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+  .card-title { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem; line-height: 1.3; flex: 1; }
+  .card-meta  { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+  .mint-price {
+    font-size: 0.78rem;
+    background: #e8f4fd;
+    color: var(--blue);
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .card-body { padding: 14px 18px; }
+
+  /* ── EBAY STATS ROW ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .stat-box { background: var(--bg); border-radius: 10px; padding: 8px 6px; text-align: center; }
+  .stat-label { font-size: 0.68rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-value { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.1rem; color: var(--text); margin-top: 1px; }
+  .stat-value.up   { color: #0e7a4e; }
+  .stat-value.down { color: var(--red); }
+
+  /* ── COINXCHANGE ROW ── */
+  .cx-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(46,196,182,0.07);
+    border: 1px solid rgba(46,196,182,0.25);
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s;
+  }
+  .cx-row:hover { background: rgba(46,196,182,0.14); }
+  .cx-badge {
+    font-size: 0.66rem;
+    font-weight: 900;
+    color: var(--teal);
+    background: rgba(46,196,182,0.15);
+    border-radius: 4px;
+    padding: 2px 5px;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .cx-stats { display: flex; gap: 10px; align-items: baseline; flex: 1; flex-wrap: wrap; }
+  .cx-stat  { display: flex; gap: 3px; align-items: baseline; font-size: 0.78rem; }
+  .cx-val   { font-family: 'Nunito', sans-serif; font-weight: 800; color: var(--text); }
+  .cx-lbl   { color: var(--muted); font-size: 0.70rem; }
+  .cx-arrow { color: var(--teal); font-size: 0.72rem; flex-shrink: 0; }
+
+  /* ── MINI CHART ── */
+  .chart-wrap { height: 80px; position: relative; margin-bottom: 12px; }
+
+  /* ── BUY NOW BUTTON ── */
+  .buy-btn {
+    width: 100%;
+    padding: 9px;
+    border: none;
+    border-radius: 10px;
+    background: var(--green);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background 0.18s;
+    font-family: 'Nunito Sans', sans-serif;
+  }
+  .buy-btn:hover    { background: #219a52; }
+  .buy-btn.open     { background: #5a6a7a; }
+  .buy-btn.open:hover { background: #4a5a6a; }
+  .buy-btn:disabled { background: #b0c8dc; cursor: not-allowed; }
+  .buy-btn .spinner { animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── LAST UPDATED ── */
+  .last-updated { font-size: 0.72rem; color: var(--muted); text-align: center; margin-top: 8px; }
+
+  /* ── RECENT SALES ── */
+  .sales-list { margin-top: 10px; display: none; border-top: 1px solid var(--border); padding-top: 10px; }
+  .sales-list.open { display: block; }
+  .sales-list-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .sale-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; padding: 4px 0; border-bottom: 1px dotted var(--border); gap: 8px; }
+  .sale-row:last-child { border-bottom: none; }
+  .sale-price { font-weight: 800; color: var(--text); }
+  .sale-date  { color: var(--muted); font-size: 0.75rem; flex-shrink: 0; }
+  .sale-title { color: var(--muted); font-size: 0.77rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
+  .view-ebay  { font-size: 0.72rem; color: var(--blue); text-decoration: none; flex-shrink: 0; }
+  .view-ebay:hover { text-decoration: underline; }
+  .toggle-sales { background: none; border: none; cursor: pointer; font-size: 0.78rem; color: var(--blue); font-weight: 700; padding: 0; margin-top: 6px; }
+
+  /* ── BUY PANEL ── */
+  .buy-panel { display: none; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
+  .buy-panel.open { display: block; }
+
+  .bp-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+
+  .bp-loading { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 0.82rem; padding: 8px 0; }
+  .bp-loading svg { animation: spin 0.8s linear infinite; }
+
+  .retailer-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 0;
+    border-bottom: 1px dotted var(--border);
+  }
+  .retailer-row:last-child { border-bottom: none; }
+
+  .ret-name  { flex: 1; font-size: 0.82rem; font-weight: 600; color: var(--text); min-width: 0; }
+  .ret-sub   { font-size: 0.68rem; color: var(--muted); font-weight: 400; margin-top: 1px; }
+  .ret-price { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 0.9rem; color: var(--text); white-space: nowrap; }
+  .ret-price.link-only { color: var(--muted); font-size: 0.78rem; font-weight: 600; }
+
+  .ret-badge {
+    font-size: 0.65rem;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .ret-badge.in    { background: #d4f5e9; color: #0e7a4e; }
+  .ret-badge.out   { background: #fde8e8; color: #c0392b; }
+
+  .ret-link {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 700;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .ret-link.buy    { background: var(--blue); color: #fff; }
+  .ret-link.buy:hover { background: #1778b8; }
+  .ret-link.search { background: var(--bg); color: var(--blue); border: 1px solid var(--border); }
+  .ret-link.search:hover { background: var(--border); }
+
+  .bp-note { font-size: 0.70rem; color: var(--muted); margin-top: 8px; font-style: italic; }
+
+  /* ── FOOTER ── */
+  footer { text-align: center; padding: 24px; font-size: 0.78rem; color: var(--muted); border-top: 1px solid var(--border); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 540px) {
+    .coins-grid { grid-template-columns: 1fr; }
+    .page-title { font-size: 1.5rem; }
+    .ret-name { font-size: 0.75rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-paw">🐾</span>
+    Bluey Coin Tracker
+    <span class="api-badge">26 Coins · eBay AU · CoinXchange</span>
+  </div>
+</header>
+
+<main>
+  <h1 class="page-title">Royal Australian Mint — Bluey Coins</h1>
+  <p class="page-sub">eBay AU sold prices and CoinXchange market listings, auto-refreshed every 2 weeks. Click <strong>Where to Buy</strong> for current retailer prices.</p>
+
+  <div class="series-tabs">
+    <button class="tab-btn active" data-series="all">All Series</button>
+    <button class="tab-btn" data-series="series1">Series 1 · 2024 Dollarbucks</button>
+    <button class="tab-btn" data-series="series2">Series 2 · 2025 Christmas</button>
+    <button class="tab-btn" data-series="series3">Series 3 · 2026 Bluey 2</button>
+  </div>
+
+  <div class="coins-grid" id="coins-grid"></div>
+</main>
+
+<footer>
+  eBay AU sold prices via RapidAPI · CoinXchange market listings · Prices in AUD · Not financial advice · Built for collectors
+</footer>
+
+<script>
+// ────────────────────────────────────────────────
+// COIN CATALOGUE
+// ────────────────────────────────────────────────
+const COINS = [
+  // ── SERIES 1 — 2024 Dollarbucks ($1) ──
+  // June 2024 — Carded NCLT coloured coins (RAM eShop)
+  { id: 's1_bluey',      series: 'series1', name: '2024 $1 Bluey Dollarbuck – Bluey',               keywords: '2024 Bluey Dollarbuck Bluey',        denomination: '$1', year: 2024, mintage: '30K',   mintPrice: 20,   color: '#1e90d4' },
+  { id: 's1_bingo',      series: 'series1', name: '2024 $1 Bluey Dollarbuck – Bingo',               keywords: '2024 Bluey Dollarbuck Bingo',        denomination: '$1', year: 2024, mintage: null,    mintPrice: 10,   color: '#f47e3c' },
+  { id: 's1_grannies',   series: 'series1', name: '2024 $1 Bluey Dollarbuck – The Grannies (NCLT)', keywords: '2024 Bluey Dollarbuck Grannies',     denomination: '$1', year: 2024, mintage: '30K',   mintPrice: 20,   color: '#2ec4b6' },
+  { id: 's1_heelers',    series: 'series1', name: '2024 $1 Bluey Dollarbuck – The Heelers (NCLT)',  keywords: '2024 Bluey Dollarbuck Heelers',      denomination: '$1', year: 2024, mintage: '30K',   mintPrice: 20,   color: '#e84855' },
+  { id: 's1_set',        series: 'series1', name: '2024 $1 Bluey Dollarbuck – 3-Coin Set',          keywords: '2024 Bluey Dollarbuck 3 coin set',   denomination: '$1', year: 2024, mintage: '30K',   mintPrice: 55,   color: '#9b59b6' },
+  // Sep 2024 — 10-coin tube set (privy mark UNC, Australia Post)
+  { id: 's1_mumdad',      series: 'series1', name: '2024 $1 Bluey – Mum & Dad (Chilli & Bandit)',     keywords: '2024 Bluey Mum and Dad coin',       denomination: '$1', year: 2024, mintage: null,    mintPrice: null, color: '#27ae60' },
+  { id: 's1_muffinsocks', series: 'series1', name: '2024 $1 Bluey – Muffin & Socks',                   keywords: '2024 Bluey Muffin and Socks coin',  denomination: '$1', year: 2024, mintage: null,    mintPrice: null, color: '#e84393' },
+  { id: 's1_radfrisky',   series: 'series1', name: '2024 $1 Bluey – Rad & Frisky',                     keywords: '2024 Bluey Rad Frisky coin',        denomination: '$1', year: 2024, mintage: null,    mintPrice: null, color: '#6c5ce7' },
+  { id: 's1_stripetrixie',series: 'series1', name: '2024 $1 Bluey – Stripe, Trixie & Nana',            keywords: '2024 Bluey Stripe Trixie Nana coin', denomination: '$1', year: 2024, mintage: null,    mintPrice: null, color: '#fd79a8' },
+  { id: 's1_blueyfriends',series: 'series1', name: '2024 $1 Bluey – Bluey & Friends',                  keywords: '2024 Bluey Bluey and Friends coin',  denomination: '$1', year: 2024, mintage: null,    mintPrice: null, color: '#00cec9' },
+  { id: 's1_bingofriends',series: 'series1', name: '2024 $1 Bluey – Bluey, Bingo & Friends',           keywords: '2024 Bluey Bingo and Friends coin',  denomination: '$1', year: 2024, mintage: null,    mintPrice: null, color: '#fab1a0' },
+  { id: 's1_tube_set',    series: 'series1', name: '2024 $1 Bluey – 10-Coin Tube & Folder Set',        keywords: '2024 Bluey 10 coin tube folder set', denomination: '$1', year: 2024, mintage: null,    mintPrice: 145,  color: '#dfe6e9' },
+
+  // ── SERIES 2 — 2025 Christmas ($1) ──
+  { id: 's2_xmas_unc',   series: 'series2', name: '2025 $1 Bluey Christmas – Coloured UNC (Ornament)', keywords: '2025 Bluey Christmas uncirculated',  denomination: '$1', year: 2025, mintage: '125K',  mintPrice: 20,   color: '#e84855' },
+  { id: 's2_xmas_silv',  series: 'series2', name: '2025 $1 Bluey Christmas – Silver Proof (Bauble)',   keywords: '2025 Bluey Christmas silver proof',  denomination: '$1', year: 2025, mintage: '10K',   mintPrice: 100,  color: '#8e8e93' },
+
+  // ── SERIES 3 — 2026 Bluey 2 ($2) ──
+  { id: 's3_folder',     series: 'series3', name: '2026 $2 Bluey 2 – Collection Folder + 5-Coin Set',   keywords: '2026 Bluey collection folder',     denomination: '$2', year: 2026, mintage: 'Unlim', mintPrice: 34,   color: '#1e90d4', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+collection&sort=4' },
+  { id: 's3_proof_ab',   series: 'series3', name: '2026 $2 Bluey 2 – Coloured Proof (Al Bronze)',       keywords: '2026 Bluey proof aluminium bronze', denomination: '$2', year: 2026, mintage: '10.5K', mintPrice: 60,   color: '#f47e3c', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+collection&sort=4' },
+  { id: 's3_proof_silv', series: 'series3', name: '2026 $2 Bluey 2 – Coloured Silver Proof (Heeler Family)', keywords: '2026 Bluey silver proof',       denomination: '$2', year: 2026, mintage: '12K',  mintPrice: 115,  color: '#8e8e93', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+collection&sort=4' },
+  { id: 's3_rain',       series: 'series3', name: '2026 $2 Bluey 2 – Privy Mark UNC – Rain',            keywords: '2026 Bluey Rain privy mark',       denomination: '$2', year: 2026, mintage: '20.5K', mintPrice: 20,   color: '#2ec4b6', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+collection&sort=4' },
+  { id: 's3_sleepytime', series: 'series3', name: '2026 $2 Bluey 2 – Privy Mark UNC – Sleepytime',      keywords: '2026 Bluey Sleepytime privy mark', denomination: '$2', year: 2026, mintage: '20.5K', mintPrice: 20,   color: '#9b59b6', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+collection&sort=4' },
+  { id: 's3_camping',    series: 'series3', name: '2026 $2 Bluey 2 – Privy Mark UNC – Camping',         keywords: '2026 Bluey Camping privy mark',    denomination: '$2', year: 2026, mintage: '20.5K', mintPrice: 20,   color: '#27ae60', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+collection&sort=4' },
+  { id: 's3_babyrace',   series: 'series3', name: '2026 $2 Bluey 2 – Privy Mark UNC – Baby Race',       keywords: '2026 Bluey Baby Race privy mark',  denomination: '$2', year: 2026, mintage: '20.5K', mintPrice: 20,   color: '#e84855', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+collection&sort=4' },
+  { id: 's3_granny',     series: 'series3', name: '2026 $2 Bluey 2 – Privy Mark UNC – Granny Mobile',   keywords: '2026 Bluey Granny Mobile privy mark', denomination: '$2', year: 2026, mintage: '20.5K', mintPrice: 20, color: '#f47e3c', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+collection&sort=4' },
+  { id: 's3_till_bluey', series: 'series3', name: '2026 $2 Bluey 2 – Coloured Till Coin – Bluey (Circulation)', keywords: '2026 Bluey till coin',         denomination: '$2', year: 2026, mintage: null,    mintPrice: null, color: '#1e90d4', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+collection&sort=4' },
+  { id: 's3_till_bingo', series: 'series3', name: '2026 $2 Bluey 2 – Coloured Till Coin – Bingo (Circulation)', keywords: '2026 Bingo till coin',         denomination: '$2', year: 2026, mintage: null,    mintPrice: null, color: '#f47e3c', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+collection&sort=4' },
+  // 2026 Australia Post PNCs
+  { id: 's3_pnc_bluey',  series: 'series3', name: '2026 $2 Bluey – For Real Life PNC (AusPost)',        keywords: '2026 Bluey For Real Life PNC',     denomination: '$2', year: 2026, mintage: null,    mintPrice: null, color: '#00b894', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+collection&sort=4' },
+  { id: 's3_pnc_bingo',  series: 'series3', name: '2026 $2 Bluey – Bingo Hooray PNC (AusPost)',         keywords: '2026 Bingo Hooray PNC',            denomination: '$2', year: 2026, mintage: null,    mintPrice: null, color: '#e17055', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+collection&sort=4' },
+];
+
+// ────────────────────────────────────────────────
+// STATE
+// ────────────────────────────────────────────────
+let coinData     = {};   // { coinId: { ebay: {...}, coinxchange: {...} } }
+let activeSeries = 'all';
+const charts     = {};
+
+// ────────────────────────────────────────────────
+// LOAD PRICES FROM BACKEND
+// ────────────────────────────────────────────────
+async function loadPrices() {
+  try {
+    const res = await fetch('/api/prices');
+    if (!res.ok) return;
+    const data = await res.json();
+    coinData = data;
+    renderGrid();
+  } catch (e) {
+    console.warn('Could not load prices:', e.message);
+  }
+}
+
+// ────────────────────────────────────────────────
+// RENDER HELPERS
+// ────────────────────────────────────────────────
+function formatAUD(val) {
+  if (val == null || isNaN(val)) return 'N/A';
+  return '$' + Number(val).toFixed(2);
+}
+
+function calcPremium(avg, mintPrice) {
+  if (!mintPrice || !avg || isNaN(avg)) return null;
+  return (((avg - mintPrice) / mintPrice) * 100).toFixed(1);
+}
+
+function safeText(val) {
+  return (val == null) ? '' : String(val);
+}
+
+function safeUrl(val) {
+  try {
+    const u = new URL(String(val));
+    return (u.protocol === 'https:' || u.protocol === 'http:') ? u.href : null;
+  } catch { return null; }
+}
+
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls)  e.className   = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+
+// ────────────────────────────────────────────────
+// SVG ICONS (all built via DOM — no innerHTML)
+// ────────────────────────────────────────────────
+function _svgEl(w, h, vb) {
+  const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  s.setAttribute('width', w); s.setAttribute('height', h);
+  s.setAttribute('viewBox', vb); s.setAttribute('fill', 'none');
+  s.setAttribute('stroke', 'currentColor'); s.setAttribute('stroke-width', '2');
+  return s;
+}
+function _path(d) {
+  const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  p.setAttribute('d', d);
+  return p;
+}
+function _circle(cx, cy, r) {
+  const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  c.setAttribute('cx', cx); c.setAttribute('cy', cy); c.setAttribute('r', r);
+  return c;
+}
+
+function cartIcon() {
+  const s = _svgEl('15', '15', '0 0 24 24');
+  s.append(
+    _circle('9','21','1'),
+    _circle('20','21','1'),
+    _path('M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6')
+  );
+  return s;
+}
+
+function spinnerIcon() {
+  const s = _svgEl('14', '14', '0 0 24 24');
+  s.classList.add('spinner');
+  s.append(_path('M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83'));
+  return s;
+}
+
+// ────────────────────────────────────────────────
+// CHART
+// ────────────────────────────────────────────────
+function buildChart(canvasId, products) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx    = canvas.getContext('2d');
+
+  const byDate = {};
+  products.forEach(p => {
+    const key = (safeText(p.date_sold) || 'Unknown').substring(0, 7);
+    if (!byDate[key]) byDate[key] = [];
+    const price = parseFloat(p.sale_price);
+    if (!isNaN(price)) byDate[key].push(price);
+  });
+
+  const labels = Object.keys(byDate).sort();
+  const data   = labels.map(k => {
+    const v = byDate[k];
+    return (v.reduce((a, b) => a + b, 0) / v.length).toFixed(2);
+  });
+
+  if (charts[canvasId]) charts[canvasId].destroy();
+  charts[canvasId] = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{ data, borderColor: '#1e90d4', backgroundColor: 'rgba(30,144,212,0.10)',
+        borderWidth: 2, pointRadius: 3, pointBackgroundColor: '#1e90d4', fill: true, tension: 0.4 }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: {
+        callbacks: { label: ctx => '$' + parseFloat(ctx.raw).toFixed(2) }
+      }},
+      scales: { x: { display: false }, y: { display: false } },
+    },
+  });
+}
+
+// ────────────────────────────────────────────────
+// BUILD CARD
+// ────────────────────────────────────────────────
+function buildCard(coin) {
+  const coinEntry = coinData[coin.id] || {};
+  const ebay      = coinEntry.ebay      || null;
+  const cx        = coinEntry.coinxchange || null;
+
+  const hasEbay = ebay && Array.isArray(ebay.products) && ebay.products.length > 0;
+  const avg     = hasEbay ? parseFloat(ebay.average_price) : null;
+  const minP    = hasEbay ? parseFloat(ebay.min_price)     : null;
+  const maxP    = hasEbay ? parseFloat(ebay.max_price)     : null;
+  const premium = calcPremium(avg, coin.mintPrice);
+  const premStr = premium !== null ? `${premium > 0 ? '+' : ''}${premium}%` : '';
+  const premCls = premium > 0 ? 'up' : (premium < 0 ? 'down' : '');
+
+  const card = el('div', 'coin-card');
+  card.id = `card-${coin.id}`;
+  card.dataset.series = coin.series;
+
+  // ── Header ──
+  const hdr = el('div', 'card-header');
+  const dot = el('div', 'series-dot');
+  dot.style.background = coin.color;
+
+  const tw = el('div');
+  tw.style.flex = '1';
+  tw.append(
+    el('div', 'card-title', coin.name),
+    el('div', 'card-meta', `${coin.denomination} · ${coin.year} · ${coin.mintage ? 'Mintage: ' + coin.mintage : 'Mintage: unknown'}`)
+  );
+  hdr.append(dot, tw);
+  if (coin.mintPrice) hdr.append(el('span', 'mint-price', `Mint $${coin.mintPrice}`));
+
+  // ── Body ──
+  const body = el('div', 'card-body');
+
+  // eBay stats
+  const statsRow = el('div', 'stats-row');
+
+  const avgBox = el('div', 'stat-box');
+  avgBox.append(el('div', 'stat-label', 'eBay Avg Sold'), el('div', 'stat-value', formatAUD(avg)));
+
+  const minBox = el('div', 'stat-box');
+  minBox.append(el('div', 'stat-label', 'eBay Min'), el('div', 'stat-value', formatAUD(minP)));
+
+  const thirdBox = el('div', 'stat-box');
+  const thirdLbl = coin.mintPrice ? 'Premium' : 'eBay Max';
+  const thirdVal = coin.mintPrice ? (premStr || formatAUD(maxP)) : formatAUD(maxP);
+  const tv       = el('div', 'stat-value', thirdVal);
+  if (premCls) tv.classList.add(premCls);
+  thirdBox.append(el('div', 'stat-label', thirdLbl), tv);
+
+  statsRow.append(avgBox, minBox, thirdBox);
+  body.append(statsRow);
+
+  // CoinXchange row (if data available)
+  if (cx && cx.average_price) {
+    const href = safeUrl(coin.cxUrl) || safeUrl(cx.search_url) || 'https://www.coinxchange.com.au/buy?search=bluey';
+    const cxRow = el('a', 'cx-row');
+    cxRow.href   = href;
+    cxRow.target = '_blank';
+    cxRow.rel    = 'noopener noreferrer';
+    cxRow.title  = 'View on CoinXchange';
+
+    const badge = el('span', 'cx-badge', 'CoinXchange');
+    const stats = el('div', 'cx-stats');
+
+    const avgStat = el('span', 'cx-stat');
+    avgStat.append(el('span', 'cx-lbl', 'Avg '), el('span', 'cx-val', formatAUD(cx.average_price)));
+
+    const minStat = el('span', 'cx-stat');
+    minStat.append(el('span', 'cx-lbl', 'Min '), el('span', 'cx-val', formatAUD(cx.min_price)));
+
+    if (cx.count) {
+      const cntStat = el('span', 'cx-stat');
+      cntStat.append(el('span', 'cx-val', String(cx.count)), el('span', 'cx-lbl', ' listings'));
+      stats.append(avgStat, minStat, cntStat);
+    } else {
+      stats.append(avgStat, minStat);
+    }
+
+    cxRow.append(badge, stats, el('span', 'cx-arrow', '↗'));
+    body.append(cxRow);
+  }
+
+  // Mini chart
+  if (hasEbay) {
+    const chartWrap = el('div', 'chart-wrap');
+    const canvas    = document.createElement('canvas');
+    canvas.id       = `chart-${coin.id}`;
+    chartWrap.append(canvas);
+    body.append(chartWrap);
+  }
+
+  // Where to Buy button
+  const buyBtn = el('button', 'buy-btn');
+  buyBtn.id = `buy-btn-${coin.id}`;
+  buyBtn.append(cartIcon(), document.createTextNode(' Where to Buy'));
+  buyBtn.addEventListener('click', () => handleBuyNow(coin.id, coin.keywords));
+  body.append(buyBtn);
+
+  // Last updated
+  const updParts = [];
+  if (ebay && ebay.fetchedAt) {
+    const d = new Date(ebay.fetchedAt * 1000);
+    updParts.push(`eBay: ${d.toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' })} · ${ebay.results || 0} sales`);
+  }
+  if (cx && cx.fetchedAt) {
+    const d = new Date(cx.fetchedAt * 1000);
+    updParts.push(`CX: ${d.toLocaleDateString('en-AU', { day:'numeric', month:'short' })}`);
+  }
+  if (updParts.length) {
+    body.append(el('div', 'last-updated', updParts.join('  ·  ')));
+  }
+
+  // Recent eBay sales toggle
+  if (hasEbay) {
+    const toggleBtn = el('button', 'toggle-sales', 'Show recent sales ▾');
+    const salesList = el('div', 'sales-list');
+    salesList.id = `sales-${coin.id}`;
+
+    toggleBtn.addEventListener('click', () => {
+      salesList.classList.toggle('open');
+      toggleBtn.textContent = salesList.classList.contains('open')
+        ? 'Hide recent sales ▴' : 'Show recent sales ▾';
+    });
+
+    salesList.append(el('div', 'sales-list-title', 'Recent eBay AU Sold'));
+    ebay.products.slice(0, 8).forEach(p => {
+      const row      = el('div', 'sale-row');
+      const raw      = safeText(p.title);
+      const short    = raw.length > 42 ? raw.substring(0, 42) + '…' : raw;
+      row.append(
+        el('span', 'sale-price', formatAUD(parseFloat(p.sale_price))),
+        el('span', 'sale-title', short),
+        el('span', 'sale-date',  safeText(p.date_sold))
+      );
+      const href = safeUrl(p.link);
+      if (href) {
+        const a = el('a', 'view-ebay', '↗');
+        a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer';
+        row.append(a);
+      }
+      salesList.append(row);
+    });
+
+    body.append(toggleBtn, salesList);
+  }
+
+  // Buy panel (populated on demand)
+  const buyPanel = el('div', 'buy-panel');
+  buyPanel.id = `buy-panel-${coin.id}`;
+  buyPanel.append(el('div', 'bp-title', 'Where to Buy'));
+  body.append(buyPanel);
+
+  card.append(hdr, body);
+  return card;
+}
+
+// ────────────────────────────────────────────────
+// BUY NOW HANDLER
+// ────────────────────────────────────────────────
+async function handleBuyNow(coinId, keywords) {
+  const btn   = document.getElementById(`buy-btn-${coinId}`);
+  const panel = document.getElementById(`buy-panel-${coinId}`);
+  if (!btn || !panel) return;
+
+  // Toggle off
+  if (panel.classList.contains('open')) {
+    panel.classList.remove('open');
+    btn.classList.remove('open');
+    while (btn.firstChild) btn.removeChild(btn.firstChild);
+    btn.append(cartIcon(), document.createTextNode(' Where to Buy'));
+    return;
+  }
+
+  // Open and show loading
+  panel.classList.add('open');
+  btn.classList.add('open');
+  while (btn.firstChild) btn.removeChild(btn.firstChild);
+  btn.append(spinnerIcon(), document.createTextNode(' Loading…'));
+  btn.disabled = true;
+
+  // Clear panel, show spinner
+  while (panel.childNodes.length > 1) panel.removeChild(panel.lastChild);
+  const loading = el('div', 'bp-loading');
+  loading.append(spinnerIcon(), document.createTextNode('Finding best prices…'));
+  panel.append(loading);
+
+  try {
+    const res = await fetch('/api/buy-options', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ coinId, keywords }),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    renderBuyOptions(panel, data.options || []);
+  } catch (err) {
+    while (panel.childNodes.length > 1) panel.removeChild(panel.lastChild);
+    panel.append(el('div', 'bp-note', 'Could not load retailer prices. Try again later.'));
+  }
+
+  // Reset button
+  btn.disabled = false;
+  while (btn.firstChild) btn.removeChild(btn.firstChild);
+  btn.append(cartIcon(), document.createTextNode(' Hide Options'));
+}
+
+// ────────────────────────────────────────────────
+// RENDER BUY OPTIONS
+// ────────────────────────────────────────────────
+function renderBuyOptions(panel, options) {
+  // Remove everything after the title
+  while (panel.childNodes.length > 1) panel.removeChild(panel.lastChild);
+
+  if (!options || options.length === 0) {
+    panel.append(el('div', 'bp-note', 'No retailer data found.'));
+    return;
+  }
+
+  options.forEach(opt => {
+    const row  = el('div', 'retailer-row');
+    const name = el('div', 'ret-name', safeText(opt.name));
+
+    // Name + optional subtitle (e.g. eBay item condition)
+    if (opt.subtitle) {
+      const sub = el('div', 'ret-sub', safeText(opt.subtitle));
+      name.append(sub);
+    }
+
+    // Price column
+    let priceEl;
+    if (!opt.link_only && opt.price != null) {
+      priceEl = el('span', 'ret-price', formatAUD(opt.price));
+    } else {
+      priceEl = el('span', 'ret-price link-only', 'Search');
+    }
+
+    // Stock badge (only for priced options)
+    const badge = el('span', 'ret-badge');
+    if (!opt.link_only && opt.price != null) {
+      if (opt.available !== false) {
+        badge.textContent = 'In Stock';
+        badge.classList.add('in');
+      } else {
+        badge.textContent = 'Out of Stock';
+        badge.classList.add('out');
+      }
+    }
+
+    // Link button
+    const href = safeUrl(opt.url);
+    const link = el('a', `ret-link ${opt.link_only ? 'search' : 'buy'}`,
+                    opt.link_only ? 'Search →' : 'Buy →');
+    if (href) {
+      link.href   = href;
+      link.target = '_blank';
+      link.rel    = 'noopener noreferrer';
+    } else {
+      link.style.visibility = 'hidden';
+    }
+
+    row.append(name, priceEl, badge, link);
+    panel.append(row);
+  });
+
+  panel.append(el('div', 'bp-note', 'Prices are scraped live and may vary. Refreshes every 24 h.'));
+}
+
+// ────────────────────────────────────────────────
+// GRID
+// ────────────────────────────────────────────────
+function renderGrid() {
+  const grid     = document.getElementById('coins-grid');
+  const filtered = activeSeries === 'all' ? COINS : COINS.filter(c => c.series === activeSeries);
+
+  while (grid.firstChild) grid.removeChild(grid.firstChild);
+  filtered.forEach(coin => grid.append(buildCard(coin)));
+
+  filtered.forEach(coin => {
+    const d = (coinData[coin.id] || {}).ebay;
+    if (d && d.products && d.products.length > 0) {
+      requestAnimationFrame(() => buildChart(`chart-${coin.id}`, d.products));
+    }
+  });
+}
+
+// ────────────────────────────────────────────────
+// TABS
+// ────────────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeSeries = btn.dataset.series;
+    renderGrid();
+  });
+});
+
+// ────────────────────────────────────────────────
+// INIT
+// ────────────────────────────────────────────────
+renderGrid();                              // show skeleton immediately
+loadPrices();                              // populate from backend cache
+setInterval(loadPrices, 5 * 60 * 1000);   // re-poll every 5 min
+</script>
+</body>
+</html>
