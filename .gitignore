@@ -26,3 +26,4 @@ attached_assets/
 # Replit / package (optional - low value for this pure-Python project)
 package.json
 package-lock.json
+.vercel
