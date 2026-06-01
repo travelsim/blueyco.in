@@ -569,11 +569,11 @@
   <div class="nav-inner">
     <a href="/" class="logo">Blueycoin</a>
     <nav class="nav-links">
-      <a href="#dashboard" class="active">Dashboard</a>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#shop" class="active">Shop Frames</a>
       <a href="#all-coins">All Coins</a>
       <a href="#price-guide">Price Guide</a>
       <a href="#missing">Missing Coins</a>
-      <a href="#blog">Blog</a>
     </nav>
     <div>
       <a href="#dashboard" class="btn-primary" style="padding:8px 20px; font-size:0.9rem;">Open Dashboard</a>
@@ -641,6 +641,82 @@
   <a href="#all-coins" style="color:var(--orange); font-weight:600;">Browse All 48 Coins →</a>
 </div>
 
+<!-- ============================================
+     BLUEYCOIN FRAMES SHOP (Revenue Feature)
+     ============================================ -->
+<section id="shop" class="section" style="max-width: 1200px;">
+  <div style="background: linear-gradient(135deg, var(--navy), #1e2937); color: white; padding: 60px 40px; border-radius: 24px; margin-bottom: 48px; text-align: center;">
+    <h2 style="font-size: 2.8rem; margin: 0 0 12px; font-weight: 700;">Display Your Collection Perfectly</h2>
+    <p style="font-size: 1.25rem; max-width: 620px; margin: 0 auto 24px; opacity: 0.9;">
+      Premium frames for every official Bluey coin — designed to showcase the coin in its original sealed packaging.
+    </p>
+    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+      <a href="#shop-grid" class="btn-primary" style="background: var(--orange);">Shop All Frames</a>
+      <a href="#bundles" style="background: rgba(255,255,255,0.1); color: white; padding: 14px 28px; border-radius: 9999px; text-decoration: none; font-weight: 600;">View Bundles</a>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; align-items: center;">
+    <select id="series-filter" onchange="filterFrames()" style="padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);">
+      <option value="">All Series</option>
+      <option value="series1">Series 1 (2024)</option>
+      <option value="series2">Series 2 (2025)</option>
+      <option value="series3">Series 3 (2026)</option>
+    </select>
+
+    <select id="type-filter" onchange="filterFrames()" style="padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);">
+      <option value="">All Types</option>
+      <option value="blister">Blister Pack</option>
+      <option value="proof">Proof Edition</option>
+      <option value="pnc">PNC / Card</option>
+      <option value="pin">Pin Cover</option>
+    </select>
+
+    <div style="margin-left: auto; font-weight: 600; color: var(--slate);">
+      <span id="frame-count">48</span> frames
+    </div>
+  </div>
+
+  <!-- Product Grid -->
+  <div id="shop-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px;">
+    <!-- Populated dynamically by JavaScript -->
+  </div>
+
+  <!-- Bundles -->
+  <div id="bundles" style="margin-top: 64px; padding-top: 48px; border-top: 1px solid var(--border);">
+    <h3 style="font-size: 1.75rem; margin-bottom: 24px;">Complete Your Set</h3>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+      <!-- Bundle 1 -->
+      <div style="border: 1px solid var(--border); border-radius: 16px; padding: 24px; background: white;">
+        <div style="font-weight: 700; font-size: 1.1rem;">Series 1 Complete Set</div>
+        <div style="color: var(--slate); margin: 8px 0 16px;">All 12 Series 1 Dollarbuck frames</div>
+        <div style="display: flex; align-items: baseline; gap: 8px;">
+          <span style="font-size: 2rem; font-weight: 800;">$799</span>
+          <span style="color: var(--slate); text-decoration: line-through;">$1,068</span>
+        </div>
+        <button onclick="addBundleToCart('s1')" class="btn-primary" style="width: 100%; margin-top: 16px; justify-content: center;">Add Bundle to Cart</button>
+      </div>
+
+      <!-- Bundle 2 -->
+      <div style="border: 1px solid var(--border); border-radius: 16px; padding: 24px; background: white;">
+        <div style="font-weight: 700; font-size: 1.1rem;">Full Collection (48 Frames)</div>
+        <div style="color: var(--slate); margin: 8px 0 16px;">Every official Bluey coin frame — the ultimate display</div>
+        <div style="display: flex; align-items: baseline; gap: 8px;">
+          <span style="font-size: 2rem; font-weight: 800;">$3,599</span>
+          <span style="color: var(--slate); text-decoration: line-through;">$4,512</span>
+        </div>
+        <button onclick="addBundleToCart('full')" class="btn-primary" style="width: 100%; margin-top: 16px; justify-content: center;">Add Full Collection</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 40px; text-align: center; font-size: 0.9rem; color: var(--slate);">
+    Free shipping on orders over $250 • 30-day returns • Handcrafted in Australia
+  </div>
+</section>
+
 <!-- Placeholder for All Coins section (will expand later) -->
 <section id="all-coins" class="section">
   <h2 class="section-title">All 48 Official Coins</h2>
@@ -648,6 +724,153 @@
 </section>
 
 <!-- The rest of the old tracker content is preserved below for now while we transition -->
+
+<!-- ============================================
+     FRAMES SHOP JAVASCRIPT
+     ============================================ -->
+<script>
+// Frame products derived from the 48-coin catalogue
+const FRAMES = (window.COINS || []).map((coin, index) => {
+  let type = 'blister';
+  if (coin.name.toLowerCase().includes('proof')) type = 'proof';
+  else if (coin.name.toLowerCase().includes('pnc')) type = 'pnc';
+  else if (coin.name.toLowerCase().includes('pin')) type = 'pin';
+
+  const price = 89 + (coin.rarity > 6 ? 10 : 0);
+
+  return {
+    id: `frame-${coin.id}`,
+    coinId: coin.id,
+    name: `${coin.name} Display Frame`,
+    series: coin.series || 'series3',
+    type: type,
+    price: price,
+    image: `/frames/${coin.id}.jpg`,   // Placeholder path - replace with real images
+    inStock: true
+  };
+});
+
+// Simple cart state
+let cart = [];
+
+function addToCart(frameId) {
+  const frame = FRAMES.find(f => f.id === frameId);
+  if (!frame) return;
+
+  cart.push(frame);
+  updateCartCount();
+  alert(`Added "${frame.name}" to cart ($${frame.price})`);
+}
+
+function addBundleToCart(bundleType) {
+  if (bundleType === 's1') {
+    const s1Frames = FRAMES.filter(f => f.series === 'series1');
+    cart = cart.concat(s1Frames);
+    alert(`Added Series 1 Complete Bundle (12 frames) — $${799}`);
+  } else if (bundleType === 'full') {
+    cart = cart.concat(FRAMES);
+    alert(`Added Full Collection Bundle (48 frames) — $${3599}`);
+  }
+  updateCartCount();
+}
+
+function updateCartCount() {
+  // For now, just console log. In a real build we'd show a cart icon count.
+  console.log('Cart items:', cart.length);
+}
+
+function filterFrames() {
+  const seriesVal = document.getElementById('series-filter').value;
+  const typeVal = document.getElementById('type-filter').value;
+
+  const grid = document.getElementById('shop-grid');
+  if (!grid) return;
+
+  grid.innerHTML = '';
+
+  const filtered = FRAMES.filter(frame => {
+    const seriesMatch = !seriesVal || frame.series === seriesVal;
+    const typeMatch = !typeVal || frame.type === typeVal;
+    return seriesMatch && typeMatch;
+  });
+
+  document.getElementById('frame-count').textContent = filtered.length;
+
+  filtered.forEach(frame => {
+    const card = document.createElement('div');
+    card.style.cssText = 'background:white; border:1px solid var(--border); border-radius:16px; overflow:hidden; display:flex; flex-direction:column;';
+    card.innerHTML = `
+      <div style="height:180px; background:#f1f5f9; display:flex; align-items:center; justify-content:center; position:relative;">
+        <div style="text-align:center; color:#64748b; font-size:0.85rem;">
+          <div style="font-size:2rem; margin-bottom:4px;">🖼️</div>
+          <div>${frame.name.split(' ')[0]} Frame</div>
+          <div style="font-size:0.7rem; margin-top:4px;">(Image coming soon)</div>
+        </div>
+      </div>
+      <div style="padding:16px; flex:1; display:flex; flex-direction:column;">
+        <div style="font-weight:600; font-size:0.95rem; line-height:1.3;">${frame.name}</div>
+        <div style="margin-top:4px; font-size:0.8rem; color:#64748b;">${frame.series.toUpperCase()} • ${frame.type}</div>
+        
+        <div style="margin-top:auto; display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <span style="font-size:1.35rem; font-weight:800;">$${frame.price}</span>
+          </div>
+          <button onclick="addToCart('${frame.id}')" 
+                  style="background:var(--orange); color:white; border:none; padding:8px 16px; border-radius:999px; font-weight:600; cursor:pointer; font-size:0.85rem;">
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// Initialize shop when DOM is ready
+function initShop() {
+  const grid = document.getElementById('shop-grid');
+  if (!grid || !window.COINS) return;
+
+  // Render all frames initially
+  grid.innerHTML = '';
+  document.getElementById('frame-count').textContent = FRAMES.length;
+
+  FRAMES.forEach(frame => {
+    const card = document.createElement('div');
+    card.style.cssText = 'background:white; border:1px solid var(--border); border-radius:16px; overflow:hidden; display:flex; flex-direction:column;';
+    card.innerHTML = `
+      <div style="height:180px; background:#f1f5f9; display:flex; align-items:center; justify-content:center; position:relative;">
+        <div style="text-align:center; color:#64748b; font-size:0.85rem;">
+          <div style="font-size:2rem; margin-bottom:4px;">🖼️</div>
+          <div>${frame.name.split(' ')[0]} Frame</div>
+          <div style="font-size:0.7rem; margin-top:4px;">(Image coming soon)</div>
+        </div>
+      </div>
+      <div style="padding:16px; flex:1; display:flex; flex-direction:column;">
+        <div style="font-weight:600; font-size:0.95rem; line-height:1.3;">${frame.name}</div>
+        <div style="margin-top:4px; font-size:0.8rem; color:#64748b;">${frame.series.toUpperCase()} • ${frame.type}</div>
+        
+        <div style="margin-top:auto; display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <span style="font-size:1.35rem; font-weight:800;">$${frame.price}</span>
+          </div>
+          <button onclick="addToCart('${frame.id}')" 
+                  style="background:var(--orange); color:white; border:none; padding:8px 16px; border-radius:999px; font-weight:600; cursor:pointer; font-size:0.85rem;">
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('shop-grid')) {
+    initShop();
+  }
+});
+</script>
 
 <script>
 // =============================================
