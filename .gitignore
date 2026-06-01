@@ -14,3 +14,15 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+# Virtual environments
+.venv/
+venv/
+
+# Agent / temp artifacts (push-ready noise)
+attached_assets/
+.local/
+
+# Replit / package (optional - low value for this pure-Python project)
+package.json
+package-lock.json

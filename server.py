@@ -76,6 +76,15 @@ COINS = [
     {'id': 's3_granny',     'ebay_kw': '2026 $2 Bluey Granny Mobile privy mark uncirculated',   'search': '2026 Bluey Granny Mobile privy mark'},
     {'id': 's3_till_bluey', 'ebay_kw': '2026 $2 Bluey coloured till coin circulation',          'search': '2026 Bluey till coin'},
     {'id': 's3_till_bingo', 'ebay_kw': '2026 $2 Bingo coloured till coin circulation',          'search': '2026 Bingo till coin'},
+    {'id': 's3_fruitbat',   'ebay_kw': '2026 $2 Bluey Fruit Bat privy mark uncirculated coin',   'search': '2026 Bluey Fruit Bat privy mark'},
+    {'id': 's3_unicorn',    'ebay_kw': '2026 $2 Bluey Unicorn privy mark uncirculated coin',    'search': '2026 Bluey Unicorn privy mark'},
+    {'id': 's3_dragon',     'ebay_kw': '2026 $2 Bluey Dragon privy mark uncirculated coin',     'search': '2026 Bluey Dragon privy mark'},
+    {'id': 's3_space',      'ebay_kw': '2026 $2 Bluey Space privy mark uncirculated coin',      'search': '2026 Bluey Space privy mark'},
+    {'id': 's3_pirate',     'ebay_kw': '2026 $2 Bluey Pirate privy mark uncirculated coin',     'search': '2026 Bluey Pirate privy mark'},
+    {'id': 's3_superhero',  'ebay_kw': '2026 $2 Bluey Superhero privy mark uncirculated coin',  'search': '2026 Bluey Superhero privy mark'},
+    {'id': 's3_mermaid',    'ebay_kw': '2026 $2 Bluey Mermaid privy mark uncirculated coin',    'search': '2026 Bluey Mermaid privy mark'},
+    {'id': 's3_robot',      'ebay_kw': '2026 $2 Bluey Robot privy mark uncirculated coin',      'search': '2026 Bluey Robot privy mark'},
+
     # ── Series 1 tube-set privy mark coins (new) ──
     {'id': 's1_mumdad',      'ebay_kw': '2024 $1 Bluey Mum & Dad Dollarbuck tube set unc',         'search': '2024 Bluey Mum and Dad tube set'},
     {'id': 's1_muffinsocks', 'ebay_kw': '2024 $1 Bluey Muffin & Socks Dollarbuck tube set unc',    'search': '2024 Bluey Muffin Socks tube set'},
