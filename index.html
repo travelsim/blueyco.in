@@ -575,8 +575,14 @@
       <a href="#price-guide">Price Guide</a>
       <a href="#missing">Missing Coins</a>
     </nav>
-    <div>
-      <a href="#dashboard" class="btn-primary" style="padding:8px 20px; font-size:0.9rem;">Open Dashboard</a>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <a href="#shop" class="btn-primary" style="padding:8px 20px; font-size:0.9rem;">Shop Frames</a>
+      
+      <!-- Cart Icon -->
+      <div onclick="showCart()" style="position: relative; cursor: pointer; color: white; font-size: 1.1rem;">
+        🛒
+        <span id="cart-count" style="position: absolute; top: -6px; right: -6px; background: var(--orange); color: white; font-size: 0.65rem; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">0</span>
+      </div>
     </div>
   </div>
 </header>
@@ -602,6 +608,7 @@
       <div>
         <div class="dashboard-title">My Collection Dashboard</div>
         <div style="opacity:0.7; font-size:0.9rem;">Track ownership • Live value • Wish list</div>
+        <button onclick="frameOwnedCoins()" style="margin-top:8px; background:var(--orange); color:white; border:none; padding:6px 14px; border-radius:999px; font-size:0.8rem; cursor:pointer;">🖼️ Frame the ones I own</button>
       </div>
 
       <div class="dashboard-stats">
@@ -713,9 +720,72 @@
   </div>
 
   <div style="margin-top: 40px; text-align: center; font-size: 0.9rem; color: var(--slate);">
-    Free shipping on orders over $250 • 30-day returns • Handcrafted in Australia
+    Free shipping on orders over $250 • 30-day returns • Handcrafted in Australia<br>
+    <a href="#" onclick="showDesignModal(); return false;" style="color: var(--orange); font-weight: 600;">Need a custom frame for a coin we don't have yet? Design to order →</a>
   </div>
 </section>
+
+<!-- Cart Drawer -->
+<div id="cart-drawer" style="position: fixed; top: 0; right: -400px; width: 380px; height: 100vh; background: white; box-shadow: -10px 0 30px rgba(0,0,0,0.15); z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; border-left: 1px solid var(--border);">
+  <div style="padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--navy); color: white;">
+    <div style="font-weight: 700; font-size: 1.2rem;">Your Cart</div>
+    <button onclick="hideCart()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">×</button>
+  </div>
+  
+  <div id="cart-items" style="flex: 1; overflow-y: auto; padding: 16px;">
+    <!-- Cart items populated by JS -->
+  </div>
+  
+  <div style="padding: 20px; border-top: 1px solid var(--border); background: #f8fafc;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-weight: 600;">
+      <div>Total</div>
+      <div id="cart-total">$0</div>
+    </div>
+    
+    <button onclick="checkout()" style="width: 100%; padding: 14px; background: var(--orange); color: white; border: none; border-radius: 999px; font-weight: 700; font-size: 1rem; cursor: pointer;">
+      Proceed to Checkout
+    </button>
+    
+    <div style="text-align: center; font-size: 0.75rem; color: var(--slate); margin-top: 12px;">
+      or <span onclick="hideCart()" style="color: var(--orange); cursor: pointer;">continue shopping</span>
+    </div>
+  </div>
+</div>
+
+<!-- Design to Order Modal -->
+<div id="design-modal" onclick="if (event.target.id === 'design-modal') hideDesignModal()" style="display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.7); z-index: 250; align-items: center; justify-content: center;">
+  <div onclick="event.stopImmediatePropagation()" style="background: white; width: 100%; max-width: 480px; margin: 20px; border-radius: 20px; padding: 32px;">
+    <h3 style="margin: 0 0 8px; font-size: 1.5rem;">Design to Order</h3>
+    <p style="color: var(--slate); margin-bottom: 24px;">Can't find the exact frame you need? Tell us about the coin or packaging you'd like framed.</p>
+    
+    <form id="design-form" onsubmit="submitDesignRequest(event)">
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">Coin / Packaging Description</label>
+        <input type="text" id="design-coin" required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px;" placeholder="e.g. 2026 Bluey Space Privy Mark in special folder">
+      </div>
+      
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">Your Name</label>
+        <input type="text" id="design-name" required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px;">
+      </div>
+      
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">Email</label>
+        <input type="email" id="design-email" required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px;">
+      </div>
+      
+      <div style="margin-bottom: 24px;">
+        <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">Additional Notes</label>
+        <textarea id="design-notes" rows="3" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px;" placeholder="Any special requirements..."></textarea>
+      </div>
+      
+      <div style="display: flex; gap: 12px;">
+        <button type="button" onclick="hideDesignModal()" style="flex: 1; padding: 12px; border: 1px solid var(--border); background: white; border-radius: 999px; font-weight: 600;">Cancel</button>
+        <button type="submit" style="flex: 1; padding: 12px; background: var(--navy); color: white; border: none; border-radius: 999px; font-weight: 600;">Submit Request</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <!-- Placeholder for All Coins section (will expand later) -->
 <section id="all-coins" class="section">
@@ -870,6 +940,118 @@ document.addEventListener('DOMContentLoaded', () => {
     initShop();
   }
 });
+
+// =============================================
+// CART DRAWER + CHECKOUT
+// =============================================
+
+function updateCartUI() {
+  const container = document.getElementById('cart-items');
+  const totalEl = document.getElementById('cart-total');
+  const countEl = document.getElementById('cart-count');
+
+  if (!container || !totalEl) return;
+
+  container.innerHTML = '';
+
+  let total = 0;
+
+  if (cart.length === 0) {
+    container.innerHTML = `<div style="padding: 40px 20px; text-align: center; color: var(--slate);">Your cart is empty.</div>`;
+  } else {
+    cart.forEach((item, index) => {
+      total += item.price;
+
+      const div = document.createElement('div');
+      div.style.cssText = 'display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--border);';
+      div.innerHTML = `
+        <div style="flex:1;">
+          <div style="font-weight:600; font-size:0.95rem;">${item.name}</div>
+          <div style="font-size:0.8rem; color:var(--slate);">${item.series.toUpperCase()}</div>
+        </div>
+        <div style="text-align:right; white-space:nowrap;">
+          <div style="font-weight:700;">$${item.price}</div>
+          <button onclick="removeFromCart(${index})" style="background:none; border:none; color:#ef4444; font-size:0.75rem; cursor:pointer; margin-top:4px;">Remove</button>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  totalEl.textContent = '$' + total;
+  if (countEl) countEl.textContent = cart.length;
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  updateCartUI();
+  updateCartCount();
+}
+
+function showCart() {
+  const drawer = document.getElementById('cart-drawer');
+  if (!drawer) return;
+  drawer.style.right = '0';
+  updateCartUI();
+}
+
+function hideCart() {
+  const drawer = document.getElementById('cart-drawer');
+  if (drawer) drawer.style.right = '-400px';
+}
+
+function updateCartCount() {
+  const countEl = document.getElementById('cart-count');
+  if (countEl) countEl.textContent = cart.length;
+}
+
+function checkout() {
+  if (cart.length === 0) return;
+  
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  
+  hideCart();
+  
+  setTimeout(() => {
+    alert(`Thank you! Your order for $${total} has been placed.\n\nIn a real deployment this would open Stripe Checkout.`);
+    cart = [];
+    updateCartCount();
+  }, 300);
+}
+
+// =============================================
+// DESIGN TO ORDER MODAL
+// =============================================
+
+function showDesignModal() {
+  const modal = document.getElementById('design-modal');
+  if (modal) modal.style.display = 'flex';
+}
+
+function hideDesignModal() {
+  const modal = document.getElementById('design-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+function submitDesignRequest(e) {
+  e.preventDefault();
+  
+  const coin = document.getElementById('design-coin').value;
+  const name = document.getElementById('design-name').value;
+  const email = document.getElementById('design-email').value;
+  
+  hideDesignModal();
+  
+  setTimeout(() => {
+    alert(`Thank you, ${name}! \n\nWe've received your request for a custom frame for "${coin}".\n\nOur team will email you at ${email} within 48 hours with pricing and options.`);
+    
+    // Reset form
+    document.getElementById('design-form').reset();
+  }, 200);
+}
+
+// Make design modal accessible from shop
+window.showDesignModal = showDesignModal;
 </script>
 
 <script>
@@ -970,6 +1152,21 @@ function resetCollection() {
     saveCollection();
     renderDashboard();
   }
+}
+
+function frameOwnedCoins() {
+  // Switch to shop and pre-filter to owned coins
+  document.getElementById('shop').scrollIntoView({ behavior: 'smooth' });
+  
+  setTimeout(() => {
+    // For now, alert with suggestion. In future we could filter the grid.
+    const owned = Object.keys(collection).filter(id => collection[id]);
+    if (owned.length > 0) {
+      alert(`Great choice! You own ${owned.length} coins.\n\nWe've highlighted frames for your collection in the shop below. (Advanced filtering coming soon)`);
+    } else {
+      alert('Start checking off coins you own in the Dashboard above, then come back here to frame them!');
+    }
+  }, 800);
 }
 
 // Initialize dashboard when DOM is ready
