@@ -97,5 +97,92 @@
   },
   "s1_bingofriends": {
     "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+Bingo+and+Friends+coin&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+
+  // --- New coins from final 48-coin catalogue ---
+  "s1_bandit": {
+    "ramint": { "price": 5.00, "available": true, "url": "https://eshop.ramint.gov.au/" },
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+Dollarbuck+Bandit&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s1_chilli": {
+    "ramint": { "price": 5.00, "available": true, "url": "https://eshop.ramint.gov.au/" },
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+Dollarbuck+Chilli&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s1_muffin": {
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+Dollarbuck+Muffin&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s1_socks": {
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+Dollarbuck+Socks&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s1_nana": {
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+Dollarbuck+Nana&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s1_bob_bilby": {
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+Dollarbuck+Bob+Bilby&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s1_lucky": {
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+Dollarbuck+Lucky&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s1_rusty": {
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+Dollarbuck+Rusty&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s1_coloured_insert_variant": {
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+Coloured+Insert+Variant&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+
+  "s3_rain_privy": {
+    "ramint": { "price": 20.00, "available": true, "url": "https://eshop.ramint.gov.au/2026-2-bluey-2-rain-privy-mark-uncirculated-coin/112483/" },
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Rain+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s3_sleepytime_privy": {
+    "ramint": { "price": 20.00, "available": true, "url": "https://eshop.ramint.gov.au/2026-2-bluey-2-sleepytime-privy-mark-uncirculated-coin/112484/" },
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Sleepytime+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s3_camping_privy": {
+    "ramint": { "price": 20.00, "available": true, "url": "https://eshop.ramint.gov.au/2026-2-bluey-2-camping-privy-mark-uncirculated-coin/112485/" },
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Camping+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s3_babyrace_privy": {
+    "ramint": { "price": 20.00, "available": true, "url": "https://eshop.ramint.gov.au/2026-2-bluey-2-baby-race-privy-mark-uncirculated-coin/112486/" },
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Baby+Race+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s3_granny_privy": {
+    "ramint": { "price": 20.00, "available": true, "url": "https://eshop.ramint.gov.au/2026-2-bluey-2-granny-mobile-privy-mark-uncirculated-coin/112487/" },
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Granny+Mobile+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s3_heeler_family_privy": {
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Heeler+Family+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s3_proof_silv_uncoloured": {
+    "ramint": { "price": 95.00, "available": true, "url": "https://eshop.ramint.gov.au/" },
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+silver+proof+uncoloured&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s3_sleepytime_insert": {
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Sleepytime+Coloured+Insert&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+
+  "s3_pnc_bandit": {
+    "auspost": { "price": null, "available": true, "url": "https://auspost.com.au/shop/search?SearchTerm=Bandit+PNC" },
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Bandit+PNC&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s3_pnc_chilli": {
+    "auspost": { "price": null, "available": true, "url": "https://auspost.com.au/shop/search?SearchTerm=Chilli+PNC" },
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Chilli+PNC&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+
+  "s3_pin_bluey": {
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=Bluey+Pin+Cover+2026&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s3_pin_bingo": {
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=Bingo+Pin+Cover+2026&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s3_pin_bandit": {
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=Bandit+Pin+Cover+2026&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s3_pin_chilli": {
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=Chilli+Pin+Cover+2026&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s3_pin_muffin": {
+    "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=Muffin+Pin+Cover+2026&LH_Sold=1&LH_Complete=1&_sop=15" }
   }
 }

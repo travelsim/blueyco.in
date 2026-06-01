@@ -166,6 +166,9 @@
     font-weight: 700;
     white-space: nowrap;
   }
+  .card-meta2 { font-size: 0.72rem; color: var(--muted); margin-top: 4px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .rarity { background: #fff3cd; color: #856404; padding: 1px 6px; border-radius: 4px; font-weight: 600; }
+  .market-range { background: #d4edda; color: #155724; padding: 1px 6px; border-radius: 4px; font-weight: 600; }
 
   .card-body { padding: 14px 18px; }
 
@@ -573,6 +576,20 @@ function buildCard(coin) {
   );
   hdr.append(dot, tw);
   if (coin.mintPrice) hdr.append(el('span', 'mint-price', `Mint $${coin.mintPrice}`));
+
+  // Rarity + Market range (new rich data)
+  if (coin.rarity != null || (coin.marketLow != null && coin.marketHigh != null)) {
+    const meta2 = el('div', 'card-meta2');
+    if (coin.rarity != null) {
+      const r = el('span', 'rarity', `Rarity ${coin.rarity}`);
+      meta2.append(r);
+    }
+    if (coin.marketLow != null && coin.marketHigh != null) {
+      const m = el('span', 'market-range', `Market $${coin.marketLow}–$${coin.marketHigh}`);
+      meta2.append(m);
+    }
+    hdr.append(meta2);
+  }
 
   // ── Body ──
   const body = el('div', 'card-body');
