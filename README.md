@@ -1,31 +1,30 @@
-# Bluey Coin Tracker
+## Bluey Coin Tracker
 
 Royal Australian Mint Bluey coins — eBay sold prices + retailer links.
 
-## Vercel Static Deployment (recommended)
+This is the **static Vercel** version of the tracker.
 
-This repo is now set up for easy static deployment on Vercel:
+### Deployment
 
-1. Go to [vercel.com/new](https://vercel.com/new)
-2. Import this GitHub repository (`blueycoin`)
-3. Vercel will automatically detect it as a static site (thanks to `vercel.json`)
-4. Deploy
+Deployed as a pure static site on Vercel:
 
-The site loads data directly from:
-- `ebay_cache.json` (eBay sold prices)
-- `retailer_prices.json` (manual retailer overrides / search links)
+1. The site is served directly from this repo.
+2. Data comes from two JSON files:
+   - `ebay_cache.json` — Recent eBay AU sold prices
+   - `retailer_prices.json` — Manual retailer prices and buy links
 
-## Updating the data
+### Updating Prices
 
-To refresh prices:
-- Run your scraper / update the JSON files locally
-- Commit and push the updated `ebay_cache.json` (and optionally `retailer_prices.json`)
-- Vercel will redeploy automatically
+To refresh the data:
 
-## Original Python backend
+1. Update `ebay_cache.json` and/or `retailer_prices.json` locally
+2. Commit and push
+3. Vercel will automatically redeploy
 
-The original `server.py` + live scraping is still in the repo if you want to run it elsewhere (Railway, Render, VPS, etc.).
+The full dynamic Python scraper (live fetching + background server) lives in the separate `blueyco.in` repository and is kept untouched.
 
-## UI
+### Tech
 
-Simplified clean card UI (closer to the previous blueyco.in style) for fast static hosting.
+- Pure static HTML + vanilla JavaScript
+- Hosted on Vercel
+- No backend required for viewing prices
