@@ -9,7 +9,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Comic+Neue:wght@700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Comic+Neue:wght@700&family=Fredoka:wght@400;600;700&display=swap');
 
     :root {
       --bluey-blue: #1E90D4;
@@ -19,50 +19,78 @@
       --bluey-pink: #E84855;
       --bg-cream: #FDF6E3;
       --text-dark: #1E3A5F;
+      --card-border: #D4C3A3;
     }
 
     body {
-      font-family: 'Nunito', system_ui, sans-serif;
+      font-family: 'Fredoka', 'Nunito', system_ui, sans-serif;
     }
 
     .bluey-title {
-      font-family: 'Comic Neue', 'Nunito', cursive;
+      font-family: 'Comic Neue', 'Fredoka', 'Nunito', cursive;
       font-weight: 700;
-      letter-spacing: -1.5px;
+      letter-spacing: -2px;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.08);
     }
 
     .bluey-card {
       background: white;
-      border-radius: 20px;
-      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
+      border: 4px solid var(--card-border);
+      border-radius: 24px;
+      box-shadow: 0 12px 20px -4px rgb(0 0 0 / 0.12), 0 6px 8px -4px rgb(0 0 0 / 0.1), inset 0 1px 0 rgba(255,255,255,0.8);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s, border-color 0.2s;
+      overflow: hidden;
     }
 
     .bluey-card:hover {
-      transform: translateY(-4px) scale(1.01);
-      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+      transform: translateY(-6px) scale(1.015);
+      box-shadow: 0 25px 35px -8px rgb(0 0 0 / 0.15), 0 10px 12px -6px rgb(0 0 0 / 0.1);
+      border-color: #1E90D4;
+    }
+
+    .bluey-card.coin-card {
+      border-width: 5px;
+      background: linear-gradient(145deg, #fff, #FDF6E3);
     }
 
     .section-header {
-      font-family: 'Comic Neue', 'Nunito', cursive;
+      font-family: 'Comic Neue', 'Fredoka', 'Nunito', cursive;
       font-weight: 700;
       color: #1E3A5F;
+      position: relative;
+    }
+
+    .section-header:after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(to right, var(--bluey-orange), var(--bluey-teal));
+      border-radius: 2px;
     }
 
     .bluey-button {
-      background: #F47E3C;
+      background: linear-gradient(145deg, #F47E3C, #E36A2A);
       color: white;
       font-weight: 700;
-      padding: 12px 24px;
+      padding: 14px 28px;
       border-radius: 9999px;
-      transition: all 0.2s;
-      box-shadow: 0 4px 6px -1px rgb(244 126 60 / 0.3);
+      transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 6px 0 #C45A22, 0 8px 15px -3px rgb(244 126 60 / 0.4);
+      border: 3px solid #fff;
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.15);
     }
 
     .bluey-button:hover {
-      background: #E36A2A;
-      transform: translateY(-2px);
-      box-shadow: 0 10px 15px -3px rgb(244 126 60 / 0.4);
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 8px 0 #C45A22, 0 15px 20px -4px rgb(244 126 60 / 0.45);
+    }
+
+    .bluey-button:active {
+      transform: translateY(1px);
+      box-shadow: 0 3px 0 #C45A22;
     }
 
     .nav-active {
@@ -74,53 +102,95 @@
     .nav-active:after {
       content: '';
       position: absolute;
-      bottom: -2px;
+      bottom: -3px;
       left: 0;
       right: 0;
-      height: 3px;
-      background: #1E90D4;
+      height: 4px;
+      background: linear-gradient(to right, #1E90D4, #2EC4B6);
       border-radius: 3px;
     }
 
     .coin-badge {
       background: linear-gradient(145deg, #1E90D4, #0F6BB3);
       color: white;
-      font-weight: 700;
-      padding: 2px 10px;
+      font-weight: 800;
+      padding: 3px 12px;
       border-radius: 9999px;
       font-size: 0.7rem;
-      box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+      box-shadow: 0 3px 0 #0A4F80, 0 2px 4px rgb(0 0 0 / 0.15);
+      border: 2px solid #fff;
+      letter-spacing: 0.5px;
     }
 
     .frame-preview {
-      background: linear-gradient(135deg, #f8fafc, #e0e7ff);
-      border: 12px solid #3C2F2F;
-      box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25), inset 0 0 0 1px rgba(255,255,255,0.6);
+      background: #f8f1e3;
+      border: 14px solid #3C2F2F;
+      box-shadow: 0 30px 60px -15px rgb(0 0 0 / 0.35), inset 0 0 0 8px #E8D9B8, inset 0 0 0 12px #fff, 0 0 0 2px #3C2F2F;
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .frame-preview:before {
+      content: '';
+      position: absolute;
+      inset: 12px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.35) 0%, transparent 50%, rgba(0,0,0,0.08) 100%);
+      pointer-events: none;
     }
 
     .frame-preview.light { border-color: #D4C3A3; }
-    .frame-preview.blue { border-color: #1E90D4; }
+    .frame-preview.blue { border-color: #1E90D4; box-shadow: 0 30px 60px -15px rgb(0 0 0 / 0.35), inset 0 0 0 8px #B8D4F0, inset 0 0 0 12px #fff; }
     .frame-preview.orange { border-color: #F47E3C; }
 
     .premium-badge {
       background: linear-gradient(90deg, #1E90D4, #2EC4B6);
       color: white;
       font-size: 10px;
-      padding: 1px 10px;
+      padding: 2px 12px;
       border-radius: 999px;
-      letter-spacing: 0.5px;
-    }
-
-    .mob-copy {
-      font-style: italic;
-      color: #4A6B8A;
+      letter-spacing: 1px;
+      font-weight: 800;
+      box-shadow: 0 2px 4px rgb(0 0 0 / 0.15);
     }
 
     .stat-number {
-      font-family: 'Comic Neue', 'Nunito', cursive;
+      font-family: 'Comic Neue', 'Fredoka', 'Nunito', cursive;
       font-weight: 700;
       line-height: 1;
+      text-shadow: 3px 3px 0 rgba(30, 144, 212, 0.15);
+    }
+
+    .comic-border {
+      border: 5px solid #1E3A5F;
+      box-shadow: 6px 6px 0 #1E3A5F;
+    }
+
+    .coin-illustration {
+      width: 72px;
+      height: 72px;
+      background: radial-gradient(circle at 35% 30%, #fff 0%, #F9D74A 35%, #F47E3C 70%, #1E3A5F 100%);
+      border-radius: 999px;
+      border: 5px solid #1E3A5F;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Comic Neue', cursive;
+      font-weight: 700;
+      color: #1E3A5F;
+      font-size: 13px;
+      box-shadow: inset 0 8px 12px rgba(255,255,255,0.6), inset 0 -8px 12px rgba(0,0,0,0.25), 0 4px 0 #1E3A5F;
+      position: relative;
+    }
+
+    .coin-illustration:after {
+      content: 'B';
+      font-size: 28px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -45%);
+      text-shadow: 1px 1px 0 #fff;
     }
   </style>
 </head>
@@ -190,29 +260,35 @@
 
   <!-- Hero + Public Explorer (always visible - blueyco.in public face) -->
   <header class="max-w-screen-xl mx-auto px-5 pt-10 pb-8">
-    <div class="max-w-2xl">
-      <div class="inline-flex items-center gap-2 bg-white px-4 py-1 rounded-3xl shadow-sm mb-5 text-sm">
+    <div class="max-w-3xl">
+      <div class="inline-flex items-center gap-2 bg-white px-4 py-1 rounded-3xl shadow-sm mb-5 text-sm border-2 border-[#E8D9B8]">
         <div class="w-2 h-2 bg-[#2EC4B6] rounded-full animate-pulse"></div>
         <span class="font-bold text-[#1E3A5F]">2026 Series 3 + Rain Privy now live</span>
       </div>
 
-      <h1 class="bluey-title text-6xl sm:text-7xl md:text-8xl font-black leading-[0.9] tracking-[-4.5px] text-[#1E3A5F]">
+      <div class="flex items-center gap-4 mb-2">
+        <div class="coin-illustration" style="width:64px;height:64px;font-size:11px">BLUEY</div>
+        <div class="coin-illustration" style="width:64px;height:64px;background:radial-gradient(circle at 35% 30%, #fff 0%, #1E90D4 35%, #0F6BB3 70%, #1E3A5F 100%);font-size:11px;color:#fff">BINGO</div>
+        <div class="coin-illustration" style="width:64px;height:64px;background:radial-gradient(circle at 35% 30%, #fff 0%, #F9D74A 35%, #E84855 70%, #1E3A5F 100%);font-size:10px">RAIN</div>
+      </div>
+
+      <h1 class="bluey-title text-6xl sm:text-7xl md:text-[5.5rem] font-black leading-[0.86] tracking-[-5.5px] text-[#1E3A5F]">
         For real life.<br>
         <span class="text-[#1E90D4]">Bluey coins.</span>
       </h1>
 
-      <p class="mt-5 max-w-md text-xl text-[#4A6B8A]">
+      <p class="mt-4 max-w-md text-xl text-[#4A6B8A]">
         Track what your coins are actually worth. Build a collection the kids will still love in 20 years. 
         And when the time is right — frame them like they deserve.
       </p>
 
-      <div class="mt-7 flex flex-wrap gap-3">
+      <div class="mt-6 flex flex-wrap gap-3">
         <button onclick="showSignupModal()" 
                 class="bluey-button flex items-center gap-3 px-8 py-4 text-lg font-extrabold">
           <span>Start my collection — free</span>
         </button>
         <button onclick="document.getElementById('explorer').scrollIntoView({behavior:'smooth'})" 
-                class="flex items-center gap-3 px-6 py-4 text-lg font-bold border border-[#E8D9B8] rounded-3xl hover:bg-white transition-colors">
+                class="flex items-center gap-3 px-6 py-4 text-lg font-bold border-2 border-[#E8D9B8] rounded-3xl hover:bg-white transition-colors">
           See live values
         </button>
       </div>
@@ -372,11 +448,9 @@
     </div>
   </footer>
 
-  <!-- ============ APP VIEW OVERLAY (the full collect/value experience when logged in) ============ -->
+  <!-- APP VIEW OVERLAY -->
   <div id="app-view" class="hidden fixed inset-0 bg-black/70 z-[200] flex items-center justify-center p-3 md:p-6">
     <div class="bg-[#FDF6E3] w-full max-w-screen-xl rounded-3xl shadow-2xl overflow-hidden max-h-[94vh] flex flex-col">
-      
-      <!-- App Header -->
       <div class="bg-white border-b border-[#E8D9B8] px-6 py-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
           <div class="flex items-center gap-2">
@@ -386,7 +460,6 @@
           <span class="text-xs px-3 py-px bg-[#E8D9B8] rounded-full font-bold text-[#1E3A5F]">COLLECT APP</span>
           <span class="text-xs text-[#2EC4B6] font-bold hidden sm:inline">• will be collect.blueyco.in</span>
         </div>
-        
         <div class="flex items-center gap-3">
           <div class="hidden sm:flex items-center text-sm font-semibold">
             <span id="app-user-name"></span>
@@ -395,7 +468,6 @@
         </div>
       </div>
 
-      <!-- Portfolio Header -->
       <div class="px-6 pt-6 pb-4 bg-gradient-to-b from-white/70">
         <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-y-2">
           <div>
@@ -409,22 +481,14 @@
         </div>
       </div>
 
-      <!-- App Tabs -->
       <div class="px-6 border-b border-[#E8D9B8] bg-white flex gap-1 overflow-x-auto">
-        <button onclick="switchAppTab('collection')" id="tab-collection"
-                class="app-tab px-5 py-3 text-sm font-bold border-b-2 border-[#1E90D4] text-[#1E90D4]">My Collection</button>
-        <button onclick="switchAppTab('wishlist')" id="tab-wishlist"
-                class="app-tab px-5 py-3 text-sm font-bold text-[#4A6B8A] hover:text-[#1E3A5F]">Wishlist</button>
-        <button onclick="switchAppTab('deals')" id="tab-deals"
-                class="app-tab px-5 py-3 text-sm font-bold text-[#4A6B8A] hover:text-[#1E3A5F]">Deal Alerts</button>
-        <button onclick="switchAppTab('frames')" id="tab-frames"
-                class="app-tab px-5 py-3 text-sm font-bold text-[#4A6B8A] hover:text-[#1E3A5F]">Frame Shop</button>
+        <button onclick="switchAppTab('collection')" id="tab-collection" class="app-tab px-5 py-3 text-sm font-bold border-b-2 border-[#1E90D4] text-[#1E90D4]">My Collection</button>
+        <button onclick="switchAppTab('wishlist')" id="tab-wishlist" class="app-tab px-5 py-3 text-sm font-bold text-[#4A6B8A] hover:text-[#1E3A5F]">Wishlist</button>
+        <button onclick="switchAppTab('deals')" id="tab-deals" class="app-tab px-5 py-3 text-sm font-bold text-[#4A6B8A] hover:text-[#1E3A5F]">Deal Alerts</button>
+        <button onclick="switchAppTab('frames')" id="tab-frames" class="app-tab px-5 py-3 text-sm font-bold text-[#4A6B8A] hover:text-[#1E3A5F]">Frame Shop</button>
       </div>
 
-      <!-- Tab Content -->
       <div class="flex-1 overflow-auto p-6" style="max-height: calc(94vh - 220px)">
-        
-        <!-- Collection Tab -->
         <div id="app-tab-collection">
           <div class="flex justify-between items-center mb-4">
             <h3 class="section-header text-2xl">My Collection</h3>
@@ -435,23 +499,19 @@
           <div id="collection-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </div>
 
-        <!-- Wishlist Tab -->
         <div id="app-tab-wishlist" class="hidden">
           <h3 class="section-header text-2xl mb-4">Wishlist — the ones that got away (for now)</h3>
           <div id="wishlist-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </div>
 
-        <!-- Deals / Alerts Tab (inside app) -->
         <div id="app-tab-deals" class="hidden">
           <h3 class="section-header text-2xl mb-3">Your active deal watches</h3>
           <div id="active-alerts-list" class="space-y-2 mb-8"></div>
-          
           <h3 class="section-header text-2xl mb-3">Quick hunt from here</h3>
           <div class="text-sm text-[#4A6B8A] mb-2">Same data as the public Deal Hunter. Set alerts that actually matter.</div>
           <div id="app-deal-grid-mini" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
         </div>
 
-        <!-- Frames Tab inside app = the simple product page focus -->
         <div id="app-tab-frames" class="hidden">
           <div class="max-w-lg mx-auto">
             <div class="text-center mb-6">
@@ -459,13 +519,8 @@
               <h3 class="bluey-title text-3xl font-black">Premium Custom Framing</h3>
               <p class="text-[#4A6B8A] mt-1">Simple. Beautiful. Made for the coins that mean something.</p>
             </div>
-            
-            <!-- The actual simple product page lives here too -->
             <div id="inline-frame-product" class="bluey-card border border-[#E8D9B8] p-6">
-              <!-- Populated when a coin is chosen, or generic -->
-              <div id="frame-product-content">
-                <p class="text-sm text-center text-[#7A92A8]">Select "Frame this" from any coin in your collection or wishlist to see the full premium product experience.</p>
-              </div>
+              <p class="text-sm text-center text-[#7A92A8]">Select "Frame this" from any coin in your collection or wishlist to see the full premium product experience.</p>
             </div>
           </div>
         </div>
@@ -491,47 +546,54 @@
           <button onclick="closeFrameModal()" class="text-3xl text-[#7A92A8] leading-none">&times;</button>
         </div>
 
+        <div class="mt-3 text-sm text-[#4A6B8A] mob-copy">
+          Every coin tells a story. Give yours the frame it deserves — solid timber, UV-protective glass, optional engraving. Handmade in Melbourne by legends who love Bluey as much as you do.
+        </div>
+
         <!-- Preview -->
         <div class="mt-5 mb-6">
           <div id="frame-preview-box" 
-               class="frame-preview w-full aspect-video rounded-2xl flex items-center justify-center mx-auto max-w-[280px]">
-            <div class="text-center">
-              <div class="text-6xl mb-1">🐾</div>
-              <div id="preview-coin-label" class="font-black text-xl"></div>
-              <div id="preview-number" class="text-xs text-[#7A92A8]"></div>
+               class="frame-preview w-full aspect-[1.85] rounded-2xl flex items-center justify-center mx-auto max-w-[300px] relative">
+            <div class="text-center z-10">
+              <div class="mx-auto mb-2" style="width:68px;height:68px;background:radial-gradient(circle at 35% 30%, #fff 0%, #F9D74A 30%, #F47E3C 65%, #1E3A5F 100%);border:5px solid #1E3A5F;border-radius:999px;box-shadow:inset 0 6px 10px rgba(255,255,255,.7),inset 0 -6px 10px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;font-family:Comic Neue,cursive;font-weight:700;color:#1E3A5F;font-size:11px;letter-spacing:1px">BLUEY</div>
+              <div id="preview-coin-label" class="font-black text-lg tracking-tight"></div>
+              <div id="preview-number" class="text-xs font-bold text-[#7A92A8] mt-0.5"></div>
             </div>
+            <!-- mat / glass overlay -->
+            <div class="absolute inset-[14px] border border-white/60 rounded-xl pointer-events-none" style="box-shadow: inset 0 0 40px rgba(255,255,255,0.5);"></div>
           </div>
+          <div class="text-center text-[10px] text-[#7A92A8] mt-1.5 tracking-widest">MUSEUM QUALITY • UV GLASS • ARCHIVAL</div>
         </div>
 
         <!-- Options -->
         <div class="space-y-5">
           <div>
-            <div class="text-xs font-extrabold tracking-widest text-[#7A92A8] mb-1.5">TIMBER COLOUR</div>
-            <div class="flex gap-3" id="frame-colour-options">
+            <div class="text-xs font-extrabold tracking-[1.5px] text-[#7A92A8] mb-2">TIMBER COLOUR</div>
+            <div class="flex gap-2.5" id="frame-colour-options">
               <!-- JS injected swatches -->
             </div>
           </div>
 
           <div>
-            <div class="text-xs font-extrabold tracking-widest text-[#7A92A8] mb-1.5">GLASS</div>
-            <div class="flex gap-2 text-sm">
-              <label class="flex-1 border border-[#E8D9B8] rounded-2xl px-4 py-2 cursor-pointer has-[:checked]:border-[#1E90D4] has-[:checked]:bg-[#F0F7FF]">
-                <input type="radio" name="glass" value="standard" checked onchange="updateFramePrice()" class="mr-2"> Standard UV
+            <div class="text-xs font-extrabold tracking-[1.5px] text-[#7A92A8] mb-2">GLASS</div>
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              <label class="flex items-center gap-2 border-2 border-[#E8D9B8] rounded-2xl px-4 py-2.5 cursor-pointer has-[:checked]:border-[#1E90D4] has-[:checked]:bg-[#F0F7FF] has-[:checked]:shadow-sm">
+                <input type="radio" name="glass" value="standard" checked onchange="updateFramePrice()" class="accent-[#1E90D4]"> Standard UV
               </label>
-              <label class="flex-1 border border-[#E8D9B8] rounded-2xl px-4 py-2 cursor-pointer has-[:checked]:border-[#1E90D4] has-[:checked]:bg-[#F0F7FF]">
-                <input type="radio" name="glass" value="premium" onchange="updateFramePrice()" class="mr-2"> Museum Premium <span class="text-xs text-[#E84855]">+$15</span>
+              <label class="flex items-center gap-2 border-2 border-[#E8D9B8] rounded-2xl px-4 py-2.5 cursor-pointer has-[:checked]:border-[#1E90D4] has-[:checked]:bg-[#F0F7FF] has-[:checked]:shadow-sm">
+                <input type="radio" name="glass" value="premium" onchange="updateFramePrice()" class="accent-[#1E90D4]"> Museum Premium <span class="font-bold text-[#E84855]">+$15</span>
               </label>
             </div>
           </div>
 
           <div>
-            <div class="text-xs font-extrabold tracking-widest text-[#7A92A8] mb-1.5">ENGRAVED NAMEPLATE</div>
-            <div class="flex gap-2 text-sm">
-              <label class="flex-1 border border-[#E8D9B8] rounded-2xl px-4 py-2 cursor-pointer has-[:checked]:border-[#1E90D4]">
-                <input type="radio" name="plate" value="none" checked onchange="updateFramePrice()" class="mr-2"> No plate
+            <div class="text-xs font-extrabold tracking-[1.5px] text-[#7A92A8] mb-2">ENGRAVED NAMEPLATE</div>
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              <label class="flex items-center gap-2 border-2 border-[#E8D9B8] rounded-2xl px-4 py-2.5 cursor-pointer has-[:checked]:border-[#1E90D4] has-[:checked]:bg-[#F0F7FF]">
+                <input type="radio" name="plate" value="none" checked onchange="updateFramePrice()" class="accent-[#1E90D4]"> No plate
               </label>
-              <label class="flex-1 border border-[#E8D9B8] rounded-2xl px-4 py-2 cursor-pointer has-[:checked]:border-[#1E90D4]">
-                <input type="radio" name="plate" value="engraved" onchange="updateFramePrice()" class="mr-2"> Engraved <span class="text-xs text-[#E84855]">+$12</span>
+              <label class="flex items-center gap-2 border-2 border-[#E8D9B8] rounded-2xl px-4 py-2.5 cursor-pointer has-[:checked]:border-[#1E90D4] has-[:checked]:bg-[#F0F7FF]">
+                <input type="radio" name="plate" value="engraved" onchange="updateFramePrice()" class="accent-[#1E90D4]"> Engraved <span class="font-bold text-[#E84855]">+$12</span>
               </label>
             </div>
           </div>
@@ -542,8 +604,7 @@
             <span class="text-xs text-[#7A92A8]">FROM</span><br>
             <span id="frame-price" class="text-4xl font-black tracking-tighter">$89</span>
           </div>
-          <button onclick="addCurrentFrameToCart()" 
-                  class="bluey-button px-9 py-3.5 font-extrabold text-base">Add to cart</button>
+          <button onclick="addCurrentFrameToCart()" class="bluey-button px-9 py-3.5 font-extrabold text-base">Add to cart</button>
         </div>
       </div>
       
@@ -553,7 +614,7 @@
     </div>
   </div>
 
-  <!-- Mini Cart Drawer -->
+  <!-- Cart Drawer -->
   <div id="cart-drawer" class="hidden fixed bottom-0 right-0 left-0 md:left-auto md:w-96 bg-white border-t md:border-l border-[#E8D9B8] z-[400] shadow-2xl rounded-t-3xl md:rounded-l-3xl md:rounded-tr-none p-5 max-h-[70vh] overflow-auto">
     <div class="flex justify-between mb-4">
       <div class="font-extrabold text-lg">Your framing cart</div>
@@ -566,8 +627,7 @@
         <div>Total</div>
         <div id="cart-total"></div>
       </div>
-      <button onclick="proceedToBuySubdomain()" 
-              class="mt-4 w-full bluey-button py-4 text-base font-extrabold">Proceed to secure checkout on buy.blueyco.in</button>
+      <button onclick="proceedToBuySubdomain()" class="mt-4 w-full bluey-button py-4 text-base font-extrabold">Proceed to secure checkout on buy.blueyco.in</button>
       <div class="text-[10px] text-center text-[#7A92A8] mt-2">This prototype simulates the buy subdomain flow. In real life it would be a real storefront.</div>
     </div>
   </div>
@@ -584,12 +644,9 @@
       </div>
 
       <div class="mt-7 space-y-3">
-        <input id="signup-name" type="text" value="Alex &amp; the Kids" placeholder="Your name or family name"
-               class="w-full border border-[#E8D9B8] px-5 py-3 rounded-2xl focus:outline-none focus:border-[#1E90D4]">
-        <input id="signup-email" type="email" value="alex@blueyco.in" placeholder="Email"
-               class="w-full border border-[#E8D9B8] px-5 py-3 rounded-2xl focus:outline-none focus:border-[#1E90D4]">
-        <input id="signup-pass" type="password" value="demo123" placeholder="Password (anything for demo)"
-               class="w-full border border-[#E8D9B8] px-5 py-3 rounded-2xl focus:outline-none focus:border-[#1E90D4]">
+        <input id="signup-name" type="text" value="Alex &amp; the Kids" placeholder="Your name or family name" class="w-full border border-[#E8D9B8] px-5 py-3 rounded-2xl focus:outline-none focus:border-[#1E90D4]">
+        <input id="signup-email" type="email" value="alex@blueyco.in" placeholder="Email" class="w-full border border-[#E8D9B8] px-5 py-3 rounded-2xl focus:outline-none focus:border-[#1E90D4]">
+        <input id="signup-pass" type="password" value="demo123" placeholder="Password (anything for demo)" class="w-full border border-[#E8D9B8] px-5 py-3 rounded-2xl focus:outline-none focus:border-[#1E90D4]">
       </div>
 
       <button onclick="createMockAccount()" class="mt-6 w-full bluey-button py-4 text-lg font-extrabold">Create my collection</button>
@@ -599,221 +656,54 @@
   </div>
 
   <script>
-    // ============ DATA & STATE ============ 
-    let currentUser = null;
-    let collection = [];
-    let wishlist = [];
-    let alerts = [];
-    let cart = [];
-    let currentFrameCoin = null;
-    let selectedFrameOptions = { colour: 'dark', glass: 'standard', plate: 'none' };
-
-    const COIN_CATALOG = [
-      { id: 's1_bluey', name: '2024 Bluey Dollarbuck – Bluey', series: 'Series 1', year: 2024, ebayAvg: 44.67, ebaySales: 24, retailerPrice: 29.00, retailerName: 'RAMint' },
-      { id: 's1_bingo', name: '2024 Bluey Dollarbuck – Bingo', series: 'Series 1', year: 2024, ebayAvg: 38.20, ebaySales: 19, retailerPrice: 29.00, retailerName: 'RAMint' },
-      { id: 's3_rain', name: '2026 Rain Privy Mark', series: 'Series 3', year: 2026, ebayAvg: 67.50, ebaySales: 8, retailerPrice: null, retailerName: 'Coming soon' },
-      { id: 's1_chilli', name: '2024 Bluey Dollarbuck – Chilli', series: 'Series 1', year: 2024, ebayAvg: 41.80, ebaySales: 12, retailerPrice: 32.00, retailerName: 'Downies' },
-      { id: 's2_family', name: '2025 Heeler Family 5-Coin Set', series: 'Series 2', year: 2025, ebayAvg: 95.00, ebaySales: 5, retailerPrice: 85.00, retailerName: 'CoinXchange' }
-    ];
-
-    function getEbayDataFor(id) {
-      const match = COIN_CATALOG.find(c => c.id === id);
-      return match ? { average_price: match.ebayAvg, results: match.ebaySales } : { average_price: 45, results: 10 };
-    }
-
-    function loadState() {
-      try {
-        currentUser = JSON.parse(localStorage.getItem('blueyco_user') || 'null');
-        collection = JSON.parse(localStorage.getItem('blueyco_collection') || '[]');
-        wishlist = JSON.parse(localStorage.getItem('blueyco_wishlist') || '[]');
-        alerts = JSON.parse(localStorage.getItem('blueyco_alerts') || '[]');
-        cart = JSON.parse(localStorage.getItem('blueyco_cart') || '[]');
-      } catch (e) { }
-      updateNavAuth();
-      updateTeaser();
-    }
-
-    function saveState() {
-      if (currentUser) localStorage.setItem('blueyco_user', JSON.stringify(currentUser));
-      localStorage.setItem('blueyco_collection', JSON.stringify(collection));
-      localStorage.setItem('blueyco_wishlist', JSON.stringify(wishlist));
-      localStorage.setItem('blueyco_alerts', JSON.stringify(alerts));
-      localStorage.setItem('blueyco_cart', JSON.stringify(cart));
-    }
-
-    function updateNavAuth() {
-      const pub = document.getElementById('nav-auth-public');
-      const userEl = document.getElementById('nav-auth-user');
-      if (currentUser) {
-        pub.classList.add('hidden');
-        userEl.classList.remove('hidden'); userEl.classList.add('flex');
-        document.getElementById('nav-user-name').textContent = currentUser.name.split(' ')[0];
-        document.getElementById('nav-avatar').textContent = currentUser.name.substring(0,2).toUpperCase();
-      } else {
-        pub.classList.remove('hidden');
-        userEl.classList.add('hidden'); userEl.classList.remove('flex');
-      }
-    }
-
-    function updateTeaser() {
-      const teaser = document.getElementById('authed-teaser');
-      if (!currentUser || collection.length === 0) { teaser.classList.add('hidden'); return; }
-      teaser.classList.remove('hidden');
-      document.getElementById('teaser-user-name').textContent = currentUser.name.split(' ')[0];
-      document.getElementById('teaser-portfolio').textContent = '$' + calculatePortfolioValue();
-    }
-
-    function calculatePortfolioValue() {
-      let total = 0;
-      collection.forEach(coin => { total += (coin.estValue || getEbayDataFor(coin.id).average_price || 45); });
-      return Math.round(total);
-    }
-
-    function createMockAccount() {
-      const name = document.getElementById('signup-name').value.trim() || "Alex's Family";
-      const email = document.getElementById('signup-email').value.trim() || "demo@blueyco.in";
-      currentUser = { name, email, joined: new Date().toISOString() };
-      closeSignupModal();
-      if (window.pendingSaveCoin) { addCoinToCollection(window.pendingSaveCoin); window.pendingSaveCoin = null; }
-      if (collection.length === 0) {
-        collection = [
-          { id: 's1_bluey', name: '2024 Bluey Dollarbuck – Bluey', series: 'Series 1', year: 2024, numbered: '0042', condition: 'UNC', purchasePrice: 35, purchaseDate: '2025-11-12', notes: 'From the local post office', estValue: 45 },
-          { id: 's1_bingo', name: '2024 Bluey Dollarbuck – Bingo', series: 'Series 1', year: 2024, numbered: null, condition: 'Brilliant UNC', purchasePrice: 29, purchaseDate: '2026-02-03', notes: '', estValue: 38 }
-        ];
-      }
-      saveState(); updateNavAuth(); updateTeaser();
-      setTimeout(() => showAppView('collection'), 450);
-    }
-
-    function showSignupModal(pendingCoin = null) { if (pendingCoin) window.pendingSaveCoin = pendingCoin; document.getElementById('signup-modal').classList.remove('hidden'); document.getElementById('signup-modal').classList.add('flex'); }
-    function closeSignupModal() { const m = document.getElementById('signup-modal'); m.classList.add('hidden'); m.classList.remove('flex'); }
-
-    function showLoginModal() {
-      currentUser = { name: "Alex & the Kids", email: "demo@blueyco.in", joined: new Date().toISOString() };
-      saveState(); updateNavAuth(); updateTeaser(); showAppView();
-    }
-
-    function logout() { if (!confirm('Log out of the demo? Your collection stays in this browser.')) return; currentUser = null; localStorage.removeItem('blueyco_user'); updateNavAuth(); document.getElementById('authed-teaser').classList.add('hidden'); hideAppView(); }
-
-    async function loadPublicValues() {
-      const grid = document.getElementById('public-value-grid'); grid.innerHTML = '';
-      COIN_CATALOG.forEach(coin => {
-        const ebay = getEbayDataFor(coin.id);
-        const div = document.createElement('div');
-        div.className = 'bluey-card p-5 border border-[#E8D9B8] flex flex-col';
-        div.innerHTML = `
-          <div class="flex-1">
-            <div class="flex justify-between items-start">
-              <div class="font-extrabold leading-tight">${coin.name}</div>
-              <div class="coin-badge ml-2">${ebay.results} sales</div>
-            </div>
-            <div class="mt-3"><div class="text-4xl font-black tracking-tighter">$${ebay.average_price}</div><div class="text-xs text-[#7A92A8]">avg eBay sold (60d)</div></div>
-            ${coin.retailerPrice ? `<div class="mt-2 text-xs"><span class="font-bold text-[#2EC4B6]">RAM:</span> $${coin.retailerPrice} in stock</div>` : ''}
-          </div>
-          <div class="mt-5 grid grid-cols-2 gap-2">
-            <button onclick="crossoverSaveToCollection('${coin.id}', '${coin.name.replace(/'/g, "\\'")}')" class="text-xs py-2.5 rounded-2xl border border-[#1E90D4] text-[#1E90D4] font-bold hover:bg-[#F0F7FF]">Save to collection</button>
-            <button onclick="showFramingForCoin('${coin.id}', '${coin.name.replace(/'/g, "\\'")}')" class="text-xs py-2.5 rounded-2xl bg-[#2EC4B6] text-white font-bold">Frame this</button>
-          </div>
-        `;
-        grid.appendChild(div);
-      });
-    }
-
-    function crossoverSaveToCollection(coinId, coinName) {
-      const coinData = COIN_CATALOG.find(c => c.id === coinId);
-      const coin = { id: coinId, name: coinName || coinData?.name, series: coinData?.series || 'Series 1', year: coinData?.year || 2024, numbered: null, condition: 'UNC', purchasePrice: null, purchaseDate: null, notes: '', estValue: coinData?.ebayAvg || 45 };
-      if (!currentUser) { showSignupModal(coin); return; }
-      addCoinToCollection(coin);
-      const toast = document.createElement('div'); toast.className = 'fixed bottom-5 left-1/2 -translate-x-1/2 bg-[#1E3A5F] text-white px-6 py-3 rounded-3xl text-sm shadow-xl flex items-center gap-2 z-[400]'; toast.innerHTML = `Added <strong>${coin.name}</strong> to your collection!`; document.body.appendChild(toast); setTimeout(() => toast.remove(), 2200);
-      setTimeout(() => showAppView('collection'), 650);
-    }
-
-    function addCoinToCollection(coin) { if (!collection.find(c => c.id === coin.id)) { collection.push(coin); saveState(); updateTeaser(); if (!document.getElementById('app-view').classList.contains('hidden')) renderCollection(); } }
-
-    function renderCollection() {
-      const container = document.getElementById('collection-grid'); container.innerHTML = '';
-      if (collection.length === 0) { container.innerHTML = `<div class="col-span-full bluey-card p-8 text-center text-[#7A92A8]">No coins yet. Use the public explorer above or the "Add coin" button to start your mob.</div>`; return; }
-      collection.forEach((coin, idx) => {
-        const div = document.createElement('div'); div.className = 'bluey-card p-5 border border-[#E8D9B8] text-sm';
-        div.innerHTML = `
-          <div class="font-extrabold text-base">${coin.name}</div>
-          <div class="text-xs text-[#7A92A8]">${coin.series} • ${coin.year}</div>
-          <div class="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 text-xs">
-            <div><div class="text-[#7A92A8]">Numbered</div><input value="${coin.numbered || ''}" placeholder="# or blank" class="w-full border border-[#E8D9B8] rounded-xl px-2 py-1 text-sm" onchange="updateCollectionField(${idx}, 'numbered', this.value)"></div>
-            <div><div class="text-[#7A92A8]">Condition</div><select class="w-full border border-[#E8D9B8] rounded-xl px-2 py-1 text-sm" onchange="updateCollectionField(${idx}, 'condition', this.value)"><option ${coin.condition==='Brilliant UNC'?'selected':''}>Brilliant UNC</option><option ${coin.condition==='UNC'?'selected':''}>UNC</option><option ${coin.condition==='Circulated'?'selected':''}>Circulated</option></select></div>
-            <div><div class="text-[#7A92A8]">Bought for</div><input type="number" value="${coin.purchasePrice || ''}" placeholder="35" class="w-full border border-[#E8D9B8] rounded-xl px-2 py-1 text-sm" onchange="updateCollectionField(${idx}, 'purchasePrice', this.value)"></div>
-            <div><div class="text-[#7A92A8]">Date</div><input type="date" value="${coin.purchaseDate || ''}" class="w-full border border-[#E8D9B8] rounded-xl px-2 py-1 text-sm" onchange="updateCollectionField(${idx}, 'purchaseDate', this.value)"></div>
-          </div>
-          <div class="mt-3 flex gap-2"><button onclick="showFramingForCoin('${coin.id}', '${coin.name.replace(/'/g,"\\'")})" class="flex-1 text-xs py-2 bg-[#2EC4B6] hover:bg-[#25A89A] text-white rounded-2xl font-bold">Frame this</button><button onclick="removeFromCollection(${idx})" class="px-3 py-2 border border-[#E8D9B8] rounded-2xl text-xs hover:bg-red-50"><i class="fa-solid fa-trash"></i></button></div>
-          <div class="text-right text-xs mt-2 font-bold text-[#1E90D4]">Est. $${coin.estValue || getEbayDataFor(coin.id).average_price}</div>
-        `;
-        container.appendChild(div);
-      });
-      const ownedEl = document.getElementById('app-owned-count'); if (ownedEl) ownedEl.textContent = collection.length;
-    }
-
-    function updateCollectionField(index, field, value) { collection[index][field] = value || null; if (field === 'purchasePrice' && value) collection[index].estValue = Math.round(parseFloat(value) * 1.2); saveState(); updateTeaser(); const valEl = document.getElementById('app-portfolio-value'); if (valEl) valEl.textContent = '$' + calculatePortfolioValue(); }
-    function removeFromCollection(index) { if (!confirm('Remove this coin from your collection?')) return; collection.splice(index, 1); saveState(); renderCollection(); updateTeaser(); }
-
-    function renderWishlist() {
-      const container = document.getElementById('wishlist-grid'); container.innerHTML = '';
-      if (wishlist.length === 0) { container.innerHTML = `<div class="col-span-full bluey-card p-8 text-center text-[#7A92A8]">Nothing on the wishlist yet. Add coins from the Deal Hunter or Explorer.</div>`; return; }
-      wishlist.forEach((coin, idx) => { const div = document.createElement('div'); div.className = 'bluey-card p-5 border border-[#E8D9B8]'; div.innerHTML = `<div class="font-extrabold">${coin.name}</div><div class="text-xs text-[#7A92A8]">${coin.series} • Est. $${coin.estValue || 45}</div><div class="mt-4 flex gap-2"><button onclick="moveWishlistToCollection(${idx})" class="flex-1 text-xs py-2 bg-[#1E90D4] text-white rounded-2xl font-bold">I got it! Add to collection</button><button onclick="showFramingForCoin('${coin.id}', '${coin.name.replace(/'/g,"\\'")})" class="text-xs px-3 py-2 border border-[#E8D9B8] rounded-2xl">Frame</button></div>`; container.appendChild(div); });
-      const wEl = document.getElementById('app-wishlist-count'); if (wEl) wEl.textContent = wishlist.length;
-    }
-
-    function moveWishlistToCollection(idx) { const coin = wishlist[idx]; wishlist.splice(idx, 1); collection.push(coin); saveState(); renderWishlist(); renderCollection(); updateTeaser(); }
-
-    function showAddCoinModal() { const name = prompt('Coin name (e.g. 2024 Bluey Dollarbuck – Bluey)'); if (!name) return; const newCoin = { id: 'custom-' + Date.now(), name, series: 'Custom', year: 2024, numbered: prompt('Numbered edition? (optional)') || null, condition: 'UNC', purchasePrice: parseFloat(prompt('Purchase price?') || '0'), purchaseDate: new Date().toISOString().slice(0,10), notes: '', estValue: 45 }; collection.push(newCoin); saveState(); renderCollection(); updateTeaser(); }
-
-    function renderDeals(filtered = null) { const grid = document.getElementById('deal-grid'); grid.innerHTML = ''; const list = filtered || COIN_CATALOG; list.forEach(coin => { const ebay = getEbayDataFor(coin.id); const div = document.createElement('div'); div.className = 'bluey-card p-4 border border-[#E8D9B8] text-sm'; div.innerHTML = `<div class="font-extrabold">${coin.name}</div><div class="flex gap-4 mt-2 text-xs"><div>eBay avg <span class="font-black text-base">$${ebay.average_price}</span><br><span class="text-[#7A92A8]">${ebay.results} sales</span></div><div>Retailer <span class="font-black text-base">${coin.retailerPrice ? '$'+coin.retailerPrice : '—'}</span><br><span class="text-[#2EC4B6]">${coin.retailerName}</span></div></div><div class="mt-3 flex gap-2"><button onclick="addAlert('${coin.id}', '${coin.name.replace(/'/g,"\\'")})" class="flex-1 text-xs py-2 border border-[#1E90D4] text-[#1E90D4] rounded-2xl font-bold">Set price alert</button><button onclick="crossoverSaveToCollection('${coin.id}', '${coin.name.replace(/'/g,"\\'")})" class="flex-1 text-xs py-2 bg-[#F47E3C] text-white rounded-2xl font-bold">Save to collection</button></div>`; grid.appendChild(div); }); }
-
-    function filterDeals() { const q = document.getElementById('deal-search').value.toLowerCase(); const series = document.getElementById('deal-filter-series').value; let list = COIN_CATALOG.filter(c => c.name.toLowerCase().includes(q) || c.series.toLowerCase().includes(q)); if (series) list = list.filter(c => c.series === series); renderDeals(list); }
-
-    function addAlert(coinId, coinName) { const threshold = parseFloat(prompt(`Alert me if ${coinName} drops below what price?`, '35')) || 35; const alert = { id: Date.now(), coinId, coinName, threshold, created: new Date().toISOString() }; alerts.push(alert); saveState(); updateAlertCount(); alert(`Price alert set! We'll pretend to email you if it drops under $${threshold}.`); if (!document.getElementById('app-view').classList.contains('hidden')) renderActiveAlerts(); }
-
-    function updateAlertCount() { const el = document.getElementById('alert-count'); if (el) el.textContent = alerts.length; }
-    function showAlertsPanel() { if (alerts.length === 0) { alert("No active alerts yet. Use the Deal Hunter cards to set some!"); return; } showAppView('deals'); }
-    function renderActiveAlerts() { const container = document.getElementById('active-alerts-list'); container.innerHTML = ''; if (alerts.length === 0) { container.innerHTML = '<div class="text-sm text-[#7A92A8]">No active watches. Set some from the Deal Hunter!</div>'; return; } alerts.forEach((a, i) => { const d = document.createElement('div'); d.className = 'flex items-center justify-between bg-white border border-[#E8D9B8] rounded-2xl px-4 py-2 text-sm'; d.innerHTML = `<div>${a.coinName} &lt; <span class="font-black">$${a.threshold}</span></div><button onclick="removeAlert(${i})" class="text-[#E84855] text-xs font-bold">Remove</button>`; container.appendChild(d); }); }
-    function removeAlert(i) { alerts.splice(i, 1); saveState(); renderActiveAlerts(); updateAlertCount(); }
-
-    function showFramingForCoin(coinId, coinName) {
-      currentFrameCoin = { id: coinId, name: coinName };
-      const modal = document.getElementById('frame-modal');
-      document.getElementById('frame-coin-name').textContent = coinName;
-      document.getElementById('preview-coin-label').textContent = coinName.split('–').pop().trim();
-      const num = collection.find(c => c.id === coinId)?.numbered; document.getElementById('preview-number').textContent = num ? '#' + num : '';
-      const colours = [ {key:'dark', label:'Dark Oak', cls:'bg-[#3C2F2F]'}, {key:'light', label:'Natural', cls:'bg-[#D4C3A3]'}, {key:'blue', label:'Bluey Blue', cls:'bg-[#1E90D4]'}, {key:'orange', label:'Heeler Orange', cls:'bg-[#F47E3C]'} ];
-      const opts = document.getElementById('frame-colour-options'); opts.innerHTML = '';
-      colours.forEach(col => { const sw = document.createElement('div'); sw.className = `w-9 h-9 rounded-2xl cursor-pointer border-2 border-transparent ${col.cls} ${col.key==='dark' ? 'ring-2 ring-offset-2 ring-[#1E90D4]' : ''}`; sw.onclick = () => { selectedFrameOptions.colour = col.key; document.querySelectorAll('#frame-colour-options > div').forEach(s => s.classList.remove('ring-2','ring-offset-2','ring-[#1E90D4]')); sw.classList.add('ring-2','ring-offset-2','ring-[#1E90D4]'); updateFramePreview(); updateFramePrice(); }; opts.appendChild(sw); });
-      selectedFrameOptions = { colour: 'dark', glass: 'standard', plate: 'none' }; updateFramePreview(); updateFramePrice(); modal.classList.remove('hidden'); modal.classList.add('flex');
-    }
-
-    function updateFramePreview() { const box = document.getElementById('frame-preview-box'); box.className = 'frame-preview w-full aspect-video rounded-2xl flex items-center justify-center mx-auto max-w-[280px]'; if (selectedFrameOptions.colour === 'light') box.classList.add('light'); if (selectedFrameOptions.colour === 'blue') box.classList.add('blue'); if (selectedFrameOptions.colour === 'orange') box.classList.add('orange'); }
-    function updateFramePrice() { let price = 89; if (selectedFrameOptions.glass === 'premium') price += 15; if (selectedFrameOptions.plate === 'engraved') price += 12; document.getElementById('frame-price').textContent = '$' + price; }
-
-    function addCurrentFrameToCart() { if (!currentFrameCoin) return; const price = parseInt(document.getElementById('frame-price').textContent.replace('$','')); cart.push({ id: 'frame-' + Date.now(), coinId: currentFrameCoin.id, coinName: currentFrameCoin.name, price, options: {...selectedFrameOptions} }); saveState(); closeFrameModal(); showCart(); }
-    function closeFrameModal() { const m = document.getElementById('frame-modal'); m.classList.add('hidden'); m.classList.remove('flex'); }
-
-    function showFramingShop() { if (currentUser && collection.length > 0) { showAppView('frames'); setTimeout(() => { const first = collection[0]; document.getElementById('frame-product-content').innerHTML = `<div class="text-center"><div class="font-extrabold mb-1">${first.name}</div><button onclick="showFramingForCoin('${first.id}', '${first.name.replace(/'/g,"\\'")}); hideAppView();" class="mt-2 bluey-button px-6 py-2 text-sm">Open full framing customiser</button></div>`; }, 120); } else { showFramingForCoin('s1_bluey', '2024 Bluey Dollarbuck – Bluey'); } }
-
-    function showCart() { const drawer = document.getElementById('cart-drawer'); const itemsEl = document.getElementById('cart-items'); itemsEl.innerHTML = ''; let total = 0; cart.forEach((item, i) => { total += item.price; const row = document.createElement('div'); row.className = 'flex justify-between items-start border-b pb-2'; row.innerHTML = `<div><div class="font-bold">${item.coinName}</div><div class="text-xs text-[#7A92A8]">${item.options.colour} • ${item.options.glass} glass ${item.options.plate==='engraved'?'• engraved':''}</div></div><div class="text-right"><div class="font-black">$${item.price}</div><button onclick="removeFromCart(${i})" class="text-[10px] text-red-500">remove</button></div>`; itemsEl.appendChild(row); }); document.getElementById('cart-total').textContent = '$' + total; drawer.classList.remove('hidden'); drawer.classList.add('flex', 'flex-col'); }
-    function removeFromCart(i) { cart.splice(i, 1); saveState(); showCart(); }
-    function hideCart() { const d = document.getElementById('cart-drawer'); d.classList.remove('flex', 'flex-col'); d.classList.add('hidden'); }
-
-    function proceedToBuySubdomain() { hideCart(); const msg = document.createElement('div'); msg.className = 'fixed inset-0 bg-black/70 flex items-center justify-center z-[500] p-6'; msg.innerHTML = `<div class="bg-white rounded-3xl max-w-sm p-8 text-center"><div class="text-4xl mb-3">🛒</div><div class="bluey-title text-2xl font-black">Off to buy.blueyco.in</div><p class="mt-3 text-sm text-[#4A6B8A]">In the real product this would open the secure checkout on the buy subdomain with your cart preloaded, address book, and payment (Stripe later).</p><button onclick="this.closest('.fixed').remove()" class="mt-6 bluey-button w-full py-3 font-extrabold">Got it — back to the prototype</button><div class="text-xs text-[#7A92A8] mt-4">This is the exact flow that will drive revenue.</div></div>`; document.body.appendChild(msg); }
-
-    let currentAppTab = 'collection';
-    function showAppView(tab = null) { if (!currentUser) { showSignupModal(); return; } const view = document.getElementById('app-view'); view.classList.remove('hidden'); view.classList.add('flex'); document.getElementById('app-user-name').textContent = currentUser.name; document.getElementById('app-portfolio-value').textContent = '$' + calculatePortfolioValue(); document.getElementById('app-owned-count').textContent = collection.length; document.getElementById('app-wishlist-count').textContent = wishlist.length; updateAlertCount(); if (tab) switchAppTab(tab); else switchAppTab(currentAppTab || 'collection'); renderMiniDeals(); }
-    function hideAppView() { const view = document.getElementById('app-view'); view.classList.add('hidden'); view.classList.remove('flex'); updateTeaser(); }
-
-    function switchAppTab(tab) { currentAppTab = tab; ['collection','wishlist','deals','frames'].forEach(t => { const el = document.getElementById('app-tab-' + t); if (el) el.classList.add('hidden'); const tabBtn = document.getElementById('tab-' + t); if (tabBtn) tabBtn.classList.remove('border-b-2','border-[#1E90D4]','text-[#1E90D4]'); }); const showEl = document.getElementById('app-tab-' + tab); if (showEl) showEl.classList.remove('hidden'); const btn = document.getElementById('tab-' + tab); if (btn) btn.classList.add('border-b-2','border-[#1E90D4]','text-[#1E90D4]'); if (tab === 'collection') renderCollection(); if (tab === 'wishlist') renderWishlist(); if (tab === 'deals') { renderActiveAlerts(); renderMiniDeals(); } }
-    function renderMiniDeals() { const c = document.getElementById('app-deal-grid-mini'); if (!c) return; c.innerHTML = ''; COIN_CATALOG.slice(0,4).forEach(coin => { const d = document.createElement('div'); d.className = 'bluey-card border border-[#E8D9B8] p-3 text-xs'; d.innerHTML = `<div class="font-bold">${coin.name}</div><div class="flex justify-between mt-1"><div>$${getEbayDataFor(coin.id).average_price} eBay</div><button onclick="addAlert('${coin.id}', '${coin.name.replace(/'/g,"\\'")});" class="text-[#1E90D4] font-bold">Alert</button></div>`; c.appendChild(d); }); }
-
-    function seedDemoCollection() { if (!currentUser) return; collection = [ { id: 's1_bluey', name: '2024 Bluey Dollarbuck – Bluey', series: 'Series 1', year: 2024, numbered: '0042', condition: 'Brilliant UNC', purchasePrice: 32, purchaseDate: '2025-08-14', notes: 'First one for the kids', estValue: 45 }, { id: 's1_bingo', name: '2024 Bluey Dollarbuck – Bingo', series: 'Series 1', year: 2024, numbered: '0199', condition: 'UNC', purchasePrice: 29, purchaseDate: '2025-11-03', notes: '', estValue: 38 }, { id: 's3_rain', name: '2026 Rain Privy Mark', series: 'Series 3', year: 2026, numbered: null, condition: 'UNC', purchasePrice: 55, purchaseDate: '2026-05-28', notes: 'Lucky find on eBay', estValue: 68 } ]; wishlist = [ { id: 's1_chilli', name: '2024 Bluey Dollarbuck – Chilli', series: 'Series 1', year: 2024, estValue: 42 } ]; saveState(); renderCollection(); renderWishlist(); document.getElementById('app-portfolio-value').textContent = '$' + calculatePortfolioValue(); document.getElementById('app-owned-count').textContent = collection.length; document.getElementById('app-wishlist-count').textContent = wishlist.length; updateTeaser(); }
-
-    function init() { loadState(); loadPublicValues(); renderDeals(); updateAlertCount(); document.addEventListener('keydown', function(e) { if (e.key === '/' && document.activeElement.tagName === 'BODY') { e.preventDefault(); const s = document.getElementById('deal-search'); if (s) s.focus(); } }); setTimeout(updateTeaser, 200); if (!localStorage.getItem('blueyco_user') && !sessionStorage.getItem('blueyco_hinted')) { setTimeout(() => { const hint = document.createElement('div'); hint.className = 'fixed bottom-4 right-4 bg-white shadow-xl border border-[#E8D9B8] px-4 py-2 rounded-2xl text-xs max-w-[240px]'; hint.innerHTML = `Try clicking any <span class="font-bold">"Save to collection"</span> card — it will prompt signup and take you straight into the app.`; document.body.appendChild(hint); setTimeout(() => hint.remove(), 6500); sessionStorage.setItem('blueyco_hinted', '1'); }, 4200); } console.log('%c[Blueyco] High-fidelity prototype ready — public + crossover + simple premium framing product page live.', 'color:#2EC4B6'); }
-    window.onload = init;
+    // Full JS logic (crossover, collection, deals, framing product page, app) - same as previous full version with all functions
+    let currentUser = null; let collection = []; let wishlist = []; let alerts = []; let cart = []; let currentFrameCoin = null; let selectedFrameOptions = { colour: 'dark', glass: 'standard', plate: 'none' };
+    const COIN_CATALOG = [ { id: 's1_bluey', name: '2024 Bluey Dollarbuck – Bluey', series: 'Series 1', year: 2024, ebayAvg: 44.67, ebaySales: 24, retailerPrice: 29.00, retailerName: 'RAMint' }, { id: 's1_bingo', name: '2024 Bluey Dollarbuck – Bingo', series: 'Series 1', year: 2024, ebayAvg: 38.20, ebaySales: 19, retailerPrice: 29.00, retailerName: 'RAMint' }, { id: 's3_rain', name: '2026 Rain Privy Mark', series: 'Series 3', year: 2026, ebayAvg: 67.50, ebaySales: 8, retailerPrice: null, retailerName: 'Coming soon' }, { id: 's1_chilli', name: '2024 Bluey Dollarbuck – Chilli', series: 'Series 1', year: 2024, ebayAvg: 41.80, ebaySales: 12, retailerPrice: 32.00, retailerName: 'Downies' }, { id: 's2_family', name: '2025 Heeler Family 5-Coin Set', series: 'Series 2', year: 2025, ebayAvg: 95.00, ebaySales: 5, retailerPrice: 85.00, retailerName: 'CoinXchange' } ];
+    function getEbayDataFor(id){ const m=COIN_CATALOG.find(c=>c.id===id); return m?{average_price:m.ebayAvg,results:m.ebaySales}:{average_price:45,results:10}; }
+    function loadState(){try{currentUser=JSON.parse(localStorage.getItem('blueyco_user')||'null');collection=JSON.parse(localStorage.getItem('blueyco_collection')||'[]');wishlist=JSON.parse(localStorage.getItem('blueyco_wishlist')||'[]');alerts=JSON.parse(localStorage.getItem('blueyco_alerts')||'[]');cart=JSON.parse(localStorage.getItem('blueyco_cart')||'[]');}catch(e){}updateNavAuth();updateTeaser();}
+    function saveState(){if(currentUser)localStorage.setItem('blueyco_user',JSON.stringify(currentUser));localStorage.setItem('blueyco_collection',JSON.stringify(collection));localStorage.setItem('blueyco_wishlist',JSON.stringify(wishlist));localStorage.setItem('blueyco_alerts',JSON.stringify(alerts));localStorage.setItem('blueyco_cart',JSON.stringify(cart));}
+    function updateNavAuth(){const pub=document.getElementById('nav-auth-public');const userEl=document.getElementById('nav-auth-user');if(currentUser){pub.classList.add('hidden');userEl.classList.remove('hidden');userEl.classList.add('flex');document.getElementById('nav-user-name').textContent=currentUser.name.split(' ')[0];document.getElementById('nav-avatar').textContent=currentUser.name.substring(0,2).toUpperCase();}else{pub.classList.remove('hidden');userEl.classList.add('hidden');userEl.classList.remove('flex');}}
+    function updateTeaser(){const teaser=document.getElementById('authed-teaser');if(!currentUser||collection.length===0){teaser.classList.add('hidden');return;}teaser.classList.remove('hidden');document.getElementById('teaser-user-name').textContent=currentUser.name.split(' ')[0];document.getElementById('teaser-portfolio').textContent='$'+calculatePortfolioValue();}
+    function calculatePortfolioValue(){let total=0;collection.forEach(coin=>{total+=(coin.estValue||getEbayDataFor(coin.id).average_price||45);});return Math.round(total);}
+    function createMockAccount(){const name=document.getElementById('signup-name').value.trim()||"Alex's Family";const email=document.getElementById('signup-email').value.trim()||"demo@blueyco.in";currentUser={name,email,joined:new Date().toISOString()};closeSignupModal();if(window.pendingSaveCoin){addCoinToCollection(window.pendingSaveCoin);window.pendingSaveCoin=null;}if(collection.length===0){collection=[{id:'s1_bluey',name:'2024 Bluey Dollarbuck – Bluey',series:'Series 1',year:2024,numbered:'0042',condition:'UNC',purchasePrice:35,purchaseDate:'2025-11-12',notes:'From the local post office',estValue:45},{id:'s1_bingo',name:'2024 Bluey Dollarbuck – Bingo',series:'Series 1',year:2024,numbered:null,condition:'Brilliant UNC',purchasePrice:29,purchaseDate:'2026-02-03',notes:'',estValue:38}];}saveState();updateNavAuth();updateTeaser();setTimeout(()=>showAppView('collection'),450);}
+    function showSignupModal(pendingCoin=null){if(pendingCoin)window.pendingSaveCoin=pendingCoin;document.getElementById('signup-modal').classList.remove('hidden');document.getElementById('signup-modal').classList.add('flex');}
+    function closeSignupModal(){const m=document.getElementById('signup-modal');m.classList.add('hidden');m.classList.remove('flex');}
+    function showLoginModal(){currentUser={name:"Alex & the Kids",email:"demo@blueyco.in",joined:new Date().toISOString()};saveState();updateNavAuth();updateTeaser();showAppView();}
+    function logout(){if(!confirm('Log out of the demo? Your collection stays in this browser.'))return;currentUser=null;localStorage.removeItem('blueyco_user');updateNavAuth();document.getElementById('authed-teaser').classList.add('hidden');hideAppView();}
+    async function loadPublicValues(){const grid=document.getElementById('public-value-grid');grid.innerHTML='';COIN_CATALOG.forEach(coin=>{const ebay=getEbayDataFor(coin.id);const div=document.createElement('div');div.className='bluey-card p-5 flex flex-col coin-card';const color=coin.id.includes('bingo')?'#1E90D4':coin.id.includes('rain')?'#E84855':'#F47E3C';div.innerHTML=`<div class="flex-1"><div class="flex items-start gap-3"><div class="coin-illustration flex-shrink-0" style="width:52px;height:52px;background:radial-gradient(circle at 35% 30%, #fff 0%, ${color} 35%, #1E3A5F 85%);color:#fff;font-size:10px;border-color:#1E3A5F">${coin.name.split('–').pop().trim().substring(0,5)}</div><div><div class="font-extrabold leading-tight text-base">${coin.name}</div><div class="coin-badge mt-1 inline-block">${ebay.results} sales</div></div></div><div class="mt-4 pl-1"><div class="text-4xl font-black tracking-tighter">$${ebay.average_price}</div><div class="text-xs text-[#7A92A8]">avg eBay sold (60d)</div></div>${coin.retailerPrice?`<div class="mt-1.5 pl-1 text-xs"><span class="font-bold text-[#2EC4B6]">In stock at RAM:</span> $${coin.retailerPrice}</div>`:''}</div><div class="mt-5 grid grid-cols-2 gap-2"><button onclick="crossoverSaveToCollection('${coin.id}', '${coin.name.replace(/'/g, "\\'")}" class="text-xs py-[10px] rounded-2xl border-2 border-[#1E90D4] text-[#1E90D4] font-extrabold hover:bg-[#F0F7FF] active:scale-[0.985]">Save to collection</button><button onclick="showFramingForCoin('${coin.id}', '${coin.name.replace(/'/g, "\\'")}" class="text-xs py-[10px] rounded-2xl bg-[#2EC4B6] text-white font-extrabold active:scale-[0.985]">Frame this</button></div>`;grid.appendChild(div);});}
+    function crossoverSaveToCollection(coinId,coinName){const coinData=COIN_CATALOG.find(c=>c.id===coinId);const coin={id:coinId,name:coinName||coinData?.name,series:coinData?.series||'Series 1',year:coinData?.year||2024,numbered:null,condition:'UNC',purchasePrice:null,purchaseDate:null,notes:'',estValue:coinData?.ebayAvg||45};if(!currentUser){showSignupModal(coin);return;}addCoinToCollection(coin);const toast=document.createElement('div');toast.className='fixed bottom-5 left-1/2 -translate-x-1/2 bg-[#1E3A5F] text-white px-6 py-3 rounded-3xl text-sm shadow-xl flex items-center gap-2 z-[400]';toast.innerHTML=`Added <strong>${coin.name}</strong> to your collection!`;document.body.appendChild(toast);setTimeout(()=>toast.remove(),2200);setTimeout(()=>showAppView('collection'),650);}
+    function addCoinToCollection(coin){if(!collection.find(c=>c.id===coin.id)){collection.push(coin);saveState();updateTeaser();if(!document.getElementById('app-view').classList.contains('hidden'))renderCollection();}}
+    function renderCollection(){const container=document.getElementById('collection-grid');container.innerHTML='';if(collection.length===0){container.innerHTML=`<div class="col-span-full bluey-card p-8 text-center text-[#7A92A8]">No coins yet. Use the public explorer above or the "Add coin" button to start your mob.</div>`;return;}collection.forEach((coin,idx)=>{const div=document.createElement('div');div.className='bluey-card p-5 border border-[#E8D9B8] text-sm';div.innerHTML=`<div class="font-extrabold text-base">${coin.name}</div><div class="text-xs text-[#7A92A8]">${coin.series} • ${coin.year}</div><div class="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 text-xs"><div><div class="text-[#7A92A8]">Numbered</div><input value="${coin.numbered||''}" placeholder="# or blank" class="w-full border border-[#E8D9B8] rounded-xl px-2 py-1 text-sm" onchange="updateCollectionField(${idx}, 'numbered', this.value)"></div><div><div class="text-[#7A92A8]">Condition</div><select class="w-full border border-[#E8D9B8] rounded-xl px-2 py-1 text-sm" onchange="updateCollectionField(${idx}, 'condition', this.value)"><option ${coin.condition==='Brilliant UNC'?'selected':''}>Brilliant UNC</option><option ${coin.condition==='UNC'?'selected':''}>UNC</option><option ${coin.condition==='Circulated'?'selected':''}>Circulated</option></select></div><div><div class="text-[#7A92A8]">Bought for</div><input type="number" value="${coin.purchasePrice||''}" placeholder="35" class="w-full border border-[#E8D9B8] rounded-xl px-2 py-1 text-sm" onchange="updateCollectionField(${idx}, 'purchasePrice', this.value)"></div><div><div class="text-[#7A92A8]">Date</div><input type="date" value="${coin.purchaseDate||''}" class="w-full border border-[#E8D9B8] rounded-xl px-2 py-1 text-sm" onchange="updateCollectionField(${idx}, 'purchaseDate', this.value)"></div></div><div class="mt-3 flex gap-2"><button onclick="showFramingForCoin('${coin.id}', '${coin.name.replace(/'/g,"\\'")}" class="flex-1 text-xs py-2 bg-[#2EC4B6] hover:bg-[#25A89A] text-white rounded-2xl font-bold">Frame this</button><button onclick="removeFromCollection(${idx})" class="px-3 py-2 border border-[#E8D9B8] rounded-2xl text-xs hover:bg-red-50"><i class="fa-solid fa-trash"></i></button></div><div class="text-right text-xs mt-2 font-bold text-[#1E90D4]">Est. $${coin.estValue||getEbayDataFor(coin.id).average_price}</div>`;container.appendChild(div);});const ownedEl=document.getElementById('app-owned-count');if(ownedEl)ownedEl.textContent=collection.length;}
+    function updateCollectionField(index,field,value){collection[index][field]=value||null;if(field==='purchasePrice'&&value)collection[index].estValue=Math.round(parseFloat(value)*1.2);saveState();updateTeaser();const valEl=document.getElementById('app-portfolio-value');if(valEl)valEl.textContent='$'+calculatePortfolioValue();}
+    function removeFromCollection(index){if(!confirm('Remove this coin from your collection?'))return;collection.splice(index,1);saveState();renderCollection();updateTeaser();}
+    function renderWishlist(){const container=document.getElementById('wishlist-grid');container.innerHTML='';if(wishlist.length===0){container.innerHTML=`<div class="col-span-full bluey-card p-8 text-center text-[#7A92A8]">Nothing on the wishlist yet. Add coins from the Deal Hunter or Explorer.</div>`;return;}wishlist.forEach((coin,idx)=>{const div=document.createElement('div');div.className='bluey-card p-5 border border-[#E8D9B8]';div.innerHTML=`<div class="font-extrabold">${coin.name}</div><div class="text-xs text-[#7A92A8]">${coin.series} • Est. $${coin.estValue||45}</div><div class="mt-4 flex gap-2"><button onclick="moveWishlistToCollection(${idx})" class="flex-1 text-xs py-2 bg-[#1E90D4] text-white rounded-2xl font-bold">I got it! Add to collection</button><button onclick="showFramingForCoin('${coin.id}', '${coin.name.replace(/'/g,"\\'")})" class="text-xs px-3 py-2 border border-[#E8D9B8] rounded-2xl">Frame</button></div>`;container.appendChild(div);});const wEl=document.getElementById('app-wishlist-count');if(wEl)wEl.textContent=wishlist.length;}
+    function moveWishlistToCollection(idx){const coin=wishlist[idx];wishlist.splice(idx,1);collection.push(coin);saveState();renderWishlist();renderCollection();updateTeaser();}
+    function showAddCoinModal(){const name=prompt('Coin name (e.g. 2024 Bluey Dollarbuck – Bluey)');if(!name)return;const newCoin={id:'custom-'+Date.now(),name,series:'Custom',year:2024,numbered:prompt('Numbered edition? (optional)')||null,condition:'UNC',purchasePrice:parseFloat(prompt('Purchase price?')||'0'),purchaseDate:new Date().toISOString().slice(0,10),notes:'',estValue:45};collection.push(newCoin);saveState();renderCollection();updateTeaser();}
+    function renderDeals(filtered=null){const grid=document.getElementById('deal-grid');grid.innerHTML='';const list=filtered||COIN_CATALOG;list.forEach(coin=>{const ebay=getEbayDataFor(coin.id);const div=document.createElement('div');div.className='bluey-card p-4 border border-[#E8D9B8] text-sm';div.innerHTML=`<div class="font-extrabold">${coin.name}</div><div class="flex gap-4 mt-2 text-xs"><div>eBay avg <span class="font-black text-base">$${ebay.average_price}</span><br><span class="text-[#7A92A8]">${ebay.results} sales</span></div><div>Retailer <span class="font-black text-base">${coin.retailerPrice?'$'+coin.retailerPrice:'—'}</span><br><span class="text-[#2EC4B6]">${coin.retailerName}</span></div></div><div class="mt-3 flex gap-2"><button onclick="addAlert('${coin.id}', '${coin.name.replace(/'/g,"\\'")})" class="flex-1 text-xs py-2 border border-[#1E90D4] text-[#1E90D4] rounded-2xl font-bold">Set price alert</button><button onclick="crossoverSaveToCollection('${coin.id}', '${coin.name.replace(/'/g,"\\'")})" class="flex-1 text-xs py-2 bg-[#F47E3C] text-white rounded-2xl font-bold">Save to collection</button></div>`;grid.appendChild(div);});}
+    function filterDeals(){const q=document.getElementById('deal-search').value.toLowerCase();const series=document.getElementById('deal-filter-series').value;let list=COIN_CATALOG.filter(c=>c.name.toLowerCase().includes(q)||c.series.toLowerCase().includes(q));if(series)list=list.filter(c=>c.series===series);renderDeals(list);}
+    function addAlert(coinId,coinName){const threshold=parseFloat(prompt(`Alert me if ${coinName} drops below what price?`,'35'))||35;const alert={id:Date.now(),coinId,coinName,threshold,created:new Date().toISOString()};alerts.push(alert);saveState();updateAlertCount();alert(`Price alert set! We'll pretend to email you if it drops under $${threshold}.`);if(!document.getElementById('app-view').classList.contains('hidden'))renderActiveAlerts();}
+    function updateAlertCount(){const el=document.getElementById('alert-count');if(el)el.textContent=alerts.length;}
+    function showAlertsPanel(){if(alerts.length===0){alert("No active alerts yet. Use the Deal Hunter cards to set some!");return;}showAppView('deals');}
+    function renderActiveAlerts(){const container=document.getElementById('active-alerts-list');container.innerHTML='';if(alerts.length===0){container.innerHTML='<div class="text-sm text-[#7A92A8]">No active watches. Set some from the Deal Hunter!</div>';return;}alerts.forEach((a,i)=>{const d=document.createElement('div');d.className='flex items-center justify-between bg-white border border-[#E8D9B8] rounded-2xl px-4 py-2 text-sm';d.innerHTML=`<div>${a.coinName} &lt; <span class="font-black">$${a.threshold}</span></div><button onclick="removeAlert(${i})" class="text-[#E84855] text-xs font-bold">Remove</button>`;container.appendChild(d);});}
+    function removeAlert(i){alerts.splice(i,1);saveState();renderActiveAlerts();updateAlertCount();}
+    function showFramingForCoin(coinId,coinName){currentFrameCoin={id:coinId,name:coinName};const modal=document.getElementById('frame-modal');document.getElementById('frame-coin-name').textContent=coinName;document.getElementById('preview-coin-label').textContent=coinName.split('–').pop().trim();const num=collection.find(c=>c.id===coinId)?.numbered;document.getElementById('preview-number').textContent=num?'#'+num:'';const colours=[{key:'dark',label:'Dark Oak',cls:'bg-[#3C2F2F]'},{key:'light',label:'Natural',cls:'bg-[#D4C3A3]'},{key:'blue',label:'Bluey Blue',cls:'bg-[#1E90D4]'},{key:'orange',label:'Heeler Orange',cls:'bg-[#F47E3C]'}];const opts=document.getElementById('frame-colour-options');opts.innerHTML='';colours.forEach(col=>{const sw=document.createElement('div');sw.className=`w-9 h-9 rounded-2xl cursor-pointer border-2 border-transparent ${col.cls} ${col.key==='dark'?'ring-2 ring-offset-2 ring-[#1E90D4]':''}`;sw.onclick=()=>{selectedFrameOptions.colour=col.key;document.querySelectorAll('#frame-colour-options > div').forEach(s=>s.classList.remove('ring-2','ring-offset-2','ring-[#1E90D4]'));sw.classList.add('ring-2','ring-offset-2','ring-[#1E90D4]');updateFramePreview();updateFramePrice();};opts.appendChild(sw);});selectedFrameOptions={colour:'dark',glass:'standard',plate:'none'};updateFramePreview();updateFramePrice();modal.classList.remove('hidden');modal.classList.add('flex');}
+    function updateFramePreview(){const box=document.getElementById('frame-preview-box');box.className='frame-preview w-full aspect-[1.85] rounded-2xl flex items-center justify-center mx-auto max-w-[300px] relative';if(selectedFrameOptions.colour==='light')box.classList.add('light');if(selectedFrameOptions.colour==='blue')box.classList.add('blue');if(selectedFrameOptions.colour==='orange')box.classList.add('orange');}
+    function updateFramePrice(){let price=89;if(selectedFrameOptions.glass==='premium')price+=15;if(selectedFrameOptions.plate==='engraved')price+=12;document.getElementById('frame-price').textContent='$'+price;}
+    function addCurrentFrameToCart(){if(!currentFrameCoin)return;const price=parseInt(document.getElementById('frame-price').textContent.replace('$',''));cart.push({id:'frame-'+Date.now(),coinId:currentFrameCoin.id,coinName:currentFrameCoin.name,price,options:{...selectedFrameOptions}});saveState();closeFrameModal();showCart();}
+    function closeFrameModal(){const m=document.getElementById('frame-modal');m.classList.add('hidden');m.classList.remove('flex');}
+    function showFramingShop(){if(currentUser&&collection.length>0){showAppView('frames');setTimeout(()=>{const first=collection[0];document.getElementById('frame-product-content').innerHTML=`<div class="text-center"><div class="font-extrabold mb-1">${first.name}</div><button onclick="showFramingForCoin('${first.id}', '${first.name.replace(/'/g,"\\'")}); hideAppView();" class="mt-2 bluey-button px-6 py-2 text-sm">Open full framing customiser</button></div>`;},120);}else{showFramingForCoin('s1_bluey','2024 Bluey Dollarbuck – Bluey');}}
+    function showCart(){const drawer=document.getElementById('cart-drawer');const itemsEl=document.getElementById('cart-items');itemsEl.innerHTML='';let total=0;cart.forEach((item,i)=>{total+=item.price;const row=document.createElement('div');row.className='flex justify-between items-start border-b pb-2';row.innerHTML=`<div><div class="font-bold">${item.coinName}</div><div class="text-xs text-[#7A92A8]">${item.options.colour} • ${item.options.glass} glass ${item.options.plate==='engraved'?'• engraved':''}</div></div><div class="text-right"><div class="font-black">$${item.price}</div><button onclick="removeFromCart(${i})" class="text-[10px] text-red-500">remove</button></div>`;itemsEl.appendChild(row);});document.getElementById('cart-total').textContent='$'+total;drawer.classList.remove('hidden');drawer.classList.add('flex','flex-col');}
+    function removeFromCart(i){cart.splice(i,1);saveState();showCart();}
+    function hideCart(){const d=document.getElementById('cart-drawer');d.classList.remove('flex','flex-col');d.classList.add('hidden');}
+    function proceedToBuySubdomain(){hideCart();const msg=document.createElement('div');msg.className='fixed inset-0 bg-black/70 flex items-center justify-center z-[500] p-6';msg.innerHTML=`<div class="bg-white rounded-3xl max-w-sm p-8 text-center"><div class="text-4xl mb-3">🛒</div><div class="bluey-title text-2xl font-black">Off to buy.blueyco.in</div><p class="mt-3 text-sm text-[#4A6B8A]">In the real product this would open the secure checkout on the buy subdomain with your cart preloaded, address book, and payment (Stripe later).</p><button onclick="this.closest('.fixed').remove()" class="mt-6 bluey-button w-full py-3 font-extrabold">Got it — back to the prototype</button><div class="text-xs text-[#7A92A8] mt-4">This is the exact flow that will drive revenue.</div></div>`;document.body.appendChild(msg);}
+    let currentAppTab='collection';
+    function showAppView(tab=null){if(!currentUser){showSignupModal();return;}const view=document.getElementById('app-view');view.classList.remove('hidden');view.classList.add('flex');document.getElementById('app-user-name').textContent=currentUser.name;document.getElementById('app-portfolio-value').textContent='$'+calculatePortfolioValue();document.getElementById('app-owned-count').textContent=collection.length;document.getElementById('app-wishlist-count').textContent=wishlist.length;updateAlertCount();if(tab)switchAppTab(tab);else switchAppTab(currentAppTab||'collection');renderMiniDeals();}
+    function hideAppView(){const view=document.getElementById('app-view');view.classList.add('hidden');view.classList.remove('flex');updateTeaser();}
+    function switchAppTab(tab){currentAppTab=tab;['collection','wishlist','deals','frames'].forEach(t=>{const el=document.getElementById('app-tab-'+t);if(el)el.classList.add('hidden');const tabBtn=document.getElementById('tab-'+t);if(tabBtn)tabBtn.classList.remove('border-b-2','border-[#1E90D4]','text-[#1E90D4]');});const showEl=document.getElementById('app-tab-'+tab);if(showEl)showEl.classList.remove('hidden');const btn=document.getElementById('tab-'+tab);if(btn)btn.classList.add('border-b-2','border-[#1E90D4]','text-[#1E90D4]');if(tab==='collection')renderCollection();if(tab==='wishlist')renderWishlist();if(tab==='deals'){renderActiveAlerts();renderMiniDeals();}}
+    function renderMiniDeals(){const c=document.getElementById('app-deal-grid-mini');if(!c)return;c.innerHTML='';COIN_CATALOG.slice(0,4).forEach(coin=>{const d=document.createElement('div');d.className='bluey-card border border-[#E8D9B8] p-3 text-xs';d.innerHTML=`<div class="font-bold">${coin.name}</div><div class="flex justify-between mt-1"><div>$${getEbayDataFor(coin.id).average_price} eBay</div><button onclick="addAlert('${coin.id}', '${coin.name.replace(/'/g,"\\'")});" class="text-[#1E90D4] font-bold">Alert</button></div>`;c.appendChild(d);});}
+    function seedDemoCollection(){if(!currentUser)return;collection=[{id:'s1_bluey',name:'2024 Bluey Dollarbuck – Bluey',series:'Series 1',year:2024,numbered:'0042',condition:'Brilliant UNC',purchasePrice:32,purchaseDate:'2025-08-14',notes:'First one for the kids',estValue:45},{id:'s1_bingo',name:'2024 Bluey Dollarbuck – Bingo',series:'Series 1',year:2024,numbered:'0199',condition:'UNC',purchasePrice:29,purchaseDate:'2025-11-03',notes:'',estValue:38},{id:'s3_rain',name:'2026 Rain Privy Mark',series:'Series 3',year:2026,numbered:null,condition:'UNC',purchasePrice:55,purchaseDate:'2026-05-28',notes:'Lucky find on eBay',estValue:68}];wishlist=[{id:'s1_chilli',name:'2024 Bluey Dollarbuck – Chilli',series:'Series 1',year:2024,estValue:42}];saveState();renderCollection();renderWishlist();document.getElementById('app-portfolio-value').textContent='$'+calculatePortfolioValue();document.getElementById('app-owned-count').textContent=collection.length;document.getElementById('app-wishlist-count').textContent=wishlist.length;updateTeaser();}
+    function init(){loadState();loadPublicValues();renderDeals();updateAlertCount();document.addEventListener('keydown',function(e){if(e.key==='/'&&document.activeElement.tagName==='BODY'){e.preventDefault();const s=document.getElementById('deal-search');if(s)s.focus();}});setTimeout(updateTeaser,200);if(!localStorage.getItem('blueyco_user')&&!sessionStorage.getItem('blueyco_hinted')){setTimeout(()=>{const hint=document.createElement('div');hint.className='fixed bottom-4 right-4 bg-white shadow-xl border border-[#E8D9B8] px-4 py-2 rounded-2xl text-xs max-w-[240px]';hint.innerHTML=`Try clicking any <span class="font-bold">"Save to collection"</span> card — it will prompt signup and take you straight into the app.`;document.body.appendChild(hint);setTimeout(()=>hint.remove(),6500);sessionStorage.setItem('blueyco_hinted','1');},4200);}console.log('%c[Blueyco] High-fidelity prototype ready — now with much better cartoon visual polish!','color:#2EC4B6');}
+    window.onload=init;
   </script>
 </body>
 </html>
