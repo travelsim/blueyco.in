@@ -153,6 +153,10 @@ _cache      = {}   # coinId → {'ebay': {...}, 'coinxchange': {...}}
 _buy_cache  = {}   # coinId → {'options': [...], 'fetchedAt': float}
 _start_time = time.monotonic()  # for health check uptime
 
+# Note: _load_price_history() is called below, right after the function
+# definition, so the in-memory list is populated before the request
+# handler can serve /api/price-history on a cold start.
+
 # ── BUY-OPTIONS CONCURRENCY CONTROLS ─────────────────────────────────────────
 # Hard cap on simultaneous retailer fan-outs. Each scrape can hold a thread for
 # up to (n_retailers × per-retailer timeout) seconds, so a small limit prevents
@@ -216,6 +220,65 @@ def _save_cache():
             json.dump(snapshot, f)
     except Exception as e:
         print(f'Cache save error: {e}')
+
+
+# ── PRICE HISTORY (persisted snapshots) ──────────────────────────────────────
+PRICE_HISTORY_FILE = 'price_history.json'
+PRICE_HISTORY_MAX_DAYS = 365   # keep one year of daily snapshots
+_price_history = []            # list[dict]; each item is {date, coins: {coinId: {...}}}
+
+def _load_price_history():
+    global _price_history
+    try:
+        with open(PRICE_HISTORY_FILE, 'r') as f:
+            data = json.load(f)
+        if isinstance(data, list):
+            _price_history = data
+        else:
+            _price_history = []
+    except (FileNotFoundError, json.JSONDecodeError):
+        _price_history = []
+
+def _save_price_history_to_disk():
+    try:
+        with open(PRICE_HISTORY_FILE, 'w') as f:
+            json.dump(_price_history, f)
+    except Exception as e:
+        print(f'Price history save error: {e}')
+
+def _save_price_snapshot():
+    """Capture today's avg/min/max/sales for every coin in the cache.
+
+    Called after each successful eBay refresh cycle. Deduplicates per-day:
+    re-running on the same date overwrites the existing snapshot so partial
+    refreshes can complete the picture without polluting the timeline.
+    """
+    global _price_history
+    today = time.strftime('%Y-%m-%d')
+    coins_snapshot = {}
+    with _lock:
+        for cid, sources in _cache.items():
+            ebay = sources.get('ebay') or {}
+            if not isinstance(ebay, dict) or not ebay.get('average_price'):
+                continue
+            coins_snapshot[cid] = {
+                'avg':  ebay.get('average_price'),
+                'min':  ebay.get('min_price'),
+                'max':  ebay.get('max_price'),
+                'cnt':  ebay.get('total_results', 0) or ebay.get('results', 0),
+            }
+    if not coins_snapshot:
+        return  # no data yet — wait for the first successful fetch
+    # overwrite-or-append today's entry
+    _price_history = [h for h in _price_history if h.get('date') != today]
+    _price_history.append({'date': today, 'coins': coins_snapshot})
+    # bound to last N days
+    _price_history = sorted(_price_history, key=lambda h: h['date'])[-PRICE_HISTORY_MAX_DAYS:]
+    _save_price_history_to_disk()
+
+# Load persisted price history on import so /api/price-history works
+# before the background refresh worker has had a chance to run.
+_load_price_history()
 
 # ── GENERIC HELPERS ──────────────────────────────────────────────────────────
 def _http_get(url, accept='text/html', timeout=12):
@@ -467,6 +530,7 @@ def _stale(coin_id, source):
 # ── BACKGROUND REFRESH THREAD ─────────────────────────────────────────────────
 def _refresh_worker():
     _load_cache()
+    _load_price_history()
     while True:
         refreshed = 0
         for coin in COINS:
@@ -511,6 +575,7 @@ def _refresh_worker():
 
         if refreshed:
             print(f'Refresh cycle complete: {refreshed} update(s).')
+            _save_price_snapshot()   # record today’s state once per cycle
         time.sleep(CHECK_SECS)
 
 
@@ -759,6 +824,32 @@ class Handler(BaseHTTPRequestHandler):
             with _lock:
                 snapshot = dict(_cache)
             self._json(200, snapshot)
+            return
+
+        if self.path.startswith('/api/price-history'):
+            # /api/price-history            → all snapshots for all coins
+            # /api/price-history?coinId=X&days=90 → filtered
+            from urllib.parse import urlparse, parse_qs
+            qs = parse_qs(urlparse(self.path).query)
+            coin_id = (qs.get('coinId') or [''])[0]
+            try:
+                days = int((qs.get('days') or ['0'])[0])
+            except ValueError:
+                days = 0
+            # filter history list
+            hist = list(_price_history)
+            if days > 0:
+                hist = hist[-days:]
+            if coin_id:
+                hist = [
+                    {'date': h['date'], **(h.get('coins', {}).get(coin_id) or {})}
+                    for h in hist if coin_id in (h.get('coins') or {})
+                ]
+            self._json(200, {
+                'snapshots': hist,
+                'count':     len(hist),
+                'coinId':    coin_id or None,
+            })
             return
 
         if self.path in ('/health', '/healthz'):

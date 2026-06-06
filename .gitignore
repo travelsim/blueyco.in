@@ -1,29 +1,9 @@
-# Cache files
-ebay_cache.json
-retailer_prices.json
-
-# Python
+.env
+.env.local
 __pycache__/
 *.pyc
-*.pyo
-
-# Environment
-.env
-*.local
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Virtual environments
 .venv/
-venv/
-
-# Agent / temp artifacts (push-ready noise)
-attached_assets/
-.local/
-
-# Replit / package (optional - low value for this pure-Python project)
-package.json
-package-lock.json
-.vercel
+node_modules/
+.DS_Store
+run_local.log
+*.log
