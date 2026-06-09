@@ -237,66 +237,86 @@ COINS = [
     {'id': 's3_pin_muffin', 'ebay_kw': 'Muffin Pin Cover 2026', 'search': 'Muffin Pin Cover'},
 ]
 
-# ── MAIN HANDLER ─────────────────────────────────────────────────────────────
-def handler(request):
-    now = time.time()
-    CACHE_TTL = 6 * 3600  # 6 hours
+# ── MAIN HANDLER (Vercel Python runtime, current format) ────────────────────
+# Vercel's current Python serverless runtime requires a class-based handler
+# that inherits from BaseHTTPRequestHandler, NOT a v1-style `def handler(request)`.
+# See: https://vercel.com/docs/functions/serverless-functions/runtimes/python
+from http.server import BaseHTTPRequestHandler
 
-    # Return cached snapshot if still fresh
-    if 'full' in _cache and (now - _last_fetch.get('full', 0)) < CACHE_TTL:
-        return {
-            "statusCode": 200,
-            "headers": {
-                "Content-Type": "application/json",
-                "Cache-Control": "s-maxage=21600, stale-while-revalidate"
-            },
-            "body": json.dumps(_cache['full'])
-        }
+class handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self._respond()
 
-    # Load manual retailer prices (static file)
-    try:
-        with open('retailer_prices.json') as f:
-            manual = json.load(f)
-    except Exception:
-        manual = {}
+    def do_POST(self):
+        self._respond()
 
-    snapshot = {}
-
-    for coin in COINS:
-        cid = coin['id']
-
-        # eBay data (only if key is present)
-        ebay_data = None
-        if RAPIDAPI_KEY:
-            try:
-                ebay_data = _fetch_ebay(coin)
-            except Exception as e:
-                print(f"eBay error for {cid}: {e}")
-
-        # CoinXchange scrape (best effort)
-        cx_data = None
+    def _respond(self):
         try:
-            listings = _scrape_coinxchange(coin['search'])
-            cx_data = _summarise(listings) or {}
-            cx_data['search_url'] = 'https://www.coinxchange.com.au/buy?search=' + urllib.parse.quote(coin['search'])
+            payload = self._build_payload()
         except Exception as e:
-            print(f"CoinXchange error for {cid}: {e}")
+            # Surface the error so it's visible in Vercel logs
+            print(f"handler error: {e}")
+            self.send_response(500)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps({'error': str(e)}).encode())
+            return
 
-        snapshot[cid] = {
-            'ebay': ebay_data,
-            'coinxchange': cx_data,
-            'manual': manual.get(cid)
-        }
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/json')
+        self.send_header('Cache-Control', 's-maxage=21600, stale-while-revalidate')
+        self.end_headers()
+        self.wfile.write(json.dumps(payload).encode())
 
-    # Save to in-memory cache
-    _cache['full'] = snapshot
-    _last_fetch['full'] = now
+    def _build_payload(self):
+        now = time.time()
+        CACHE_TTL = 6 * 3600  # 6 hours
 
-    return {
-        "statusCode": 200,
-        "headers": {
-            "Content-Type": "application/json",
-            "Cache-Control": "s-maxage=21600, stale-while-revalidate"
-        },
-        "body": json.dumps(snapshot)
-    }
+        # Return cached snapshot if still fresh
+        if 'full' in _cache and (now - _last_fetch.get('full', 0)) < CACHE_TTL:
+            return _cache['full']
+
+        # Load manual retailer prices (static file)
+        # Vercel deploys from the project root, but the working directory at
+        # function runtime is the project root too — try both paths.
+        manual = {}
+        for candidate in ('retailer_prices.json', '/var/task/retailer_prices.json'):
+            try:
+                with open(candidate) as f:
+                    manual = json.load(f)
+                break
+            except Exception:
+                continue
+
+        snapshot = {}
+
+        for coin in COINS:
+            cid = coin['id']
+
+            # eBay data (only if key is present)
+            ebay_data = None
+            if RAPIDAPI_KEY:
+                try:
+                    ebay_data = _fetch_ebay(coin)
+                except Exception as e:
+                    print(f"eBay error for {cid}: {e}")
+
+            # CoinXchange scrape (best effort)
+            cx_data = None
+            try:
+                listings = _scrape_coinxchange(coin['search'])
+                cx_data = _summarise(listings) or {}
+                cx_data['search_url'] = 'https://www.coinxchange.com.au/buy?search=' + urllib.parse.quote(coin['search'])
+            except Exception as e:
+                print(f"CoinXchange error for {cid}: {e}")
+
+            snapshot[cid] = {
+                'ebay': ebay_data,
+                'coinxchange': cx_data,
+                'manual': manual.get(cid)
+            }
+
+        # Save to in-memory cache
+        _cache['full'] = snapshot
+        _last_fetch['full'] = now
+        return snapshot
