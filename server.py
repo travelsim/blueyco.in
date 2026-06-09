@@ -178,6 +178,24 @@ class _BusyError(Exception):
 _rate_lock    = threading.Lock()
 _rate_buckets = {}
 
+def _client_ip(headers, socket_address):
+    """Return the best visitor IP available behind Cloudflare/Render proxies."""
+    cf_ip = (headers.get('CF-Connecting-IP') or '').strip()
+    if cf_ip:
+        return cf_ip
+
+    forwarded_for = (headers.get('X-Forwarded-For') or '').strip()
+    if forwarded_for:
+        first = forwarded_for.split(',')[0].strip()
+        if first:
+            return first
+
+    real_ip = (headers.get('X-Real-IP') or '').strip()
+    if real_ip:
+        return real_ip
+
+    return socket_address[0]
+
 def _is_rate_limited(ip):
     now = time.monotonic()
     with _rate_lock:
@@ -917,7 +935,7 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             return
 
-        if _is_rate_limited(self.client_address[0]):
+        if _is_rate_limited(_client_ip(self.headers, self.client_address)):
             self._json(429, {'error': 'Too many requests.'})
             return
 

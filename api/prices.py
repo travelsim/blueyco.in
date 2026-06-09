@@ -139,6 +139,27 @@ def _scrape_coinxchange(search_term):
             unique.append(l)
     return unique[:15]
 
+def _summarise(listings):
+    """Summarise CoinXchange listings for /api/prices.
+
+    Keep both the dynamic server naming (count/listings) and the broader
+    /api/prices naming (total_results/products) so frontend consumers can use
+    either shape without breaking if this serverless fallback is enabled.
+    """
+    prices = [l['price'] for l in listings if l.get('price')]
+    if not prices:
+        return None
+    top_listings = listings[:10]
+    return {
+        'average_price': round(sum(prices) / len(prices), 2),
+        'min_price': min(prices),
+        'max_price': max(prices),
+        'count': len(prices),
+        'listings': top_listings,
+        'total_results': len(prices),
+        'products': top_listings,
+    }
+
 def _fetch_ebay(coin):
     if not RAPIDAPI_KEY:
         return {"products": [], "average_price": None}
