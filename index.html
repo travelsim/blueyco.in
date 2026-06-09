@@ -790,7 +790,7 @@
 <!-- Placeholder for All Coins section (will expand later) -->
 <section id="all-coins" class="section">
   <h2 class="section-title">All 48 Official Coins</h2>
-  <p style="color:var(--slate); max-width:600px;">Full searchable and filterable catalogue coming in the next iteration. The interactive dashboard above already uses the complete 48-coin dataset.</p>
+  <p style="color:var(--slate); max-width:600px;">Search and sort the complete catalogue below. Use the <kbd>/</kbd> key to jump straight to search.</p>
 </section>
 
 <!-- The rest of the old tracker content is preserved below for now while we transition -->
@@ -1208,6 +1208,28 @@ document.addEventListener('DOMContentLoaded', () => {
     <button class="tab-btn" data-series="series3">Series 3 · 2026 Bluey 2</button>
   </div>
 
+  <div class="filter-bar" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:14px 0 18px; padding:10px 12px; background:var(--bg); border:1px solid var(--border); border-radius:10px;">
+    <input
+      type="search"
+      id="search-input"
+      placeholder="🔍 Search by name, year, mintage, or keywords…"
+      autocomplete="off"
+      style="flex:1 1 240px; min-width:200px; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:0.92rem; background:#fff;"
+      aria-label="Search coins">
+    <select
+      id="sort-select"
+      style="padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:0.9rem; background:#fff; cursor:pointer;"
+      aria-label="Sort coins">
+      <option value="default">Sort: Default order</option>
+      <option value="premium_desc">Highest Premium %</option>
+      <option value="price_desc">Highest eBay Avg</option>
+      <option value="price_asc">Lowest eBay Avg</option>
+      <option value="mintage_asc">Rarest (lowest mintage)</option>
+      <option value="newest">Newest first</option>
+    </select>
+    <span id="filter-count" style="font-size:0.82rem; color:var(--slate); white-space:nowrap;"></span>
+  </div>
+
   <div class="coins-grid" id="coins-grid"></div>
 </main>
 
@@ -1281,6 +1303,8 @@ window.COINS = [
 // ────────────────────────────────────────────────
 let coinData     = {};   // { coinId: { ebay: {...}, coinxchange: {...} } }
 let activeSeries = 'all';
+let searchQuery  = '';   // raw user input, lowercased in the filter fn
+let sortMode     = 'default';
 const charts     = {};
 
 // ────────────────────────────────────────────────
@@ -1309,6 +1333,12 @@ function formatAUD(val) {
 function calcPremium(avg, mintPrice) {
   if (!mintPrice || !avg || isNaN(avg)) return null;
   return (((avg - mintPrice) / mintPrice) * 100).toFixed(1);
+}
+
+function parseMintage(raw) {
+  if (raw == null) return null;
+  const n = parseInt(String(raw).replace(/[^\d]/g, ''), 10);
+  return Number.isFinite(n) && n > 0 ? n : null;
 }
 
 function safeText(val) {
@@ -1696,19 +1726,94 @@ function renderBuyOptions(panel, options) {
 // ────────────────────────────────────────────────
 // GRID
 // ────────────────────────────────────────────────
+function _coinMatchesSearch(coin, q) {
+  if (!q) return true;
+  const haystack = [
+    coin.name,
+    coin.keywords,
+    String(coin.year || ''),
+    coin.mintage ? String(coin.mintage) : '',
+    coin.series,
+    coin.rarity != null ? `rarity ${coin.rarity}` : '',
+  ].join(' ').toLowerCase();
+  return q.split(/\s+/).filter(Boolean).every(token => haystack.includes(token));
+}
+
+function _coinEbay(coin) {
+  return (coinData[coin.id] || {}).ebay || {};
+}
+
+function _sortCoins(list) {
+  if (sortMode === 'default') return list;
+  const out = list.slice();
+  switch (sortMode) {
+    case 'premium_desc': {
+      out.sort((a, b) => {
+        const pa = parseFloat(calcPremium(_coinEbay(a).average_price, a.mintPrice)) || -Infinity;
+        const pb = parseFloat(calcPremium(_coinEbay(b).average_price, b.mintPrice)) || -Infinity;
+        return pb - pa;
+      });
+      break;
+    }
+    case 'price_desc': {
+      out.sort((a, b) => (parseFloat(_coinEbay(b).average_price) || 0) - (parseFloat(_coinEbay(a).average_price) || 0));
+      break;
+    }
+    case 'price_asc': {
+      out.sort((a, b) => (parseFloat(_coinEbay(a).average_price) || Infinity) - (parseFloat(_coinEbay(b).average_price) || Infinity));
+      break;
+    }
+    case 'mintage_asc': {
+      out.sort((a, b) => (parseMintage(a.mintage) || Infinity) - (parseMintage(b.mintage) || Infinity));
+      break;
+    }
+    case 'newest': {
+      out.sort((a, b) => (b.year || 0) - (a.year || 0));
+      break;
+    }
+  }
+  return out;
+}
+
 function renderGrid() {
   const grid     = document.getElementById('coins-grid');
-  const filtered = activeSeries === 'all' ? COINS : COINS.filter(c => c.series === activeSeries);
+  const countEl  = document.getElementById('filter-count');
+  const q        = searchQuery.trim().toLowerCase();
 
+  // 1. series filter
+  let list = activeSeries === 'all' ? COINS.slice() : COINS.filter(c => c.series === activeSeries);
+
+  // 2. search filter
+  const totalInSeries = list.length;
+  if (q) list = list.filter(c => _coinMatchesSearch(c, q));
+
+  // 3. sort
+  list = _sortCoins(list);
+
+  // 4. paint
   while (grid.firstChild) grid.removeChild(grid.firstChild);
-  filtered.forEach(coin => grid.append(buildCard(coin)));
+  if (list.length === 0) {
+    const empty = el('div', 'empty-state', 'No coins match your search.');
+    empty.style.cssText = 'grid-column:1/-1; padding:40px; text-align:center; color:var(--slate); font-style:italic;';
+    grid.append(empty);
+  } else {
+    list.forEach(coin => grid.append(buildCard(coin)));
+    list.forEach(coin => {
+      const d = _coinEbay(coin);
+      if (d && d.products && d.products.length > 0) {
+        requestAnimationFrame(() => buildChart(`chart-${coin.id}`, d.products));
+      }
+    });
+  }
 
-  filtered.forEach(coin => {
-    const d = (coinData[coin.id] || {}).ebay;
-    if (d && d.products && d.products.length > 0) {
-      requestAnimationFrame(() => buildChart(`chart-${coin.id}`, d.products));
+  // 5. count badge
+  if (countEl) {
+    if (q || activeSeries !== 'all') {
+      countEl.textContent = `Showing ${list.length} of ${totalInSeries}`;
+    } else {
+      countEl.textContent = `${list.length} coins`;
     }
-  });
+  }
 }
 
 // ────────────────────────────────────────────────
@@ -1722,6 +1827,41 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     renderGrid();
   });
 });
+
+// ────────────────────────────────────────────────
+// SEARCH + SORT
+// ────────────────────────────────────────────────
+const _searchInput = document.getElementById('search-input');
+const _sortSelect  = document.getElementById('sort-select');
+if (_searchInput) {
+  _searchInput.addEventListener('input', (e) => {
+    searchQuery = e.target.value || '';
+    renderGrid();
+  });
+  // keyboard shortcut: '/' focuses search from anywhere (matches deal-hunter UX)
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && document.activeElement !== _searchInput &&
+        document.activeElement && document.activeElement.tagName !== 'INPUT' &&
+        document.activeElement.tagName !== 'TEXTAREA' &&
+        document.activeElement.tagName !== 'SELECT') {
+      e.preventDefault();
+      _searchInput.focus();
+      _searchInput.select();
+    }
+    if (e.key === 'Escape' && document.activeElement === _searchInput) {
+      _searchInput.value = '';
+      searchQuery = '';
+      renderGrid();
+      _searchInput.blur();
+    }
+  });
+}
+if (_sortSelect) {
+  _sortSelect.addEventListener('change', (e) => {
+    sortMode = e.target.value || 'default';
+    renderGrid();
+  });
+}
 
 // ────────────────────────────────────────────────
 // INIT
