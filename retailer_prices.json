@@ -99,7 +99,6 @@
     "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+Bingo+and+Friends+coin&LH_Sold=1&LH_Complete=1&_sop=15" }
   },
 
-  // --- New coins from final 48-coin catalogue ---
   "s1_bandit": {
     "ramint": { "price": 5.00, "available": true, "url": "https://eshop.ramint.gov.au/" },
     "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+Dollarbuck+Bandit&LH_Sold=1&LH_Complete=1&_sop=15" }
