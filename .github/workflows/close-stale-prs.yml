@@ -1,0 +1,31 @@
+name: Close Stale PRs
+on:
+  schedule:
+    - cron: '0 0 * * 0'
+permissions:
+  pull-requests: write
+jobs:
+  close-stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const staleDays = 60;
+            const staleDate = new Date();
+            staleDate.setDate(staleDate.getDate() - staleDays);
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open'
+            });
+            for (const pr of prs) {
+              if (new Date(pr.updated_at) < staleDate && !pr.draft) {
+                await github.rest.pulls.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pr.number,
+                  state: 'closed'
+                });
+              }
+            }
