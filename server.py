@@ -1,3 +1,4 @@
+import base64
 import json
 import os
 import re
@@ -16,6 +17,18 @@ RAPIDAPI_URL  = f'https://{RAPIDAPI_HOST}/findCompletedItems'
 
 EBAY_LIVE_HOST = 'real-time-ebay.p.rapidapi.com'
 EBAY_LIVE_URL  = f'https://{EBAY_LIVE_HOST}/search'
+
+# eBay's own Browse API (OAuth2 client-credentials grant — application-level
+# auth, no user login). Preferred over the RapidAPI reseller above when
+# configured, since it's eBay's sanctioned public API rather than a paid
+# third-party proxy. Covers active/Buy-It-Now listings only — eBay does not
+# expose sold/completed-listing search on this free tier.
+EBAY_CLIENT_ID     = os.environ.get('EBAY_CLIENT_ID', '')
+EBAY_CLIENT_SECRET = os.environ.get('EBAY_CLIENT_SECRET', '')
+EBAY_OAUTH_URL     = 'https://api.ebay.com/identity/v1/oauth2/token'
+EBAY_OAUTH_SCOPE   = 'https://api.ebay.com/oauth/api_scope'
+EBAY_BROWSE_URL    = 'https://api.ebay.com/buy/browse/v1/item_summary/search'
+EBAY_MARKETPLACE   = 'EBAY_AU'
 
 CACHE_FILE         = 'ebay_cache.json'
 MANUAL_PRICES_FILE = 'retailer_prices.json'
@@ -49,8 +62,8 @@ COINS = [
     {'id': 's3_camping',    'ebay_kw': '2026 $2 Bluey Camping privy mark uncirculated coin',    'search': '2026 Bluey Camping privy mark'},
     {'id': 's3_babyrace',   'ebay_kw': '2026 $2 Bluey Baby Race privy mark uncirculated',       'search': '2026 Bluey Baby Race privy mark'},
     {'id': 's3_granny',     'ebay_kw': '2026 $2 Bluey Granny Mobile privy mark uncirculated',   'search': '2026 Bluey Granny Mobile privy mark'},
-    {'id': 's3_till_bluey', 'ebay_kw': '2026 $2 Bluey coloured till coin circulation',          'search': '2026 Bluey till coin'},
-    {'id': 's3_till_bingo', 'ebay_kw': '2026 $2 Bingo coloured till coin circulation',          'search': '2026 Bingo till coin'},
+    {'id': 's3_till_bluey', 'ebay_kw': '2026 $2 Bluey coloured till coin circulation',          'search': '2026 Bluey Bingo coloured coin pair'},
+    {'id': 's3_till_bingo', 'ebay_kw': '2026 $2 Bingo coloured till coin circulation',          'search': '2026 Bluey Bingo coloured coin pair'},
     # ── Series 1 tube-set privy mark coins (new) ──
     {'id': 's1_mumdad',      'ebay_kw': '2024 $1 Bluey Mum & Dad Dollarbuck tube set unc',         'search': '2024 Bluey Mum and Dad tube set'},
     {'id': 's1_muffinsocks', 'ebay_kw': '2024 $1 Bluey Muffin & Socks Dollarbuck tube set unc',    'search': '2024 Bluey Muffin Socks tube set'},
@@ -95,6 +108,24 @@ RETAILERS = [
         'search_url': 'https://www.coinxchange.com.au/buy?search={q}',
         'type':       'coinxchange',
     },
+    {
+        'id':         'gumtree',
+        'name':       'Gumtree AU',
+        'base_url':   'https://www.gumtree.com.au',
+        # Gumtree's URL-slug search wants words space-separated (%20, as
+        # produced by urllib.parse.quote below) — hyphens are treated as a
+        # literal joined phrase and mostly return nothing. With real spaces
+        # this resolves to a precise per-coin search.
+        'search_url': 'https://www.gumtree.com.au/s-{q}/k0',
+        'type':       'link_only',
+    },
+    {
+        'id':         'cashconverters',
+        'name':       'Cash Converters',
+        'base_url':   'https://www.cashconverters.com.au',
+        'search_url': 'https://www.cashconverters.com.au/search-results?q={q}&query={q}',
+        'type':       'cashconverters',
+    },
 ]
 
 # ── IN-MEMORY STATE ──────────────────────────────────────────────────────────
@@ -102,6 +133,12 @@ _lock       = threading.Lock()
 _cache      = {}   # coinId → {'ebay': {...}, 'coinxchange': {...}}
 _buy_cache  = {}   # coinId → {'options': [...], 'fetchedAt': float}
 _start_time = time.monotonic()  # for health check uptime
+
+# eBay Browse API application access token — client-credentials tokens are
+# valid for ~2 h and shared across all requests, so it's minted once and
+# reused rather than re-fetched per search.
+_ebay_token_lock = threading.Lock()
+_ebay_token      = {'value': None, 'expires_at': 0}
 
 # ── BUY-OPTIONS CONCURRENCY CONTROLS ─────────────────────────────────────────
 # Hard cap on simultaneous retailer fan-outs. Each scrape can hold a thread for
@@ -194,6 +231,47 @@ def _parse_price(raw):
     return round(val, 2) if val > 0 else None
 
 
+class _TextLinearizer(HTMLParser):
+    """Flattens HTML into one text-node-per-line (roughly mirroring a
+    browser's rendered text), with the innermost enclosing <a href> tracked
+    per line. Used to parse listing pages by line position instead of by
+    brittle, changeable CSS class names."""
+    SKIP_TAGS = {'script', 'style', 'noscript', 'svg'}
+
+    def __init__(self):
+        super().__init__()
+        self._skip_depth = 0
+        self._href_stack = []
+        self.lines = []
+        self.hrefs = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag in self.SKIP_TAGS:
+            self._skip_depth += 1
+        if tag == 'a':
+            self._href_stack.append(dict(attrs).get('href'))
+
+    def handle_endtag(self, tag):
+        if tag in self.SKIP_TAGS and self._skip_depth:
+            self._skip_depth -= 1
+        if tag == 'a' and self._href_stack:
+            self._href_stack.pop()
+
+    def handle_data(self, data):
+        if self._skip_depth:
+            return
+        text = data.strip()
+        if text:
+            self.lines.append(text)
+            self.hrefs.append(self._href_stack[-1] if self._href_stack else None)
+
+
+def _linearize_html(html):
+    p = _TextLinearizer()
+    p.feed(html)
+    return p.lines, p.hrefs
+
+
 class _LDParser(HTMLParser):
     """Extracts application/ld+json script block contents."""
     def __init__(self):
@@ -284,70 +362,125 @@ def _fetch_ebay(coin):
 
 
 # ── COINXCHANGE MARKET PRICE SCRAPER ─────────────────────────────────────────
-def _scrape_coinxchange(search_term):
+# CoinXchange's listing cards are server-rendered twice per item (a mobile
+# layout and a desktop layout, toggled by CSS), so the page is linearized to
+# text and parsed by fixed line position relative to well-known anchor lines
+# ("Sold <date>" for sold listings, the "AU $<price>" line for active ones)
+# rather than by CSS class, then deduplicated. This also distinguishes a
+# listing's real price ("AU $12.00") from its postage cost
+# ("+AU $12.00 postage"), which a plain dollar-amount regex cannot.
+_CX_BASE = 'https://www.coinxchange.com.au'
+
+
+def _cx_is_feedback(s):
+    return s == '(No feedback)' or bool(re.match(r'^\(\d+\)$', s))
+
+
+def _cx_dedupe(records, keys):
+    seen, out = set(), []
+    for r in records:
+        k = tuple(r.get(x) for x in keys)
+        if k in seen:
+            continue
+        seen.add(k)
+        out.append(r)
+    return out
+
+
+def _cx_parse_sold(lines, hrefs):
+    """Parse a sold_items=true&sort=3 page into sold listings (for market-price stats)."""
+    n, i, records = len(lines), 0, []
+    while i < n:
+        if lines[i].startswith('Sold '):
+            date = lines[i][5:].strip()
+            seller = lines[i + 1] if i + 1 < n else ''
+            j = i + 2
+            k = j + 1 if (j < n and _cx_is_feedback(lines[j])) else j
+            if k < n and re.match(r'^\d+%$', lines[k]):
+                k += 1
+
+            p_idx = i - 1
+            price = title = href = None
+            if p_idx >= 0 and (lines[p_idx] == 'Free postage' or re.match(r'^\+AU \$[\d,.]+ postage$', lines[p_idx])):
+                p_idx -= 1
+            if p_idx >= 0 and lines[p_idx] == 'Buy It Now':
+                p_idx -= 1
+            if p_idx >= 0 and re.match(r'^AU \$[\d,.]+$', lines[p_idx]):
+                price = _parse_price(lines[p_idx].replace('AU $', ''))
+                p_idx -= 1
+            if p_idx >= 0 and lines[p_idx] == 'Promoted':
+                p_idx -= 1
+            if p_idx >= 0 and not _cx_is_feedback(lines[p_idx]) and not re.match(r'^\d+%$', lines[p_idx]):
+                title = lines[p_idx]
+                href = hrefs[p_idx]
+
+            if title and price:
+                records.append({
+                    'price': price, 'title': title, 'url': _abs_url(href, _CX_BASE) if href else None,
+                    'sold_date': date, 'seller': seller,
+                })
+            i = k
+        else:
+            i += 1
+    return _cx_dedupe(records, ['title', 'price', 'sold_date', 'seller'])
+
+
+def _cx_parse_active(lines, hrefs):
+    """Parse a plain (unfiltered) search page into currently-buyable listings."""
+    n, i, records = len(lines), 0, []
+    while i < n:
+        if re.match(r'^AU \$[\d,.]+$', lines[i]):
+            price = _parse_price(lines[i].replace('AU $', ''))
+            p = i - 1
+            if p >= 0 and lines[p] == 'Promoted':
+                p -= 1
+            title = href = None
+            if p >= 0 and not _cx_is_feedback(lines[p]) and not re.match(r'^\d+%$', lines[p]):
+                title = lines[p]
+                href = hrefs[p]
+
+            f = i + 1
+            if f < n and lines[f] == 'Buy It Now':
+                f += 1
+            if f < n and (lines[f] == 'Free postage' or re.match(r'^\+AU \$[\d,.]+ postage$', lines[f])):
+                f += 1
+            seller = lines[f] if f < n else None
+            f += 1
+            if f < n and _cx_is_feedback(lines[f]):
+                f += 1
+            if f < n and re.match(r'^\d+%$', lines[f]):
+                f += 1
+
+            if title and price and seller:
+                records.append({'price': price, 'title': title, 'url': _abs_url(href, _CX_BASE) if href else None})
+            i = f
+        else:
+            i += 1
+    return _cx_dedupe(records, ['title', 'price', 'url'])
+
+
+def _scrape_coinxchange(search_term, sold_only=True):
     """
-    Scrape CoinXchange buy listings for market price data.
-    Tries JSON-LD → embedded JSON → microdata → dollar-amount regex.
-    Returns list of {'price': float, 'title': str, 'url': str}.
+    Scrape CoinXchange listings.
+    sold_only=True  -> recently sold prices, used for market-price stats.
+    sold_only=False -> currently active/buyable listings, used for the Buy-Now panel.
+    Returns list of {'price': float, 'title': str, 'url': str, ...}.
     """
-    q   = urllib.parse.quote(search_term)
-    url = f'https://www.coinxchange.com.au/buy?search={q}'
+    params = {'search': search_term}
+    if sold_only:
+        params['sort'] = '3'
+        params['filter[show_only][sold_items]'] = 'true'
+    url = f'{_CX_BASE}/buy?{urllib.parse.urlencode(params)}'
     try:
         html = _http_get(url)
     except Exception as e:
         print(f'CoinXchange fetch error ({search_term}): {e}')
         return []
 
-    listings = []
+    lines, hrefs = _linearize_html(html)
+    listings = _cx_parse_sold(lines, hrefs) if sold_only else _cx_parse_active(lines, hrefs)
 
-    # Strategy 1 — JSON-LD
-    for prod in _ld_products(html, 'https://www.coinxchange.com.au'):
-        if prod['price']:
-            listings.append({'price': prod['price'], 'title': prod['name'], 'url': prod['url'] or url})
-
-    # Strategy 2 — embedded JSON objects containing a "price" key
-    if not listings:
-        for m in re.finditer(r'\{[^{}]{0,400}"price"[^{}]{0,400}\}', html):
-            try:
-                obj = json.loads(m.group())
-                p   = _parse_price(obj.get('price') or obj.get('Price'))
-                if p and 5 < p < 10000:
-                    listings.append({
-                        'price': p,
-                        'title': str(obj.get('title') or obj.get('name') or ''),
-                        'url':   str(obj.get('url') or obj.get('link') or url),
-                    })
-            except (json.JSONDecodeError, TypeError):
-                continue
-
-    # Strategy 3 — microdata itemprop="price"
-    if not listings:
-        for m in re.finditer(
-            r'itemprop=["\']price["\'][^>]*content=["\']([^"\']+)["\']', html
-        ):
-            p = _parse_price(m.group(1))
-            if p and 5 < p < 10000:
-                listings.append({'price': p, 'title': '', 'url': url})
-
-    # Strategy 4 — dollar-amount regex scan
-    if not listings:
-        raw_prices = re.findall(r'\$\s*([\d,]+(?:\.\d{1,2})?)', html)
-        seen = set()
-        for raw in raw_prices:
-            p = _parse_price(raw)
-            if p and 5 < p < 10000 and p not in seen:
-                seen.add(p)
-                listings.append({'price': p, 'title': '', 'url': url})
-
-    # Deduplicate and sort
-    unique, seen_prices = [], set()
-    for l in sorted(listings, key=lambda x: x['price']):
-        key = round(l['price'], 0)
-        if key not in seen_prices:
-            seen_prices.add(key)
-            unique.append(l)
-
-    return unique[:15]
+    return sorted(listings, key=lambda x: x['price'])[:15]
 
 
 def _summarise(listings):
@@ -473,10 +606,52 @@ def _jsonld_options(retailer, keywords):
     return sorted(items[:3], key=lambda x: x['price'] or 9999)
 
 
+def _cashconverters_options(retailer, keywords):
+    """
+    Query Cash Converters' public search JSON API for matching listings.
+    Unlike eBay/Gumtree this endpoint has no bot-detection at all — a plain
+    request with a basic User-Agent returns clean structured JSON, no HTML
+    scraping needed. Cash Converters is a real secondhand retailer with
+    limited stock, so a narrow per-coin query often legitimately returns
+    zero results (not a matching bug) — that's fine, it just means nothing
+    of that specific coin is in stock right now.
+    """
+    q = urllib.parse.quote(keywords)
+    api_url = (
+        'https://www.cashconverters.com.au/c3api/search/results'
+        f'?Sort=default&page=1&q={q}&query={q}'
+    )
+    try:
+        body = _http_get(api_url, accept='application/json')
+        data = json.loads(body)
+    except Exception as e:
+        print(f'Cash Converters fetch error ({keywords}): {e}')
+        return []
+
+    product_list = (data.get('Value') or {}).get('ProductList') or {}
+    items = product_list.get('ProductListItems') or []
+
+    out = []
+    for it in items:
+        price = _parse_price(it.get('Sp'))
+        if not price:
+            continue
+        out.append({
+            'retailer_id': retailer['id'],
+            'name':        retailer['name'],
+            'price':       price,
+            'available':   True,
+            'url':         _abs_url(it.get('Url'), retailer['base_url']),
+            'link_only':   False,
+            'subtitle':    it.get('StoreNameWithState'),
+        })
+    return sorted(out, key=lambda x: x['price'])[:3]
+
+
 def _coinxchange_buy_options(retailer, keywords):
     q        = urllib.parse.quote(keywords)
     page_url = retailer['search_url'].replace('{q}', q)
-    listings = _scrape_coinxchange(keywords)
+    listings = _scrape_coinxchange(keywords, sold_only=False)
     if not listings:
         return [{'retailer_id': retailer['id'], 'name': retailer['name'],
                  'price': None, 'available': True, 'url': page_url, 'link_only': True}]
@@ -490,13 +665,96 @@ def _coinxchange_buy_options(retailer, keywords):
     } for l in listings[:3]]
 
 
-def _ebay_live_options(retailer, keywords):
+def _get_ebay_token():
+    """Mint (or reuse) an eBay OAuth2 application access token via the
+    client-credentials grant. Raises on failure — callers treat that as
+    'Browse API unavailable' and fall back accordingly."""
+    with _ebay_token_lock:
+        if _ebay_token['value'] and time.time() < _ebay_token['expires_at'] - 60:
+            return _ebay_token['value']
+
+    creds = base64.b64encode(f'{EBAY_CLIENT_ID}:{EBAY_CLIENT_SECRET}'.encode()).decode()
+    body  = urllib.parse.urlencode({
+        'grant_type': 'client_credentials',
+        'scope':      EBAY_OAUTH_SCOPE,
+    }).encode()
+    req = urllib.request.Request(EBAY_OAUTH_URL, data=body, headers={
+        'Authorization': f'Basic {creds}',
+        'Content-Type':  'application/x-www-form-urlencoded',
+    }, method='POST')
+    with urllib.request.urlopen(req, timeout=10) as r:
+        data = json.loads(r.read())
+
+    token = data['access_token']
+    with _ebay_token_lock:
+        _ebay_token['value']      = token
+        _ebay_token['expires_at'] = time.time() + data.get('expires_in', 7200)
+    return token
+
+
+def _ebay_browse_search(keywords, limit=5):
     """
-    Fetch active eBay AU Buy It Now listings via RapidAPI real-time-ebay.
-    Falls back to a search link if the API call fails or returns no results.
+    Query eBay's own Browse API for active Buy It Now listings.
+    Returns list of {'price', 'title', 'url', 'subtitle'}. Requires
+    EBAY_CLIENT_ID/EBAY_CLIENT_SECRET; returns [] if unset or on any error.
+    """
+    if not (EBAY_CLIENT_ID and EBAY_CLIENT_SECRET):
+        return []
+
+    try:
+        token = _get_ebay_token()
+    except Exception as e:
+        print(f'eBay OAuth token error: {e}')
+        return []
+
+    params = urllib.parse.urlencode({
+        'q':      keywords,
+        'limit':  str(limit),
+        'filter': 'buyingOptions:{FIXED_PRICE}',
+        'sort':   'price',
+    })
+    req = urllib.request.Request(f'{EBAY_BROWSE_URL}?{params}', headers={
+        'Authorization':           f'Bearer {token}',
+        'X-EBAY-C-MARKETPLACE-ID': EBAY_MARKETPLACE,
+        'Accept':                  'application/json',
+    })
+    try:
+        with urllib.request.urlopen(req, timeout=12) as r:
+            data = json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        if e.code == 401:
+            # Token expired/revoked mid-lifetime — drop it so the next call remints.
+            with _ebay_token_lock:
+                _ebay_token['value'] = None
+        print(f'eBay Browse API error: {e}')
+        return []
+    except Exception as e:
+        print(f'eBay Browse API error: {e}')
+        return []
+
+    items = []
+    for it in data.get('itemSummaries', []):
+        price = _parse_price((it.get('price') or {}).get('value'))
+        if not price:
+            continue
+        condition = it.get('condition') or ''
+        items.append({
+            'price':    price,
+            'title':    it.get('title') or '',
+            'url':      it.get('itemWebUrl'),
+            'subtitle': condition[:40] if condition else None,
+        })
+    return items
+
+
+def _ebay_rapidapi_search(keywords):
+    """
+    Query the RapidAPI real-time-ebay reseller for active Buy It Now
+    listings. Returns list of {'price', 'title', 'url', 'subtitle'}.
+    Requires RAPIDAPI_KEY; returns [] if unset or on any error.
     """
     if not RAPIDAPI_KEY:
-        return _link_only_option(retailer, keywords)
+        return []
 
     q   = urllib.parse.quote(keywords)
     url = f'{EBAY_LIVE_URL}?query={q}&region=15&buyNow=true&sortBy=price_asc'
@@ -510,7 +768,7 @@ def _ebay_live_options(retailer, keywords):
             data = json.loads(r.read())
     except Exception as e:
         print(f'eBay live API error: {e}')
-        return _link_only_option(retailer, keywords)
+        return []
 
     # Normalise across known response shapes
     results = (
@@ -527,32 +785,51 @@ def _ebay_live_options(retailer, keywords):
         if isinstance(raw_price, dict):
             raw_price = raw_price.get('value') or raw_price.get('amount')
         price = _parse_price(raw_price)
+        if not price:
+            continue
 
-        link = (
-            p.get('link') or p.get('url') or p.get('itemUrl') or
-            p.get('itemWebUrl') or
-            retailer['search_url'].replace('{q}', q)
-        )
-        safe_link = link if str(link).startswith('http') else retailer['search_url'].replace('{q}', q)
-
+        link = p.get('link') or p.get('url') or p.get('itemUrl') or p.get('itemWebUrl')
         condition = str(p.get('condition') or p.get('conditionDisplayName') or '')
-        available = True  # active listings are by definition available
 
-        if price:
-            items.append({
-                'retailer_id': retailer['id'],
-                'name':        retailer['name'],
-                'price':       price,
-                'available':   available,
-                'url':         safe_link,
-                'link_only':   False,
-                'subtitle':    condition[:40] if condition else None,
-            })
+        items.append({
+            'price':    price,
+            'title':    str(p.get('title') or ''),
+            'url':      link,
+            'subtitle': condition[:40] if condition else None,
+        })
+    return items
 
+
+def _ebay_live_options(retailer, keywords):
+    """
+    Fetch active eBay AU Buy It Now listings for the Buy-Now panel.
+    Prefers eBay's own Browse API (EBAY_CLIENT_ID/EBAY_CLIENT_SECRET); falls
+    back to the RapidAPI real-time-ebay reseller (RAPIDAPI_KEY) if that
+    yields nothing; falls back to a plain search link if neither is
+    configured or both fail.
+    """
+    items = _ebay_browse_search(keywords, limit=5)
+    if not items:
+        items = _ebay_rapidapi_search(keywords)
     if not items:
         return _link_only_option(retailer, keywords)
 
-    return sorted(items, key=lambda x: x['price'])[:3]
+    q = urllib.parse.quote(keywords)
+    out = []
+    for it in items:
+        url = it.get('url')
+        safe_link = url if url and str(url).startswith('http') else retailer['search_url'].replace('{q}', q)
+        out.append({
+            'retailer_id': retailer['id'],
+            'name':        retailer['name'],
+            'price':       it['price'],
+            'available':   True,
+            'url':         safe_link,
+            'link_only':   False,
+            'subtitle':    it.get('subtitle'),
+        })
+
+    return sorted(out, key=lambda x: x['price'])[:3]
 
 
 def _link_only_option(retailer, keywords):
@@ -629,6 +906,8 @@ def get_buy_options(coin_id, keywords):
                     results = _coinxchange_buy_options(r, keywords)
                 elif r['type'] == 'ebay_live':
                     results = _ebay_live_options(r, keywords)
+                elif r['type'] == 'cashconverters':
+                    results = _cashconverters_options(r, keywords)
                 else:
                     results = []
             except Exception as e:
@@ -752,6 +1031,8 @@ if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     print(f'Bluey Coin Tracker — http://0.0.0.0:{port}')
     if not RAPIDAPI_KEY:
-        print('WARNING: RAPIDAPI_KEY not set — eBay data will not auto-refresh.')
+        print('WARNING: RAPIDAPI_KEY not set — eBay sold-price stats will not auto-refresh.')
+    if not (EBAY_CLIENT_ID and EBAY_CLIENT_SECRET):
+        print('WARNING: EBAY_CLIENT_ID/EBAY_CLIENT_SECRET not set — eBay Buy-Now listings will fall back to RapidAPI or a search link.')
     threading.Thread(target=_refresh_worker, daemon=True).start()
     ThreadingHTTPServer(('0.0.0.0', port), Handler).serve_forever()

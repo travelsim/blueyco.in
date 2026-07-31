@@ -17,5 +17,9 @@ services:
         value: "10000"
       - key: RAPIDAPI_KEY
         sync: false          # secret — set manually in Render dashboard
+      - key: EBAY_CLIENT_ID
+        sync: false          # secret — eBay Developer Program app Client ID (Browse API)
+      - key: EBAY_CLIENT_SECRET
+        sync: false          # secret — eBay Developer Program app Client Secret (Browse API)
       - key: PYTHONUNBUFFERED
         value: "1"
