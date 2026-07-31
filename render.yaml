@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: blueyco-in
+    runtime: python
+    plan: free
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: python3 server.py
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: RAPIDAPI_KEY
+        sync: false
+      - key: EPN_CAMPAIGN_ID
+        sync: false
+      - key: RUN_BACKGROUND_REFRESH
+        value: "0"

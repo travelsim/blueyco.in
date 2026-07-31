@@ -9,6 +9,8 @@ import urllib.parse
 from html.parser import HTMLParser
 from http.server import BaseHTTPRequestHandler, HTTPServer, ThreadingHTTPServer
 
+from storage import Storage
+
 # ── CONFIG ───────────────────────────────────────────────────────────────────
 RAPIDAPI_KEY  = os.environ.get('RAPIDAPI_KEY', '')
 RAPIDAPI_HOST = 'ebay-average-selling-price.p.rapidapi.com'
@@ -44,12 +46,24 @@ def affiliate_url(raw_url: str, coin_id: str = '', source: str = 'ebay') -> str:
 
 CACHE_FILE         = 'ebay_cache.json'
 MANUAL_PRICES_FILE = 'retailer_prices.json'
+PRICE_HISTORY_FILE  = 'price_history.json'
 REFRESH_SECS       = 14 * 24 * 3600   # 2 weeks
 CHECK_SECS         = 24 * 3600         # check daily whether refresh needed
 BUY_CACHE_TTL      = 24 * 3600         # retailer panel cache: 24 h
 MAX_BODY_BYTES     = 4_096
 RATE_LIMIT_RPM     = 10
 RATE_WINDOW_SECS   = 60
+RUN_BACKGROUND_REFRESH = os.environ.get(
+    'RUN_BACKGROUND_REFRESH',
+    '0' if os.environ.get('DATABASE_URL') else '1',
+).lower() in ('1', 'true', 'yes', 'on')
+
+storage = Storage(CACHE_FILE, PRICE_HISTORY_FILE)
+if storage.using_postgres:
+    storage.ensure_schema()
+    print('Storage: Postgres')
+else:
+    print('Storage: local JSON fallback')
 
 STATIC_FILES = {
     '/':            ('index.html',  'text/html; charset=utf-8'),
@@ -57,7 +71,7 @@ STATIC_FILES = {
     '/favicon.svg': ('favicon.svg', 'image/svg+xml'),
 }
 
-# ── COIN CATALOGUE (48 coins - final authoritative list) ─────────────────────
+# ── COIN CATALOGUE (46 coins - final authoritative list) ─────────────────────
 COINS = [
     # Series 1 - 2024 Dollarbucks
     {'id': 's1_bluey', 'ebay_kw': '2024 $1 Bluey Dollarbuck Bluey coin uncirculated', 'search': '2024 Bluey Dollarbuck Bluey'},
@@ -208,61 +222,41 @@ def _is_rate_limited(ip):
 
 # ── CACHE PERSISTENCE ────────────────────────────────────────────────────────
 def _load_cache():
-    try:
-        with open(CACHE_FILE, 'r') as f:
-            data = json.load(f)
-        # Normalize fetchedAt to float — some entries may have string timestamps
-        # from manual edits or older cache formats.
-        for coin_id, sources in data.items():
-            if not isinstance(sources, dict):
-                continue
-            for source, entry in sources.items():
-                if isinstance(entry, dict) and 'fetchedAt' in entry:
-                    ts = entry['fetchedAt']
-                    if isinstance(ts, str):
-                        try:
-                            entry['fetchedAt'] = float(ts)
-                        except ValueError:
-                            entry['fetchedAt'] = 0.0  # force re-fetch
-        with _lock:
-            _cache.update(data)
-        print(f'Cache loaded: {len(data)} coins')
-    except (FileNotFoundError, json.JSONDecodeError):
-        pass
+    data = storage.load_cache()
+    # Normalize fetchedAt to float for older seed files and database rows.
+    for coin_id, sources in data.items():
+        if not isinstance(sources, dict):
+            continue
+        for source, entry in sources.items():
+            if isinstance(entry, dict) and 'fetchedAt' in entry:
+                ts = entry['fetchedAt']
+                if isinstance(ts, str):
+                    try:
+                        entry['fetchedAt'] = float(ts)
+                    except ValueError:
+                        entry['fetchedAt'] = 0.0
+    with _lock:
+        _cache.clear()
+        _cache.update(data)
+    print(f'Cache loaded: {len(data)} coins')
 
 def _save_cache():
     with _lock:
         snapshot = dict(_cache)
-    try:
-        with open(CACHE_FILE, 'w') as f:
-            json.dump(snapshot, f)
-    except Exception as e:
-        print(f'Cache save error: {e}')
+    storage.save_cache(snapshot)
 
 
 # ── PRICE HISTORY (persisted snapshots) ──────────────────────────────────────
-PRICE_HISTORY_FILE = 'price_history.json'
 PRICE_HISTORY_MAX_DAYS = 365   # keep one year of daily snapshots
 _price_history = []            # list[dict]; each item is {date, coins: {coinId: {...}}}
 
 def _load_price_history():
     global _price_history
-    try:
-        with open(PRICE_HISTORY_FILE, 'r') as f:
-            data = json.load(f)
-        if isinstance(data, list):
-            _price_history = data
-        else:
-            _price_history = []
-    except (FileNotFoundError, json.JSONDecodeError):
-        _price_history = []
+    data = storage.load_history()
+    _price_history = data if isinstance(data, list) else []
 
 def _save_price_history_to_disk():
-    try:
-        with open(PRICE_HISTORY_FILE, 'w') as f:
-            json.dump(_price_history, f)
-    except Exception as e:
-        print(f'Price history save error: {e}')
+    storage.save_history(_price_history)
 
 def _save_price_snapshot():
     """Capture today's avg/min/max/sales for every coin in the cache.
@@ -545,55 +539,59 @@ def _stale(coin_id, source):
     return (time.time() - ts) > refresh_secs
 
 
-# ── BACKGROUND REFRESH THREAD ─────────────────────────────────────────────────
-def _refresh_worker():
+# ── PRICE REFRESH ────────────────────────────────────────────────────────────
+def refresh_once():
+    """Refresh stale sources once and persist the resulting snapshot."""
     _load_cache()
     _load_price_history()
+    refreshed = 0
+    for coin in COINS:
+        cid = coin['id']
+
+        if RAPIDAPI_KEY and _stale(cid, 'ebay'):
+            try:
+                result = _fetch_ebay(coin)
+                with _lock:
+                    _cache.setdefault(cid, {})['ebay'] = {
+                        **result, 'fetchedAt': time.time()
+                    }
+                _save_cache()
+                refreshed += 1
+                print(f'eBay OK: {cid}')
+            except Exception as e:
+                print(f'eBay FAIL {cid}: {e}')
+            time.sleep(5)
+
+        if _stale(cid, 'coinxchange'):
+            try:
+                listings = _scrape_coinxchange(coin['search'])
+                summary  = _summarise(listings)
+                with _lock:
+                    _cache.setdefault(cid, {})['coinxchange'] = {
+                        **(summary or {}),
+                        'fetchedAt': time.time(),
+                        'search_url': (
+                            'https://www.coinxchange.com.au/buy?search='
+                            + urllib.parse.quote(coin['search'])
+                        ),
+                    }
+                _save_cache()
+                refreshed += 1
+                n = len(listings)
+                print(f'CoinXchange OK: {cid} ({n} listing{"s" if n != 1 else ""})')
+            except Exception as e:
+                print(f'CoinXchange FAIL {cid}: {e}')
+            time.sleep(3)
+
+    if refreshed:
+        print(f'Refresh cycle complete: {refreshed} update(s).')
+        _save_price_snapshot()
+    return refreshed
+
+
+def _refresh_worker():
     while True:
-        refreshed = 0
-        for coin in COINS:
-            cid = coin['id']
-
-            # ── eBay ──
-            if RAPIDAPI_KEY and _stale(cid, 'ebay'):
-                try:
-                    result = _fetch_ebay(coin)
-                    with _lock:
-                        _cache.setdefault(cid, {})['ebay'] = {
-                            **result, 'fetchedAt': time.time()
-                        }
-                    _save_cache()
-                    refreshed += 1
-                    print(f'eBay OK: {cid}')
-                except Exception as e:
-                    print(f'eBay FAIL {cid}: {e}')
-                time.sleep(5)
-
-            # ── CoinXchange ──
-            if _stale(cid, 'coinxchange'):
-                try:
-                    listings = _scrape_coinxchange(coin['search'])
-                    summary  = _summarise(listings)
-                    with _lock:
-                        _cache.setdefault(cid, {})['coinxchange'] = {
-                            **(summary or {}),
-                            'fetchedAt': time.time(),
-                            'search_url': (
-                                'https://www.coinxchange.com.au/buy?search='
-                                + urllib.parse.quote(coin['search'])
-                            ),
-                        }
-                    _save_cache()
-                    refreshed += 1
-                    n = len(listings)
-                    print(f'CoinXchange OK: {cid} — {n} listing{"s" if n!=1 else ""}')
-                except Exception as e:
-                    print(f'CoinXchange FAIL {cid}: {e}')
-                time.sleep(3)
-
-        if refreshed:
-            print(f'Refresh cycle complete: {refreshed} update(s).')
-            _save_price_snapshot()   # record today’s state once per cycle
+        refresh_once()
         time.sleep(CHECK_SECS)
 
 
@@ -741,10 +739,21 @@ def _load_manual():
         return {}
 
 
-def get_buy_options(coin_id, keywords):
-    # Fast path: valid cached result.
+def _get_cached_buy_options(coin_id):
     with _lock:
         cached = _buy_cache.get(coin_id)
+    if cached:
+        return cached
+    cached = storage.load_buy_cache(coin_id)
+    if cached:
+        with _lock:
+            _buy_cache[coin_id] = cached
+    return cached
+
+
+def get_buy_options(coin_id, keywords):
+    # Fast path: valid cached result.
+    cached = _get_cached_buy_options(coin_id)
     if cached and (time.time() - cached['fetchedAt']) < BUY_CACHE_TTL:
         return cached['options']
 
@@ -766,8 +775,7 @@ def get_buy_options(coin_id, keywords):
     try:
         # Re-check cache now that we hold a semaphore slot (another thread may
         # have just finished the same coin while we acquired the slot).
-        with _lock:
-            cached = _buy_cache.get(coin_id)
+        cached = _get_cached_buy_options(coin_id)
         if cached and (time.time() - cached['fetchedAt']) < BUY_CACHE_TTL:
             return cached['options']
 
@@ -813,8 +821,10 @@ def get_buy_options(coin_id, keywords):
         link_only = [o for o in options if o['link_only'] or o['price'] is None]
 
         final = priced + link_only
+        cached_value = {'options': final, 'fetchedAt': time.time()}
         with _lock:
-            _buy_cache[coin_id] = {'options': final, 'fetchedAt': time.time()}
+            _buy_cache[coin_id] = cached_value
+        storage.save_buy_cache(coin_id, cached_value)
         return final
     finally:
         _buy_options_sem.release()
@@ -874,6 +884,7 @@ class Handler(BaseHTTPRequestHandler):
             self._json(200, {
                 'status': 'ok',
                 'cache_count': len(_cache),
+                'storage': storage.mode,
                 'uptime_seconds': int(time.monotonic() - _start_time),
             })
             return
@@ -975,5 +986,10 @@ if __name__ == '__main__':
     print(f'Bluey Coin Tracker — http://0.0.0.0:{port}')
     if not RAPIDAPI_KEY:
         print('WARNING: RAPIDAPI_KEY not set — eBay data will not auto-refresh.')
-    threading.Thread(target=_refresh_worker, daemon=True).start()
+    _load_cache()
+    _load_price_history()
+    if RUN_BACKGROUND_REFRESH:
+        threading.Thread(target=_refresh_worker, daemon=True).start()
+    else:
+        print('Background refresh disabled; use scripts/refresh_prices.py.')
     ThreadingHTTPServer(('0.0.0.0', port), Handler).serve_forever()

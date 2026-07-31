@@ -1,1 +1,1 @@
-# Pure Python stdlib — no external dependencies needed.
+psycopg[binary,pool]>=3.2,<4
