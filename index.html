@@ -184,6 +184,7 @@
   .card-meta2 { font-size: 0.72rem; color: var(--muted); margin-top: 4px; display: flex; gap: 8px; flex-wrap: wrap; }
   .rarity { background: #fff3cd; color: #856404; padding: 1px 6px; border-radius: 4px; font-weight: 600; }
   .market-range { background: #d4edda; color: #155724; padding: 1px 6px; border-radius: 4px; font-weight: 600; }
+  .release-badge { background: rgba(30,144,212,0.12); color: var(--blue); padding: 1px 6px; border-radius: 4px; font-weight: 600; }
 
   .card-body { padding: 14px 18px; }
 
@@ -234,6 +235,21 @@
 
   /* ── MINI CHART ── */
   .chart-wrap { height: 80px; position: relative; margin-bottom: 12px; }
+
+  /* ── PRICE TREND (from persisted daily history) ── */
+  .price-trend {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.74rem;
+    color: var(--muted);
+    margin-bottom: 10px;
+    padding: 4px 2px;
+  }
+  .price-trend .trend-arrow { font-weight: 900; }
+  .price-trend.up   .trend-arrow, .price-trend.up   .trend-pct { color: #0e7a4e; }
+  .price-trend.down .trend-arrow, .price-trend.down .trend-pct { color: var(--red); }
+  .price-trend .trend-pct { font-weight: 800; }
 
   /* ── BUY NOW BUTTON ── */
   .buy-btn {
@@ -646,8 +662,8 @@
     <a href="#dashboard" class="btn-primary">
       Launch Interactive Dashboard →
     </a>
-    <div style="margin-top: 24px; font-size: 0.9rem; opacity: 0.75;">
-      46 official coins • Updated daily
+    <div style="margin-top: 24px; font-size: 0.9rem; opacity: 0.75;" id="hero-coin-count">
+      Updated daily
     </div>
   </div>
 </section>
@@ -1304,17 +1320,12 @@ document.addEventListener('DOMContentLoaded', () => {
 // ────────────────────────────────────────────────
 window.COINS = [
   // Series 1 — 2024 Dollarbucks ($1)
-  { id: 's1_bluey', series: 'series1', name: 'Bluey $1 Dollarbuck', keywords: 'bluey 2024 dollarbucks', denomination: 1, year: 2024, mintage: 1250000, mintPrice: 2, color: true, rarity: 2, marketLow: 5, marketHigh: 20, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Dollarbuck+Bluey' },
-  { id: 's1_bingo', series: 'series1', name: 'Bingo $1 Dollarbuck', keywords: 'bingo 2024 dollarbucks', denomination: 1, year: 2024, mintage: 1250000, mintPrice: 2, color: true, rarity: 2, marketLow: 5, marketHigh: 20, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Dollarbuck+Bingo' },
-  { id: 's1_bandit', series: 'series1', name: 'Bandit $1 Dollarbuck', keywords: 'bandit 2024 dollarbucks', denomination: 1, year: 2024, mintage: null, mintPrice: 5, color: true, rarity: 4, marketLow: 10, marketHigh: 30, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Dollarbuck+Bandit' },
-  { id: 's1_chilli', series: 'series1', name: 'Chilli $1 Dollarbuck', keywords: 'chilli 2024 dollarbucks', denomination: 1, year: 2024, mintage: null, mintPrice: 5, color: true, rarity: 4, marketLow: 10, marketHigh: 30, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Dollarbuck+Chilli' },
-  { id: 's1_muffin', series: 'series1', name: 'Muffin $1 Dollarbuck', keywords: 'muffin 2024 dollarbucks', denomination: 1, year: 2024, mintage: null, mintPrice: 8, color: true, rarity: 5, marketLow: 15, marketHigh: 40, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Dollarbuck+Muffin' },
-  { id: 's1_socks', series: 'series1', name: 'Socks $1 Dollarbuck', keywords: 'socks 2024 dollarbucks', denomination: 1, year: 2024, mintage: null, mintPrice: 8, color: true, rarity: 5, marketLow: 15, marketHigh: 40, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Dollarbuck+Socks' },
-  { id: 's1_nana', series: 'series1', name: 'Nana $1 Dollarbuck', keywords: 'nana 2024 dollarbucks', denomination: 1, year: 2024, mintage: null, mintPrice: 8, color: true, rarity: 5, marketLow: 15, marketHigh: 40, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Dollarbuck+Nana' },
-  { id: 's1_bob_bilby', series: 'series1', name: 'Bob Bilby $1 Dollarbuck', keywords: 'bob bilby 2024 dollarbucks', denomination: 1, year: 2024, mintage: null, mintPrice: 8, color: true, rarity: 5, marketLow: 15, marketHigh: 40, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Dollarbuck+Bob+Bilby' },
-  { id: 's1_lucky', series: 'series1', name: 'Lucky $1 Dollarbuck', keywords: 'lucky 2024 dollarbucks', denomination: 1, year: 2024, mintage: null, mintPrice: 8, color: true, rarity: 5, marketLow: 15, marketHigh: 40, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Dollarbuck+Lucky' },
-  { id: 's1_rusty', series: 'series1', name: 'Rusty $1 Dollarbuck', keywords: 'rusty 2024 dollarbucks', denomination: 1, year: 2024, mintage: null, mintPrice: 8, color: true, rarity: 5, marketLow: 15, marketHigh: 40, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Dollarbuck+Rusty' },
-  { id: 's1_10_coin_folder_set', series: 'series1', name: '10-Coin Folder Set', keywords: 'folder 2024 set', denomination: 1, year: 2024, mintage: null, mintPrice: 39, color: true, rarity: 4, marketLow: 80, marketHigh: 180, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+10+coin+tube+folder+set' },
+  { id: 's1_bluey', series: 'series1', release: 'ram_jun_2024', name: 'Bluey $1 Dollarbuck', keywords: 'bluey 2024 dollarbucks', denomination: 1, year: 2024, mintage: 30000, mintPrice: 20, color: true, rarity: 2, marketLow: 20, marketHigh: 40, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Dollarbuck+Bluey' },
+  { id: 's1_bingo', series: 'series1', release: 'auspost_sep_2024', name: 'Bingo $1 Dollarbuck', keywords: 'bingo 2024 dollarbucks', denomination: 1, year: 2024, mintage: null, mintPrice: 20, color: true, rarity: 2, marketLow: 20, marketHigh: 40, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Dollarbuck+Bingo' },
+  { id: 's1_grannies', series: 'series1', release: 'ram_jun_2024', name: 'The Grannies $1 Dollarbuck', keywords: 'the grannies 2024 dollarbucks', denomination: 1, year: 2024, mintage: 30000, mintPrice: 20, color: true, rarity: 2, marketLow: 20, marketHigh: 40, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+The+Grannies' },
+  { id: 's1_heelers', series: 'series1', release: 'ram_jun_2024', name: 'The Heelers $1 Dollarbuck', keywords: 'the heelers 2024 dollarbucks', denomination: 1, year: 2024, mintage: 30000, mintPrice: 20, color: true, rarity: 2, marketLow: 20, marketHigh: 40, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+The+Heelers' },
+  { id: 's1_3_coin_set', series: 'series1', release: 'ram_jun_2024', name: 'Three-Coin Presentation Set', keywords: '3 coin presentation envelope 2024', denomination: 1, year: 2024, mintage: 25000, mintPrice: null, color: true, rarity: 6, marketLow: 350, marketHigh: 600, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Three+Coin+Collection' },
+  { id: 's1_10_coin_folder_set', series: 'series1', release: 'auspost_sep_2024', name: '10-Coin Folder Set', keywords: 'folder 2024 set', denomination: 1, year: 2024, mintage: null, mintPrice: 39, color: true, rarity: 4, marketLow: 80, marketHigh: 180, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+10+coin+tube+folder+set' },
   { id: 's1_coloured_insert_variant', series: 'series1', name: 'Coloured Insert Variant', keywords: 'insert 2024 variant', denomination: 1, year: 2024, mintage: null, mintPrice: null, color: true, rarity: 8, marketLow: 150, marketHigh: 500, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+insert+variant' },
 
   // Series 2 — 2025 Christmas
@@ -1322,11 +1333,11 @@ window.COINS = [
   { id: 's2_xmas_silv', series: 'series2', name: '$1 Coloured Silver Proof Christmas Coin', keywords: 'christmas 2025 silver proof', denomination: 1, year: 2025, mintage: 10000, mintPrice: 100, color: true, rarity: 9, marketLow: 250, marketHigh: 700, cxUrl: 'https://www.coinxchange.com.au/buy?search=2025+Bluey+Christmas+silver+proof' },
 
   // Series 3 — 2026 Bluey $2
-  { id: 's3_rain', series: 'series3', name: 'Rain $2', keywords: 'rain 2026 dollarbucks', denomination: 2, year: 2026, mintage: null, mintPrice: 15, color: true, rarity: 3, marketLow: 40, marketHigh: 90, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Rain' },
-  { id: 's3_sleepytime', series: 'series3', name: 'Sleepytime $2', keywords: 'sleepytime 2026 dollarbucks', denomination: 2, year: 2026, mintage: null, mintPrice: 15, color: true, rarity: 3, marketLow: 40, marketHigh: 90, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Sleepytime' },
-  { id: 's3_camping', series: 'series3', name: 'Camping $2', keywords: 'camping 2026 dollarbucks', denomination: 2, year: 2026, mintage: null, mintPrice: 15, color: true, rarity: 3, marketLow: 40, marketHigh: 90, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Camping' },
-  { id: 's3_babyrace', series: 'series3', name: 'Baby Race $2', keywords: 'baby race 2026 dollarbucks', denomination: 2, year: 2026, mintage: null, mintPrice: 15, color: true, rarity: 3, marketLow: 40, marketHigh: 90, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Baby+Race' },
-  { id: 's3_granny', series: 'series3', name: 'Granny Mobile $2', keywords: 'granny mobile 2026 dollarbucks', denomination: 2, year: 2026, mintage: null, mintPrice: 15, color: true, rarity: 3, marketLow: 40, marketHigh: 90, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Granny+Mobile' },
+  { id: 's3_rain', series: 'series3', name: 'Rain $2', keywords: 'rain 2026 dollarbucks', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, rarity: 7, marketLow: 40, marketHigh: 90, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Rain' },
+  { id: 's3_sleepytime', series: 'series3', name: 'Sleepytime $2', keywords: 'sleepytime 2026 dollarbucks', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, rarity: 7, marketLow: 40, marketHigh: 90, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Sleepytime' },
+  { id: 's3_camping', series: 'series3', name: 'Camping $2', keywords: 'camping 2026 dollarbucks', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, rarity: 7, marketLow: 40, marketHigh: 90, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Camping' },
+  { id: 's3_babyrace', series: 'series3', name: 'Baby Race $2', keywords: 'baby race 2026 dollarbucks', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, rarity: 7, marketLow: 40, marketHigh: 90, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Baby+Race' },
+  { id: 's3_granny', series: 'series3', name: 'Granny Mobile $2', keywords: 'granny mobile 2026 dollarbucks', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, rarity: 7, marketLow: 40, marketHigh: 90, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Granny+Mobile' },
   { id: 's3_rain_privy', series: 'series3', name: 'Rain Privy Mark $2', keywords: 'privy mark rain 2026', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, rarity: 7, marketLow: 80, marketHigh: 200, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Rain+Privy+Mark' },
   { id: 's3_sleepytime_privy', series: 'series3', name: 'Sleepytime Privy Mark $2', keywords: 'privy mark sleepytime 2026', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, rarity: 7, marketLow: 80, marketHigh: 200, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Sleepytime+Privy+Mark' },
   { id: 's3_camping_privy', series: 'series3', name: 'Camping Privy Mark $2', keywords: 'privy mark camping 2026', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, rarity: 7, marketLow: 80, marketHigh: 200, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Camping+Privy+Mark' },
@@ -1349,18 +1360,23 @@ window.COINS = [
   { id: 's3_pin_chilli', series: 'series3', name: 'Chilli Pin Cover', keywords: 'pin cover 2026 chilli', denomination: null, year: 2026, mintage: null, mintPrice: 18, color: false, rarity: 6, marketLow: 25, marketHigh: 60, cxUrl: 'https://www.coinxchange.com.au/buy?search=Chilli+Pin+Cover' },
   { id: 's3_pin_muffin', series: 'series3', name: 'Muffin Pin Cover', keywords: 'pin cover 2026 muffin', denomination: null, year: 2026, mintage: null, mintPrice: 18, color: false, rarity: 6, marketLow: 25, marketHigh: 60, cxUrl: 'https://www.coinxchange.com.au/buy?search=Muffin+Pin+Cover' },
 
-  // Series 1 tube sets / variants (from final list)
-  { id: 's1_mumdad', series: 'series1', name: 'Mum & Dad $1 Tube Set', keywords: 'mum dad 2024 tube', denomination: 1, year: 2024, mintage: null, mintPrice: 8, color: true, rarity: 5, marketLow: 15, marketHigh: 40, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Mum+and+Dad+tube+set' },
-  { id: 's1_muffinsocks', series: 'series1', name: 'Muffin & Socks $1 Tube Set', keywords: 'muffin socks 2024 tube', denomination: 1, year: 2024, mintage: null, mintPrice: 8, color: true, rarity: 5, marketLow: 15, marketHigh: 40, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Muffin+Socks+tube+set' },
-  { id: 's1_radfrisky', series: 'series1', name: 'Rad & Frisky $1 Tube Set', keywords: 'rad frisky 2024 tube', denomination: 1, year: 2024, mintage: null, mintPrice: 8, color: true, rarity: 5, marketLow: 15, marketHigh: 40, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Rad+Frisky+tube+set' },
-  { id: 's1_stripetrixie', series: 'series1', name: 'Stripe Trixie Nana $1 Tube Set', keywords: 'stripe trixie nana 2024 tube', denomination: 1, year: 2024, mintage: null, mintPrice: 8, color: true, rarity: 5, marketLow: 15, marketHigh: 40, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Stripe+Trixie+tube+set' },
-  { id: 's1_blueyfriends', series: 'series1', name: 'Bluey & Friends $1 Tube Set', keywords: 'bluey friends 2024 tube', denomination: 1, year: 2024, mintage: null, mintPrice: 8, color: true, rarity: 5, marketLow: 15, marketHigh: 40, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+friends+tube+set' },
-  { id: 's1_bingofriends', series: 'series1', name: 'Bingo & Friends $1 Tube Set', keywords: 'bingo friends 2024 tube', denomination: 1, year: 2024, mintage: null, mintPrice: 8, color: true, rarity: 5, marketLow: 15, marketHigh: 40, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Bingo+friends+tube+set' },
+  // Series 1 — remaining designs from the September 2024 Australia Post 10-coin collection
+  { id: 's1_mumdad', series: 'series1', release: 'auspost_sep_2024', name: 'Mum & Dad $1 Dollarbuck', keywords: 'mum dad 2024 dollarbucks', denomination: 1, year: 2024, mintage: null, mintPrice: null, color: true, rarity: 3, marketLow: 20, marketHigh: 50, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Mum+and+Dad' },
+  { id: 's1_muffinsocks', series: 'series1', release: 'auspost_sep_2024', name: 'Muffin & Socks $1 Dollarbuck', keywords: 'muffin socks 2024 dollarbucks', denomination: 1, year: 2024, mintage: null, mintPrice: null, color: true, rarity: 3, marketLow: 20, marketHigh: 50, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Muffin+Socks' },
+  { id: 's1_radfrisky', series: 'series1', release: 'auspost_sep_2024', name: 'Rad & Frisky $1 Dollarbuck', keywords: 'rad frisky uncle 2024 dollarbucks', denomination: 1, year: 2024, mintage: null, mintPrice: null, color: true, rarity: 3, marketLow: 20, marketHigh: 50, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Rad+Frisky' },
+  { id: 's1_stripetrixie', series: 'series1', release: 'auspost_sep_2024', name: 'Stripe, Trixie & Nana $1 Dollarbuck', keywords: 'stripe trixie nana 2024 dollarbucks', denomination: 1, year: 2024, mintage: null, mintPrice: null, color: true, rarity: 3, marketLow: 20, marketHigh: 50, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Stripe+Trixie' },
+  { id: 's1_blueyfriends', series: 'series1', release: 'auspost_sep_2024', name: 'Bluey & Friends $1 Dollarbuck', keywords: 'bluey friends 2024 dollarbucks', denomination: 1, year: 2024, mintage: null, mintPrice: null, color: true, rarity: 3, marketLow: 20, marketHigh: 50, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+and+Friends' },
+  { id: 's1_bingofriends', series: 'series1', release: 'auspost_sep_2024', name: 'Bluey, Bingo & Friends $1 Dollarbuck', keywords: 'bluey bingo friends 2024 dollarbucks', denomination: 1, year: 2024, mintage: null, mintPrice: null, color: true, rarity: 3, marketLow: 20, marketHigh: 50, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Bingo+and+Friends' },
 ];
 
 // ────────────────────────────────────────────────
 // STATE
 // ────────────────────────────────────────────────
+const RELEASE_LABELS = {
+  ram_jun_2024:     'RAM Ballot · Jun 2024',
+  auspost_sep_2024: 'Australia Post · Sep 2024',
+};
+
 let coinData     = {};   // { coinId: { ebay: {...}, coinxchange: {...} } }
 let activeSeries = 'all';
 let searchQuery  = '';   // raw user input, lowercased in the filter fn
@@ -1499,6 +1515,54 @@ function buildChart(canvasId, products) {
 }
 
 // ────────────────────────────────────────────────
+// PRICE TREND (persisted daily history)
+// ────────────────────────────────────────────────
+const _trendCache = {}; // coinId -> snapshots[], avoids refetching on every re-render
+
+async function loadTrend(coin) {
+  const trendEl = document.getElementById(`trend-${coin.id}`);
+  if (!trendEl) return;
+
+  let snapshots = _trendCache[coin.id];
+  if (!snapshots) {
+    try {
+      const res = await fetch(`/api/price-history?coinId=${encodeURIComponent(coin.id)}&days=30`);
+      if (!res.ok) return;
+      const data = await res.json();
+      snapshots = data.snapshots || [];
+      _trendCache[coin.id] = snapshots;
+    } catch (e) {
+      return;
+    }
+  }
+
+  // still points at a live card? (grid may have re-rendered since the fetch started)
+  const liveEl = document.getElementById(`trend-${coin.id}`);
+  if (!liveEl) return;
+
+  if (snapshots.length < 2) {
+    liveEl.textContent = '';
+    return;
+  }
+
+  const first = snapshots[0];
+  const last  = snapshots[snapshots.length - 1];
+  const delta = last.avg - first.avg;
+  const pct   = first.avg ? (delta / first.avg) * 100 : 0;
+  const dir   = delta > 0 ? 'up' : (delta < 0 ? 'down' : '');
+  const arrow = delta > 0 ? '▲' : (delta < 0 ? '▼' : '—');
+  const days  = snapshots.length;
+
+  liveEl.className = 'price-trend' + (dir ? ` ${dir}` : '');
+  while (liveEl.firstChild) liveEl.removeChild(liveEl.firstChild);
+  liveEl.append(
+    el('span', 'trend-arrow', arrow),
+    el('span', 'trend-pct', `${pct > 0 ? '+' : ''}${pct.toFixed(1)}%`),
+    el('span', '', `over ${days} day${days !== 1 ? 's' : ''}`)
+  );
+}
+
+// ────────────────────────────────────────────────
 // BUILD CARD
 // ────────────────────────────────────────────────
 function buildCard(coin) {
@@ -1532,8 +1596,8 @@ function buildCard(coin) {
   hdr.append(dot, tw);
   if (coin.mintPrice) hdr.append(el('span', 'mint-price', `Mint $${coin.mintPrice}`));
 
-  // Rarity + Market range (new rich data)
-  if (coin.rarity != null || (coin.marketLow != null && coin.marketHigh != null)) {
+  // Rarity + Market range + release wave (new rich data)
+  if (coin.rarity != null || (coin.marketLow != null && coin.marketHigh != null) || RELEASE_LABELS[coin.release]) {
     const meta2 = el('div', 'card-meta2');
     if (coin.rarity != null) {
       const r = el('span', 'rarity', `Rarity ${coin.rarity}`);
@@ -1542,6 +1606,9 @@ function buildCard(coin) {
     if (coin.marketLow != null && coin.marketHigh != null) {
       const m = el('span', 'market-range', `Market $${coin.marketLow}–$${coin.marketHigh}`);
       meta2.append(m);
+    }
+    if (RELEASE_LABELS[coin.release]) {
+      meta2.append(el('span', 'release-badge', RELEASE_LABELS[coin.release]));
     }
     hdr.append(meta2);
   }
@@ -1567,6 +1634,11 @@ function buildCard(coin) {
 
   statsRow.append(avgBox, minBox, thirdBox);
   body.append(statsRow);
+
+  // Price trend (from persisted daily history, filled in async below)
+  const trendEl = el('div', 'price-trend');
+  trendEl.id = `trend-${coin.id}`;
+  body.append(trendEl);
 
   // CoinXchange row (if data available)
   if (cx && cx.average_price) {
@@ -1919,6 +1991,7 @@ function renderGrid() {
       if (d && d.products && d.products.length > 0) {
         requestAnimationFrame(() => buildChart(`chart-${coin.id}`, d.products));
       }
+      loadTrend(coin);
     });
   }
 
@@ -1985,6 +2058,9 @@ if (_sortSelect) {
 renderGrid();                              // show skeleton immediately
 loadPrices();                              // populate from backend cache
 setInterval(loadPrices, 5 * 60 * 1000);   // re-poll every 5 min
+
+const heroCount = document.getElementById('hero-coin-count');
+if (heroCount) heroCount.textContent = `${COINS.length} official coins • Updated daily`;
 </script>
 </body>
 </html>

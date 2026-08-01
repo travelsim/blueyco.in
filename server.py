@@ -75,14 +75,9 @@ COINS = [
     # Series 1 - 2024 Dollarbucks
     {'id': 's1_bluey', 'ebay_kw': '2024 $1 Bluey Dollarbuck Bluey coin uncirculated', 'search': '2024 Bluey Dollarbuck Bluey'},
     {'id': 's1_bingo', 'ebay_kw': '2024 $1 Bluey Dollarbuck Bingo coin uncirculated', 'search': '2024 Bluey Dollarbuck Bingo'},
-    {'id': 's1_bandit', 'ebay_kw': '2024 $1 Bluey Dollarbuck Bandit coin uncirculated', 'search': '2024 Bluey Dollarbuck Bandit'},
-    {'id': 's1_chilli', 'ebay_kw': '2024 $1 Bluey Dollarbuck Chilli coin uncirculated', 'search': '2024 Bluey Dollarbuck Chilli'},
-    {'id': 's1_muffin', 'ebay_kw': '2024 $1 Bluey Dollarbuck Muffin coin uncirculated', 'search': '2024 Bluey Dollarbuck Muffin'},
-    {'id': 's1_socks', 'ebay_kw': '2024 $1 Bluey Dollarbuck Socks coin uncirculated', 'search': '2024 Bluey Dollarbuck Socks'},
-    {'id': 's1_nana', 'ebay_kw': '2024 $1 Bluey Dollarbuck Nana coin uncirculated', 'search': '2024 Bluey Dollarbuck Nana'},
-    {'id': 's1_bob_bilby', 'ebay_kw': '2024 $1 Bluey Dollarbuck Bob Bilby coin uncirculated', 'search': '2024 Bluey Dollarbuck Bob Bilby'},
-    {'id': 's1_lucky', 'ebay_kw': '2024 $1 Bluey Dollarbuck Lucky coin uncirculated', 'search': '2024 Bluey Dollarbuck Lucky'},
-    {'id': 's1_rusty', 'ebay_kw': '2024 $1 Bluey Dollarbuck Rusty coin uncirculated', 'search': '2024 Bluey Dollarbuck Rusty'},
+    {'id': 's1_grannies', 'ebay_kw': '2024 $1 Bluey Dollarbuck The Grannies coin uncirculated', 'search': '2024 Bluey The Grannies'},
+    {'id': 's1_heelers', 'ebay_kw': '2024 $1 Bluey Dollarbuck The Heelers coin uncirculated', 'search': '2024 Bluey The Heelers'},
+    {'id': 's1_3_coin_set', 'ebay_kw': '2024 Bluey Three Coin Collection presentation envelope', 'search': '2024 Bluey Three Coin Collection'},
     {'id': 's1_10_coin_folder_set', 'ebay_kw': '2024 $1 Bluey 10 coin tube folder set', 'search': '2024 Bluey 10 coin tube folder set'},
     {'id': 's1_coloured_insert_variant', 'ebay_kw': '2024 Bluey Coloured Insert Variant coin', 'search': '2024 Bluey insert variant'},
 
@@ -119,12 +114,12 @@ COINS = [
     {'id': 's3_pin_muffin', 'ebay_kw': 'Muffin Pin Cover 2026', 'search': 'Muffin Pin Cover'},
 
     # Series 1 additional from final list (tube sets / variants)
-    {'id': 's1_mumdad', 'ebay_kw': '2024 $1 Bluey Mum & Dad Dollarbuck tube set unc', 'search': '2024 Bluey Mum and Dad tube set'},
-    {'id': 's1_muffinsocks', 'ebay_kw': '2024 $1 Bluey Muffin & Socks Dollarbuck tube set unc', 'search': '2024 Bluey Muffin Socks tube set'},
-    {'id': 's1_radfrisky', 'ebay_kw': '2024 $1 Bluey Rad & Frisky Dollarbuck tube set unc', 'search': '2024 Bluey Rad Frisky tube set'},
-    {'id': 's1_stripetrixie', 'ebay_kw': '2024 $1 Bluey Stripe Trixie Nana Dollarbuck tube set unc', 'search': '2024 Bluey Stripe Trixie tube set'},
-    {'id': 's1_blueyfriends', 'ebay_kw': '2024 $1 Bluey Bluey & Friends Dollarbuck tube set unc', 'search': '2024 Bluey friends tube set'},
-    {'id': 's1_bingofriends', 'ebay_kw': '2024 $1 Bluey Bingo & Friends Dollarbuck tube set unc', 'search': '2024 Bluey Bingo friends tube set'},
+    {'id': 's1_mumdad', 'ebay_kw': '2024 $1 Bluey Dollarbuck Mum and Dad coin uncirculated', 'search': '2024 Bluey Mum and Dad'},
+    {'id': 's1_muffinsocks', 'ebay_kw': '2024 $1 Bluey Dollarbuck Muffin and Socks coin uncirculated', 'search': '2024 Bluey Muffin Socks'},
+    {'id': 's1_radfrisky', 'ebay_kw': '2024 $1 Bluey Dollarbuck Rad and Frisky coin uncirculated', 'search': '2024 Bluey Rad Frisky'},
+    {'id': 's1_stripetrixie', 'ebay_kw': '2024 $1 Bluey Dollarbuck Stripe Nana and Trixie coin uncirculated', 'search': '2024 Bluey Stripe Trixie'},
+    {'id': 's1_blueyfriends', 'ebay_kw': '2024 $1 Bluey Dollarbuck Bluey and Friends coin uncirculated', 'search': '2024 Bluey and Friends'},
+    {'id': 's1_bingofriends', 'ebay_kw': '2024 $1 Bluey Dollarbuck Bluey Bingo and Friends coin uncirculated', 'search': '2024 Bluey Bingo and Friends'},
 ]
 COIN_BY_ID = {c['id']: c for c in COINS}
 
@@ -155,7 +150,7 @@ RETAILERS = [
         'id':         'coinxchange_buy',
         'name':       'CoinXchange',
         'base_url':   'https://www.coinxchange.com.au',
-        'search_url': 'https://www.coinxchange.com.au/buy?search={q}',
+        'search_url': 'https://www.coinxchange.com.au/buy?search={q}&sort=4',
         'type':       'coinxchange',
     },
     {
@@ -302,11 +297,15 @@ def _save_price_history_to_disk():
         print(f'Price history save error: {e}')
 
 def _save_price_snapshot():
-    """Capture today's avg/min/max/sales for every coin in the cache.
+    """Capture today's avg/min/max/source for every priced coin in the cache.
 
-    Called after each successful eBay refresh cycle. Deduplicates per-day:
-    re-running on the same date overwrites the existing snapshot so partial
-    refreshes can complete the picture without polluting the timeline.
+    Called after each individual coin update (not just once per full sweep),
+    so today's entry fills in progressively as the refresh loop runs instead
+    of waiting on the entire ~50-coin pass to finish. Prefers eBay stats when
+    available, falls back to CoinXchange so coins with no eBay data still get
+    tracked. Deduplicates per-day: re-running on the same date overwrites the
+    existing snapshot so partial refreshes can complete the picture without
+    polluting the timeline.
     """
     global _price_history
     today = time.strftime('%Y-%m-%d')
@@ -314,14 +313,23 @@ def _save_price_snapshot():
     with _lock:
         for cid, sources in _cache.items():
             ebay = sources.get('ebay') or {}
-            if not isinstance(ebay, dict) or not ebay.get('average_price'):
-                continue
-            coins_snapshot[cid] = {
-                'avg':  ebay.get('average_price'),
-                'min':  ebay.get('min_price'),
-                'max':  ebay.get('max_price'),
-                'cnt':  ebay.get('total_results', 0) or ebay.get('results', 0),
-            }
+            cx   = sources.get('coinxchange') or {}
+            if isinstance(ebay, dict) and ebay.get('average_price'):
+                coins_snapshot[cid] = {
+                    'avg':    ebay.get('average_price'),
+                    'min':    ebay.get('min_price'),
+                    'max':    ebay.get('max_price'),
+                    'cnt':    ebay.get('total_results', 0) or ebay.get('results', 0),
+                    'source': 'ebay',
+                }
+            elif isinstance(cx, dict) and cx.get('average_price'):
+                coins_snapshot[cid] = {
+                    'avg':    cx.get('average_price'),
+                    'min':    cx.get('min_price'),
+                    'max':    cx.get('max_price'),
+                    'cnt':    cx.get('count', 0),
+                    'source': 'coinxchange',
+                }
     if not coins_snapshot:
         return  # no data yet — wait for the first successful fetch
     # overwrite-or-append today's entry
@@ -613,8 +621,10 @@ def _scrape_coinxchange(search_term, sold_only=True):
     """
     params = {'search': search_term}
     if sold_only:
-        params['sort'] = '3'
+        params['sort'] = '3'  # price, high to low — for market-average sampling
         params['filter[show_only][sold_items]'] = 'true'
+    else:
+        params['sort'] = '4'  # price, low to high — so the cheapest active listings are what gets parsed/shown
     url = f'{_CX_BASE}/buy?{urllib.parse.urlencode(params)}'
     try:
         html = _http_get(url)
@@ -725,9 +735,12 @@ def _refresh_worker():
                     print(f'CoinXchange FAIL {cid}: {e}')
                 time.sleep(3)
 
+            # record today's snapshot as each coin's data lands, rather than
+            # waiting for the whole ~50-coin sweep to finish
+            _save_price_snapshot()
+
         if refreshed:
             print(f'Refresh cycle complete: {refreshed} update(s).')
-            _save_price_snapshot()   # record today’s state once per cycle
         time.sleep(CHECK_SECS)
 
 
@@ -1118,6 +1131,34 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(payload)
 
     def do_GET(self):
+        if self.path == '/api/debug/ebay':
+            # TEMPORARY diagnostic — remove once the production eBay Browse
+            # API failure is root-caused. Surfaces the real exception since
+            # Render's /v1/logs API doesn't show application stdout.
+            import traceback
+            out = {
+                'has_client_id':     bool(EBAY_CLIENT_ID),
+                'has_client_secret': bool(EBAY_CLIENT_SECRET),
+                'has_rapidapi_key':  bool(RAPIDAPI_KEY),
+            }
+            try:
+                token = _get_ebay_token()
+                out['token_ok'] = True
+                out['token_prefix'] = token[:12] if token else None
+            except Exception:
+                out['token_ok'] = False
+                out['token_error'] = traceback.format_exc()
+            if out.get('token_ok'):
+                try:
+                    items = _ebay_browse_search('2024 Bluey Dollarbuck Bluey', limit=3)
+                    out['browse_ok'] = True
+                    out['browse_item_count'] = len(items)
+                except Exception:
+                    out['browse_ok'] = False
+                    out['browse_error'] = traceback.format_exc()
+            self._json(200, out)
+            return
+
         if self.path == '/api/prices':
             with _lock:
                 snapshot = dict(_cache)
