@@ -8,10 +8,16 @@
     }
   },
   "rewrites": [
-    { "source": "/app", "destination": "/app.html" },
     {
       "source": "/((?!api(?:/|$)|_vercel(?:/|$)).*)",
       "destination": "/index.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/app",
+      "destination": "/",
+      "permanent": true
     }
   ]
 }

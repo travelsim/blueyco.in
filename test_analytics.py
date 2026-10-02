@@ -42,13 +42,19 @@ class TestVercelDeploymentConfiguration(unittest.TestCase):
         self.assertEqual(
             VERCEL_CONFIG["rewrites"],
             [
-                {"source": "/app", "destination": "/app.html"},
                 {
                     "source": "/((?!api(?:/|$)|_vercel(?:/|$)).*)",
                     "destination": "/index.html",
                 },
             ],
         )
+
+    def test_prototype_app_route_redirects_to_the_real_dashboard(self):
+        self.assertEqual(
+            VERCEL_CONFIG["redirects"],
+            [{"source": "/app", "destination": "/", "permanent": True}],
+        )
+        self.assertFalse((ROOT / "app.html").exists())
 
     def test_python_312_is_pinned_in_project_metadata(self):
         self.assertEqual(PYPROJECT["project"]["requires-python"], "~=3.12.0")
