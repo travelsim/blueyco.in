@@ -39,6 +39,18 @@ class TestPricesDeadline(unittest.TestCase):
         self.assertTrue(complete)
         self.assertEqual(calls, ['a'])
 
+    def test_baseline_cache_is_used_when_ebay_not_fetched(self):
+        def fetch_no_ebay(coin):
+            return {'ebay': None, 'coinxchange': None}
+
+        snapshot, complete = prices._build_payload(
+            [c for c in prices.COINS if c['id'] == 's1_bluey'],
+            fetch_coin=fetch_no_ebay,
+            deadline=1,
+        )
+        self.assertIsNotNone(snapshot['s1_bluey']['ebay'])
+        self.assertIsNotNone(snapshot['s1_bluey']['coinxchange'])
+
 
 if __name__ == '__main__':
     unittest.main()

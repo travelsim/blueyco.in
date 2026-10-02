@@ -281,12 +281,22 @@ class handler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(payload).encode())
 
 
+def _load_base_cache():
+    for candidate in ('ebay_cache.json', '/var/task/ebay_cache.json', os.path.join(os.path.dirname(__file__), '..', 'ebay_cache.json')):
+        try:
+            with open(candidate, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception:
+            continue
+    return {}
+
+
 def _load_manual():
     # Vercel deploys from the project root, but the working directory at
     # function runtime is the project root too — try both paths.
-    for candidate in ('retailer_prices.json', '/var/task/retailer_prices.json'):
+    for candidate in ('retailer_prices.json', '/var/task/retailer_prices.json', os.path.join(os.path.dirname(__file__), '..', 'retailer_prices.json')):
         try:
-            with open(candidate) as f:
+            with open(candidate, 'r', encoding='utf-8') as f:
                 return json.load(f)
         except Exception:
             continue
@@ -318,7 +328,7 @@ def _fetch_coin(coin):
 
 def _build_payload(coins=None, fetch_coin=None, deadline=None):
     """Return (snapshot, complete). Coins still in flight at the deadline get
-    manual prices only, and the partial snapshot is cached briefly."""
+    cached baseline or manual prices, and the partial snapshot is cached briefly."""
     coins = COINS if coins is None else coins
     fetch_coin = fetch_coin or _fetch_coin
     deadline = FETCH_DEADLINE if deadline is None else deadline
@@ -328,6 +338,7 @@ def _build_payload(coins=None, fetch_coin=None, deadline=None):
     if 'full' in _cache and now < _last_fetch.get('full', 0):
         return _cache['full'], _cache.get('complete', True)
 
+    base_cache = _load_base_cache()
     manual = _load_manual()
     pool = ThreadPoolExecutor(max_workers=MAX_WORKERS)
     futures = {pool.submit(fetch_coin, coin): coin['id'] for coin in coins}
@@ -337,10 +348,16 @@ def _build_payload(coins=None, fetch_coin=None, deadline=None):
 
     snapshot = {}
     for future, cid in futures.items():
-        result = {'ebay': None, 'coinxchange': None}
+        cached = base_cache.get(cid, {})
+        result = {'ebay': cached.get('ebay'), 'coinxchange': cached.get('coinxchange')}
         if future in done:
             try:
-                result = future.result()
+                fetched = future.result()
+                if isinstance(fetched, dict):
+                    if fetched.get('ebay') is not None:
+                        result['ebay'] = fetched['ebay']
+                    if fetched.get('coinxchange') is not None:
+                        result['coinxchange'] = fetched['coinxchange']
             except Exception as e:
                 print(f"fetch error for {cid}: {e}")
         result['manual'] = manual.get(cid)
