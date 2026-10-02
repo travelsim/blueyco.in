@@ -1,9 +1,13 @@
+import json
 import re
 import unittest
 from pathlib import Path
 
 
 INDEX = Path(__file__).with_name("index.html").read_text(encoding="utf-8")
+VERCEL_CONFIG = json.loads(
+    Path(__file__).with_name("vercel.json").read_text(encoding="utf-8")
+)
 
 
 class TestVercelAnalyticsInstrumentation(unittest.TestCase):
@@ -25,6 +29,11 @@ class TestVercelAnalyticsInstrumentation(unittest.TestCase):
         )
         self.assertIn("window.va('event', { name });", INDEX)
         self.assertNotIn("trackEvent('Purchase')", INDEX)
+
+    def test_python_runtime_is_auto_detected_by_vercel(self):
+        python_config = VERCEL_CONFIG["functions"]["api/**/*.py"]
+        self.assertNotIn("runtime", python_config)
+        self.assertEqual(python_config["maxDuration"], 10)
 
 
 if __name__ == "__main__":
