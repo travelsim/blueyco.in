@@ -4,6 +4,7 @@ import re
 import time
 import urllib.request
 import urllib.parse
+from concurrent.futures import ThreadPoolExecutor, wait
 from html.parser import HTMLParser
 
 # ── CONFIG ───────────────────────────────────────────────────────────────────
@@ -18,9 +19,18 @@ EBAY_LIVE_URL = f'https://{EBAY_LIVE_HOST}/search'
 _cache = {}
 _last_fetch = {}
 
+# The function has a 10s maxDuration (Hobby). Every upstream request gets a
+# short timeout, coins are fetched concurrently, and whatever has not finished
+# by the deadline is returned as a partial snapshot instead of timing out.
+UPSTREAM_TIMEOUT = 5
+FETCH_DEADLINE = 7.5
+MAX_WORKERS = 20
+CACHE_TTL = 6 * 3600         # full snapshot
+PARTIAL_CACHE_TTL = 5 * 60   # partial snapshot: retry soon
+
 # ── HELPER FUNCTIONS (extracted and cleaned from server.py) ──────────────────
 
-def _http_get(url, accept='text/html', timeout=12):
+def _http_get(url, accept='text/html', timeout=UPSTREAM_TIMEOUT):
     req = urllib.request.Request(url, headers={
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
         'Accept': accept,
@@ -182,7 +192,7 @@ def _fetch_ebay(coin):
         method='POST',
     )
     try:
-        with urllib.request.urlopen(req, timeout=25) as r:
+        with urllib.request.urlopen(req, timeout=UPSTREAM_TIMEOUT) as r:
             data = json.loads(r.read())
             return {
                 "products": data.get("products", [])[:20],
@@ -252,7 +262,7 @@ class handler(BaseHTTPRequestHandler):
 
     def _respond(self):
         try:
-            payload = self._build_payload()
+            payload, complete = _build_payload()
         except Exception as e:
             # Surface the error so it's visible in Vercel logs
             print(f"handler error: {e}")
@@ -262,61 +272,103 @@ class handler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps({'error': str(e)}).encode())
             return
 
+        max_age = CACHE_TTL if complete else PARTIAL_CACHE_TTL
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
-        self.send_header('Cache-Control', 's-maxage=21600, stale-while-revalidate')
+        self.send_header('Cache-Control', f's-maxage={max_age}, stale-while-revalidate')
+        self.send_header('X-Prices-Complete', 'true' if complete else 'false')
         self.end_headers()
         self.wfile.write(json.dumps(payload).encode())
 
-    def _build_payload(self):
-        now = time.time()
-        CACHE_TTL = 6 * 3600  # 6 hours
 
-        # Return cached snapshot if still fresh
-        if 'full' in _cache and (now - _last_fetch.get('full', 0)) < CACHE_TTL:
-            return _cache['full']
+def _load_base_cache():
+    for candidate in ('ebay_cache.json', '/var/task/ebay_cache.json', os.path.join(os.path.dirname(__file__), '..', 'ebay_cache.json')):
+        try:
+            with open(candidate, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception:
+            continue
+    return {}
 
-        # Load manual retailer prices (static file)
-        # Vercel deploys from the project root, but the working directory at
-        # function runtime is the project root too — try both paths.
-        manual = {}
-        for candidate in ('retailer_prices.json', '/var/task/retailer_prices.json'):
+
+def _load_manual():
+    # Vercel deploys from the project root, but the working directory at
+    # function runtime is the project root too — try both paths.
+    for candidate in ('retailer_prices.json', '/var/task/retailer_prices.json', os.path.join(os.path.dirname(__file__), '..', 'retailer_prices.json')):
+        try:
+            with open(candidate, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception:
+            continue
+    return {}
+
+
+def _fetch_coin(coin):
+    cid = coin['id']
+
+    # eBay data (only if key is present)
+    ebay_data = None
+    if RAPIDAPI_KEY:
+        try:
+            ebay_data = _fetch_ebay(coin)
+        except Exception as e:
+            print(f"eBay error for {cid}: {e}")
+
+    # CoinXchange scrape (best effort)
+    cx_data = None
+    try:
+        listings = _scrape_coinxchange(coin['search'])
+        cx_data = _summarise(listings) or {}
+        cx_data['search_url'] = 'https://www.coinxchange.com.au/buy?search=' + urllib.parse.quote(coin['search'])
+    except Exception as e:
+        print(f"CoinXchange error for {cid}: {e}")
+
+    return {'ebay': ebay_data, 'coinxchange': cx_data}
+
+
+def _build_payload(coins=None, fetch_coin=None, deadline=None):
+    """Return (snapshot, complete). Coins still in flight at the deadline get
+    cached baseline or manual prices, and the partial snapshot is cached briefly."""
+    coins = COINS if coins is None else coins
+    fetch_coin = fetch_coin or _fetch_coin
+    deadline = FETCH_DEADLINE if deadline is None else deadline
+    now = time.time()
+
+    # Return cached snapshot if still fresh
+    if 'full' in _cache and now < _last_fetch.get('full', 0):
+        return _cache['full'], _cache.get('complete', True)
+
+    base_cache = _load_base_cache()
+    manual = _load_manual()
+    pool = ThreadPoolExecutor(max_workers=MAX_WORKERS)
+    futures = {pool.submit(fetch_coin, coin): coin['id'] for coin in coins}
+    done, pending = wait(futures, timeout=deadline)
+    # Don't block on stragglers; their sockets time out on their own.
+    pool.shutdown(wait=False, cancel_futures=True)
+
+    snapshot = {}
+    for future, cid in futures.items():
+        cached = base_cache.get(cid, {})
+        result = {'ebay': cached.get('ebay'), 'coinxchange': cached.get('coinxchange')}
+        if future in done:
             try:
-                with open(candidate) as f:
-                    manual = json.load(f)
-                break
-            except Exception:
-                continue
-
-        snapshot = {}
-
-        for coin in COINS:
-            cid = coin['id']
-
-            # eBay data (only if key is present)
-            ebay_data = None
-            if RAPIDAPI_KEY:
-                try:
-                    ebay_data = _fetch_ebay(coin)
-                except Exception as e:
-                    print(f"eBay error for {cid}: {e}")
-
-            # CoinXchange scrape (best effort)
-            cx_data = None
-            try:
-                listings = _scrape_coinxchange(coin['search'])
-                cx_data = _summarise(listings) or {}
-                cx_data['search_url'] = 'https://www.coinxchange.com.au/buy?search=' + urllib.parse.quote(coin['search'])
+                fetched = future.result()
+                if isinstance(fetched, dict):
+                    if fetched.get('ebay') is not None:
+                        result['ebay'] = fetched['ebay']
+                    if fetched.get('coinxchange') is not None:
+                        result['coinxchange'] = fetched['coinxchange']
             except Exception as e:
-                print(f"CoinXchange error for {cid}: {e}")
+                print(f"fetch error for {cid}: {e}")
+        result['manual'] = manual.get(cid)
+        snapshot[cid] = result
 
-            snapshot[cid] = {
-                'ebay': ebay_data,
-                'coinxchange': cx_data,
-                'manual': manual.get(cid)
-            }
+    complete = not pending
+    if pending:
+        print(f"prices: {len(pending)}/{len(coins)} coins unfinished at {deadline}s deadline")
 
-        # Save to in-memory cache
-        _cache['full'] = snapshot
-        _last_fetch['full'] = now
-        return snapshot
+    # Save to in-memory cache (stores expiry time)
+    _cache['full'] = snapshot
+    _cache['complete'] = complete
+    _last_fetch['full'] = now + (CACHE_TTL if complete else PARTIAL_CACHE_TTL)
+    return snapshot, complete

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://plausible.io; img-src 'self' data: https://plausible.io;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:;">
 <title>Blueycoin — Australia’s Most Complete Bluey Coin Resource</title>
 <meta name="description" content="Track, value, and complete your official Bluey coin collection. 48 coins, live market data, interactive dashboard, and wish list tools.">
 <meta name="keywords" content="Bluey coin, Bluey Dollarbuck, RAM Bluey coins, Bluey collection, Bluey 2026, Bluey price guide, Bluey tracker">
@@ -40,8 +40,13 @@
   })();
 </script>
 
-<!-- Plausible Analytics -->
-<script defer data-domain="blueyco.in" src="https://plausible.io/js/script.js"></script>
+<!-- Vercel Web Analytics and Speed Insights use same-origin /_vercel routes. -->
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw==" crossorigin="anonymous"></script>
 
 <style>
@@ -884,6 +889,23 @@
 // initShop(), which runs on DOMContentLoaded once COINS is guaranteed ready.
 let FRAMES = [];
 
+// Deliberately accepts only an event name: no search terms, names, emails, or
+// other user-provided values can be attached as custom-event properties.
+const ANALYTICS_EVENTS = new Set([
+  'Search',
+  'Where to Buy',
+  'Add to Cart',
+  'Custom Frame Submit Attempt'
+]);
+
+// Provider-agnostic hook: repoint this one function at GA4 or Plausible later.
+// Vercel custom events need a Pro plan, so on Hobby these calls are no-ops.
+function trackEvent(name) {
+  if (ANALYTICS_EVENTS.has(name) && typeof window.va === 'function') {
+    window.va('event', { name });
+  }
+}
+
 function buildFrames() {
   return (window.COINS || []).map((coin, index) => {
     let type = 'blister';
@@ -914,19 +936,24 @@ function addToCart(frameId) {
   if (!frame) return;
 
   cart.push(frame);
+  trackEvent('Add to Cart');
   updateCartCount();
   alert(`Added "${frame.name}" to cart ($${frame.price})`);
 }
 
 function addBundleToCart(bundleType) {
+  let added = false;
   if (bundleType === 's1') {
     const s1Frames = FRAMES.filter(f => f.series === 'series1');
     cart = cart.concat(s1Frames);
+    added = true;
     alert(`Added Series 1 Complete Bundle (12 frames) — $${799}`);
   } else if (bundleType === 'full') {
     cart = cart.concat(FRAMES);
+    added = true;
     alert(`Added Full Collection Bundle (48 frames) — $${3599}`);
   }
+  if (added) trackEvent('Add to Cart');
   updateCartCount();
 }
 
@@ -1123,6 +1150,7 @@ function hideDesignModal() {
 
 function submitDesignRequest(e) {
   e.preventDefault();
+  trackEvent('Custom Frame Submit Attempt');
   
   const coin = document.getElementById('design-coin').value;
   const name = document.getElementById('design-name').value;
@@ -1701,6 +1729,8 @@ async function handleBuyNow(coinId, keywords) {
     return;
   }
 
+  trackEvent('Where to Buy');
+
   // Open and show loading
   panel.classList.add('open');
   btn.classList.add('open');
@@ -1949,10 +1979,25 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 // ────────────────────────────────────────────────
 const _searchInput = document.getElementById('search-input');
 const _sortSelect  = document.getElementById('sort-select');
+let _searchEventTimer = null;
+let _lastTrackedSearch = '';
 if (_searchInput) {
   _searchInput.addEventListener('input', (e) => {
     searchQuery = e.target.value || '';
     renderGrid();
+
+    const normalizedSearch = searchQuery.trim().toLowerCase();
+    clearTimeout(_searchEventTimer);
+    if (!normalizedSearch) {
+      _lastTrackedSearch = '';
+    } else if (normalizedSearch !== _lastTrackedSearch) {
+      _searchEventTimer = setTimeout(() => {
+        if (_searchInput.value.trim().toLowerCase() === normalizedSearch) {
+          trackEvent('Search');
+          _lastTrackedSearch = normalizedSearch;
+        }
+      }, 750);
+    }
   });
   // keyboard shortcut: '/' focuses search from anywhere (matches deal-hunter UX)
   document.addEventListener('keydown', (e) => {
@@ -1965,8 +2010,10 @@ if (_searchInput) {
       _searchInput.select();
     }
     if (e.key === 'Escape' && document.activeElement === _searchInput) {
+      clearTimeout(_searchEventTimer);
       _searchInput.value = '';
       searchQuery = '';
+      _lastTrackedSearch = '';
       renderGrid();
       _searchInput.blur();
     }
