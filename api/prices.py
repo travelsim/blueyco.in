@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import sys
 import time
 import urllib.request
 import urllib.parse
@@ -114,6 +115,31 @@ def _ld_products(html, base):
     return results
 
 def _scrape_coinxchange(search_term):
+    """Recently-sold CoinXchange prices. Delegates to server.py's parser (the
+    same one /api/buy-options uses), which reads the rendered listing grid;
+    CoinXchange no longer ships JSON-LD, so the generic fallback below finds
+    nothing on its own."""
+    try:
+        legacy = _legacy()
+        if legacy is not None:
+            return legacy._scrape_coinxchange(search_term, sold_only=True)
+    except Exception as e:
+        print(f"CoinXchange legacy scraper error ({search_term}): {e}")
+    return _scrape_coinxchange_generic(search_term)
+
+
+def _legacy():
+    here = os.path.dirname(os.path.abspath(__file__))
+    for root in (os.path.dirname(here), here):
+        if os.path.exists(os.path.join(root, 'server.py')):
+            if root not in sys.path:
+                sys.path.insert(0, root)
+            import server
+            return server
+    return None
+
+
+def _scrape_coinxchange_generic(search_term):
     q = urllib.parse.quote(search_term)
     url = f'https://www.coinxchange.com.au/buy?search={q}'
     try:
