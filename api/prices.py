@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import sys
 import time
 import urllib.request
 import urllib.parse
@@ -114,6 +115,31 @@ def _ld_products(html, base):
     return results
 
 def _scrape_coinxchange(search_term):
+    """Recently-sold CoinXchange prices. Delegates to server.py's parser (the
+    same one /api/buy-options uses), which reads the rendered listing grid;
+    CoinXchange no longer ships JSON-LD, so the generic fallback below finds
+    nothing on its own."""
+    try:
+        legacy = _legacy()
+        if legacy is not None:
+            return legacy._scrape_coinxchange(search_term, sold_only=True)
+    except Exception as e:
+        print(f"CoinXchange legacy scraper error ({search_term}): {e}")
+    return _scrape_coinxchange_generic(search_term)
+
+
+def _legacy():
+    here = os.path.dirname(os.path.abspath(__file__))
+    for root in (os.path.dirname(here), here):
+        if os.path.exists(os.path.join(root, 'server.py')):
+            if root not in sys.path:
+                sys.path.insert(0, root)
+            import server
+            return server
+    return None
+
+
+def _scrape_coinxchange_generic(search_term):
     q = urllib.parse.quote(search_term)
     url = f'https://www.coinxchange.com.au/buy?search={q}'
     try:
@@ -245,6 +271,14 @@ COINS = [
     {'id': 's3_pin_bandit', 'ebay_kw': 'Bandit Pin Cover 2026', 'search': 'Bandit Pin Cover'},
     {'id': 's3_pin_chilli', 'ebay_kw': 'Chilli Pin Cover 2026', 'search': 'Chilli Pin Cover'},
     {'id': 's3_pin_muffin', 'ebay_kw': 'Muffin Pin Cover 2026', 'search': 'Muffin Pin Cover'},
+    # Series 1 tube sets — these ship in the frontend catalogue and in
+    # server.py; they were missing here so they never received live prices.
+    {'id': 's1_mumdad', 'ebay_kw': '2024 $1 Bluey Mum & Dad Dollarbuck tube set unc', 'search': '2024 Bluey Mum and Dad tube set'},
+    {'id': 's1_muffinsocks', 'ebay_kw': '2024 $1 Bluey Muffin & Socks Dollarbuck tube set unc', 'search': '2024 Bluey Muffin Socks tube set'},
+    {'id': 's1_radfrisky', 'ebay_kw': '2024 $1 Bluey Rad & Frisky Dollarbuck tube set unc', 'search': '2024 Bluey Rad Frisky tube set'},
+    {'id': 's1_stripetrixie', 'ebay_kw': '2024 $1 Bluey Stripe Trixie Nana Dollarbuck tube set unc', 'search': '2024 Bluey Stripe Trixie tube set'},
+    {'id': 's1_blueyfriends', 'ebay_kw': '2024 $1 Bluey Bluey & Friends Dollarbuck tube set unc', 'search': '2024 Bluey friends tube set'},
+    {'id': 's1_bingofriends', 'ebay_kw': '2024 $1 Bluey Bingo & Friends Dollarbuck tube set unc', 'search': '2024 Bluey Bingo friends tube set'},
 ]
 
 # ── MAIN HANDLER (Vercel Python runtime, current format) ────────────────────

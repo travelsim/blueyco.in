@@ -1,5 +1,6 @@
 import time
 import unittest
+from unittest import mock
 
 from api import prices
 
@@ -54,3 +55,19 @@ class TestPricesDeadline(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class TestCoinXchangeDelegation(unittest.TestCase):
+    def test_prices_uses_server_sold_parser(self):
+        calls = []
+
+        class FakeLegacy:
+            @staticmethod
+            def _scrape_coinxchange(term, sold_only=True):
+                calls.append((term, sold_only))
+                return [{'price': 12.0, 'title': 't', 'url': 'u'}]
+
+        with mock.patch.object(prices, '_legacy', return_value=FakeLegacy):
+            listings = prices._scrape_coinxchange('Bluey')
+        self.assertEqual(calls, [('Bluey', True)])
+        self.assertEqual(prices._summarise(listings)['min_price'], 12.0)
