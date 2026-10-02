@@ -1,4 +1,5 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "name": "blueycoin",
   "version": 2,
   "functions": {
@@ -6,9 +7,11 @@
       "maxDuration": 10
     }
   },
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/app", "dest": "/app.html" },
-    { "src": "/(.*)", "dest": "/index.html" }
+  "rewrites": [
+    { "source": "/app", "destination": "/app.html" },
+    {
+      "source": "/((?!api(?:/|$)|_vercel(?:/|$)).*)",
+      "destination": "/index.html"
+    }
   ]
 }

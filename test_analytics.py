@@ -1,13 +1,14 @@
 import json
 import re
+import tomllib
 import unittest
 from pathlib import Path
 
 
-INDEX = Path(__file__).with_name("index.html").read_text(encoding="utf-8")
-VERCEL_CONFIG = json.loads(
-    Path(__file__).with_name("vercel.json").read_text(encoding="utf-8")
-)
+ROOT = Path(__file__).parent
+INDEX = (ROOT / "index.html").read_text(encoding="utf-8")
+VERCEL_CONFIG = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
+PYPROJECT = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
 
 
 class TestVercelAnalyticsInstrumentation(unittest.TestCase):
@@ -30,10 +31,27 @@ class TestVercelAnalyticsInstrumentation(unittest.TestCase):
         self.assertIn("window.va('event', { name });", INDEX)
         self.assertNotIn("trackEvent('Purchase')", INDEX)
 
-    def test_python_runtime_is_auto_detected_by_vercel(self):
-        python_config = VERCEL_CONFIG["functions"]["api/**/*.py"]
-        self.assertNotIn("runtime", python_config)
-        self.assertEqual(python_config["maxDuration"], 10)
+
+class TestVercelDeploymentConfiguration(unittest.TestCase):
+    def test_python_runtime_is_auto_detected_with_duration_preserved(self):
+        function_config = VERCEL_CONFIG["functions"]["api/**/*.py"]
+        self.assertEqual(function_config, {"maxDuration": 10})
+
+    def test_spa_fallback_excludes_api_and_vercel_platform_routes(self):
+        self.assertNotIn("routes", VERCEL_CONFIG)
+        self.assertEqual(
+            VERCEL_CONFIG["rewrites"],
+            [
+                {"source": "/app", "destination": "/app.html"},
+                {
+                    "source": "/((?!api(?:/|$)|_vercel(?:/|$)).*)",
+                    "destination": "/index.html",
+                },
+            ],
+        )
+
+    def test_python_312_is_pinned_in_project_metadata(self):
+        self.assertEqual(PYPROJECT["project"]["requires-python"], "~=3.12.0")
 
 
 if __name__ == "__main__":
