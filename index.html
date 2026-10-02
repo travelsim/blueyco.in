@@ -1120,18 +1120,32 @@ function updateCartCount() {
   if (countEl) countEl.textContent = cart.length;
 }
 
-function checkout() {
+async function checkout() {
   if (cart.length === 0) return;
-  
-  const total = cart.reduce((sum, item) => sum + item.price, 0);
-  
-  hideCart();
-  
-  setTimeout(() => {
-    alert(`Thank you! Your order for $${total} has been placed.\n\nIn a real deployment this would open Stripe Checkout.`);
-    cart = [];
-    updateCartCount();
-  }, 300);
+
+  const items = cart.map(item => ({ name: item.name, price: item.price }));
+
+  try {
+    const res = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items })
+    });
+    const data = await res.json().catch(() => ({}));
+
+    if (res.ok && data.checkoutUrl) {
+      window.location.href = data.checkoutUrl;
+      return;
+    }
+
+    // Checkout is not switched on, or the request was rejected. Say so plainly
+    // rather than pretending an order was placed.
+    hideCart();
+    alert(data.error || 'Checkout is unavailable right now. Please use Design to Order and we will invoice you.');
+  } catch (e) {
+    hideCart();
+    alert('Could not reach checkout. Please use Design to Order and we will invoice you.');
+  }
 }
 
 // =============================================
@@ -1148,22 +1162,36 @@ function hideDesignModal() {
   if (modal) modal.style.display = 'none';
 }
 
-function submitDesignRequest(e) {
+async function submitDesignRequest(e) {
   e.preventDefault();
   trackEvent('Custom Frame Submit Attempt');
-  
-  const coin = document.getElementById('design-coin').value;
-  const name = document.getElementById('design-name').value;
+
+  const coin  = document.getElementById('design-coin').value;
+  const name  = document.getElementById('design-name').value;
   const email = document.getElementById('design-email').value;
-  
-  hideDesignModal();
-  
-  setTimeout(() => {
-    alert(`Thank you, ${name}! \n\nWe've received your request for a custom frame for "${coin}".\n\nOur team will email you at ${email} within 48 hours with pricing and options.`);
-    
-    // Reset form
-    document.getElementById('design-form').reset();
-  }, 200);
+  const notes = document.getElementById('design-notes').value;
+
+  try {
+    const res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ coin, name, email, notes })
+    });
+    const data = await res.json().catch(() => ({}));
+
+    hideDesignModal();
+
+    if (data.delivered) {
+      alert(`Thank you, ${name}!\n\nWe've received your request for a custom frame for "${coin}".\n\nOur team will email you at ${email} within 48 hours with pricing and options.`);
+      document.getElementById('design-form').reset();
+    } else {
+      // The request was not delivered — keep the form contents so nothing is lost.
+      alert(data.error || 'We could not send your request. Please email us instead.');
+    }
+  } catch (err) {
+    hideDesignModal();
+    alert('We could not send your request. Please email us instead.');
+  }
 }
 
 // Make design modal accessible from shop
@@ -1194,8 +1222,10 @@ function updateDashboardStats() {
   coins.forEach(coin => {
     if (collection[coin.id]) {
       owned++;
-      // Use marketHigh as conservative high estimate, or fall back to mintPrice * 3
-      const estValue = coin.marketHigh || (coin.mintPrice ? coin.mintPrice * 3 : 25);
+      // Prefer a live market figure (median sold price), then the static market
+      // range, then a mint-price heuristic.
+      const live = _referencePrice(coin);
+      const estValue = live || coin.marketHigh || (coin.mintPrice ? coin.mintPrice * 3 : 25);
       totalValue += estValue;
     }
   });
@@ -1323,7 +1353,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <footer>
   eBay AU sold prices via RapidAPI · CoinXchange market listings · Prices in AUD · Not financial advice · Built for collectors<br><br>
-  <small>Some links on this site are affiliate links through the eBay Partner Network (EPN). We may earn a commission if you make a purchase through these links, at no extra cost to you.</small>
+  <small>Some links on this site are affiliate links through the eBay Partner Network (EPN). We may earn a commission if you make a purchase through these links, at no extra cost to you.</small><br><br>
+  <small>Bluey Coin Tracker is an independent, fan-run collector guide. It is not affiliated with, endorsed by, or associated with Ludo Studio, BBC Studios, or the Royal Australian Mint.</small>
 </footer>
 
 <script>
@@ -1538,7 +1569,11 @@ function buildCard(coin) {
   const avg     = hasEbay ? parseFloat(ebay.average_price) : null;
   const minP    = hasEbay ? parseFloat(ebay.min_price)     : null;
   const maxP    = hasEbay ? parseFloat(ebay.max_price)     : null;
-  const premium = calcPremium(avg, coin.mintPrice);
+  // Median preferred over mean: eBay keyword searches mix single coins with
+  // pairs, lots and rolls, which inflates the average several-fold.
+  const med     = hasEbay ? (parseFloat(ebay.median_price) || _medianOfProducts(ebay)) : null;
+  const refPrice = med || avg;
+  const premium = calcPremium(refPrice, coin.mintPrice);
   const premStr = premium !== null ? `${premium > 0 ? '+' : ''}${premium}%` : '';
   const premCls = premium > 0 ? 'up' : (premium < 0 ? 'down' : '');
 
@@ -1580,8 +1615,13 @@ function buildCard(coin) {
   // eBay stats
   const statsRow = el('div', 'stats-row');
 
+  const refLabel = med ? 'eBay Median Sold' : 'eBay Avg Sold';
+
   const avgBox = el('div', 'stat-box');
-  avgBox.append(el('div', 'stat-label', 'eBay Avg Sold'), el('div', 'stat-value', formatAUD(avg)));
+  avgBox.append(el('div', 'stat-label', refLabel), el('div', 'stat-value', formatAUD(refPrice)));
+  if (med && avg && Math.abs(med - avg) / avg > 0.15) {
+    avgBox.title = `Mean sold ${formatAUD(avg)} is inflated by lots and multi-coin sets; the median single-coin price is ${formatAUD(med)}.`;
+  }
 
   const minBox = el('div', 'stat-box');
   minBox.append(el('div', 'stat-label', 'eBay Min'), el('div', 'stat-value', formatAUD(minP)));
@@ -1646,7 +1686,7 @@ function buildCard(coin) {
   const sellBtn = el('button', 'sell-btn');
   sellBtn.id = `sell-btn-${coin.id}`;
   sellBtn.textContent = 'Sell My Coin';
-  sellBtn.addEventListener('click', () => handleSell(coin.id, avg));
+  sellBtn.addEventListener('click', () => handleSell(coin.id, refPrice, Boolean(med)));
   body.append(sellBtn);
 
   // Sell panel (populated on demand)
@@ -1828,7 +1868,7 @@ function renderBuyOptions(panel, options) {
 // ────────────────────────────────────────────────
 // SELL MY COIN
 // ────────────────────────────────────────────────
-function handleSell(coinId, referenceValue) {
+function handleSell(coinId, referenceValue, isMedian) {
   const btn   = document.getElementById(`sell-btn-${coinId}`);
   const panel = document.getElementById(`sell-panel-${coinId}`);
   if (!btn || !panel) return;
@@ -1849,7 +1889,8 @@ function handleSell(coinId, referenceValue) {
   panel.append(el('div', 'sp-title', 'Sell This Coin'));
   panel.append(el('div', 'sp-value',
     referenceValue
-      ? 'Reference value: ' + formatAUD(referenceValue) + ' (eBay AU avg sold)'
+      ? 'Reference value: ' + formatAUD(referenceValue)
+        + (isMedian ? ' (eBay AU median sold)' : ' (eBay AU avg sold)')
       : 'No recent sold-price data for this coin yet.'
   ));
 
@@ -1889,24 +1930,50 @@ function _coinEbay(coin) {
   return (coinData[coin.id] || {}).ebay || {};
 }
 
+// Median of the listed sold prices, used when the feed carries no median of
+// its own. The mean is badly skewed on eBay because a broad keyword search
+// returns lots, pairs and rolls alongside single coins — for s1_bluey the mean
+// sat near $44 while a single uncirculated coin trades around $12-15.
+function _medianOfProducts(ebay) {
+  const prices = ((ebay && ebay.products) || [])
+    .map(p => parseFloat(p.sale_price))
+    .filter(p => p > 0)
+    .sort((a, b) => a - b);
+  if (!prices.length) return null;
+  const mid = Math.floor(prices.length / 2);
+  return prices.length % 2 ? prices[mid] : (prices[mid - 1] + prices[mid]) / 2;
+}
+
+// The figure used for premium, sorting and portfolio value: the feed's median
+// when present, otherwise a median of its sold prices, and only then the mean.
+function _referencePrice(coin) {
+  const ebay = _coinEbay(coin);
+  const median = parseFloat(ebay.median_price);
+  if (median > 0) return median;
+  const derived = _medianOfProducts(ebay);
+  if (derived) return derived;
+  const avg = parseFloat(ebay.average_price);
+  return avg > 0 ? avg : null;
+}
+
 function _sortCoins(list) {
   if (sortMode === 'default') return list;
   const out = list.slice();
   switch (sortMode) {
     case 'premium_desc': {
       out.sort((a, b) => {
-        const pa = parseFloat(calcPremium(_coinEbay(a).average_price, a.mintPrice)) || -Infinity;
-        const pb = parseFloat(calcPremium(_coinEbay(b).average_price, b.mintPrice)) || -Infinity;
+        const pa = parseFloat(calcPremium(_referencePrice(a), a.mintPrice)) || -Infinity;
+        const pb = parseFloat(calcPremium(_referencePrice(b), b.mintPrice)) || -Infinity;
         return pb - pa;
       });
       break;
     }
     case 'price_desc': {
-      out.sort((a, b) => (parseFloat(_coinEbay(b).average_price) || 0) - (parseFloat(_coinEbay(a).average_price) || 0));
+      out.sort((a, b) => (_referencePrice(b) || 0) - (_referencePrice(a) || 0));
       break;
     }
     case 'price_asc': {
-      out.sort((a, b) => (parseFloat(_coinEbay(a).average_price) || Infinity) - (parseFloat(_coinEbay(b).average_price) || Infinity));
+      out.sort((a, b) => (_referencePrice(a) || Infinity) - (_referencePrice(b) || Infinity));
       break;
     }
     case 'mintage_asc': {
