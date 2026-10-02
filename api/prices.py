@@ -245,6 +245,14 @@ COINS = [
     {'id': 's3_pin_bandit', 'ebay_kw': 'Bandit Pin Cover 2026', 'search': 'Bandit Pin Cover'},
     {'id': 's3_pin_chilli', 'ebay_kw': 'Chilli Pin Cover 2026', 'search': 'Chilli Pin Cover'},
     {'id': 's3_pin_muffin', 'ebay_kw': 'Muffin Pin Cover 2026', 'search': 'Muffin Pin Cover'},
+    # Series 1 tube sets — these ship in the frontend catalogue and in
+    # server.py; they were missing here so they never received live prices.
+    {'id': 's1_mumdad', 'ebay_kw': '2024 $1 Bluey Mum & Dad Dollarbuck tube set unc', 'search': '2024 Bluey Mum and Dad tube set'},
+    {'id': 's1_muffinsocks', 'ebay_kw': '2024 $1 Bluey Muffin & Socks Dollarbuck tube set unc', 'search': '2024 Bluey Muffin Socks tube set'},
+    {'id': 's1_radfrisky', 'ebay_kw': '2024 $1 Bluey Rad & Frisky Dollarbuck tube set unc', 'search': '2024 Bluey Rad Frisky tube set'},
+    {'id': 's1_stripetrixie', 'ebay_kw': '2024 $1 Bluey Stripe Trixie Nana Dollarbuck tube set unc', 'search': '2024 Bluey Stripe Trixie tube set'},
+    {'id': 's1_blueyfriends', 'ebay_kw': '2024 $1 Bluey Bluey & Friends Dollarbuck tube set unc', 'search': '2024 Bluey friends tube set'},
+    {'id': 's1_bingofriends', 'ebay_kw': '2024 $1 Bluey Bingo & Friends Dollarbuck tube set unc', 'search': '2024 Bluey Bingo friends tube set'},
 ]
 
 # ── MAIN HANDLER (Vercel Python runtime, current format) ────────────────────
