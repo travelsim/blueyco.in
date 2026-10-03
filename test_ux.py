@@ -140,6 +140,37 @@ class TestHonestCopy(unittest.TestCase):
         hero = INDEX.split('class="hero"')[1].split('</section>')[0]
         self.assertNotIn('trusted by serious collectors', hero.lower())
 
+    def test_no_stale_48_frame_claim(self):
+        self.assertNotIn('48 Frames', INDEX)
+
+
+class TestClutterReduction(unittest.TestCase):
+    def test_navigation_has_one_frames_destination(self):
+        nav = INDEX.split('<header class="nav">')[1].split('</header>')[0]
+        self.assertEqual(nav.count('href="#shop"'), 1)
+        self.assertIn('>Collection<', nav)
+        self.assertIn('>Price Guide<', nav)
+
+    def test_dashboard_opens_as_a_six_coin_preview(self):
+        self.assertIn('dashboard-list-collapsed', INDEX)
+        self.assertIn('.dashboard-list-collapsed .coin-row:nth-child(n+7)', INDEX)
+        self.assertIn('function toggleDashboardCoins()', INDEX)
+        self.assertIn('aria-expanded="false"', INDEX)
+
+    def test_shop_defaults_to_photographed_frames(self):
+        self.assertIn('let frameCatalogueExpanded = false', INDEX)
+        self.assertIn('matching.filter(frame => frame.image)', INDEX)
+        self.assertIn('function toggleFrameCatalogue()', INDEX)
+        self.assertIn('featured frames', INDEX)
+
+    def test_price_cards_progressively_disclose_detail(self):
+        self.assertIn("el('button', 'card-details-toggle', 'Show market details')", INDEX)
+        self.assertIn("card.classList.toggle('details-open')", INDEX)
+        self.assertIn('.coin-card:not(.details-open) .chart-wrap', INDEX)
+
+    def test_cart_count_has_one_source_of_truth(self):
+        self.assertEqual(INDEX.count('function updateCartCount()'), 1)
+
 
 if __name__ == '__main__':
     unittest.main()
