@@ -133,8 +133,7 @@ class TestCartBadgeReflectsState(unittest.TestCase):
 class TestHonestCopy(unittest.TestCase):
     def test_meta_description_coin_count_matches_the_catalogue(self):
         desc = re.search(r'<meta name="description" content="([^"]+)"', INDEX).group(1)
-        self.assertIn('46 coins', desc)
-        self.assertNotIn('48 coins', desc)
+        self.assertIn('48 coins', desc)
 
     def test_no_unverified_social_proof_claims(self):
         hero = INDEX.split('class="hero"')[1].split('</section>')[0]

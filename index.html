@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#3d3a63">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:;">
 <title>Blueycoin — Australia's Most Complete Bluey Coin Resource</title>
-<meta name="description" content="Track, value, and complete your official Bluey coin collection. 46 coins, live market data, interactive dashboard, and wish list tools.">
+<meta name="description" content="Track, value, and complete your official Bluey coin collection. 48 coins across four series, live market data, and an interactive collection dashboard.">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" id="canonical-url" href="https://blueyco.in/">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -22,7 +22,7 @@
 <meta property="og:image:alt" content="Bluey $1 Dollarbuck 2024 in a display frame">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Blueycoin — Track every Bluey coin in one place">
-<meta name="twitter:description" content="Australia's most complete resource for official Bluey coins. 46 coins, live sold prices, collection tracker.">
+<meta name="twitter:description" content="Australia's most complete resource for official Bluey coins. 48 coins across four series, live sold prices, and a collection tracker.">
 <meta name="twitter:image" content="https://blueyco.in/frames/blister-bluey-dollarbuck-2024.jpg">
 
 <script type="application/ld+json">
@@ -51,7 +51,7 @@
         {
           "@type": "Question",
           "name": "How many official Bluey coins are there?",
-          "acceptedAnswer": { "@type": "Answer", "text": "There are 46 official Bluey coins in the tracker: Series 1 2024 Dollarbucks, Series 2 2025 Christmas coins, and Series 3 2026 $2 coins including privy marks, proofs, PNCs and pin covers." }
+          "acceptedAnswer": { "@type": "Answer", "text": "There are 48 official Bluey coins in the tracker across four series: 2024 Dollarbucks, 2025 Christmas coins, 2026 $2 coins, and the 2027 Cricket $1 uncirculated and silver proof coins." }
         },
         {
           "@type": "Question",
@@ -250,6 +250,8 @@
   .market-range { background: #d4edda; color: #155724; padding: 1px 6px; border-radius: 4px; font-weight: 600; }
 
   .card-body { padding: 14px 18px; }
+  .coin-source-link { display: inline-block; margin: 0 0 10px; font-size: 0.78rem; color: var(--blue); }
+  .coin-source-link:hover { text-decoration-thickness: 2px; }
 
   /* ── EBAY STATS ROW ── */
   .stats-row {
@@ -1114,7 +1116,7 @@
       Start your collection
     </a>
     <div class="hero-meta">
-      46 official coins · Prices refreshed regularly
+      48 official coins · Prices refreshed regularly
     </div>
   </div>
 </section>
@@ -1130,7 +1132,7 @@
 
       <div class="dashboard-stats">
         <div class="stat">
-          <div class="stat-value" id="owned-count">0 / 46</div>
+          <div class="stat-value" id="owned-count">0 / 48</div>
           <div class="stat-label">Coins Owned</div>
         </div>
         <div class="stat">
@@ -1151,7 +1153,7 @@
 
     <div class="dashboard-footer">
       <button id="dashboard-toggle" class="subtle-button" onclick="toggleDashboardCoins()" aria-expanded="false">
-        Show all 46 coins
+        Show all 48 coins
       </button>
       <div class="dashboard-footer-actions">
         <button onclick="frameOwnedCoins()" class="subtle-button subtle-button-accent">Frame coins I own</button>
@@ -1179,6 +1181,7 @@
       <option value="series1">Series 1 (2024)</option>
       <option value="series2">Series 2 (2025)</option>
       <option value="series3">Series 3 (2026)</option>
+      <option value="series4">Series 4 (2027 Cricket)</option>
     </select>
 
     <select id="owned-filter" onchange="filterFrames()" aria-label="Filter frames by coins you own" style="padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);">
@@ -1314,6 +1317,7 @@
     <button class="tab-btn" data-series="series1">Series 1 · 2024 Dollarbucks</button>
     <button class="tab-btn" data-series="series2">Series 2 · 2025 Christmas</button>
     <button class="tab-btn" data-series="series3">Series 3 · 2026 Bluey 2</button>
+    <button class="tab-btn" data-series="series4">Series 4 · 2027 Cricket</button>
   </div>
 
   <div class="filter-bar" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:14px 0 18px; padding:10px 12px; background:var(--bg); border:1px solid var(--border); border-radius:10px;">
@@ -1961,7 +1965,7 @@ document.addEventListener('DOMContentLoaded', () => {
   <div class="faq-list">
     <div class="faq-item">
       <h3>How many official Bluey coins are there?</h3>
-      <p>There are 46 official Bluey coins in this tracker: Series 1 2024 Dollarbucks, Series 2 2025 Christmas coins, and Series 3 2026 $2 coins including privy marks, proofs, PNCs and pin covers.</p>
+      <p>There are 48 official Bluey coins in this tracker across four series: 2024 Dollarbucks, 2025 Christmas coins, 2026 $2 coins, and the 2027 Cricket $1 uncirculated and silver proof coins.</p>
     </div>
     <div class="faq-item">
       <h3>What is a Bluey Dollarbuck worth?</h3>
@@ -2039,6 +2043,10 @@ window.COINS = [
   { id: 's3_pin_bandit', series: 'series3', name: 'Bandit Pin Cover', keywords: 'pin cover 2026 bandit', denomination: null, year: 2026, mintage: null, mintPrice: 18, color: false, rarity: 6, marketLow: 25, marketHigh: 60, cxUrl: 'https://www.coinxchange.com.au/buy?search=Bandit+Pin+Cover' },
   { id: 's3_pin_chilli', series: 'series3', name: 'Chilli Pin Cover', keywords: 'pin cover 2026 chilli', denomination: null, year: 2026, mintage: null, mintPrice: 18, color: false, rarity: 6, marketLow: 25, marketHigh: 60, cxUrl: 'https://www.coinxchange.com.au/buy?search=Chilli+Pin+Cover' },
   { id: 's3_pin_muffin', series: 'series3', name: 'Muffin Pin Cover', keywords: 'pin cover 2026 muffin', denomination: null, year: 2026, mintage: null, mintPrice: 18, color: false, rarity: 6, marketLow: 25, marketHigh: 60, cxUrl: 'https://www.coinxchange.com.au/buy?search=Muffin+Pin+Cover' },
+
+  // Series 4 — 2027 Cricket episode ($1; official RAM specifications).
+  { id: 's4_cricket_unc', series: 'series4', name: 'Cricket $1 Coloured Uncirculated', keywords: 'cricket rusty bluey 2027 carded 200000 mintage', denomination: 1, year: 2027, mintage: 200000, mintPrice: 25, color: true, rarity: 4, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/about-us/whats-new/bluey-cricket-collectible-coins-celebrating-aussie-tradition', cxUrl: 'https://www.coinxchange.com.au/buy?search=2027+Bluey+Cricket+uncirculated' },
+  { id: 's4_cricket_proof', series: 'series4', name: 'Cricket $1 Coloured Silver Proof', keywords: 'cricket rusty bluey 2027 silver proof cricket ball tin 20000 mintage', denomination: 1, year: 2027, mintage: 20000, mintPrice: 112.5, color: true, rarity: 8, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/about-us/whats-new/bluey-cricket-collectible-coins-celebrating-aussie-tradition', cxUrl: 'https://www.coinxchange.com.au/buy?search=2027+Bluey+Cricket+silver+proof' },
 
   // Series 1 tube sets / variants (from final list)
   { id: 's1_mumdad', series: 'series1', name: 'Mum & Dad $1 Tube Set', keywords: 'mum dad 2024 tube', denomination: 1, year: 2024, mintage: null, mintPrice: 8, color: true, rarity: 5, marketLow: 15, marketHigh: 40, cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Mum+and+Dad+tube+set' },
@@ -2225,7 +2233,10 @@ function buildCard(coin) {
     el('div', 'card-meta', `${coin.denomination} · ${coin.year} · ${coin.mintage ? 'Mintage: ' + coin.mintage : 'Mintage: unknown'}`)
   );
   hdr.append(dot, tw);
-  if (coin.mintPrice) hdr.append(el('span', 'mint-price', `Mint $${coin.mintPrice}`));
+  if (coin.mintPrice) {
+    const mintPriceText = Number.isInteger(coin.mintPrice) ? coin.mintPrice : coin.mintPrice.toFixed(2);
+    hdr.append(el('span', 'mint-price', `Mint $${mintPriceText}`));
+  }
 
   // Rarity + Market range (new rich data)
   if (coin.rarity != null || (coin.marketLow != null && coin.marketHigh != null)) {
@@ -2271,6 +2282,13 @@ function buildCard(coin) {
   const detailsBtn = el('button', 'card-details-toggle', 'Show market details');
   detailsBtn.type = 'button';
   detailsBtn.setAttribute('aria-expanded', 'false');
+  if (coin.sourceUrl) {
+    const sourceLink = el('a', 'coin-source-link', 'Official RAM details ↗');
+    sourceLink.href = safeUrl(coin.sourceUrl);
+    sourceLink.target = '_blank';
+    sourceLink.rel = 'noopener noreferrer';
+    body.append(sourceLink);
+  }
   body.append(detailsBtn);
 
   // CoinXchange row (if data available)

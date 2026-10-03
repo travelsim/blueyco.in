@@ -271,6 +271,9 @@ COINS = [
     {'id': 's3_pin_bandit', 'ebay_kw': 'Bandit Pin Cover 2026', 'search': 'Bandit Pin Cover'},
     {'id': 's3_pin_chilli', 'ebay_kw': 'Chilli Pin Cover 2026', 'search': 'Chilli Pin Cover'},
     {'id': 's3_pin_muffin', 'ebay_kw': 'Muffin Pin Cover 2026', 'search': 'Muffin Pin Cover'},
+    # Series 4 — 2027 Cricket episode collectible coins (RAM launch prices).
+    {'id': 's4_cricket_unc', 'ebay_kw': '2027 $1 Bluey Cricket Rusty coloured uncirculated coin card', 'search': '2027 Bluey Cricket $1 uncirculated'},
+    {'id': 's4_cricket_proof', 'ebay_kw': '2027 $1 Bluey Cricket silver proof coin cricket ball tin', 'search': '2027 Bluey Cricket $1 silver proof'},
     # Series 1 tube sets — these ship in the frontend catalogue and in
     # server.py; they were missing here so they never received live prices.
     {'id': 's1_mumdad', 'ebay_kw': '2024 $1 Bluey Mum & Dad Dollarbuck tube set unc', 'search': '2024 Bluey Mum and Dad tube set'},
