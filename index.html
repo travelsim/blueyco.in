@@ -2,41 +2,97 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#3d3a63">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:;">
-<title>Blueycoin — Australia’s Most Complete Bluey Coin Resource</title>
+<title>Blueycoin — Australia's Most Complete Bluey Coin Resource</title>
 <meta name="description" content="Track, value, and complete your official Bluey coin collection. 46 coins, live market data, interactive dashboard, and wish list tools.">
-<meta name="keywords" content="Bluey coin, Bluey Dollarbuck, RAM Bluey coins, Bluey collection, Bluey 2026, Bluey price guide, Bluey tracker">
-<meta name="robots" content="index, follow">
-<link rel="canonical" id="canonical-url">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" id="canonical-url" href="https://blueyco.in/">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <meta property="og:type" content="website">
-<meta property="og:title" content="Blueycoin — Australia’s Most Complete Bluey Coin Resource">
+<meta property="og:site_name" content="Blueycoin">
+<meta property="og:locale" content="en_AU">
+<meta property="og:title" content="Blueycoin — Australia's Most Complete Bluey Coin Resource">
 <meta property="og:description" content="Track, value, and complete your official Bluey coin collection with live market data and an interactive dashboard.">
-<meta property="og:url" id="og-url" content="">
+<meta property="og:url" id="og-url" content="https://blueyco.in/">
+<meta property="og:image" content="https://blueyco.in/frames/blister-bluey-dollarbuck-2024.jpg">
+<meta property="og:image:alt" content="Bluey $1 Dollarbuck 2024 in a display frame">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Blueycoin">
-<meta name="twitter:description" content="Australia’s most complete resource for official Bluey coins.">
+<meta name="twitter:title" content="Blueycoin — Track every Bluey coin in one place">
+<meta name="twitter:description" content="Australia's most complete resource for official Bluey coins. 46 coins, live sold prices, collection tracker.">
+<meta name="twitter:image" content="https://blueyco.in/frames/blister-bluey-dollarbuck-2024.jpg">
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Blueycoin",
-  "description": "Track, value, and complete your official Bluey coin collection.",
-  "applicationCategory": "LifestyleApplication",
-  "operatingSystem": "Any",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" }
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "name": "Blueycoin",
+      "url": "https://blueyco.in/",
+      "inLanguage": "en-AU",
+      "description": "Track, value, and complete your official Bluey coin collection."
+    },
+    {
+      "@type": "WebApplication",
+      "name": "Blueycoin",
+      "url": "https://blueyco.in/",
+      "description": "Track, value, and complete your official Bluey coin collection.",
+      "applicationCategory": "LifestyleApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How many official Bluey coins are there?",
+          "acceptedAnswer": { "@type": "Answer", "text": "There are 46 official Bluey coins in the tracker: Series 1 2024 Dollarbucks, Series 2 2025 Christmas coins, and Series 3 2026 $2 coins including privy marks, proofs, PNCs and pin covers." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a Bluey Dollarbuck worth?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A single 2024 Bluey $1 Dollarbuck typically resells for around $12–$15 on eBay Australia (median sold price). Check the price guide for the live median, because average prices are skewed by multi-coin lots, pairs and rolls." }
+        },
+        {
+          "@type": "Question",
+          "name": "Where can I buy official Bluey coins?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Buy from the Royal Australian Mint ballot, CoinXchange, or eBay Australia sold listings for secondary-market prices. Use the Buy Options panel on each coin card to compare live retailer prices." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the rarest Bluey coin?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The rarest tracked coins are low-mintage proofs: the 2025 $1 Silver Proof Christmas coin (10,000 mintage) and the 2026 Aluminium-Bronze Proof $2 (10,500 mintage). Coloured insert variants are also scarce with unlisted mintages." }
+        },
+        {
+          "@type": "Question",
+          "name": "How should I store or display Bluey coins?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Keep blister packs sealed and out of direct sun. For display, use a made-to-order timber frame sized to the packaging: blister, proof capsule, PNC card or pin cover. Frames start at $89 with free shipping over $250." }
+        }
+      ]
+    }
+  ]
 }
 </script>
 
 <script>
   (function(){
-    var origin = window.location.origin + '/';
-    var c = document.getElementById('canonical-url');
-    if (c) c.href = origin;
-    var og = document.getElementById('og-url');
-    if (og) og.setAttribute('content', origin);
+    // Static canonical/og-url above covers crawlers without JS; this only
+    // keeps preview deployments self-referential in the browser.
+    try {
+      var origin = window.location.origin + '/';
+      var isProd = /blueyco\.in$/.test(window.location.hostname);
+      if (!isProd) {
+        var c = document.getElementById('canonical-url');
+        if (c) c.href = origin;
+        var og = document.getElementById('og-url');
+        if (og) og.setAttribute('content', origin);
+      }
+    } catch (e) {}
   })();
 </script>
 
@@ -47,10 +103,11 @@
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 <script defer src="/_vercel/speed-insights/script.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw==" crossorigin="anonymous"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw==" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap');
+  /* Fonts load via <link> above for faster first paint; no @import. */
 
   /*
     Palette sampled from the official bluey.tv brand (logo SVG fill, character
@@ -936,23 +993,14 @@
       .shop-intro { align-items: flex-start; flex-direction: column; }
     }
     @media (max-width: 640px) {
-      html { scroll-padding-top: 118px; }
-      .nav-inner { min-height: 56px; padding: 0 16px; }
-      .nav-links {
-        order: 3;
-        width: 100%;
-        overflow-x: auto;
-        justify-content: flex-start;
-        padding: 8px 0 10px;
-        border-top: 1px solid rgba(255,255,255,.12);
-      }
+      html { scroll-padding-top: 72px; }
       .hero { padding: 38px 20px 58px; }
-      .hero h1 { font-size: 2rem; }
+      .hero h1 { font-size: clamp(1.85rem, 8vw, 2rem); }
       .hero p { font-size: 1rem; }
       .dashboard-section { padding-inline: 14px; }
       .dashboard-header { padding: 20px; }
       .dashboard-stats { width: 100%; justify-content: space-between; gap: 12px; }
-      .coin-row { grid-template-columns: 28px 1fr auto; padding: 12px 18px; }
+      .coin-row { grid-template-columns: 28px minmax(0,1fr) auto; padding: 12px 18px; }
       .coin-row > div:nth-child(3) { display: none; }
       .coin-row > div:nth-child(5) { grid-column: 2 / 4; }
       .dashboard-footer { padding: 14px 18px; }
@@ -963,20 +1011,83 @@
       .card-actions { grid-template-columns: 1fr; }
     }
 
+    /* ===== MOBILE-FIRST HEADER: no overlap, hamburger on small screens =====
+       Base is the mobile layout (logo + menu/cart on one row, links in a
+       dropdown panel). Desktop restores the inline row. This replaces the
+       old wrapping second-row approach that overlapped the logo on 360px. */
+    html { scroll-padding-top: 72px; }
+    body { overflow-x: clip; }
+    img { max-width: 100%; }
+    section[id], footer[id] { scroll-margin-top: 76px; }
+    .skip-link {
+      position: absolute; left: 12px; top: -48px; z-index: 300;
+      background: #fff; color: var(--navy); font-weight: 700; font-size: 0.85rem;
+      padding: 10px 16px; border-radius: 999px; text-decoration: none;
+      transition: top 0.15s;
+    }
+    .skip-link:focus { top: 10px; }
+    .nav-inner { flex-wrap: wrap; min-height: 60px; padding: 0 16px; gap: 0 12px; }
+    .logo { min-height: 44px; display: inline-flex; align-items: center; }
+    .nav-actions { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+    .nav-toggle {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 44px; min-height: 44px; padding: 8px 10px;
+      background: none; border: 1px solid rgba(255,255,255,0.28); border-radius: 10px;
+      color: #fff; font-size: 1.15rem; line-height: 1; cursor: pointer;
+    }
+    .nav-toggle:hover { background: rgba(255,255,255,0.1); }
+    .nav-links {
+      display: none;
+      order: 3; flex-basis: 100%; width: 100%;
+      flex-direction: column; align-items: stretch; gap: 0;
+      padding: 6px 0 10px; margin: 0;
+      border-top: 1px solid rgba(255,255,255,0.14);
+    }
+    .nav.nav-open .nav-links { display: flex; }
+    .nav-links a {
+      display: flex; align-items: center; min-height: 44px;
+      padding: 10px 4px; font-size: 1rem;
+    }
+    .cart-button { min-width: 44px; min-height: 44px; padding: 10px; }
+    @media (min-width: 720px) {
+      html { scroll-padding-top: 76px; }
+      .nav-inner { flex-wrap: nowrap; align-items: center; padding: 0 24px; gap: 24px; }
+      .nav-toggle { display: none; }
+      .nav-actions { margin-left: 0; }
+      .nav-links {
+        display: flex; order: 0; flex-basis: auto; width: auto;
+        flex-direction: row; align-items: center; gap: 22px;
+        padding: 0; border-top: none; font-size: 0.92rem;
+      }
+      .nav-links a { min-height: 0; padding: 4px 2px; font-size: inherit; }
+    }
+
+    /* ===== MOBILE TAP TARGETS + DRAWER SAFETY ===== */
+    .tab-btn, .subtle-button, .btn-add, .btn-primary { min-height: 44px; }
+    .shop-toolbar select, .filter-bar select, .filter-bar input { min-height: 44px; font-size: 16px; }
+    #cart-drawer { width: min(380px, 100vw); right: min(-380px, -100vw); }
+    .frame-photo { height: auto; }
+    main { display: block; max-width: 1200px; margin: 0 auto; padding: 0; }
+    main > .dashboard-section, main > .section { padding-left: 20px; padding-right: 20px; }
+    @media (max-width: 640px) {
+      main > .dashboard-section, main > .section { padding-left: 14px; padding-right: 14px; }
+    }
+    .faq-list { display: grid; gap: 12px; margin-top: 18px; }
+    .faq-item { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+    .faq-item h3 { font-size: 1rem; margin-bottom: 6px; }
+    .faq-item p { color: var(--text); font-size: 0.92rem; margin: 0; }
+
 </style>
 </head>
 <body>
 
 <!-- New Blueycoin Navigation -->
-<header class="nav">
+<a class="skip-link" href="#dashboard">Skip to collection</a>
+<header class="nav" id="site-header">
   <div class="nav-inner">
     <a href="/" class="logo">Blueycoin</a>
-    <nav class="nav-links">
-      <a href="#dashboard">Collection</a>
-      <a href="#all-coins">Price Guide</a>
-      <a href="#shop">Frames</a>
-    </nav>
     <div class="nav-actions">
+      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">☰</button>
       <!-- Cart Icon -->
       <button class="cart-button" onclick="showCart()" aria-label="Open cart">
         <span aria-hidden="true">🛒</span>
@@ -984,10 +1095,17 @@
         <span class="sr-only" id="cart-status" role="status" aria-live="polite"></span>
       </button>
     </div>
+    <nav class="nav-links" id="site-nav" aria-label="Primary">
+      <a href="#dashboard">Collection</a>
+      <a href="#all-coins">Price Guide</a>
+      <a href="#shop">Frames</a>
+      <a href="#faq">FAQ</a>
+    </nav>
   </div>
 </header>
 
 <!-- Hero -->
+<main id="main-content">
 <section class="hero">
   <div style="max-width: 720px; margin: 0 auto;">
     <h1>Track every Bluey coin in one place</h1>
@@ -1807,11 +1925,65 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('dashboard')) {
     initDashboard();
   }
+  // Mobile menu: toggles the dropdown panel without ever overlapping the logo.
+  var toggle = document.getElementById('nav-toggle');
+  var header = document.getElementById('site-header');
+  if (toggle && header) {
+    toggle.addEventListener('click', () => {
+      var open = header.classList.toggle('nav-open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+    // Close the menu when a destination is chosen or Escape is pressed.
+    document.getElementById('site-nav').addEventListener('click', (e) => {
+      if (e.target.tagName === 'A' && header.classList.contains('nav-open')) {
+        header.classList.remove('nav-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open menu');
+      }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && header.classList.contains('nav-open')) {
+        header.classList.remove('nav-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open menu');
+        toggle.focus();
+      }
+    });
+  }
 });
 </script>
 
 
-<footer>
+<section id="faq" class="section" aria-labelledby="faq-heading">
+  <h2 id="faq-heading" class="section-title">Bluey coin questions, answered</h2>
+  <p class="page-sub">Short answers for collectors and search assistants. Live medians are in the price guide above.</p>
+  <div class="faq-list">
+    <div class="faq-item">
+      <h3>How many official Bluey coins are there?</h3>
+      <p>There are 46 official Bluey coins in this tracker: Series 1 2024 Dollarbucks, Series 2 2025 Christmas coins, and Series 3 2026 $2 coins including privy marks, proofs, PNCs and pin covers.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What is a Bluey Dollarbuck worth?</h3>
+      <p>A single 2024 Bluey $1 Dollarbuck typically resells for around $12–$15 on eBay Australia (median sold price). Use the price guide median, because averages are skewed by multi-coin lots, pairs and rolls.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Where can I buy official Bluey coins?</h3>
+      <p>Buy from the Royal Australian Mint ballot, CoinXchange, or eBay Australia for secondary-market prices. Open Buy Options on any coin card to compare live retailer prices.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What is the rarest Bluey coin?</h3>
+      <p>The rarest tracked coins are low-mintage proofs: the 2025 $1 Silver Proof Christmas coin (10,000 mintage) and the 2026 Aluminium-Bronze Proof $2 (10,500 mintage). Coloured insert variants are also scarce.</p>
+    </div>
+    <div class="faq-item">
+      <h3>How should I store or display Bluey coins?</h3>
+      <p>Keep blister packs sealed and out of direct sun. For display, use a made-to-order timber frame sized to the packaging: blister, proof capsule, PNC card or pin cover. Frames start at $89.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer id="site-footer">
   eBay AU sold prices via RapidAPI · CoinXchange market listings · Prices in AUD · Not financial advice · Built for collectors<br><br>
   <small>Some links on this site are affiliate links through the eBay Partner Network (EPN). We may earn a commission if you make a purchase through these links, at no extra cost to you.</small><br><br>
   <small>Bluey Coin Tracker is an independent, fan-run collector guide. It is not affiliated with, endorsed by, or associated with Ludo Studio, BBC Studios, or the Royal Australian Mint.</small>

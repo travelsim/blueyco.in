@@ -172,5 +172,55 @@ class TestClutterReduction(unittest.TestCase):
         self.assertEqual(INDEX.count('function updateCartCount()'), 1)
 
 
+class TestMobileHeaderNoOverlap(unittest.TestCase):
+    def test_hamburger_toggle_exists_and_controls_nav(self):
+        self.assertIn('id="nav-toggle"', INDEX)
+        self.assertIn('aria-controls="site-nav"', INDEX)
+        self.assertIn("header.classList.toggle('nav-open')", INDEX)
+
+    def test_nav_links_hidden_on_mobile_shown_on_desktop(self):
+        self.assertIn('.nav-links {', INDEX)
+        self.assertIn('display: none;', INDEX)
+        self.assertIn('.nav.nav-open .nav-links { display: flex; }', INDEX)
+        self.assertIn('@media (min-width: 720px)', INDEX)
+
+    def test_header_inner_wraps_without_overlapping(self):
+        self.assertIn('.nav-inner { flex-wrap: wrap;', INDEX)
+
+    def test_skip_link_exists(self):
+        self.assertIn('class="skip-link"', INDEX)
+        self.assertIn('href="#dashboard"', INDEX)
+
+    def test_cart_drawer_fits_small_phones(self):
+        self.assertIn('width: min(380px, 100vw)', INDEX)
+
+    def test_tap_targets_meet_44px(self):
+        self.assertIn('.tab-btn, .subtle-button, .btn-add, .btn-primary { min-height: 44px; }', INDEX)
+        self.assertIn('.cart-button { min-width: 44px; min-height: 44px;', INDEX)
+
+
+class TestSeoAeo(unittest.TestCase):
+    def test_canonical_and_og_url_are_static(self):
+        self.assertIn('<link rel="canonical" id="canonical-url" href="https://blueyco.in/">', INDEX)
+        self.assertIn('<meta property="og:url" id="og-url" content="https://blueyco.in/">', INDEX)
+
+    def test_social_images_present(self):
+        self.assertIn('og:image', INDEX)
+        self.assertIn('twitter:image', INDEX)
+
+    def test_faq_section_visible_and_matches_json_ld(self):
+        self.assertIn('id="faq"', INDEX)
+        self.assertIn('How many official Bluey coins are there?', INDEX)
+        self.assertIn('"@type": "FAQPage"', INDEX)
+        self.assertIn('What is a Bluey Dollarbuck worth?', INDEX)
+
+    def test_main_landmark_wraps_content(self):
+        self.assertIn('<main id="main-content">', INDEX)
+        self.assertIn('</main>', INDEX)
+
+    def test_chart_js_is_deferred(self):
+        self.assertIn('defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js', INDEX)
+
+
 if __name__ == '__main__':
     unittest.main()
