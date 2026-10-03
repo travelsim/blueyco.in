@@ -2,41 +2,97 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#3d3a63">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:;">
-<title>Blueycoin — Australia’s Most Complete Bluey Coin Resource</title>
+<title>Blueycoin — Australia's Most Complete Bluey Coin Resource</title>
 <meta name="description" content="Track, value, and complete your official Bluey coin collection. 46 coins, live market data, interactive dashboard, and wish list tools.">
-<meta name="keywords" content="Bluey coin, Bluey Dollarbuck, RAM Bluey coins, Bluey collection, Bluey 2026, Bluey price guide, Bluey tracker">
-<meta name="robots" content="index, follow">
-<link rel="canonical" id="canonical-url">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" id="canonical-url" href="https://blueyco.in/">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <meta property="og:type" content="website">
-<meta property="og:title" content="Blueycoin — Australia’s Most Complete Bluey Coin Resource">
+<meta property="og:site_name" content="Blueycoin">
+<meta property="og:locale" content="en_AU">
+<meta property="og:title" content="Blueycoin — Australia's Most Complete Bluey Coin Resource">
 <meta property="og:description" content="Track, value, and complete your official Bluey coin collection with live market data and an interactive dashboard.">
-<meta property="og:url" id="og-url" content="">
+<meta property="og:url" id="og-url" content="https://blueyco.in/">
+<meta property="og:image" content="https://blueyco.in/frames/blister-bluey-dollarbuck-2024.jpg">
+<meta property="og:image:alt" content="Bluey $1 Dollarbuck 2024 in a display frame">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Blueycoin">
-<meta name="twitter:description" content="Australia’s most complete resource for official Bluey coins.">
+<meta name="twitter:title" content="Blueycoin — Track every Bluey coin in one place">
+<meta name="twitter:description" content="Australia's most complete resource for official Bluey coins. 46 coins, live sold prices, collection tracker.">
+<meta name="twitter:image" content="https://blueyco.in/frames/blister-bluey-dollarbuck-2024.jpg">
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Blueycoin",
-  "description": "Track, value, and complete your official Bluey coin collection.",
-  "applicationCategory": "LifestyleApplication",
-  "operatingSystem": "Any",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" }
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "name": "Blueycoin",
+      "url": "https://blueyco.in/",
+      "inLanguage": "en-AU",
+      "description": "Track, value, and complete your official Bluey coin collection."
+    },
+    {
+      "@type": "WebApplication",
+      "name": "Blueycoin",
+      "url": "https://blueyco.in/",
+      "description": "Track, value, and complete your official Bluey coin collection.",
+      "applicationCategory": "LifestyleApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AUD" }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How many official Bluey coins are there?",
+          "acceptedAnswer": { "@type": "Answer", "text": "There are 46 official Bluey coins in the tracker: Series 1 2024 Dollarbucks, Series 2 2025 Christmas coins, and Series 3 2026 $2 coins including privy marks, proofs, PNCs and pin covers." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a Bluey Dollarbuck worth?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A single 2024 Bluey $1 Dollarbuck typically resells for around $12–$15 on eBay Australia (median sold price). Check the price guide for the live median, because average prices are skewed by multi-coin lots, pairs and rolls." }
+        },
+        {
+          "@type": "Question",
+          "name": "Where can I buy official Bluey coins?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Buy from the Royal Australian Mint ballot, CoinXchange, or eBay Australia sold listings for secondary-market prices. Use the Buy Options panel on each coin card to compare live retailer prices." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the rarest Bluey coin?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The rarest tracked coins are low-mintage proofs: the 2025 $1 Silver Proof Christmas coin (10,000 mintage) and the 2026 Aluminium-Bronze Proof $2 (10,500 mintage). Coloured insert variants are also scarce with unlisted mintages." }
+        },
+        {
+          "@type": "Question",
+          "name": "How should I store or display Bluey coins?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Keep blister packs sealed and out of direct sun. For display, use a made-to-order timber frame sized to the packaging: blister, proof capsule, PNC card or pin cover. Frames start at $89 with free shipping over $250." }
+        }
+      ]
+    }
+  ]
 }
 </script>
 
 <script>
   (function(){
-    var origin = window.location.origin + '/';
-    var c = document.getElementById('canonical-url');
-    if (c) c.href = origin;
-    var og = document.getElementById('og-url');
-    if (og) og.setAttribute('content', origin);
+    // Static canonical/og-url above covers crawlers without JS; this only
+    // keeps preview deployments self-referential in the browser.
+    try {
+      var origin = window.location.origin + '/';
+      var isProd = /blueyco\.in$/.test(window.location.hostname);
+      if (!isProd) {
+        var c = document.getElementById('canonical-url');
+        if (c) c.href = origin;
+        var og = document.getElementById('og-url');
+        if (og) og.setAttribute('content', origin);
+      }
+    } catch (e) {}
   })();
 </script>
 
@@ -47,10 +103,11 @@
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 <script defer src="/_vercel/speed-insights/script.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw==" crossorigin="anonymous"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw==" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap');
+  /* Fonts load via <link> above for faster first paint; no @import. */
 
   /*
     Palette sampled from the official bluey.tv brand (logo SVG fill, character
@@ -79,6 +136,8 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-padding-top: 84px; }
 
   body {
     font-family: 'Open Sans', sans-serif;
@@ -802,22 +861,233 @@
       * { scroll-behavior: auto !important; }
     }
 
+    /* ===== CLUTTER REDUCTION: one primary journey, progressive detail ===== */
+    .nav { padding: 0; box-shadow: 0 2px 14px rgba(31, 28, 61, 0.18); }
+    .nav-inner { min-height: 60px; gap: 24px; }
+    .nav-links { gap: 22px; font-size: 0.92rem; }
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+
+    .hero { padding: 52px 24px 72px; }
+    .hero h1 {
+      max-width: 760px;
+      margin: 0 auto 14px;
+      font-size: clamp(2.15rem, 5vw, 3rem);
+      letter-spacing: -0.025em;
+    }
+    .hero p { max-width: 660px; margin-bottom: 24px; font-size: 1.08rem; }
+    .hero-meta { margin-top: 16px; font-size: 0.82rem; opacity: 0.72; }
+
+    .dashboard-section { margin: -32px auto 56px; }
+    .dashboard-header {
+      background: #fff;
+      color: var(--navy);
+      border-bottom: 1px solid var(--border);
+      padding: 22px 28px;
+    }
+    .dashboard-title { font-size: 1.35rem; }
+    .dashboard-kicker { color: var(--slate); font-size: 0.86rem; }
+    .dashboard-stats { gap: 26px; }
+    .dashboard-stats .stat-label { color: var(--slate); opacity: 1; }
+    .dashboard-stats .stat-value { font-size: 1.2rem; }
+    .coin-row {
+      grid-template-columns: 32px minmax(220px, 1fr) 72px 90px 116px;
+      padding: 12px 28px;
+    }
+    .dashboard-list-collapsed .coin-row:nth-child(n+7) { display: none; }
+    .dashboard-footer {
+      padding: 14px 28px;
+      background: #fbfaf7;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .dashboard-footer-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .subtle-button {
+      background: #fff;
+      color: var(--navy);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    .subtle-button:hover { border-color: var(--orange); }
+    .subtle-button-accent { background: var(--orange); border-color: var(--orange); color: #fff; }
+
+    .section { margin-bottom: 60px; }
+    .section-title { margin-bottom: 8px; }
+    .shop-intro {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 24px;
+      margin-bottom: 22px;
+    }
+    .shop-intro h2 { font-size: 2rem; line-height: 1.2; margin-bottom: 6px; }
+    .shop-intro p { color: var(--slate); max-width: 660px; }
+    .shop-toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      align-items: center;
+      padding: 12px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .shop-toolbar select { min-height: 40px; background: #fff; }
+    .shop-toolbar-meta { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+    #shop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .frame-card { box-shadow: 0 8px 20px -14px rgba(61, 58, 99, 0.45); }
+
+    .all-coins-intro { margin-bottom: 20px; }
+    .all-coins-intro .page-sub { margin-bottom: 0; }
+    .filter-bar { background: #fff !important; }
+    .coins-grid { gap: 16px; }
+    .coin-card { border-radius: 14px; box-shadow: 0 6px 18px -14px rgba(61,58,99,.45); }
+    .coin-card:hover { transform: none; box-shadow: 0 8px 22px -14px rgba(61,58,99,.5); }
+    .card-header { padding: 14px 16px 10px; }
+    .card-body { padding: 12px 16px 16px; }
+    .coin-card .stats-row { grid-template-columns: repeat(2, 1fr); margin-bottom: 10px; }
+    .coin-card .stat-box:nth-child(2) { display: none; }
+    .coin-card:not(.details-open) .cx-row,
+    .coin-card:not(.details-open) .chart-wrap,
+    .coin-card:not(.details-open) .last-updated,
+    .coin-card:not(.details-open) .toggle-sales,
+    .coin-card:not(.details-open) .sales-list { display: none; }
+    .card-details-toggle {
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--slate);
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 2px 0 10px;
+      text-align: left;
+    }
+    .card-details-toggle:hover { color: var(--navy); }
+    .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .card-actions .sell-btn {
+      margin-top: 0;
+      background: #fff;
+      color: var(--navy);
+      border: 1px solid var(--border);
+    }
+    .card-actions .sell-btn:hover { background: #f5f2eb; }
+
+    @media (max-width: 900px) {
+      .nav-inner { gap: 14px; }
+      .nav-links { gap: 16px; }
+      .coin-row { grid-template-columns: 30px minmax(180px, 1fr) 66px 84px 108px; padding-inline: 20px; }
+      .shop-intro { align-items: flex-start; flex-direction: column; }
+    }
+    @media (max-width: 640px) {
+      html { scroll-padding-top: 72px; }
+      .hero { padding: 38px 20px 58px; }
+      .hero h1 { font-size: clamp(1.85rem, 8vw, 2rem); }
+      .hero p { font-size: 1rem; }
+      .dashboard-section { padding-inline: 14px; }
+      .dashboard-header { padding: 20px; }
+      .dashboard-stats { width: 100%; justify-content: space-between; gap: 12px; }
+      .coin-row { grid-template-columns: 28px minmax(0,1fr) auto; padding: 12px 18px; }
+      .coin-row > div:nth-child(3) { display: none; }
+      .coin-row > div:nth-child(5) { grid-column: 2 / 4; }
+      .dashboard-footer { padding: 14px 18px; }
+      .dashboard-footer-actions { width: 100%; }
+      .dashboard-footer-actions .subtle-button { flex: 1; }
+      .shop-toolbar-meta { width: 100%; margin-left: 0; justify-content: space-between; }
+      #shop-grid { grid-template-columns: 1fr; }
+      .card-actions { grid-template-columns: 1fr; }
+    }
+
+    /* ===== MOBILE-FIRST HEADER: no overlap, hamburger on small screens =====
+       Base is the mobile layout (logo + menu/cart on one row, links in a
+       dropdown panel). Desktop restores the inline row. This replaces the
+       old wrapping second-row approach that overlapped the logo on 360px. */
+    html { scroll-padding-top: 72px; }
+    body { overflow-x: clip; }
+    img { max-width: 100%; }
+    section[id], footer[id] { scroll-margin-top: 76px; }
+    .skip-link {
+      position: absolute; left: 12px; top: -48px; z-index: 300;
+      background: #fff; color: var(--navy); font-weight: 700; font-size: 0.85rem;
+      padding: 10px 16px; border-radius: 999px; text-decoration: none;
+      transition: top 0.15s;
+    }
+    .skip-link:focus { top: 10px; }
+    .nav-inner { flex-wrap: wrap; min-height: 60px; padding: 0 16px; gap: 0 12px; }
+    .logo { min-height: 44px; display: inline-flex; align-items: center; }
+    .nav-actions { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+    .nav-toggle {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 44px; min-height: 44px; padding: 8px 10px;
+      background: none; border: 1px solid rgba(255,255,255,0.28); border-radius: 10px;
+      color: #fff; font-size: 1.15rem; line-height: 1; cursor: pointer;
+    }
+    .nav-toggle:hover { background: rgba(255,255,255,0.1); }
+    .nav-links {
+      display: none;
+      order: 3; flex-basis: 100%; width: 100%;
+      flex-direction: column; align-items: stretch; gap: 0;
+      padding: 6px 0 10px; margin: 0;
+      border-top: 1px solid rgba(255,255,255,0.14);
+    }
+    .nav.nav-open .nav-links { display: flex; }
+    .nav-links a {
+      display: flex; align-items: center; min-height: 44px;
+      padding: 10px 4px; font-size: 1rem;
+    }
+    .cart-button { min-width: 44px; min-height: 44px; padding: 10px; }
+    @media (min-width: 720px) {
+      html { scroll-padding-top: 76px; }
+      .nav-inner { flex-wrap: nowrap; align-items: center; padding: 0 24px; gap: 24px; }
+      .nav-toggle { display: none; }
+      .nav-actions { margin-left: 0; }
+      .nav-links {
+        display: flex; order: 0; flex-basis: auto; width: auto;
+        flex-direction: row; align-items: center; gap: 22px;
+        padding: 0; border-top: none; font-size: 0.92rem;
+      }
+      .nav-links a { min-height: 0; padding: 4px 2px; font-size: inherit; }
+    }
+
+    /* ===== MOBILE TAP TARGETS + DRAWER SAFETY ===== */
+    .tab-btn, .subtle-button, .btn-add, .btn-primary { min-height: 44px; }
+    .shop-toolbar select, .filter-bar select, .filter-bar input { min-height: 44px; font-size: 16px; }
+    #cart-drawer { width: min(380px, 100vw); right: min(-380px, -100vw); }
+    .frame-photo { height: auto; }
+    main { display: block; max-width: 1200px; margin: 0 auto; padding: 0; }
+    main > .dashboard-section, main > .section { padding-left: 20px; padding-right: 20px; }
+    @media (max-width: 640px) {
+      main > .dashboard-section, main > .section { padding-left: 14px; padding-right: 14px; }
+    }
+    .faq-list { display: grid; gap: 12px; margin-top: 18px; }
+    .faq-item { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+    .faq-item h3 { font-size: 1rem; margin-bottom: 6px; }
+    .faq-item p { color: var(--text); font-size: 0.92rem; margin: 0; }
+
 </style>
 </head>
 <body>
 
 <!-- New Blueycoin Navigation -->
-<header class="nav">
+<a class="skip-link" href="#dashboard">Skip to collection</a>
+<header class="nav" id="site-header">
   <div class="nav-inner">
     <a href="/" class="logo">Blueycoin</a>
-    <nav class="nav-links">
-      <a href="#dashboard">Dashboard</a>
-      <a href="#shop">Shop Frames</a>
-      <a href="#all-coins">All Coins</a>
-    </nav>
-    <div style="display: flex; align-items: center; gap: 16px;">
-      <a href="#shop" class="btn-primary" style="padding:8px 20px; font-size:0.9rem;">Shop Frames</a>
-      
+    <div class="nav-actions">
+      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">☰</button>
       <!-- Cart Icon -->
       <button class="cart-button" onclick="showCart()" aria-label="Open cart">
         <span aria-hidden="true">🛒</span>
@@ -825,19 +1095,26 @@
         <span class="sr-only" id="cart-status" role="status" aria-live="polite"></span>
       </button>
     </div>
+    <nav class="nav-links" id="site-nav" aria-label="Primary">
+      <a href="#dashboard">Collection</a>
+      <a href="#all-coins">Price Guide</a>
+      <a href="#shop">Frames</a>
+      <a href="#faq">FAQ</a>
+    </nav>
   </div>
 </header>
 
 <!-- Hero -->
+<main id="main-content">
 <section class="hero">
   <div style="max-width: 720px; margin: 0 auto;">
-    <h1>Australia’s Most Complete<br>Bluey Coin Resource</h1>
-    <p>Track your collection, see live market values, and find where to buy each coin — with eBay sold prices trimmed to real single-coin values.</p>
+    <h1>Track every Bluey coin in one place</h1>
+    <p>Mark what you own, check reliable sold prices, and find the right frame when you need one.</p>
     <a href="#dashboard" class="btn-primary">
-      Launch Interactive Dashboard →
+      Start your collection
     </a>
-    <div style="margin-top: 24px; font-size: 0.9rem; opacity: 0.75;">
-      46 official coins • Updated daily
+    <div class="hero-meta">
+      46 official coins · Prices refreshed regularly
     </div>
   </div>
 </section>
@@ -848,8 +1125,7 @@
     <div class="dashboard-header">
       <div>
         <div class="dashboard-title">My Collection Dashboard</div>
-        <div style="opacity:0.7; font-size:0.9rem;">Track ownership • Live value • Wish list</div>
-        <button onclick="frameOwnedCoins()" style="margin-top:8px; background:var(--orange); color:white; border:none; padding:6px 14px; border-radius:999px; font-size:0.8rem; cursor:pointer;">🖼️ Frame the ones I own</button>
+        <div class="dashboard-kicker">Tick off coins as your collection grows.</div>
       </div>
 
       <div class="dashboard-stats">
@@ -869,43 +1145,35 @@
     </div>
 
     <!-- Dashboard Coin List -->
-    <div id="dashboard-coins" class="coin-list">
+    <div id="dashboard-coins" class="coin-list dashboard-list-collapsed">
       <!-- Populated by JavaScript -->
     </div>
 
-    <div style="padding: 20px 32px; background:#f8fafc; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; font-size:0.9rem;">
-      <div>
-        <strong>Pro tip:</strong> Check the boxes as you acquire coins. Values update live.
-      </div>
-      <button id="reset-collection" onclick="resetCollection()" style="background:none; border:1px solid var(--border); padding:6px 14px; border-radius:8px; cursor:pointer;">
-        Reset Collection
+    <div class="dashboard-footer">
+      <button id="dashboard-toggle" class="subtle-button" onclick="toggleDashboardCoins()" aria-expanded="false">
+        Show all 46 coins
       </button>
+      <div class="dashboard-footer-actions">
+        <button onclick="frameOwnedCoins()" class="subtle-button subtle-button-accent">Frame coins I own</button>
+        <button id="reset-collection" onclick="resetCollection()" class="subtle-button">Reset</button>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- Quick links to other sections -->
-<div style="text-align:center; margin-bottom:60px;">
-  <a href="#all-coins" style="color:var(--orange); font-weight:600;">Browse All 46 Coins →</a>
-</div>
-
 <!-- ============================================
      BLUEYCOIN FRAMES SHOP (Revenue Feature)
      ============================================ -->
-<section id="shop" class="section" style="max-width: 1200px;">
-  <div style="background: linear-gradient(135deg, var(--navy), #1e2937); color: white; padding: 60px 40px; border-radius: 24px; margin-bottom: 48px; text-align: center;">
-    <h2 style="font-size: 2.8rem; margin: 0 0 12px; font-weight: 700;">Display Your Collection Perfectly</h2>
-    <p style="font-size: 1.25rem; max-width: 620px; margin: 0 auto 24px; opacity: 0.9;">
-      Premium frames for every official Bluey coin — designed to showcase the coin in its original sealed packaging.
-    </p>
-    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-      <a href="#shop-grid" class="btn-primary" style="background: var(--orange);">Shop All Frames</a>
-      <a href="#bundles" style="background: rgba(255,255,255,0.1); color: white; padding: 14px 28px; border-radius: 9999px; text-decoration: none; font-weight: 600;">View Bundles</a>
+<section id="shop" class="section">
+  <div class="shop-intro">
+    <div>
+      <h2>Frames for your collection</h2>
+      <p>Start with photographed designs, then browse the full made-to-order catalogue when you need something specific.</p>
     </div>
   </div>
 
   <!-- Filters -->
-  <div class="shop-toolbar" style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; align-items: center;">
+  <div class="shop-toolbar">
     <select id="series-filter" onchange="filterFrames()" aria-label="Filter frames by series" style="padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);">
       <option value="">All Series</option>
       <option value="series1">Series 1 (2024)</option>
@@ -925,13 +1193,14 @@
       <option value="pin">Pin Cover</option>
     </select>
 
-    <div style="margin-left: auto; font-weight: 600; color: var(--slate);">
-      <span id="frame-count">0</span> frames
+    <div class="shop-toolbar-meta">
+      <span style="font-weight: 600; color: var(--slate);"><span id="frame-count">0</span> <span id="frame-count-label">featured frames</span></span>
+      <button id="catalogue-toggle" class="subtle-button" onclick="toggleFrameCatalogue()" aria-expanded="false">View all frames</button>
     </div>
   </div>
 
   <!-- Product Grid -->
-  <div id="shop-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px;">
+  <div id="shop-grid">
     <!-- Populated dynamically by JavaScript -->
   </div>
 
@@ -953,7 +1222,7 @@
 
       <!-- Bundle 2 -->
       <div style="border: 1px solid var(--border); border-radius: 16px; padding: 24px; background: white;">
-        <div style="font-weight: 700; font-size: 1.1rem;">Full Collection (48 Frames)</div>
+        <div style="font-weight: 700; font-size: 1.1rem;">Full Collection</div>
         <div style="color: var(--slate); margin: 8px 0 16px;">Every official Bluey coin frame — the ultimate display</div>
         <div style="display: flex; align-items: baseline; gap: 8px;">
           <span style="font-size: 2rem; font-weight: 800;">$3,599</span>
@@ -1035,8 +1304,10 @@
 </div>
 
 <section id="all-coins" class="section">
-  <h2 class="section-title">All Official Bluey Coins</h2>
-  <p class="page-sub">eBay AU sold prices and CoinXchange market listings, auto-refreshed every 2 weeks. Click <strong>Where to Buy</strong> for current retailer prices.</p>
+  <div class="all-coins-intro">
+    <h2 class="section-title">Bluey coin price guide</h2>
+    <p class="page-sub">A focused snapshot of recent sold prices. Open market details only when you need the supporting data.</p>
+  </div>
 
   <div class="series-tabs">
     <button class="tab-btn active" data-series="all">All Series</button>
@@ -1079,6 +1350,7 @@
 // parse time here (it would always evaluate to []) — it's built lazily in
 // initShop(), which runs on DOMContentLoaded once COINS is guaranteed ready.
 let FRAMES = [];
+let frameCatalogueExpanded = false;
 
 // Deliberately accepts only an event name: no search terms, names, emails, or
 // other user-provided values can be attached as custom-event properties.
@@ -1201,8 +1473,31 @@ function updateCartCount() {
   }
 }
 
-// Kept as an alias so the inline onchange handlers keep working.
-function filterFrames() { applyFrameFilters(); }
+// A deliberate compact default: photographed frames first. Choosing any
+// filter reveals the full made-to-order catalogue for that selection.
+function filterFrames() {
+  frameCatalogueExpanded = true;
+  syncFrameCatalogueToggle();
+  applyFrameFilters();
+}
+
+function syncFrameCatalogueToggle() {
+  const button = document.getElementById('catalogue-toggle');
+  if (!button) return;
+  button.textContent = frameCatalogueExpanded ? 'Show featured only' : 'View all frames';
+  button.setAttribute('aria-expanded', String(frameCatalogueExpanded));
+}
+
+function toggleFrameCatalogue() {
+  frameCatalogueExpanded = !frameCatalogueExpanded;
+  if (!frameCatalogueExpanded) {
+    document.getElementById('series-filter').value = '';
+    document.getElementById('type-filter').value = '';
+    document.getElementById('owned-filter').value = 'all';
+  }
+  syncFrameCatalogueToggle();
+  applyFrameFilters();
+}
 
 function applyFrameFilters() {
   const seriesVal = document.getElementById('series-filter').value;
@@ -1216,7 +1511,7 @@ function applyFrameFilters() {
 
   const ownedIds = new Set(Object.keys(collection).filter(id => collection[id]));
 
-  const filtered = FRAMES.filter(frame => {
+  const matching = FRAMES.filter(frame => {
     const seriesMatch = !seriesVal || frame.series === seriesVal;
     const typeMatch   = !typeVal || frame.type === typeVal;
     // "owned" mode only shows frames for coins ticked off in the dashboard.
@@ -1224,7 +1519,14 @@ function applyFrameFilters() {
     return seriesMatch && typeMatch && ownedMatch;
   });
 
+  const hasExplicitFilter = Boolean(seriesVal || typeVal || ownedVal === 'owned');
+  const filtered = !frameCatalogueExpanded && !hasExplicitFilter
+    ? matching.filter(frame => frame.image)
+    : matching;
+
   document.getElementById('frame-count').textContent = filtered.length;
+  const countLabel = document.getElementById('frame-count-label');
+  if (countLabel) countLabel.textContent = frameCatalogueExpanded || hasExplicitFilter ? 'frames' : 'featured frames';
 
   if (filtered.length === 0) {
     const empty = document.createElement('div');
@@ -1276,7 +1578,9 @@ function initShop() {
 
   FRAMES = buildFrames();
 
-  // Render all frames initially
+  // Start with the six photographed products, then let the customer opt into
+  // the full made-to-order catalogue instead of opening on 40 placeholders.
+  syncFrameCatalogueToggle();
   applyFrameFilters();
   updateCartCount();
 }
@@ -1344,11 +1648,6 @@ function showCart() {
 function hideCart() {
   const drawer = document.getElementById('cart-drawer');
   if (drawer) drawer.style.right = '-400px';
-}
-
-function updateCartCount() {
-  const countEl = document.getElementById('cart-count');
-  if (countEl) countEl.textContent = cart.length;
 }
 
 async function checkout() {
@@ -1505,7 +1804,7 @@ function renderDashboard() {
     const row = document.createElement('div');
     row.className = 'coin-row';
     row.innerHTML = `
-      <input type="checkbox" class="coin-checkbox" ${isOwned ? 'checked' : ''} data-id="${coin.id}">
+      <input type="checkbox" class="coin-checkbox" aria-label="Mark ${coin.name} as owned" ${isOwned ? 'checked' : ''} data-id="${coin.id}">
       <div>
         <div class="coin-name">${coin.name}</div>
         <div class="coin-meta">${coin.year} · Series ${coin.series?.replace('series','') || '?'}</div>
@@ -1516,9 +1815,6 @@ function renderDashboard() {
       <div class="coin-value">$${estValue}</div>
       <div>
         <button class="wish-btn${isWishlisted ? ' wishlisted' : ''}" data-id="${coin.id}">${isWishlisted ? '♥ Wishlisted' : '+ Wishlist'}</button>
-      </div>
-      <div style="font-size:0.8rem; color:#64748b; text-align:right;">
-        ${coin.marketLow && coin.marketHigh ? `$${coin.marketLow}–$${coin.marketHigh}` : ''}
       </div>
     `;
 
@@ -1553,6 +1849,16 @@ function renderDashboard() {
   });
 
   updateDashboardStats();
+}
+
+function toggleDashboardCoins() {
+  const list = document.getElementById('dashboard-coins');
+  const button = document.getElementById('dashboard-toggle');
+  if (!list || !button) return;
+  const expanded = list.classList.toggle('dashboard-list-expanded');
+  list.classList.toggle('dashboard-list-collapsed', !expanded);
+  button.setAttribute('aria-expanded', String(expanded));
+  button.textContent = expanded ? 'Show fewer coins' : `Show all ${(window.COINS || []).length} coins`;
 }
 
 function resetCollection() {
@@ -1619,11 +1925,65 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('dashboard')) {
     initDashboard();
   }
+  // Mobile menu: toggles the dropdown panel without ever overlapping the logo.
+  var toggle = document.getElementById('nav-toggle');
+  var header = document.getElementById('site-header');
+  if (toggle && header) {
+    toggle.addEventListener('click', () => {
+      var open = header.classList.toggle('nav-open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+    // Close the menu when a destination is chosen or Escape is pressed.
+    document.getElementById('site-nav').addEventListener('click', (e) => {
+      if (e.target.tagName === 'A' && header.classList.contains('nav-open')) {
+        header.classList.remove('nav-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open menu');
+      }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && header.classList.contains('nav-open')) {
+        header.classList.remove('nav-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open menu');
+        toggle.focus();
+      }
+    });
+  }
 });
 </script>
 
 
-<footer>
+<section id="faq" class="section" aria-labelledby="faq-heading">
+  <h2 id="faq-heading" class="section-title">Bluey coin questions, answered</h2>
+  <p class="page-sub">Short answers for collectors and search assistants. Live medians are in the price guide above.</p>
+  <div class="faq-list">
+    <div class="faq-item">
+      <h3>How many official Bluey coins are there?</h3>
+      <p>There are 46 official Bluey coins in this tracker: Series 1 2024 Dollarbucks, Series 2 2025 Christmas coins, and Series 3 2026 $2 coins including privy marks, proofs, PNCs and pin covers.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What is a Bluey Dollarbuck worth?</h3>
+      <p>A single 2024 Bluey $1 Dollarbuck typically resells for around $12–$15 on eBay Australia (median sold price). Use the price guide median, because averages are skewed by multi-coin lots, pairs and rolls.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Where can I buy official Bluey coins?</h3>
+      <p>Buy from the Royal Australian Mint ballot, CoinXchange, or eBay Australia for secondary-market prices. Open Buy Options on any coin card to compare live retailer prices.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What is the rarest Bluey coin?</h3>
+      <p>The rarest tracked coins are low-mintage proofs: the 2025 $1 Silver Proof Christmas coin (10,000 mintage) and the 2026 Aluminium-Bronze Proof $2 (10,500 mintage). Coloured insert variants are also scarce.</p>
+    </div>
+    <div class="faq-item">
+      <h3>How should I store or display Bluey coins?</h3>
+      <p>Keep blister packs sealed and out of direct sun. For display, use a made-to-order timber frame sized to the packaging: blister, proof capsule, PNC card or pin cover. Frames start at $89.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer id="site-footer">
   eBay AU sold prices via RapidAPI · CoinXchange market listings · Prices in AUD · Not financial advice · Built for collectors<br><br>
   <small>Some links on this site are affiliate links through the eBay Partner Network (EPN). We may earn a commission if you make a purchase through these links, at no extra cost to you.</small><br><br>
   <small>Bluey Coin Tracker is an independent, fan-run collector guide. It is not affiliated with, endorsed by, or associated with Ludo Studio, BBC Studios, or the Royal Australian Mint.</small>
@@ -1908,6 +2268,11 @@ function buildCard(coin) {
   statsRow.append(avgBox, minBox, thirdBox);
   body.append(statsRow);
 
+  const detailsBtn = el('button', 'card-details-toggle', 'Show market details');
+  detailsBtn.type = 'button';
+  detailsBtn.setAttribute('aria-expanded', 'false');
+  body.append(detailsBtn);
+
   // CoinXchange row (if data available)
   if (cx && cx.average_price) {
     const href = safeUrl(coin.cxUrl) || safeUrl(cx.search_url) || 'https://www.coinxchange.com.au/buy?search=bluey';
@@ -1952,14 +2317,16 @@ function buildCard(coin) {
   buyBtn.id = `buy-btn-${coin.id}`;
   buyBtn.append(cartIcon(), document.createTextNode(' Where to Buy'));
   buyBtn.addEventListener('click', () => handleBuyNow(coin.id, coin.keywords));
-  body.append(buyBtn);
 
   // Sell My Coin button
   const sellBtn = el('button', 'sell-btn');
   sellBtn.id = `sell-btn-${coin.id}`;
   sellBtn.textContent = 'Sell My Coin';
   sellBtn.addEventListener('click', () => handleSell(coin.id, refPrice, Boolean(med)));
-  body.append(sellBtn);
+
+  const actions = el('div', 'card-actions');
+  actions.append(buyBtn, sellBtn);
+  body.append(actions);
 
   // Sell panel (populated on demand)
   const sellPanel = el('div', 'sell-panel');
@@ -2019,6 +2386,13 @@ function buildCard(coin) {
   buyPanel.id = `buy-panel-${coin.id}`;
   buyPanel.append(el('div', 'bp-title', 'Where to Buy'));
   body.append(buyPanel);
+
+  detailsBtn.addEventListener('click', () => {
+    const expanded = card.classList.toggle('details-open');
+    detailsBtn.textContent = expanded ? 'Hide market details' : 'Show market details';
+    detailsBtn.setAttribute('aria-expanded', String(expanded));
+    if (expanded) window.dispatchEvent(new Event('resize'));
+  });
 
   card.append(hdr, body);
   return card;
