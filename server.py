@@ -27,11 +27,14 @@ def affiliate_url(raw_url: str, coin_id: str = '', source: str = 'ebay') -> str:
     """Wrap an eBay AU URL with EPN affiliate tracking parameters.
 
     Returns the original URL unchanged if no campaign is configured or the
-    URL is not an eBay AU link.
+    URL is not an eBay AU link. Never double-tags: a URL that already
+    carries EPN parameters is returned unchanged.
     """
     if not raw_url or not raw_url.startswith('https://www.ebay.com.au'):
         return raw_url
     if not EPN_CAMPAIGN_ID:
+        return raw_url
+    if 'campid=' in raw_url or 'mkevt=' in raw_url:
         return raw_url
     custom_id = f'blueycoin-{source}-{coin_id}' if coin_id else 'blueycoin'
     separator = '&' if '?' in raw_url else '?'
@@ -1075,7 +1078,9 @@ def get_buy_options(coin_id, keywords):
                     'name':        r['name'],
                     'price':       m.get('price'),
                     'available':   m.get('available', True),
-                    'url':         m.get('url') or r['search_url'].replace('{q}', q),
+                    'url':         affiliate_url(
+                        m.get('url') or r['search_url'].replace('{q}', q),
+                        coin_id=coin_id, source='ebay_search'),
                     'link_only':   m.get('price') is None,
                 })
                 continue
