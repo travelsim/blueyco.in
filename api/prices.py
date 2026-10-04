@@ -1,7 +1,9 @@
 import json
+import math
 import os
 import re
 import sys
+import threading
 import time
 import urllib.request
 import urllib.parse
@@ -13,16 +15,47 @@ RAPIDAPI_KEY = os.environ.get('RAPIDAPI_KEY', '')
 RAPIDAPI_HOST = 'ebay-average-selling-price.p.rapidapi.com'
 RAPIDAPI_URL = f'https://{RAPIDAPI_HOST}/findCompletedItems'
 
+
+def _env_bool(name, default=False):
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {'1', 'true', 'yes', 'on'}
+
+
+def _env_int(name, default):
+    try:
+        return int(os.environ.get(name, default))
+    except (TypeError, ValueError):
+        return default
+
+
+def _env_float(name, default):
+    try:
+        value = float(os.environ.get(name, default))
+        return value if math.isfinite(value) else default
+    except (TypeError, ValueError):
+        return default
+
+
+# Live refresh is opt-in. Normal Vercel requests use the committed snapshot.
+RAPIDAPI_LIVE_REFRESH = _env_bool('RAPIDAPI_LIVE_REFRESH')
+RAPIDAPI_REFRESH_LIMIT = min(max(_env_int('RAPIDAPI_REFRESH_LIMIT', 5), 0), 5)
+RAPIDAPI_MIN_INTERVAL = max(_env_float('RAPIDAPI_MIN_INTERVAL', 1.2), 1.2)
+
 EBAY_LIVE_HOST = 'real-time-ebay.p.rapidapi.com'
 EBAY_LIVE_URL = f'https://{EBAY_LIVE_HOST}/search'
 
 # Simple in-memory cache (persists for the lifetime of the serverless instance)
 _cache = {}
 _last_fetch = {}
+_rapidapi_lock = threading.Lock()
+_rapidapi_request_lock = threading.Lock()
+_last_rapidapi_request = 0.0
 
-# The function has a 10s maxDuration (Hobby). Every upstream request gets a
-# short timeout, coins are fetched concurrently, and whatever has not finished
-# by the deadline is returned as a partial snapshot instead of timing out.
+# The function has a 10s maxDuration (Hobby). Normal requests use the durable
+# snapshot; explicit live refreshes are bounded and serialized. The legacy
+# worker settings below remain for the injected fetcher used by tests/tools.
 UPSTREAM_TIMEOUT = 5
 FETCH_DEADLINE = 7.5
 MAX_WORKERS = 20
@@ -196,10 +229,28 @@ def _summarise(listings):
         'products': top_listings,
     }
 
-def _fetch_ebay(coin):
-    if not RAPIDAPI_KEY:
-        return {"products": [], "average_price": None}
+def _wait_for_rapidapi_slot(max_wait=None):
+    """Reserve a request start without allowing concurrent RapidAPI calls."""
+    global _last_rapidapi_request
+    with _rapidapi_lock:
+        now = time.monotonic()
+        delay = RAPIDAPI_MIN_INTERVAL - (now - _last_rapidapi_request)
+        if delay > 0:
+            if max_wait is not None and delay > max_wait:
+                return False
+            time.sleep(delay)
+        _last_rapidapi_request = time.monotonic()
+        return True
 
+
+def _fetch_ebay(coin, timeout=UPSTREAM_TIMEOUT):
+    if not RAPIDAPI_KEY:
+        return None
+
+    try:
+        timeout = max(0.1, float(timeout))
+    except (TypeError, ValueError):
+        timeout = UPSTREAM_TIMEOUT
     payload = json.dumps({
         'keywords': coin['ebay_kw'],
         'max_search_results': '60',
@@ -217,17 +268,21 @@ def _fetch_ebay(coin):
         },
         method='POST',
     )
-    try:
-        with urllib.request.urlopen(req, timeout=UPSTREAM_TIMEOUT) as r:
-            data = json.loads(r.read())
-            return {
-                "products": data.get("products", [])[:20],
-                "average_price": data.get("average_price"),
-                "total_results": data.get("total_results", 0),
-            }
-    except Exception as e:
-        print(f"eBay fetch error for {coin['id']}: {e}")
-        return {"products": [], "average_price": None, "error": str(e)}
+    with _rapidapi_request_lock:
+        if not _wait_for_rapidapi_slot(max_wait=timeout):
+            return None
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                data = json.loads(r.read())
+                return {
+                    "products": data.get("products", [])[:20],
+                    "average_price": data.get("average_price"),
+                    "total_results": data.get("total_results", 0),
+                }
+        except Exception as e:
+            # Keep upstream response details, URLs, and credentials out of logs.
+            print(f"eBay fetch failed for {coin.get('id', 'unknown')}: {type(e).__name__}")
+            return None
 
 # ── COIN CATALOGUE (embedded for serverless) ─────────────────────────────────
 COINS = [
@@ -349,16 +404,79 @@ def _load_manual():
     return {}
 
 
-def _fetch_coin(coin):
+def _has_value(value):
+    return value not in (None, '', 0, [], {})
+
+
+def _usable_ebay(data):
+    if not isinstance(data, dict) or data.get('error'):
+        return False
+    return any(_has_value(data.get(key)) for key in (
+        'average_price', 'median_price', 'products', 'results',
+    ))
+
+
+def _usable_coinxchange(data):
+    if not isinstance(data, dict):
+        return False
+    return any(_has_value(data.get(key)) for key in (
+        'average_price', 'min_price', 'max_price', 'listings', 'products',
+    ))
+
+
+def _apply_fetched(result, fetched):
+    """Merge only usable upstream data, preserving a durable fallback."""
+    if not isinstance(fetched, dict):
+        return
+    ebay = fetched.get('ebay')
+    if _usable_ebay(ebay):
+        result['ebay'] = ebay
+    coinxchange = fetched.get('coinxchange')
+    if _usable_coinxchange(coinxchange):
+        result['coinxchange'] = coinxchange
+
+
+def _cached_snapshot(coins, base_cache, manual):
+    snapshot = {}
+    for coin in coins:
+        cid = coin['id']
+        cached = base_cache.get(cid, {})
+        if not isinstance(cached, dict):
+            cached = {}
+        snapshot[cid] = {
+            'ebay': cached.get('ebay'),
+            'coinxchange': cached.get('coinxchange'),
+            'manual': manual.get(cid),
+        }
+    return snapshot
+
+
+def _rapidapi_refresh_ids(coins):
+    """Choose one bounded batch per cache window for explicit live refresh."""
+    if not (RAPIDAPI_KEY and RAPIDAPI_LIVE_REFRESH and RAPIDAPI_REFRESH_LIMIT):
+        return set()
+    if not coins:
+        return set()
+    batch_size = RAPIDAPI_REFRESH_LIMIT
+    batch_count = (len(coins) + batch_size - 1) // batch_size
+    batch = int(time.time() // CACHE_TTL) % batch_count
+    start = batch * batch_size
+    return {
+        coins[index]['id']
+        for index in range(start, min(start + batch_size, len(coins)))
+    }
+
+
+def _fetch_coin(coin, fetch_ebay=False):
     cid = coin['id']
 
-    # eBay data (only if key is present)
+    # eBay data is opt-in for callers outside the main cache-first path.
     ebay_data = None
-    if RAPIDAPI_KEY:
+    if fetch_ebay and RAPIDAPI_KEY:
         try:
             ebay_data = _fetch_ebay(coin)
         except Exception as e:
-            print(f"eBay error for {cid}: {e}")
+            print(f"eBay fetch failed for {cid}: {type(e).__name__}")
 
     # CoinXchange scrape (best effort)
     cx_data = None
@@ -367,16 +485,19 @@ def _fetch_coin(coin):
         cx_data = _summarise(listings) or {}
         cx_data['search_url'] = 'https://www.coinxchange.com.au/buy?search=' + urllib.parse.quote(coin['search'])
     except Exception as e:
-        print(f"CoinXchange error for {cid}: {e}")
+        print(f"CoinXchange fetch failed for {cid}: {type(e).__name__}")
 
     return {'ebay': ebay_data, 'coinxchange': cx_data}
 
 
 def _build_payload(coins=None, fetch_coin=None, deadline=None):
-    """Return (snapshot, complete). Coins still in flight at the deadline get
-    cached baseline or manual prices, and the partial snapshot is cached briefly."""
+    """Return (snapshot, complete) with a durable, cache-first production path.
+
+    A custom fetcher is retained for focused tests and local diagnostics. The
+    deployed handler never uses that path: it serves the committed snapshot and
+    only performs a bounded, sequential eBay refresh when explicitly enabled.
+    """
     coins = COINS if coins is None else coins
-    fetch_coin = fetch_coin or _fetch_coin
     deadline = FETCH_DEADLINE if deadline is None else deadline
     now = time.time()
 
@@ -386,28 +507,56 @@ def _build_payload(coins=None, fetch_coin=None, deadline=None):
 
     base_cache = _load_base_cache()
     manual = _load_manual()
+    if fetch_coin is None:
+        snapshot = _cached_snapshot(coins, base_cache, manual)
+        refresh_ids = _rapidapi_refresh_ids(coins)
+        complete = True
+
+        if refresh_ids:
+            refresh_started = time.monotonic()
+            attempted = 0
+            for coin in coins:
+                if coin['id'] not in refresh_ids:
+                    continue
+                remaining = deadline - (time.monotonic() - refresh_started)
+                if remaining <= 0.1:
+                    complete = False
+                    break
+                attempted += 1
+                try:
+                    ebay_data = _fetch_ebay(
+                        coin,
+                        timeout=min(UPSTREAM_TIMEOUT, remaining),
+                    )
+                    if _usable_ebay(ebay_data):
+                        snapshot[coin['id']]['ebay'] = ebay_data
+                except Exception as e:
+                    print(f"eBay refresh failed for {coin['id']}: {type(e).__name__}")
+            if attempted < len(refresh_ids):
+                complete = False
+
+        _cache['full'] = snapshot
+        _cache['complete'] = complete
+        _last_fetch['full'] = now + (CACHE_TTL if complete else PARTIAL_CACHE_TTL)
+        return snapshot, complete
+
+    # Explicit fetchers retain the old deadline-bounded path for tests and
+    # diagnostics. Its merge step below still preserves cached data on errors.
     pool = ThreadPoolExecutor(max_workers=MAX_WORKERS)
     futures = {pool.submit(fetch_coin, coin): coin['id'] for coin in coins}
     done, pending = wait(futures, timeout=deadline)
     # Don't block on stragglers; their sockets time out on their own.
     pool.shutdown(wait=False, cancel_futures=True)
 
-    snapshot = {}
+    snapshot = _cached_snapshot(coins, base_cache, manual)
     for future, cid in futures.items():
-        cached = base_cache.get(cid, {})
-        result = {'ebay': cached.get('ebay'), 'coinxchange': cached.get('coinxchange')}
+        result = snapshot[cid]
         if future in done:
             try:
                 fetched = future.result()
-                if isinstance(fetched, dict):
-                    if fetched.get('ebay') is not None:
-                        result['ebay'] = fetched['ebay']
-                    if fetched.get('coinxchange') is not None:
-                        result['coinxchange'] = fetched['coinxchange']
+                _apply_fetched(result, fetched)
             except Exception as e:
-                print(f"fetch error for {cid}: {e}")
-        result['manual'] = manual.get(cid)
-        snapshot[cid] = result
+                print(f"fetch failed for {cid}: {type(e).__name__}")
 
     complete = not pending
     if pending:
