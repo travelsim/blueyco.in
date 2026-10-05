@@ -92,7 +92,9 @@ class TestPricesSnapshotTagging(unittest.TestCase):
                     'average_price': 12.95,
                     'response_url': ('https://www.ebay.com.au/sch/9355/i.html?'
                                      '_nkw=Bluey&LH_Sold=1&_ipg=60'),
-                    'products': [{'title': 't', 'link': 'https://www.ebay.com.au/itm/111'}],
+                    'products': [{'title': 'x', 'sale_price': 12.95,
+                                  'currency': 'AU', 'date_sold': '1 Oct 2026',
+                                  'link': 'https://www.ebay.com.au/itm/111'}],
                 },
                 'coinxchange': {'average_price': 10.0},
             }
@@ -120,8 +122,8 @@ class TestPricesSnapshotTagging(unittest.TestCase):
         self.assertIn('LH_Sold=1', entry['ebay']['response_url'])
         self.assertIn('campid=testcamp', entry['ebay']['products'][0]['link'])
         self.assertIn('campid=testcamp', entry['manual']['ebay']['url'])
-        # Non-eBay data untouched.
-        self.assertEqual(entry['coinxchange']['average_price'], 10.0)
+        # Historical CoinXchange scrape data is no longer served.
+        self.assertIsNone(entry['coinxchange'])
 
     def test_snapshot_leaves_ordinary_urls_when_no_campaign(self):
         coins = [{'id': 's1_bluey', 'search': 'x', 'ebay_kw': 'x'}]
@@ -141,6 +143,16 @@ class TestPricesSnapshotTagging(unittest.TestCase):
             retagged = prices._tag_ebay_urls(snapshot['s1_bluey']['ebay'], 's1_bluey')
         self.assertEqual(retagged['response_url'].count('campid='), 1)
         self.assertEqual(retagged['products'][0]['link'].count('campid='), 1)
+
+    def test_every_catalogue_coin_gets_a_live_affiliate_sold_search(self):
+        with mock.patch.dict(os.environ, {'EPN_CAMPAIGN_ID': 'testcamp'}):
+            snapshot = prices._cached_snapshot(prices.COINS, {}, {})
+        self.assertEqual(len(snapshot), len(prices.COINS))
+        for coin_id, entry in snapshot.items():
+            url = entry['manual']['ebay']['url']
+            self.assertIn('LH_Sold=1', url, coin_id)
+            self.assertIn('LH_Complete=1', url, coin_id)
+            self.assertIn('campid=testcamp', url, coin_id)
 
 
 class FakeResp:
@@ -192,7 +204,8 @@ class TestUpstreamFailureFallback(unittest.TestCase):
     def test_error_payload_preserves_cached_snapshot_and_shape(self):
         coin = {'id': 'a', 'search': 'x', 'ebay_kw': 'x'}
         baseline = {'a': {'ebay': {'average_price': 12.95,
-                                   'products': [{'title': 'cached'}]},
+                                   'products': [{'title': 'x', 'sale_price': 12.95,
+                                                 'currency': 'AU', 'date_sold': '1 Oct 2026'}]},
                           'coinxchange': {'average_price': 10.0}}}
 
         def fetch(_coin):
@@ -205,6 +218,7 @@ class TestUpstreamFailureFallback(unittest.TestCase):
             snapshot, _ = prices._build_payload([coin], fetch_coin=fetch, deadline=1)
         # Cached price survives; error never appears as a fresh price.
         self.assertEqual(snapshot['a']['ebay']['average_price'], 12.95)
+        self.assertIsNone(snapshot['a']['coinxchange'])
         # Honest response shape is unchanged: every coin carries all three keys.
         self.assertEqual(set(snapshot['a'].keys()), {'ebay', 'coinxchange', 'manual'})
 

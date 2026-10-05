@@ -1,6 +1,8 @@
 import importlib.util
 import os
+import time
 import unittest
+from unittest import mock
 
 _ROOT = os.path.dirname(os.path.abspath(__file__))
 _SPEC = importlib.util.spec_from_file_location(
@@ -36,7 +38,10 @@ class TestBuyOptions(unittest.TestCase):
                 self.assertFalse(seen_link_only, 'priced option after a link-only option')
 
     def test_manual_override_takes_priority(self):
-        manual = {'s1_bluey': {'ramint': {'price': 42.0, 'url': 'https://example.test/bluey'}}}
+        manual = {'s1_bluey': {'ramint': {
+            'price': 42.0, 'checkedAt': time.time(),
+            'url': 'https://example.test/bluey',
+        }}}
         original = buy_options._manual
         buy_options._manual = lambda: manual
         try:
@@ -46,6 +51,29 @@ class TestBuyOptions(unittest.TestCase):
         self.assertEqual(option['price'], 42.0)
         self.assertEqual(option['url'], 'https://example.test/bluey')
         self.assertFalse(option['link_only'])
+        self.assertEqual(option['price_type'], 'asking')
+
+    def test_marketplaces_without_permission_use_search_links_only(self):
+        retailers = {r['id']: r for r in legacy.RETAILERS}
+        for retailer_id in ('coinxchange_buy', 'cashconverters', 'gumtree'):
+            retailer = retailers[retailer_id]
+            self.assertEqual(retailer['type'], 'link_only')
+            with mock.patch.object(legacy, '_http_get', side_effect=AssertionError('network access')):
+                self.assertEqual(buy_options._scrape(retailer, '2024 Bluey coin', 's1_bluey'), [])
+            option = buy_options._fallback(retailer, '2024 Bluey coin', 's1_bluey', {})[0]
+            self.assertTrue(option['link_only'])
+            self.assertIsNone(option['price'])
+            self.assertIn('2024', option['url'])
+        self.assertNotIn('query=', retailers['cashconverters']['search_url'])
+
+    def test_manual_price_without_recent_check_date_is_search_only(self):
+        manual = {'s1_bluey': {'ramint': {
+            'price': 42.0, 'url': 'https://example.test/bluey',
+        }}}
+        option = buy_options._fallback(
+            legacy.RETAILERS[0], '2024 Bluey', 's1_bluey', manual)[0]
+        self.assertIsNone(option['price'])
+        self.assertTrue(option['link_only'])
 
     def test_result_is_cached(self):
         first, _ = buy_options.get_buy_options('s1_bingo', '2024 Bluey Dollarbuck Bingo')

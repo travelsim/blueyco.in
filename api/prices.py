@@ -5,10 +5,10 @@ import re
 import sys
 import threading
 import time
+from datetime import datetime, timezone
 import urllib.request
 import urllib.parse
 from concurrent.futures import ThreadPoolExecutor, wait
-from html.parser import HTMLParser
 
 # ── CONFIG ───────────────────────────────────────────────────────────────────
 RAPIDAPI_KEY = os.environ.get('RAPIDAPI_KEY', '')
@@ -89,76 +89,9 @@ def _parse_price(raw):
         val = val / 100
     return round(val, 2) if val > 0 else None
 
-class _LDParser(HTMLParser):
-    def __init__(self):
-        super().__init__()
-        self._on = False
-        self._buf = []
-        self.blocks = []
-
-    def handle_starttag(self, tag, attrs):
-        if tag == 'script' and ('type', 'application/ld+json') in attrs:
-            self._on, self._buf = True, []
-
-    def handle_endtag(self, tag):
-        if tag == 'script' and self._on:
-            self._on = False
-            self.blocks.append(''.join(self._buf))
-
-    def handle_data(self, data):
-        if self._on:
-            self._buf.append(data)
-
-def _ld_products(html, base):
-    p = _LDParser()
-    p.feed(html)
-    results = []
-    for block in p.blocks:
-        try:
-            data = json.loads(block)
-        except json.JSONDecodeError:
-            continue
-        nodes = []
-        if isinstance(data, list):
-            nodes = data
-        elif isinstance(data, dict):
-            t = data.get('@type', '')
-            if t == 'ItemList':
-                nodes = [i.get('item', i) for i in data.get('itemListElement', [])]
-            elif t == 'Product':
-                nodes = [data]
-        for n in nodes:
-            if not isinstance(n, dict):
-                continue
-            t = n.get('@type', '')
-            if isinstance(t, list):
-                t = t[0] if t else ''
-            if t not in ('Product', 'product'):
-                continue
-            offers = n.get('offers', {})
-            if isinstance(offers, list):
-                offers = offers[0] if offers else {}
-            price = _parse_price(offers.get('price'))
-            if price:
-                results.append({
-                    'price': price,
-                    'name': n.get('name', ''),
-                    'url': n.get('url', '')
-                })
-    return results
-
 def _scrape_coinxchange(search_term):
-    """Recently-sold CoinXchange prices. Delegates to server.py's parser (the
-    same one /api/buy-options uses), which reads the rendered listing grid;
-    CoinXchange no longer ships JSON-LD, so the generic fallback below finds
-    nothing on its own."""
-    try:
-        legacy = _legacy()
-        if legacy is not None:
-            return legacy._scrape_coinxchange(search_term, sold_only=True)
-    except Exception as e:
-        print(f"CoinXchange legacy scraper error ({search_term}): {e}")
-    return _scrape_coinxchange_generic(search_term)
+    """CoinXchange disallows automated platform access without permission."""
+    return []
 
 
 def _legacy():
@@ -171,42 +104,6 @@ def _legacy():
             return server
     return None
 
-
-def _scrape_coinxchange_generic(search_term):
-    q = urllib.parse.quote(search_term)
-    url = f'https://www.coinxchange.com.au/buy?search={q}'
-    try:
-        html = _http_get(url)
-    except Exception:
-        return []
-
-    listings = []
-
-    # Strategy 1 — JSON-LD
-    for prod in _ld_products(html, 'https://www.coinxchange.com.au'):
-        if prod.get('price'):
-            listings.append({'price': prod['price'], 'title': prod.get('name', ''), 'url': prod.get('url') or url})
-
-    # Strategy 2 — embedded JSON
-    if not listings:
-        for m in re.finditer(r'\{[^{}]{0,400}"price"[^{}]{0,400}\}', html):
-            try:
-                obj = json.loads(m.group())
-                p = _parse_price(obj.get('price') or obj.get('Price'))
-                if p and 5 < p < 10000:
-                    listings.append({'price': p, 'title': str(obj.get('title') or obj.get('name') or ''), 'url': obj.get('url') or url})
-            except Exception:
-                continue
-
-    # Dedup
-    unique = []
-    seen = set()
-    for l in sorted(listings, key=lambda x: x['price']):
-        key = round(l['price'], 0)
-        if key not in seen:
-            seen.add(key)
-            unique.append(l)
-    return unique[:15]
 
 def _summarise(listings):
     """Summarise CoinXchange listings for /api/prices.
@@ -417,11 +314,9 @@ def _usable_ebay(data):
 
 
 def _usable_coinxchange(data):
-    if not isinstance(data, dict):
-        return False
-    return any(_has_value(data.get(key)) for key in (
-        'average_price', 'min_price', 'max_price', 'listings', 'products',
-    ))
+    # No CoinXchange snapshots may be used until express written permission
+    # for automated access is obtained.
+    return False
 
 
 def _affiliate_url(raw_url, coin_id='', source='ebay'):
@@ -476,6 +371,133 @@ def _tag_ebay_urls(ebay_data, coin_id):
     return tagged
 
 
+_TITLE_STOP_WORDS = {
+    'a', 'and', 'au', 'australia', 'australian', 'coin', 'coins', 'dollar',
+    'dollars', 'for', 'in', 'new', 'of', 'the',
+    'unc', 'uncirculated', 'with',
+}
+_NUMBER_WORDS = {
+    'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5,
+    'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10,
+    'twenty': 20, 'fifty': 50,
+}
+
+
+def _sold_timestamp(value):
+    if not value:
+        return None
+    for fmt in ('%d %b %Y', '%d %B %Y', '%b %d, %Y', '%B %d, %Y', '%Y-%m-%d'):
+        try:
+            return datetime.strptime(str(value).strip(), fmt).replace(tzinfo=timezone.utc).timestamp()
+        except ValueError:
+            continue
+    return None
+
+
+def _title_tokens(value):
+    return set(re.findall(r'[a-z0-9]+', str(value or '').lower()))
+
+
+def _expected_quantity(keywords):
+    words = re.findall(r'\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|twenty|fifty)\s*(?:-|\s)?\s*(?:coin|coins|piece|pieces|pcs)\b', str(keywords or '').lower())
+    if not words:
+        return 1
+    value = words[-1]
+    return int(value) if value.isdigit() else _NUMBER_WORDS[value]
+
+
+def _product_quantity(title):
+    text = str(title or '').lower()
+    if re.search(r'\bpair\b|\bpairs\b|\bboth\s+(?:bluey|bingo)\b', text):
+        return 2
+    match = re.search(r'\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|twenty|fifty)\s*(?:-|\s)?\s*(?:coin|coins|piece|pieces|pcs)\b', text)
+    if match:
+        value = match.group(1)
+        return int(value) if value.isdigit() else _NUMBER_WORDS[value]
+    match = re.search(r'\b(?:bag|roll|pack)\s+of\s+(\d+)\b', text)
+    if match:
+        return int(match.group(1))
+    match = re.search(r'\b(\d+)\s*[x×]\s*(?:\$?\d|one|two|three)\b', text)
+    if match:
+        return int(match.group(1))
+    return 1
+
+
+def _product_matches_coin(product, coin, now=None):
+    """Conservative sold-record gate: date, identity tokens and product quantity."""
+    now = time.time() if now is None else now
+    title = str(product.get('title') or '')
+    sold_at = _sold_timestamp(product.get('date_sold'))
+    if not title or sold_at is None or not 0 <= now - sold_at <= 90 * 24 * 3600:
+        return False
+
+    query = str(coin.get('ebay_kw') or '')
+    query_tokens = _title_tokens(query)
+    title_tokens = _title_tokens(title)
+    years = {token for token in query_tokens if re.fullmatch(r'20\d{2}', token)}
+    if years and not years.issubset(title_tokens):
+        return False
+
+    for variant in {'proof', 'silver', 'coloured', 'colored', 'privy', 'postal', 'pnc', 'card'}:
+        if variant in title_tokens and variant not in query_tokens:
+            return False
+
+    identity = query_tokens - _TITLE_STOP_WORDS - years - {'1', '2'}
+    # Permit common spelling of Sleepytime as two words while still requiring
+    # the distinctive product concept to be present.
+    if 'sleepytime' in identity and {'sleepy', 'time'}.issubset(title_tokens):
+        title_tokens.add('sleepytime')
+    hits = len(identity & title_tokens)
+    if hits < min(2, len(identity)):
+        return False
+
+    expected = _expected_quantity(query)
+    if _product_quantity(title) != expected:
+        return False
+    return True
+
+
+def _quality_filter_ebay(data, coin, now=None):
+    """Recompute summaries only from dated, title-matched, same-quantity sales."""
+    if not isinstance(data, dict):
+        return data
+    products = []
+    for product in (data.get('products') or []):
+        if not isinstance(product, dict) or not _product_matches_coin(product, coin, now=now):
+            continue
+        currency = str(product.get('currency') or '').strip().lower()
+        if currency not in {'au', 'aud', 'a$'}:
+            continue
+        try:
+            sale_price = float(str(product.get('sale_price')).replace('$', '').replace(',', '').strip())
+        except (TypeError, ValueError):
+            continue
+        if sale_price <= 0:
+            continue
+        products.append({**product, 'sale_price': sale_price})
+    products.sort(key=lambda p: _sold_timestamp(p.get('date_sold')) or 0, reverse=True)
+    prices = [p['sale_price'] for p in products]
+    result = dict(data)
+    result['products'] = products
+    result['raw_results'] = data.get('total_results', data.get('results'))
+    result['results'] = result['total_results'] = len(products)
+    result['matched_results'] = len(products)
+    if prices:
+        ordered = sorted(prices)
+        mid = len(ordered) // 2
+        median = ordered[mid] if len(ordered) % 2 else (ordered[mid - 1] + ordered[mid]) / 2
+        result.update({
+            'average_price': round(sum(prices) / len(prices), 2),
+            'median_price': round(median, 2),
+            'min_price': min(prices),
+            'max_price': max(prices),
+        })
+    else:
+        for key in ('average_price', 'median_price', 'min_price', 'max_price'):
+            result[key] = None
+    return result
+
+
 def _tag_manual_ebay(manual_entry, coin_id):
     """Tag the manual eBay search URL in one coin's manual entry (copied)."""
     if not isinstance(manual_entry, dict):
@@ -491,16 +513,13 @@ def _tag_manual_ebay(manual_entry, coin_id):
     return tagged
 
 
-def _apply_fetched(result, fetched):
+def _apply_fetched(result, fetched, coin):
     """Merge only usable upstream data, preserving a durable fallback."""
     if not isinstance(fetched, dict):
         return
     ebay = fetched.get('ebay')
     if _usable_ebay(ebay):
         result['ebay'] = ebay
-    coinxchange = fetched.get('coinxchange')
-    if _usable_coinxchange(coinxchange):
-        result['coinxchange'] = coinxchange
 
 
 def _cached_snapshot(coins, base_cache, manual):
@@ -510,10 +529,27 @@ def _cached_snapshot(coins, base_cache, manual):
         cached = base_cache.get(cid, {})
         if not isinstance(cached, dict):
             cached = {}
+        ebay = _quality_filter_ebay(cached.get('ebay'), coin)
+        manual_entry = manual.get(cid)
+        if not isinstance(manual_entry, dict):
+            manual_entry = {}
+        if not isinstance((manual_entry.get('ebay') or {}).get('url'), str):
+            sold_search = 'https://www.ebay.com.au/sch/i.html?' + urllib.parse.urlencode({
+                '_nkw': coin.get('ebay_kw', coin.get('search', 'Bluey coin')),
+                'LH_Sold': '1',
+                'LH_Complete': '1',
+                '_sop': '15',
+            })
+            manual_entry = {
+                **manual_entry,
+                'ebay': {'price': None, 'available': True, 'url': sold_search},
+            }
         snapshot[cid] = {
-            'ebay': _tag_ebay_urls(cached.get('ebay'), cid),
-            'coinxchange': cached.get('coinxchange'),
-            'manual': _tag_manual_ebay(manual.get(cid), cid),
+            'ebay': _tag_ebay_urls(ebay, cid),
+            # Older snapshots contain scraped CoinXchange prices. The site
+            # terms prohibit automated access, so do not keep serving them.
+            'coinxchange': None,
+            'manual': _tag_manual_ebay(manual_entry, cid),
         }
     return snapshot
 
@@ -545,16 +581,7 @@ def _fetch_coin(coin, fetch_ebay=False):
         except Exception as e:
             print(f"eBay fetch failed for {cid}: {type(e).__name__}")
 
-    # CoinXchange scrape (best effort)
-    cx_data = None
-    try:
-        listings = _scrape_coinxchange(coin['search'])
-        cx_data = _summarise(listings) or {}
-        cx_data['search_url'] = 'https://www.coinxchange.com.au/buy?search=' + urllib.parse.quote(coin['search'])
-    except Exception as e:
-        print(f"CoinXchange fetch failed for {cid}: {type(e).__name__}")
-
-    return {'ebay': ebay_data, 'coinxchange': cx_data}
+    return {'ebay': ebay_data, 'coinxchange': None}
 
 
 def _build_payload(coins=None, fetch_coin=None, deadline=None):
@@ -596,7 +623,10 @@ def _build_payload(coins=None, fetch_coin=None, deadline=None):
                         timeout=min(UPSTREAM_TIMEOUT, remaining),
                     )
                     if _usable_ebay(ebay_data):
-                        snapshot[coin['id']]['ebay'] = ebay_data
+                        ebay_data = dict(ebay_data)
+                        ebay_data['fetchedAt'] = time.time()
+                        snapshot[coin['id']]['ebay'] = _tag_ebay_urls(
+                            _quality_filter_ebay(ebay_data, coin), coin['id'])
                 except Exception as e:
                     print(f"eBay refresh failed for {coin['id']}: {type(e).__name__}")
             if attempted < len(refresh_ids):
@@ -610,18 +640,19 @@ def _build_payload(coins=None, fetch_coin=None, deadline=None):
     # Explicit fetchers retain the old deadline-bounded path for tests and
     # diagnostics. Its merge step below still preserves cached data on errors.
     pool = ThreadPoolExecutor(max_workers=MAX_WORKERS)
-    futures = {pool.submit(fetch_coin, coin): coin['id'] for coin in coins}
+    futures = {pool.submit(fetch_coin, coin): coin for coin in coins}
     done, pending = wait(futures, timeout=deadline)
     # Don't block on stragglers; their sockets time out on their own.
     pool.shutdown(wait=False, cancel_futures=True)
 
     snapshot = _cached_snapshot(coins, base_cache, manual)
-    for future, cid in futures.items():
+    for future, coin in futures.items():
+        cid = coin['id']
         result = snapshot[cid]
         if future in done:
             try:
                 fetched = future.result()
-                _apply_fetched(result, fetched)
+                _apply_fetched(result, fetched, coin)
             except Exception as e:
                 print(f"fetch failed for {cid}: {type(e).__name__}")
 

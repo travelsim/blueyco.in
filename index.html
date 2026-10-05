@@ -22,7 +22,7 @@
 <meta property="og:image:alt" content="Bluey $1 Dollarbuck 2024 in a display frame">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Blueycoin — Track every Bluey coin in one place">
-<meta name="twitter:description" content="A Bluey coin collector guide with Royal Australian Mint mintages, product images, live sold prices, and a collection tracker.">
+<meta name="twitter:description" content="A Bluey coin collector guide with Royal Australian Mint mintages, product images, eBay sold-search links, current retailer listings, and a collection tracker.">
 <meta name="twitter:image" content="https://blueyco.in/frames/blister-bluey-dollarbuck-2024.jpg">
 
 <script type="application/ld+json">
@@ -56,12 +56,12 @@
         {
           "@type": "Question",
           "name": "What is a Bluey Dollarbuck worth?",
-          "acceptedAnswer": { "@type": "Answer", "text": "A single 2024 Bluey $1 Dollarbuck typically resells for around $12–$15 on eBay Australia (median sold price). Check the price guide for the live median, because average prices are skewed by multi-coin lots, pairs and rolls." }
+          "acceptedAnswer": { "@type": "Answer", "text": "There is no reliable current estimate in this guide until recent, product-matched sold transactions are available. Open the eBay sold-search link on a coin card to inspect current completed sales; search results can include pairs and lots." }
         },
         {
           "@type": "Question",
           "name": "Where can I buy official Bluey coins?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Buy from the Royal Australian Mint ballot, CoinXchange, or eBay Australia sold listings for secondary-market prices. Use the Buy Options panel on each coin card to compare live retailer prices." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Check official Royal Australian Mint and Australia Post product pages, or use the Buy Options panel for retailer search links and current asking prices. Sold searches are shown separately from active listings." }
         },
         {
           "@type": "Question",
@@ -255,6 +255,8 @@
   .card-body { padding: 14px 18px; }
   .coin-source-link { display: inline-block; margin: 0 0 10px; font-size: 0.78rem; color: var(--blue); }
   .coin-source-link:hover { text-decoration-thickness: 2px; }
+  .market-data-note { color: var(--muted); font-size: 0.82rem; padding: 8px 0; }
+  .sold-search-link { display: inline-block; margin: 0 0 10px; font-size: 0.78rem; font-weight: 700; color: var(--blue); }
 
   /* ── EBAY STATS ROW ── */
   .stats-row {
@@ -1114,7 +1116,7 @@
 <section class="hero">
   <div style="max-width: 720px; margin: 0 auto;">
     <h1>Track every Bluey coin in one place</h1>
-    <p>Mark what you own, check reliable sold prices, and find the right frame when you need one.</p>
+    <p>Track your collection, inspect sold-search evidence, compare current asking prices, and find the right frame.</p>
     <a href="#dashboard" class="btn-primary">
       Start your collection
     </a>
@@ -1312,7 +1314,7 @@
 <section id="all-coins" class="section">
   <div class="all-coins-intro">
     <h2 class="section-title">Bluey coin price guide</h2>
-    <p class="page-sub">A focused snapshot of recent sold prices. Open market details only when you need the supporting data.</p>
+    <p class="page-sub">Only recent sold records are summarized. Open each live eBay sold search to inspect current results; active retailer asking prices stay in Where to Buy.</p>
   </div>
 
   <div class="series-tabs">
@@ -1770,15 +1772,16 @@ function updateDashboardStats() {
   const coins = window.COINS || [];
   let owned = 0;
   let totalValue = 0;
+  let pricedOwned = 0;
 
   coins.forEach(coin => {
     if (collection[coin.id]) {
       owned++;
-      // Prefer a live market figure (median sold price), then the static market
-      // range, then a mint-price heuristic.
       const live = _referencePrice(coin);
-      const estValue = live || coin.marketHigh || (coin.mintPrice ? coin.mintPrice * 3 : 25);
-      totalValue += estValue;
+      if (live) {
+        totalValue += live;
+        pricedOwned++;
+      }
     }
   });
 
@@ -1787,7 +1790,11 @@ function updateDashboardStats() {
   const completionEl = document.getElementById('completion');
 
   if (ownedEl) ownedEl.textContent = `${owned} / ${coins.length}`;
-  if (valueEl) valueEl.textContent = '$' + Math.round(totalValue);
+  if (valueEl) {
+    valueEl.textContent = pricedOwned === owned
+      ? '$' + Math.round(totalValue)
+      : (pricedOwned ? `Partial $${Math.round(totalValue)} (${pricedOwned} priced)` : 'No current data');
+  }
   if (completionEl) {
     const pct = coins.length ? Math.round((owned / coins.length) * 100) : 0;
     completionEl.textContent = pct + '%';
@@ -1804,7 +1811,7 @@ function renderDashboard() {
   coins.forEach(coin => {
     const isOwned    = !!collection[coin.id];
     const isWishlisted = !!wishlist[coin.id];
-    const estValue = coin.marketHigh || (coin.mintPrice ? coin.mintPrice * 3 : 25);
+    const estValue = _referencePrice(coin);
 
     const row = document.createElement('div');
     row.className = 'coin-row';
@@ -1817,7 +1824,7 @@ function renderDashboard() {
       <div>
         <span class="rarity-badge">R${coin.rarity || '?'}</span>
       </div>
-      <div class="coin-value">$${estValue}</div>
+      <div class="coin-value">${estValue ? formatAUD(estValue) : '—'}</div>
       <div>
         <button class="wish-btn${isWishlisted ? ' wishlisted' : ''}" data-id="${coin.id}">${isWishlisted ? '♥ Wishlisted' : '+ Wishlist'}</button>
       </div>
@@ -1962,7 +1969,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <section id="faq" class="section" aria-labelledby="faq-heading">
   <h2 id="faq-heading" class="section-title">Bluey coin questions, answered</h2>
-  <p class="page-sub">Short answers for collectors and search assistants. Live medians are in the price guide above.</p>
+  <p class="page-sub">Answers for collectors. Sold transactions and current asking prices are kept separate throughout this guide.</p>
   <div class="faq-list">
     <div class="faq-item">
       <h3>How many official Bluey coins are there?</h3>
@@ -1970,11 +1977,11 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
     <div class="faq-item">
       <h3>What is a Bluey Dollarbuck worth?</h3>
-      <p>A single 2024 Bluey $1 Dollarbuck typically resells for around $12–$15 on eBay Australia (median sold price). Use the price guide median, because averages are skewed by multi-coin lots, pairs and rolls.</p>
+      <p>There is no reliable current estimate in this guide until recent, product-matched sold transactions are available. Open the eBay sold-search link on a coin card to inspect current completed sales; search results can include pairs and lots.</p>
     </div>
     <div class="faq-item">
       <h3>Where can I buy official Bluey coins?</h3>
-      <p>Buy from the Royal Australian Mint ballot, CoinXchange, or eBay Australia for secondary-market prices. Open Buy Options on any coin card to compare live retailer prices.</p>
+      <p>Check official Royal Australian Mint and Australia Post product pages, or use the Buy Options panel for retailer search links and current asking prices. Sold searches are shown separately from active listings.</p>
     </div>
     <div class="faq-item">
       <h3>What is the rarest Bluey coin?</h3>
@@ -1989,7 +1996,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </main>
 
 <footer id="site-footer">
-  eBay AU sold prices via RapidAPI · CoinXchange market listings · Prices in AUD · Not financial advice · Built for collectors<br><br>
+  eBay AU completed-sale search links · Current retailer asking-price links · Prices in AUD · Not financial advice · Built for collectors<br><br>
   <small>Some links on this site are affiliate links through the eBay Partner Network (EPN). We may earn a commission if you make a purchase through these links, at no extra cost to you.</small><br><br>
   <small>Bluey Coin Tracker is an independent, fan-run collector guide. It is not affiliated with, endorsed by, or associated with Ludo Studio, BBC Studios, or the Royal Australian Mint.</small>
 </footer>
@@ -2281,14 +2288,14 @@ function buildCard(coin) {
   const ebay      = coinEntry.ebay      || null;
   const cx        = coinEntry.coinxchange || null;
 
-  const hasEbay = ebay && Array.isArray(ebay.products) && ebay.products.length > 0;
+  const hasEbay = _hasFreshEbaySales(ebay);
   const avg     = hasEbay ? parseFloat(ebay.average_price) : null;
   const minP    = hasEbay ? parseFloat(ebay.min_price)     : null;
   const maxP    = hasEbay ? parseFloat(ebay.max_price)     : null;
   // Median preferred over mean: eBay keyword searches mix single coins with
   // pairs, lots and rolls, which inflates the average several-fold.
   const med     = hasEbay ? (parseFloat(ebay.median_price) || _medianOfProducts(ebay)) : null;
-  const refPrice = med || avg;
+  const refPrice = hasEbay ? (med || avg) : null;
   const premium = calcPremium(refPrice, coin.mintPrice);
   const premStr = premium !== null ? `${premium > 0 ? '+' : ''}${premium}%` : '';
   const premCls = premium > 0 ? 'up' : (premium < 0 ? 'down' : '');
@@ -2347,8 +2354,12 @@ function buildCard(coin) {
   if (premCls) tv.classList.add(premCls);
   thirdBox.append(el('div', 'stat-label', thirdLbl), tv);
 
-  statsRow.append(avgBox, minBox, thirdBox);
-  body.append(statsRow);
+  if (hasEbay) {
+    statsRow.append(avgBox, minBox, thirdBox);
+    body.append(statsRow);
+  } else {
+    body.append(el('div', 'market-data-note', 'No recent verified sold-price data for this coin.'));
+  }
 
   const detailsBtn = el('button', 'card-details-toggle', 'Show market details');
   detailsBtn.type = 'button';
@@ -2362,6 +2373,18 @@ function buildCard(coin) {
     body.append(sourceLink);
   }
   body.append(detailsBtn);
+
+  // Keep an actionable current sold-search link visible even when the saved
+  // evidence is stale or empty. This is a live search, not a verified price.
+  const soldSearchUrl = safeUrl(ebay && ebay.response_url) ||
+    safeUrl(coinEntry.manual && coinEntry.manual.ebay && coinEntry.manual.ebay.url);
+  if (soldSearchUrl) {
+    const soldSearch = el('a', 'sold-search-link', 'Open live eBay sold search ↗');
+    soldSearch.href = soldSearchUrl;
+    soldSearch.target = '_blank';
+    soldSearch.rel = 'sponsored noopener noreferrer';
+    body.append(soldSearch);
+  }
 
   // CoinXchange row (if data available)
   if (cx && cx.average_price) {
@@ -2427,7 +2450,10 @@ function buildCard(coin) {
   const updParts = [];
   if (ebay && ebay.fetchedAt) {
     const d = new Date(ebay.fetchedAt * 1000);
-    updParts.push(`eBay: ${d.toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' })} · ${ebay.results || 0} sales`);
+    const checked = d.toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
+    updParts.push(_hasFreshEbaySales(ebay)
+      ? `eBay sold records checked ${checked} · ${ebay.results || 0} matched sales`
+      : `eBay saved records are stale · last checked ${checked}`);
   }
   if (cx && cx.fetchedAt) {
     const d = new Date(cx.fetchedAt * 1000);
@@ -2583,7 +2609,7 @@ function renderBuyOptions(panel, options) {
     // Price column
     let priceEl;
     if (!opt.link_only && opt.price != null) {
-      priceEl = el('span', 'ret-price', formatAUD(opt.price));
+      priceEl = el('span', 'ret-price', `${opt.price_type === 'asking' ? 'Ask ' : ''}${formatAUD(opt.price)}`);
     } else {
       priceEl = el('span', 'ret-price link-only', 'Search');
     }
@@ -2616,7 +2642,7 @@ function renderBuyOptions(panel, options) {
     panel.append(row);
   });
 
-  panel.append(el('div', 'bp-note', 'Prices are scraped live and may vary. Refreshes every 24 h.'));
+  panel.append(el('div', 'bp-note', 'Priced results are current asking prices, not completed sales. Manual prices without a recent checked date and retailers without permitted feeds appear as search links.'));
 }
 
 // ────────────────────────────────────────────────
@@ -2698,10 +2724,23 @@ function _medianOfProducts(ebay) {
   return prices.length % 2 ? prices[mid] : (prices[mid - 1] + prices[mid]) / 2;
 }
 
+function _hasFreshEbaySales(ebay) {
+  if (!ebay || !Array.isArray(ebay.products) || !ebay.products.length) return false;
+  const now = Date.now();
+  const maxAge = 90 * 24 * 60 * 60 * 1000;
+  const fetchedAt = Number(ebay.fetchedAt) * 1000;
+  if (!Number.isFinite(fetchedAt) || now - fetchedAt > maxAge || fetchedAt - now > 24 * 60 * 60 * 1000) return false;
+  return ebay.products.some(product => {
+    const soldAt = Date.parse(product.date_sold || '');
+    return Number.isFinite(soldAt) && now - soldAt <= maxAge && soldAt - now <= 24 * 60 * 60 * 1000;
+  });
+}
+
 // The figure used for premium, sorting and portfolio value: the feed's median
 // when present, otherwise a median of its sold prices, and only then the mean.
 function _referencePrice(coin) {
   const ebay = _coinEbay(coin);
+  if (!_hasFreshEbaySales(ebay)) return null;
   const median = parseFloat(ebay.median_price);
   if (median > 0) return median;
   const derived = _medianOfProducts(ebay);

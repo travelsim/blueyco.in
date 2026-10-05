@@ -65,15 +65,24 @@ def _fallback(retailer, keywords, coin_id, manual):
     entry = (manual.get(coin_id) or {}).get(retailer['id'])
     if entry:
         q = urllib.parse.quote(keywords)
+        checked_at = entry.get('checkedAt')
+        try:
+            checked_at = float(checked_at)
+        except (TypeError, ValueError):
+            checked_at = 0
+        age = time.time() - checked_at
+        fresh_manual_price = checked_at > 0 and 0 <= age <= 7 * 24 * 3600
+        price = entry.get('price') if fresh_manual_price else None
         return [{
             'retailer_id': retailer['id'],
             'name': retailer['name'],
-            'price': entry.get('price'),
-            'available': entry.get('available', True),
+            'price': price,
+            'available': entry.get('available', True) if price is not None else None,
+            'price_type': 'asking' if price is not None else None,
             'url': legacy.affiliate_url(
                 entry.get('url') or retailer['search_url'].replace('{q}', q),
                 coin_id=coin_id, source='ebay_search'),
-            'link_only': entry.get('price') is None,
+            'link_only': price is None,
         }]
     return legacy._link_only_option(retailer, keywords, coin_id=coin_id)
 
@@ -124,6 +133,9 @@ def get_buy_options(coin_id, keywords):
             continue
         if len(results) > 3:
             results = sorted(results, key=lambda o: (o.get('price') is None, o.get('price') or 9999))[:3]
+        for option in results:
+            if option.get('price') is not None:
+                option.setdefault('price_type', 'asking')
         options.extend(results)
 
     priced = sorted(

@@ -170,7 +170,8 @@ RETAILERS = [
         'name':       'CoinXchange',
         'base_url':   'https://www.coinxchange.com.au',
         'search_url': 'https://www.coinxchange.com.au/buy?search={q}',
-        'type':       'coinxchange',
+        # The site terms prohibit automated use. Keep a search link only.
+        'type':       'link_only',
     },
     {
         'id':         'gumtree',
@@ -187,8 +188,10 @@ RETAILERS = [
         'id':         'cashconverters',
         'name':       'Cash Converters',
         'base_url':   'https://www.cashconverters.com.au',
-        'search_url': 'https://www.cashconverters.com.au/search-results?q={q}&query={q}',
-        'type':       'cashconverters',
+        # The site terms prohibit automated use; query= is also disallowed by
+        # robots.txt. A user-clicked search link remains available.
+        'search_url': 'https://www.cashconverters.com.au/search-results?q={q}',
+        'type':       'link_only',
     },
 ]
 
@@ -267,6 +270,9 @@ def _load_cache():
         for coin_id, sources in data.items():
             if not isinstance(sources, dict):
                 continue
+            # Historical CoinXchange cache rows came from automated access,
+            # which its current terms prohibit without written permission.
+            sources.pop('coinxchange', None)
             for source, entry in sources.items():
                 if isinstance(entry, dict) and 'fetchedAt' in entry:
                     ts = entry['fetchedAt']
@@ -625,21 +631,10 @@ def _scrape_coinxchange(search_term, sold_only=True):
     sold_only=False -> currently active/buyable listings, used for the Buy-Now panel.
     Returns list of {'price': float, 'title': str, 'url': str, ...}.
     """
-    params = {'search': search_term}
-    if sold_only:
-        params['sort'] = '3'
-        params['filter[show_only][sold_items]'] = 'true'
-    url = f'{_CX_BASE}/buy?{urllib.parse.urlencode(params)}'
-    try:
-        html = _http_get(url)
-    except Exception as e:
-        print(f'CoinXchange fetch error ({search_term}): {e}')
-        return []
-
-    lines, hrefs = _linearize_html(html)
-    listings = _cx_parse_sold(lines, hrefs) if sold_only else _cx_parse_active(lines, hrefs)
-
-    return sorted(listings, key=lambda x: x['price'])[:15]
+    # CoinXchange's current website and marketplace terms prohibit automated
+    # use without express written permission. Do not make network requests;
+    # the user-facing buy panel still exposes a direct search link.
+    return []
 
 
 def _summarise(listings):
@@ -717,28 +712,6 @@ def _refresh_worker():
                     print(f'eBay FAIL {cid}: {e}')
                 time.sleep(5)
 
-            # ── CoinXchange ──
-            if _stale(cid, 'coinxchange'):
-                try:
-                    listings = _scrape_coinxchange(coin['search'])
-                    summary  = _summarise(listings)
-                    with _lock:
-                        _cache.setdefault(cid, {})['coinxchange'] = {
-                            **(summary or {}),
-                            'fetchedAt': time.time(),
-                            'search_url': (
-                                'https://www.coinxchange.com.au/buy?search='
-                                + urllib.parse.quote(coin['search'])
-                            ),
-                        }
-                    _save_cache()
-                    refreshed += 1
-                    n = len(listings)
-                    print(f'CoinXchange OK: {cid} — {n} listing{"s" if n!=1 else ""}')
-                except Exception as e:
-                    print(f'CoinXchange FAIL {cid}: {e}')
-                time.sleep(3)
-
         if refreshed:
             print(f'Refresh cycle complete: {refreshed} update(s).')
             _save_price_snapshot()   # record today’s state once per cycle
@@ -800,36 +773,9 @@ def _cashconverters_options(retailer, keywords):
     zero results (not a matching bug) — that's fine, it just means nothing
     of that specific coin is in stock right now.
     """
-    q = urllib.parse.quote(keywords)
-    api_url = (
-        'https://www.cashconverters.com.au/c3api/search/results'
-        f'?Sort=default&page=1&q={q}&query={q}'
-    )
-    try:
-        body = _http_get(api_url, accept='application/json')
-        data = json.loads(body)
-    except Exception as e:
-        print(f'Cash Converters fetch error ({keywords}): {e}')
-        return []
-
-    product_list = (data.get('Value') or {}).get('ProductList') or {}
-    items = product_list.get('ProductListItems') or []
-
-    out = []
-    for it in items:
-        price = _parse_price(it.get('Sp'))
-        if not price:
-            continue
-        out.append({
-            'retailer_id': retailer['id'],
-            'name':        retailer['name'],
-            'price':       price,
-            'available':   True,
-            'url':         _abs_url(it.get('Url'), retailer['base_url']),
-            'link_only':   False,
-            'subtitle':    it.get('StoreNameWithState'),
-        })
-    return sorted(out, key=lambda x: x['price'])[:3]
+    # Cash Converters prohibits automated access without express written
+    # permission. Keep the user-clicked search option; do not fetch its API.
+    return _link_only_option(retailer, keywords)
 
 
 def _coinxchange_buy_options(retailer, keywords):
@@ -1025,6 +971,16 @@ def _link_only_option(retailer, keywords, coin_id=''):
               'url': aff_url, 'link_only': True}]
 
 
+def _manual_price_is_fresh(entry):
+    """Manual retailer prices require an explicit recent checkedAt timestamp."""
+    try:
+        checked_at = float(entry.get('checkedAt'))
+    except (AttributeError, TypeError, ValueError):
+        return False
+    age = time.time() - checked_at
+    return 0 <= age <= 7 * 24 * 3600
+
+
 def _load_manual():
     try:
         with open(MANUAL_PRICES_FILE, 'r') as f:
@@ -1069,8 +1025,9 @@ def get_buy_options(coin_id, keywords):
         for r in RETAILERS:
             rid = r['id']
 
-            # Manual override always takes priority
-            if coin_id in manual and rid in manual[coin_id]:
+            # Manual prices only count as current when recently verified.
+            if (coin_id in manual and rid in manual[coin_id]
+                    and _manual_price_is_fresh(manual[coin_id][rid])):
                 m = manual[coin_id][rid]
                 q = urllib.parse.quote(keywords)
                 options.append({
@@ -1078,6 +1035,7 @@ def get_buy_options(coin_id, keywords):
                     'name':        r['name'],
                     'price':       m.get('price'),
                     'available':   m.get('available', True),
+                    'price_type':  'asking' if m.get('price') is not None else None,
                     'url':         affiliate_url(
                         m.get('url') or r['search_url'].replace('{q}', q),
                         coin_id=coin_id, source='ebay_search'),
@@ -1106,6 +1064,8 @@ def get_buy_options(coin_id, keywords):
 
         priced    = sorted([o for o in options if not o['link_only'] and o['price'] is not None],
                            key=lambda x: x['price'])
+        for option in priced:
+            option.setdefault('price_type', 'asking')
         link_only = [o for o in options if o['link_only'] or o['price'] is None]
 
         final = priced + link_only
