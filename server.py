@@ -176,14 +176,14 @@ RETAILERS = [
         'id':         'nova_coins',
         'name':       'Nova Coins · dealer asking listings',
         'base_url':   'https://www.novacoins.com.au',
-        'search_url': 'https://www.novacoins.com.au/search?q={q}',
+        'search_url': 'https://www.novacoins.com.au/collections/bluey-coins',
         'type':       'link_only',
     },
     {
         'id':         'aussie_coins_direct',
         'name':       'Aussie Coins Direct · dealer asking listings',
         'base_url':   'https://aussiecoinsdirect.com.au',
-        'search_url': 'https://aussiecoinsdirect.com.au/search?q={q}',
+        'search_url': 'https://aussiecoinsdirect.com.au/collections/bluey',
         'type':       'link_only',
     },
     {

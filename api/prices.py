@@ -314,7 +314,7 @@ def _usable_ebay(data):
     if not isinstance(data, dict) or data.get('error'):
         return False
     return any(_has_value(data.get(key)) for key in (
-        'average_price', 'median_price', 'products', 'results',
+        'average_price', 'median_price', 'products', 'historical_products', 'results',
     ))
 
 
