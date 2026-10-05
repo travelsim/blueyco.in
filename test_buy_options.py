@@ -53,9 +53,9 @@ class TestBuyOptions(unittest.TestCase):
         self.assertFalse(option['link_only'])
         self.assertEqual(option['price_type'], 'asking')
 
-    def test_marketplaces_without_permission_use_search_links_only(self):
+    def test_cash_converters_and_gumtree_remain_search_only(self):
         retailers = {r['id']: r for r in legacy.RETAILERS}
-        for retailer_id in ('coinxchange_buy', 'cashconverters', 'gumtree'):
+        for retailer_id in ('cashconverters', 'gumtree'):
             retailer = retailers[retailer_id]
             self.assertEqual(retailer['type'], 'link_only')
             with mock.patch.object(legacy, '_http_get', side_effect=AssertionError('network access')):
@@ -65,6 +65,21 @@ class TestBuyOptions(unittest.TestCase):
             self.assertIsNone(option['price'])
             self.assertIn('2024', option['url'])
         self.assertNotIn('query=', retailers['cashconverters']['search_url'])
+
+    def test_coinxchange_active_asks_are_identity_and_quantity_filtered(self):
+        retailer = {r['id']: r for r in legacy.RETAILERS}['coinxchange_buy']
+        self.assertEqual(retailer['type'], 'coinxchange')
+        raw = [
+            {'title': '2024 Bluey Dollarbuck till coin', 'price': 12.0, 'url': 'https://cx.test/1'},
+            {'title': '2023 Bluey Dollarbuck till coin', 'price': 8.0, 'url': 'https://cx.test/2'},
+            {'title': '2024 Bluey Dollarbuck bag of 20 coins', 'price': 30.0, 'url': 'https://cx.test/3'},
+        ]
+        with mock.patch.object(legacy, '_scrape_coinxchange', return_value=raw):
+            options = buy_options._scrape(retailer, '2024 Bluey Dollarbuck till coin', 's1_bluey')
+        self.assertEqual(len(options), 1)
+        self.assertEqual(options[0]['price'], 12.0)
+        self.assertEqual(options[0]['price_type'], 'asking')
+        self.assertEqual(options[0]['title'], '2024 Bluey Dollarbuck till coin')
 
     def test_manual_price_without_recent_check_date_is_search_only(self):
         manual = {'s1_bluey': {'ramint': {
@@ -101,6 +116,21 @@ class TestCatalogueParity(unittest.TestCase):
         for coin in prices.COINS:
             self.assertTrue(coin.get('search'), coin['id'])
             self.assertTrue(coin.get('ebay_kw'), coin['id'])
+
+
+class TestCoinXchangeParser(unittest.TestCase):
+    def test_sold_record_parses_sale_price_date_and_postage_separately(self):
+        lines = [
+            '2024 Bluey Dollarbuck till coin', 'AU $12.00', 'Buy It Now',
+            '+AU $5.00 postage', 'Sold 1 Oct 2026', 'seller-id', '(3)', '100%',
+        ]
+        hrefs = ['/item/1'] + [None] * (len(lines) - 1)
+        record = legacy._cx_parse_sold(lines, hrefs)[0]
+        self.assertEqual(record['price'], 12.0)
+        self.assertEqual(record['postage'], 5.0)
+        self.assertEqual(record['currency'], 'AUD')
+        self.assertEqual(record['sold_date'], '1 Oct 2026')
+        self.assertEqual(record['seller'], 'seller-id')
 
 
 if __name__ == '__main__':

@@ -90,8 +90,13 @@ def _parse_price(raw):
     return round(val, 2) if val > 0 else None
 
 def _scrape_coinxchange(search_term):
-    """CoinXchange disallows automated platform access without permission."""
-    return []
+    """Fetch completed CoinXchange records through the ordinary HTML parser."""
+    try:
+        legacy = _legacy()
+        return legacy._scrape_coinxchange(search_term, sold_only=True) if legacy else None
+    except Exception as e:
+        print(f"CoinXchange fetch failed: {type(e).__name__}")
+        return None
 
 
 def _legacy():
@@ -314,9 +319,7 @@ def _usable_ebay(data):
 
 
 def _usable_coinxchange(data):
-    # No CoinXchange snapshots may be used until express written permission
-    # for automated access is obtained.
-    return False
+    return isinstance(data, dict) and isinstance(data.get('products'), list) and bool(data.get('fetchedAt'))
 
 
 def _affiliate_url(raw_url, coin_id='', source='ebay'):
@@ -381,6 +384,12 @@ _NUMBER_WORDS = {
     'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10,
     'twenty': 20, 'fifty': 50,
 }
+_NAMED_VARIANT_TOKENS = {
+    'bingo', 'muffin', 'muffinsocks', 'socks', 'stripe', 'stripes', 'trixie',
+    'nana', 'rad', 'frisky', 'friend', 'friends', 'mum', 'dad', 'family',
+    'granny', 'grannies', 'rain', 'camping', 'cricket', 'rusty', 'sleepytime',
+    'sleepy', 'baby', 'race',
+}
 
 
 def _sold_timestamp(value):
@@ -441,6 +450,9 @@ def _product_matches_coin(product, coin, now=None):
     for variant in {'proof', 'silver', 'coloured', 'colored', 'privy', 'postal', 'pnc', 'card'}:
         if variant in title_tokens and variant not in query_tokens:
             return False
+    unrequested_names = (title_tokens & _NAMED_VARIANT_TOKENS) - (query_tokens & _NAMED_VARIANT_TOKENS)
+    if unrequested_names:
+        return False
 
     identity = query_tokens - _TITLE_STOP_WORDS - years - {'1', '2'}
     # Permit common spelling of Sleepytime as two words while still requiring
@@ -498,6 +510,59 @@ def _quality_filter_ebay(data, coin, now=None):
     return result
 
 
+def _quality_filter_coinxchange(data, coin, now=None):
+    """Normalize CoinXchange sold rows and reuse the strict sold-record gate."""
+    if not isinstance(data, dict):
+        return None
+    fetched_at = data.get('fetchedAt')
+    if not fetched_at:
+        return None
+    raw = data.get('products', data.get('listings', [])) or []
+    normalized = []
+    for item in raw:
+        if not isinstance(item, dict):
+            continue
+        normalized.append({
+            **item,
+            'title': item.get('title'),
+            'sale_price': item.get('sale_price', item.get('price')),
+            # Parser accepts only CoinXchange's explicit AU $ price label.
+            'currency': item.get('currency') or 'AUD',
+            'date_sold': item.get('date_sold', item.get('sold_date')),
+        })
+    filtered = _quality_filter_ebay({'products': normalized}, coin, now=now)
+    products = filtered['products']
+    prices = [p['sale_price'] for p in products]
+    ordered = sorted(prices)
+    mid = len(ordered) // 2
+    median = ordered[mid] if len(ordered) % 2 else (
+        (ordered[mid - 1] + ordered[mid]) / 2 if ordered else None)
+    listings = [{
+        'price': p['sale_price'],
+        'title': p.get('title'),
+        'url': p.get('url'),
+        'sold_date': p.get('date_sold'),
+        'postage': p.get('postage'),
+        'currency': 'AUD',
+    } for p in products]
+    return {
+        'source': 'CoinXchange',
+        'currency': 'AUD',
+        'fetchedAt': fetched_at,
+        'candidate_results': len(raw),
+        'matched_results': len(products),
+        'results': len(products),
+        'count': len(products),
+        'products': listings,
+        'listings': listings[:10],
+        'search_url': data.get('search_url'),
+        'average_price': round(sum(prices) / len(prices), 2) if prices else None,
+        'median_price': round(median, 2) if median is not None else None,
+        'min_price': min(prices) if prices else None,
+        'max_price': max(prices) if prices else None,
+    }
+
+
 def _tag_manual_ebay(manual_entry, coin_id):
     """Tag the manual eBay search URL in one coin's manual entry (copied)."""
     if not isinstance(manual_entry, dict):
@@ -519,7 +584,14 @@ def _apply_fetched(result, fetched, coin):
         return
     ebay = fetched.get('ebay')
     if _usable_ebay(ebay):
-        result['ebay'] = ebay
+        ebay = dict(ebay)
+        ebay['fetchedAt'] = time.time()
+        result['ebay'] = _quality_filter_ebay(ebay, coin)
+    coinxchange = _quality_filter_coinxchange(fetched.get('coinxchange'), coin)
+    if _usable_coinxchange(coinxchange):
+        if not coinxchange.get('fetchedAt'):
+            coinxchange['fetchedAt'] = time.time()
+        result['coinxchange'] = coinxchange
 
 
 def _cached_snapshot(coins, base_cache, manual):
@@ -530,6 +602,7 @@ def _cached_snapshot(coins, base_cache, manual):
         if not isinstance(cached, dict):
             cached = {}
         ebay = _quality_filter_ebay(cached.get('ebay'), coin)
+        coinxchange = _quality_filter_coinxchange(cached.get('coinxchange'), coin)
         manual_entry = manual.get(cid)
         if not isinstance(manual_entry, dict):
             manual_entry = {}
@@ -546,9 +619,7 @@ def _cached_snapshot(coins, base_cache, manual):
             }
         snapshot[cid] = {
             'ebay': _tag_ebay_urls(ebay, cid),
-            # Older snapshots contain scraped CoinXchange prices. The site
-            # terms prohibit automated access, so do not keep serving them.
-            'coinxchange': None,
+            'coinxchange': coinxchange,
             'manual': _tag_manual_ebay(manual_entry, cid),
         }
     return snapshot
@@ -570,7 +641,7 @@ def _rapidapi_refresh_ids(coins):
     }
 
 
-def _fetch_coin(coin, fetch_ebay=False):
+def _fetch_coin(coin, fetch_ebay=False, fetch_coinxchange=False):
     cid = coin['id']
 
     # eBay data is opt-in for callers outside the main cache-first path.
@@ -581,7 +652,21 @@ def _fetch_coin(coin, fetch_ebay=False):
         except Exception as e:
             print(f"eBay fetch failed for {cid}: {type(e).__name__}")
 
-    return {'ebay': ebay_data, 'coinxchange': None}
+    coinxchange_data = None
+    if fetch_coinxchange:
+        try:
+            raw_listings = _scrape_coinxchange(coin.get('ebay_kw') or coin.get('search') or '')
+            if raw_listings is not None:
+                coinxchange_data = {
+                    'products': raw_listings,
+                    'fetchedAt': time.time(),
+                    'search_url': 'https://www.coinxchange.com.au/buy?' + urllib.parse.urlencode({
+                        'search': coin.get('ebay_kw') or coin.get('search') or '',
+                    }),
+                }
+        except Exception as e:
+            print(f"CoinXchange fetch failed for {cid}: {type(e).__name__}")
+    return {'ebay': ebay_data, 'coinxchange': coinxchange_data}
 
 
 def _build_payload(coins=None, fetch_coin=None, deadline=None):
