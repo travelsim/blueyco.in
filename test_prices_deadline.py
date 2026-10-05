@@ -45,11 +45,14 @@ class TestPricesDeadline(unittest.TestCase):
         def fetch_no_ebay(coin):
             return {'ebay': None, 'coinxchange': None}
 
-        snapshot, complete = prices._build_payload(
-            [c for c in prices.COINS if c['id'] == 's1_bluey'],
-            fetch_coin=fetch_no_ebay,
-            deadline=1,
-        )
+        baseline = prices._load_base_cache()
+        baseline['s1_bluey'].pop('coinxchange', None)
+        with mock.patch.object(prices, '_load_base_cache', return_value=baseline):
+            snapshot, complete = prices._build_payload(
+                [c for c in prices.COINS if c['id'] == 's1_bluey'],
+                fetch_coin=fetch_no_ebay,
+                deadline=1,
+            )
         self.assertIsNotNone(snapshot['s1_bluey']['ebay'])
         self.assertIsNone(snapshot['s1_bluey']['coinxchange'])
 
@@ -59,9 +62,57 @@ if __name__ == '__main__':
 
 
 class TestCoinXchangeDelegation(unittest.TestCase):
-    def test_prices_does_not_access_coinxchange_automatically(self):
-        with mock.patch.object(prices, '_http_get', side_effect=AssertionError('network access')):
-            self.assertEqual(prices._scrape_coinxchange('Bluey'), [])
+    def test_prices_uses_the_legacy_parser_for_sold_records(self):
+        expected = [{'title': 'Bluey', 'price': 12.0, 'sold_date': '1 Oct 2026'}]
+        with mock.patch.object(prices, '_legacy') as legacy:
+            legacy.return_value._scrape_coinxchange.return_value = expected
+            self.assertEqual(prices._scrape_coinxchange('Bluey'), expected)
+            legacy.return_value._scrape_coinxchange.assert_called_once_with('Bluey', sold_only=True)
+
+
+class TestCoinXchangeSoldQuality(unittest.TestCase):
+    def test_sold_statistics_keep_only_recent_identity_and_quantity_matches(self):
+        now = datetime(2026, 10, 5, tzinfo=timezone.utc).timestamp()
+        coin = {'id': 's1_bluey', 'ebay_kw': '2024 $1 Bluey Dollarbuck till coin'}
+        raw = [
+            {'title': '2024 $1 Bluey Dollarbuck till coin', 'price': 12.0,
+             'sold_date': '1 Oct 2026', 'postage': 5.0, 'url': 'https://cx.test/1'},
+            {'title': '2023 Bluey Dollarbuck till coin', 'price': 7.0,
+             'sold_date': '1 Oct 2026'},
+            {'title': '2024 Bluey Dollarbuck bag of 20 coins', 'price': 50.0,
+             'sold_date': '2 Oct 2026'},
+            {'title': '2024 Bluey Dollarbuck till coin', 'price': 5.0,
+             'sold_date': '1 May 2026'},
+        ]
+        result = prices._quality_filter_coinxchange(
+            {'products': raw, 'fetchedAt': now, 'search_url': 'https://cx.test/search'},
+            coin, now=now)
+        self.assertEqual(result['matched_results'], 1)
+        self.assertEqual(result['median_price'], 12.0)
+        self.assertEqual(result['products'][0]['postage'], 5.0)
+        self.assertEqual(result['products'][0]['currency'], 'AUD')
+
+    def test_successful_empty_check_is_dated_and_not_a_price(self):
+        now = datetime(2026, 10, 5, tzinfo=timezone.utc).timestamp()
+        coin = {'id': 's1_bluey', 'ebay_kw': '2024 Bluey Dollarbuck till coin'}
+        result = prices._quality_filter_coinxchange({'products': [], 'fetchedAt': now}, coin, now=now)
+        self.assertEqual(result['matched_results'], 0)
+        self.assertIsNone(result['average_price'])
+        self.assertTrue(prices._usable_coinxchange(result))
+
+    def test_generic_bluey_pnc_does_not_absorb_named_character_variants(self):
+        now = datetime(2026, 10, 5, tzinfo=timezone.utc).timestamp()
+        coin = {'id': 's1_pnc_bluey', 'ebay_kw': '2024 Bluey postal numismatic cover PNC'}
+        wrong_character = {
+            'title': '2024 Bluey PNC $1 Postal Cover Muffin & Socks',
+            'sale_price': 20, 'currency': 'AUD', 'date_sold': '1 Oct 2026',
+        }
+        correct = {
+            'title': '2024 Bluey PNC $1 Postal Numismatic Cover',
+            'sale_price': 20, 'currency': 'AUD', 'date_sold': '1 Oct 2026',
+        }
+        self.assertFalse(prices._product_matches_coin(wrong_character, coin, now=now))
+        self.assertTrue(prices._product_matches_coin(correct, coin, now=now))
 
 
 class TestPricesRateLimit(unittest.TestCase):

@@ -170,8 +170,7 @@ RETAILERS = [
         'name':       'CoinXchange',
         'base_url':   'https://www.coinxchange.com.au',
         'search_url': 'https://www.coinxchange.com.au/buy?search={q}',
-        # The site terms prohibit automated use. Keep a search link only.
-        'type':       'link_only',
+        'type':       'coinxchange',
     },
     {
         'id':         'gumtree',
@@ -270,9 +269,6 @@ def _load_cache():
         for coin_id, sources in data.items():
             if not isinstance(sources, dict):
                 continue
-            # Historical CoinXchange cache rows came from automated access,
-            # which its current terms prohibit without written permission.
-            sources.pop('coinxchange', None)
             for source, entry in sources.items():
                 if isinstance(entry, dict) and 'fetchedAt' in entry:
                     ts = entry['fetchedAt']
@@ -535,6 +531,13 @@ def _fetch_ebay(coin):
 # listing's real price ("AU $12.00") from its postage cost
 # ("+AU $12.00 postage"), which a plain dollar-amount regex cannot.
 _CX_BASE = 'https://www.coinxchange.com.au'
+_CX_MIN_INTERVAL = 1.2
+_CX_CACHE_TTL_SOLD = 6 * 3600
+_CX_CACHE_TTL_ACTIVE = 15 * 60
+_cx_request_lock = threading.Lock()
+_cx_cache_lock = threading.Lock()
+_cx_cache = {}
+_cx_last_request = 0.0
 
 
 def _cx_is_feedback(s):
@@ -565,6 +568,10 @@ def _cx_parse_sold(lines, hrefs):
                 k += 1
 
             p_idx = i - 1
+            postage = 0.0
+            if p_idx >= 0 and lines[p_idx].startswith('+AU $'):
+                postage_match = re.search(r'\$([\d,.]+)', lines[p_idx])
+                postage = _parse_price(postage_match.group(1)) if postage_match else None
             price = title = href = None
             if p_idx >= 0 and (lines[p_idx] == 'Free postage' or re.match(r'^\+AU \$[\d,.]+ postage$', lines[p_idx])):
                 p_idx -= 1
@@ -582,7 +589,7 @@ def _cx_parse_sold(lines, hrefs):
             if title and price:
                 records.append({
                     'price': price, 'title': title, 'url': _abs_url(href, _CX_BASE) if href else None,
-                    'sold_date': date, 'seller': seller,
+                    'sold_date': date, 'seller': seller, 'postage': postage, 'currency': 'AUD',
                 })
             i = k
         else:
@@ -605,9 +612,13 @@ def _cx_parse_active(lines, hrefs):
                 href = hrefs[p]
 
             f = i + 1
+            postage = 0.0
             if f < n and lines[f] == 'Buy It Now':
                 f += 1
             if f < n and (lines[f] == 'Free postage' or re.match(r'^\+AU \$[\d,.]+ postage$', lines[f])):
+                if lines[f].startswith('+AU $'):
+                    postage_match = re.search(r'\$([\d,.]+)', lines[f])
+                    postage = _parse_price(postage_match.group(1)) if postage_match else None
                 f += 1
             seller = lines[f] if f < n else None
             f += 1
@@ -617,7 +628,8 @@ def _cx_parse_active(lines, hrefs):
                 f += 1
 
             if title and price and seller:
-                records.append({'price': price, 'title': title, 'url': _abs_url(href, _CX_BASE) if href else None})
+                records.append({'price': price, 'title': title, 'url': _abs_url(href, _CX_BASE) if href else None,
+                                'postage': postage, 'currency': 'AUD', 'seller': seller})
             i = f
         else:
             i += 1
@@ -631,10 +643,42 @@ def _scrape_coinxchange(search_term, sold_only=True):
     sold_only=False -> currently active/buyable listings, used for the Buy-Now panel.
     Returns list of {'price': float, 'title': str, 'url': str, ...}.
     """
-    # CoinXchange's current website and marketplace terms prohibit automated
-    # use without express written permission. Do not make network requests;
-    # the user-facing buy panel still exposes a direct search link.
-    return []
+    key = (str(search_term).strip().lower(), bool(sold_only))
+    ttl = _CX_CACHE_TTL_SOLD if sold_only else _CX_CACHE_TTL_ACTIVE
+    now = time.time()
+    with _cx_cache_lock:
+        cached = _cx_cache.get(key)
+        if cached and now - cached['fetchedAt'] < ttl:
+            return list(cached['listings'])
+
+    params = {'search': search_term}
+    if sold_only:
+        params['sort'] = '3'
+        params['filter[show_only][sold_items]'] = 'true'
+    url = f'{_CX_BASE}/buy?{urllib.parse.urlencode(params)}'
+    try:
+        # User directly authorized bounded CoinXchange collection while
+        # acknowledging the site's automated-access terms. No WAF, CAPTCHA,
+        # login, proxy or other access-control bypass is used.
+        global _cx_last_request
+        with _cx_request_lock:
+            delay = _CX_MIN_INTERVAL - (time.monotonic() - _cx_last_request)
+            if delay > 0:
+                time.sleep(delay)
+            _cx_last_request = time.monotonic()
+            html = _http_get(url, timeout=7)
+    except Exception as e:
+        print(f'CoinXchange fetch failed: {type(e).__name__}')
+        return None
+
+    lines, hrefs = _linearize_html(html)
+    listings = _cx_parse_sold(lines, hrefs) if sold_only else _cx_parse_active(lines, hrefs)
+    # Preserve the marketplace's sold-order (most recent first) for sale
+    # evidence; active asks are sorted by lowest current price for buy-now.
+    listings = listings[:15] if sold_only else sorted(listings, key=lambda x: x['price'])[:15]
+    with _cx_cache_lock:
+        _cx_cache[key] = {'fetchedAt': time.time(), 'listings': list(listings)}
+    return listings
 
 
 def _summarise(listings):
@@ -778,10 +822,57 @@ def _cashconverters_options(retailer, keywords):
     return _link_only_option(retailer, keywords)
 
 
-def _coinxchange_buy_options(retailer, keywords):
+def _coinxchange_quantity(text):
+    s = str(text or '').lower()
+    if re.search(r'\bpair\b|\bpairs\b|\bboth\s+(?:bluey|bingo)\b', s):
+        return 2
+    match = re.search(r'\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|twenty|fifty)\s*(?:-|\s)?\s*(?:coin|coins|piece|pieces|pcs)\b', s)
+    if match:
+        return int(match.group(1)) if match.group(1).isdigit() else {
+            'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5,
+            'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10,
+            'twenty': 20, 'fifty': 50,
+        }[match.group(1)]
+    match = re.search(r'\b(?:bag|roll|pack)\s+of\s+(\d+)\b', s)
+    return int(match.group(1)) if match else 1
+
+
+def _coinxchange_title_matches(title, keywords):
+    title_tokens = set(re.findall(r'[a-z0-9]+', str(title or '').lower()))
+    query_tokens = set(re.findall(r'[a-z0-9]+', str(keywords or '').lower()))
+    years = {token for token in query_tokens if re.fullmatch(r'20\d{2}', token)}
+    if not title_tokens or (years and not years.issubset(title_tokens)):
+        return False
+    for variant in {'proof', 'silver', 'coloured', 'colored', 'privy', 'postal', 'pnc', 'card'}:
+        if variant in title_tokens and variant not in query_tokens:
+            return False
+    named_variants = {
+        'bingo', 'muffin', 'muffinsocks', 'socks', 'stripe', 'stripes', 'trixie',
+        'nana', 'rad', 'frisky', 'friend', 'friends', 'mum', 'dad', 'family',
+        'granny', 'grannies', 'rain', 'camping', 'cricket', 'rusty', 'sleepytime',
+        'sleepy', 'baby', 'race',
+    }
+    if (title_tokens & named_variants) - (query_tokens & named_variants):
+        return False
+    stop = {'a', 'and', 'au', 'australia', 'australian', 'coin', 'coins', 'dollar',
+            'dollars', 'for', 'in', 'new', 'of', 'the', 'unc', 'uncirculated', 'with'}
+    identity = query_tokens - stop - years - {'1', '2'}
+    if 'sleepytime' in identity and {'sleepy', 'time'}.issubset(title_tokens):
+        title_tokens.add('sleepytime')
+    if 'sleepy' in identity and 'sleepytime' in title_tokens:
+        title_tokens.add('sleepy')
+    if 'time' in identity and 'sleepytime' in title_tokens:
+        title_tokens.add('time')
+    if len(identity & title_tokens) < min(2, len(identity)):
+        return False
+    return _coinxchange_quantity(title) == _coinxchange_quantity(keywords)
+
+
+def _coinxchange_buy_options(retailer, keywords, coin_id=None):
     q        = urllib.parse.quote(keywords)
     page_url = retailer['search_url'].replace('{q}', q)
     listings = _scrape_coinxchange(keywords, sold_only=False)
+    listings = [l for l in listings if _coinxchange_title_matches(l.get('title'), keywords)]
     if not listings:
         return [{'retailer_id': retailer['id'], 'name': retailer['name'],
                  'price': None, 'available': True, 'url': page_url, 'link_only': True}]
@@ -791,6 +882,9 @@ def _coinxchange_buy_options(retailer, keywords):
         'price':       l['price'],
         'available':   True,
         'url':         l.get('url') or page_url,
+        'title':        l.get('title'),
+        'currency':     'AUD',
+        'price_type':   'asking',
         'link_only':   l['price'] is None,
     } for l in listings[:3]]
 

@@ -257,6 +257,11 @@
   .coin-source-link:hover { text-decoration-thickness: 2px; }
   .market-data-note { color: var(--muted); font-size: 0.82rem; padding: 8px 0; }
   .sold-search-link { display: inline-block; margin: 0 0 10px; font-size: 0.78rem; font-weight: 700; color: var(--blue); }
+  .cx-sales-list { border-left: 2px solid rgba(46,196,182,0.35); margin: -4px 0 12px 8px; padding-left: 10px; }
+  .cx-sale-row { display: flex; gap: 8px; align-items: baseline; font-size: 0.74rem; padding: 3px 0; }
+  .cx-sale-price { font-weight: 800; white-space: nowrap; }
+  .cx-sale-title { color: var(--muted); overflow: hidden; text-overflow: ellipsis; }
+  .cx-sale-date, .cx-sale-postage { color: var(--muted); white-space: nowrap; }
 
   /* ── EBAY STATS ROW ── */
   .stats-row {
@@ -2386,23 +2391,23 @@ function buildCard(coin) {
     body.append(soldSearch);
   }
 
-  // CoinXchange row (if data available)
+  // CoinXchange completed sales are separate from active buy-now asks.
   if (cx && cx.average_price) {
-    const href = safeUrl(coin.cxUrl) || safeUrl(cx.search_url) || 'https://www.coinxchange.com.au/buy?search=bluey';
+    const href = safeUrl(cx.search_url) || safeUrl(coin.cxUrl) || 'https://www.coinxchange.com.au/buy?search=bluey';
     const cxRow = el('a', 'cx-row');
     cxRow.href   = href;
     cxRow.target = '_blank';
     cxRow.rel    = 'noopener noreferrer';
-    cxRow.title  = 'View on CoinXchange';
+    cxRow.title  = 'View completed CoinXchange sales. Sale price excludes postage.';
 
-    const badge = el('span', 'cx-badge', 'CoinXchange');
+    const badge = el('span', 'cx-badge', 'CoinXchange SOLD');
     const stats = el('div', 'cx-stats');
 
     const avgStat = el('span', 'cx-stat');
-    avgStat.append(el('span', 'cx-lbl', 'Avg '), el('span', 'cx-val', formatAUD(cx.average_price)));
+    avgStat.append(el('span', 'cx-lbl', 'Mean sold '), el('span', 'cx-val', formatAUD(cx.average_price)));
 
     const minStat = el('span', 'cx-stat');
-    minStat.append(el('span', 'cx-lbl', 'Min '), el('span', 'cx-val', formatAUD(cx.min_price)));
+    minStat.append(el('span', 'cx-lbl', 'Median '), el('span', 'cx-val', formatAUD(cx.median_price)));
 
     if (cx.count) {
       const cntStat = el('span', 'cx-stat');
@@ -2414,6 +2419,27 @@ function buildCard(coin) {
 
     cxRow.append(badge, stats, el('span', 'cx-arrow', '↗'));
     body.append(cxRow);
+  }
+
+  if (cx && cx.average_price) {
+    body.append(el('div', 'market-data-note', `Completed CoinXchange sales; sold price excludes postage. Checked ${new Date(cx.fetchedAt * 1000).toLocaleDateString('en-AU')}.`));
+    const cxSales = el('div', 'cx-sales-list');
+    (cx.products || []).slice(0, 3).forEach(sale => {
+      const row = el('div', 'cx-sale-row');
+      row.append(
+        el('span', 'cx-sale-price', formatAUD(sale.price)),
+        el('span', 'cx-sale-title', safeText(sale.title)),
+        el('span', 'cx-sale-date', safeText(sale.sold_date))
+      );
+      if (sale.postage != null && sale.postage > 0) {
+        row.append(el('span', 'cx-sale-postage', `+ ${formatAUD(sale.postage)} postage`));
+      }
+      cxSales.append(row);
+    });
+    if (cxSales.childElementCount) body.append(cxSales);
+  } else if (cx && cx.fetchedAt) {
+    const checked = new Date(cx.fetchedAt * 1000).toLocaleDateString('en-AU');
+    body.append(el('div', 'market-data-note', `CoinXchange checked ${checked}; no recent product-matched sold records.`));
   }
 
   // Mini chart
@@ -2457,7 +2483,7 @@ function buildCard(coin) {
   }
   if (cx && cx.fetchedAt) {
     const d = new Date(cx.fetchedAt * 1000);
-    updParts.push(`CX: ${d.toLocaleDateString('en-AU', { day:'numeric', month:'short' })}`);
+    updParts.push(`CoinXchange sales checked ${d.toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' })}`);
   }
   if (updParts.length) {
     body.append(el('div', 'last-updated', updParts.join('  ·  ')));

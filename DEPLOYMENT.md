@@ -18,8 +18,10 @@ _Verified 5 October 2026._
 - eBay completed-sale results come from the configured RapidAPI integration. Only records with recent dates, Australian currency, matching product identity, and the expected coin quantity may contribute to displayed summaries.
 - Saved eBay records older than 90 days are not shown as current prices. Each catalogue item has an eBay completed-sale search link, tagged through the eBay Partner Network when `EPN_CAMPAIGN_ID` is configured.
 - Retailer prices in Where to Buy are asking prices. Manual prices require a `checkedAt` timestamp within seven days; otherwise only the source link is returned.
-- CoinXchange and Cash Converters prohibit automated access without written permission. Their scrapers are disabled; direct user search links remain. Gumtree is link-only because it blocks automated requests and has no completed-sale history.
-- Do not re-enable a source scraper without documented permission or an official supported API.
+- CoinXchange completed-sale parsing is enabled under James Love's direct instruction on 5 October 2026, with his explicit acknowledgement of the site's automated-access terms. This is owner authorization to accept that terms risk, not permission granted by CoinXchange. Requests use a 1.2-second minimum interval, a six-hour sold-search cache and no login, proxy, CAPTCHA or bot-control bypass. Stop if the site returns 403 or 429; do not retry around the block.
+- CoinXchange sold-price summaries require a sale within 90 days, Australian dollars, matching year and at least two identity tokens, matching variant and expected item quantity. Active CoinXchange results are separately filtered and labelled as asking prices. Sold price and postage remain separate fields.
+- Cash Converters automation remains disabled; its terms and robots rules prohibit the current automated route. Gumtree stays link-only because it blocks automated requests and has no completed-sale history.
+- The manual refresh command is `python scripts/refresh_coinxchange.py`. It processes every catalog coin in sequence, writes only after a complete successful run, and leaves the old snapshot unchanged on request failure. Schedule it only after confirming acceptable GitHub Actions and Vercel deployment usage.
 
 ## Environment
 
