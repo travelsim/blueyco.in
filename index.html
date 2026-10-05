@@ -1831,7 +1831,7 @@ function renderDashboard() {
         <div class="coin-meta">${coin.year} · Series ${coin.series?.replace('series','') || '?'}</div>
       </div>
       <div>
-        <span class="rarity-badge" title="Relative mintage score: 1 is the largest catalog mintage; 10 is the smallest.">${coin.rarity == null ? 'Unrated' : `Mintage ${coin.rarity}/10`}</span>
+        <span class="rarity-badge" title="Relative mintage score: 1 is the largest catalog mintage; 10 is the smallest.">${mintageRarity(coin) == null ? 'Unrated' : `Mintage ${mintageRarity(coin)}/10`}</span>
       </div>
       <div class="coin-value">${estValue ? formatAUD(estValue) : '—'}</div>
       <div>
