@@ -173,6 +173,20 @@ RETAILERS = [
         'type':       'coinxchange',
     },
     {
+        'id':         'nova_coins',
+        'name':       'Nova Coins · dealer asking listings',
+        'base_url':   'https://www.novacoins.com.au',
+        'search_url': 'https://www.novacoins.com.au/collections/bluey-coins',
+        'type':       'link_only',
+    },
+    {
+        'id':         'aussie_coins_direct',
+        'name':       'Aussie Coins Direct · dealer asking listings',
+        'base_url':   'https://aussiecoinsdirect.com.au',
+        'search_url': 'https://aussiecoinsdirect.com.au/collections/bluey',
+        'type':       'link_only',
+    },
+    {
         'id':         'gumtree',
         'name':       'Gumtree AU',
         'base_url':   'https://www.gumtree.com.au',
@@ -1130,6 +1144,7 @@ def get_buy_options(coin_id, keywords):
                     'price':       m.get('price'),
                     'available':   m.get('available', True),
                     'price_type':  'asking' if m.get('price') is not None else None,
+                    'checkedAt':   m.get('checkedAt'),
                     'url':         affiliate_url(
                         m.get('url') or r['search_url'].replace('{q}', q),
                         coin_id=coin_id, source='ebay_search'),

@@ -250,7 +250,11 @@
     white-space: nowrap;
   }
   .card-meta2 { font-size: 0.72rem; color: var(--muted); margin-top: 4px; display: flex; gap: 8px; flex-wrap: wrap; }
-  .rarity { background: #fff3cd; color: #856404; padding: 1px 6px; border-radius: 4px; font-weight: 600; }
+  .catalog-facts { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .catalog-fact { font-size:.7rem; line-height:1.4; padding:3px 8px; border-radius:999px; background:#f1f5f9; color:#475569; white-space:nowrap; }
+  .catalog-fact.rarity { background:#fff3cd; color:#856404; font-weight:700; }
+  .historical-sales { border-left:2px solid #cbd5e1; margin:8px 0 10px 8px; padding-left:10px; opacity:.92; }
+  .historical-sales .sales-list-title { color:#64748b; }
 
   .card-body { padding: 14px 18px; }
   .coin-source-link { display: inline-block; margin: 0 0 10px; font-size: 0.78rem; color: var(--blue); }
@@ -1319,7 +1323,7 @@
 <section id="all-coins" class="section">
   <div class="all-coins-intro">
     <h2 class="section-title">Bluey coin price guide</h2>
-    <p class="page-sub">Only recent sold records are summarized. Open each live eBay sold search to inspect current results; active retailer asking prices stay in Where to Buy.</p>
+    <p class="page-sub">Recent sold records inform current prices. Older matched eBay sales remain visible as history, not current value. Compare them with active dealer asking listings in Where to Buy.</p>
   </div>
 
   <div class="series-tabs">
@@ -1827,7 +1831,7 @@ function renderDashboard() {
         <div class="coin-meta">${coin.year} · Series ${coin.series?.replace('series','') || '?'}</div>
       </div>
       <div>
-        <span class="rarity-badge">R${coin.rarity || '?'}</span>
+        <span class="rarity-badge" title="Relative mintage score: 1 is the largest catalog mintage; 10 is the smallest.">${mintageRarity(coin) == null ? 'Unrated' : `Mintage ${mintageRarity(coin)}/10`}</span>
       </div>
       <div class="coin-value">${estValue ? formatAUD(estValue) : '—'}</div>
       <div>
@@ -2078,6 +2082,18 @@ window.COINS = [
 
 ];
 
+// Mintage rarity is a relative catalog score: 1 is the largest known mintage,
+// 10 is the smallest. Equal mintages share a score; unpublished mintages are unrated.
+function mintageRarity(coin, catalog = window.COINS || []) {
+  const values = [...new Set(catalog.map(item => Number(item.mintage)).filter(value => Number.isFinite(value) && value > 0))].sort((a, b) => a - b);
+  const mintage = Number(coin && coin.mintage);
+  if (!Number.isFinite(mintage) || mintage <= 0 || values.length === 0) return null;
+  if (values.length === 1) return 10;
+  const rank = values.indexOf(mintage);
+  if (rank < 0) return null;
+  return Math.round(10 - (9 * rank / (values.length - 1)));
+}
+
 // ────────────────────────────────────────────────
 // STATE
 // ────────────────────────────────────────────────
@@ -2316,24 +2332,18 @@ function buildCard(coin) {
 
   const tw = el('div');
   tw.style.flex = '1';
-  tw.append(
-    el('div', 'card-title', coin.name),
-    el('div', 'card-meta', `${coin.denomination ? '$' + coin.denomination : 'Collectable'} · ${coin.year} · ${coin.mintage != null ? 'Mintage: ' + Number(coin.mintage).toLocaleString('en-AU') : (coin.mintageLabel || 'Mintage not published by RAM')}`)
-  );
+  tw.append(el('div', 'card-title', coin.name));
+  const facts = el('div', 'catalog-facts');
+  facts.append(el('span', 'catalog-fact', `${coin.denomination ? '$' + coin.denomination : 'Collectable'} · ${coin.year}`));
+  facts.append(el('span', 'catalog-fact', coin.mintage != null
+    ? `Mintage ${Number(coin.mintage).toLocaleString('en-AU')}`
+    : (coin.mintageLabel || 'Mintage unpublished')));
+  if (coin.mintPrice != null) facts.append(el('span', 'catalog-fact', `Issue price ${formatAUD(coin.mintPrice)}`));
+  const rarity = mintageRarity(coin);
+  facts.append(el('span', 'catalog-fact rarity', rarity == null ? 'Rarity unrated' : `Mintage rarity ${rarity}/10`));
+  facts.title = 'Relative to catalog items with a published mintage: 1 is the largest mintage and 10 is the smallest.';
+  tw.append(facts);
   hdr.append(dot, tw);
-  if (coin.mintPrice) {
-    const mintPriceText = Number.isInteger(coin.mintPrice) ? coin.mintPrice : coin.mintPrice.toFixed(2);
-    hdr.append(el('span', 'mint-price', `Mint $${mintPriceText}`));
-  }
-
-  // Rarity is catalog metadata. Static marketLow/marketHigh values have no
-  // source or observation date, so never present them as current market facts.
-  if (coin.rarity != null) {
-    const meta2 = el('div', 'card-meta2');
-    const r = el('span', 'rarity', `Rarity ${coin.rarity}`);
-    meta2.append(r);
-    hdr.append(meta2);
-  }
 
   // ── Body ──
   const body = el('div', 'card-body');
@@ -2480,6 +2490,7 @@ function buildCard(coin) {
     updParts.push(_hasFreshEbaySales(ebay)
       ? `eBay sold records checked ${checked} · ${ebay.results || 0} matched sales`
       : `eBay saved records are stale · last checked ${checked}`);
+    if (ebay.historical_count) updParts.push(`${ebay.historical_count} older matched sales retained as history`);
   }
   if (cx && cx.fetchedAt) {
     const d = new Date(cx.fetchedAt * 1000);
@@ -2521,6 +2532,38 @@ function buildCard(coin) {
     });
 
     body.append(toggleBtn, salesList);
+  }
+
+  const historicalSales = ebay && Array.isArray(ebay.historical_products) ? ebay.historical_products : [];
+  if (historicalSales.length) {
+    const historyBtn = el('button', 'toggle-sales', `Show historical eBay sales (${historicalSales.length})`);
+    const historyList = el('div', 'sales-list historical-sales');
+    historyList.id = `historical-sales-${coin.id}`;
+    historyBtn.setAttribute('aria-expanded', 'false');
+    historyBtn.addEventListener('click', () => {
+      historyList.classList.toggle('open');
+      const open = historyList.classList.contains('open');
+      historyBtn.setAttribute('aria-expanded', String(open));
+      historyBtn.textContent = open ? 'Hide historical sales' : `Show historical eBay sales (${historicalSales.length})`;
+    });
+    historyList.append(el('div', 'sales-list-title', 'Historical eBay AU sold · older than 90 days · not used in current price'));
+    historicalSales.slice(0, 12).forEach(p => {
+      const row = el('div', 'sale-row');
+      const raw = safeText(p.title);
+      row.append(
+        el('span', 'sale-price', formatAUD(parseFloat(p.sale_price))),
+        el('span', 'sale-title', raw.length > 42 ? raw.substring(0, 42) + '…' : raw),
+        el('span', 'sale-date', safeText(p.date_sold))
+      );
+      const href = safeUrl(p.link);
+      if (href) {
+        const a = el('a', 'view-ebay', '↗');
+        a.href = href; a.target = '_blank'; a.rel = 'sponsored noopener noreferrer';
+        row.append(a);
+      }
+      historyList.append(row);
+    });
+    body.append(historyBtn, historyList);
   }
 
   // Buy panel (populated on demand)
@@ -2626,9 +2669,15 @@ function renderBuyOptions(panel, options) {
     const row  = el('div', 'retailer-row');
     const name = el('div', 'ret-name', safeText(opt.name));
 
-    // Name + optional subtitle (e.g. eBay item condition)
-    if (opt.subtitle) {
-      const sub = el('div', 'ret-sub', safeText(opt.subtitle));
+    // Show the observed date for manual asking prices, and conditions where present.
+    const subtitles = [];
+    if (opt.subtitle) subtitles.push(safeText(opt.subtitle));
+    if (opt.checkedAt) {
+      const checked = new Date(Number(opt.checkedAt) * 1000).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
+      subtitles.push(`Asking price checked ${checked}`);
+    }
+    if (subtitles.length) {
+      const sub = el('div', 'ret-sub', subtitles.join(' · '));
       name.append(sub);
     }
 
@@ -2637,7 +2686,7 @@ function renderBuyOptions(panel, options) {
     if (!opt.link_only && opt.price != null) {
       priceEl = el('span', 'ret-price', `${opt.price_type === 'asking' ? 'Ask ' : ''}${formatAUD(opt.price)}`);
     } else {
-      priceEl = el('span', 'ret-price link-only', 'Search');
+      priceEl = el('span', 'ret-price link-only', 'Listings');
     }
 
     // Stock badge (only for priced options)
@@ -2668,7 +2717,7 @@ function renderBuyOptions(panel, options) {
     panel.append(row);
   });
 
-  panel.append(el('div', 'bp-note', 'Priced results are current asking prices, not completed sales. Manual prices without a recent checked date and retailers without permitted feeds appear as search links.'));
+  panel.append(el('div', 'bp-note', 'Priced results are current asking prices, not completed sales. Dealer search links may show higher retail asks; no price is shown until it can be checked and dated.'));
 }
 
 // ────────────────────────────────────────────────
@@ -2727,7 +2776,7 @@ function _coinMatchesSearch(coin, q) {
     String(coin.year || ''),
     coin.mintage ? String(coin.mintage) : '',
     coin.series,
-    coin.rarity != null ? `rarity ${coin.rarity}` : '',
+    mintageRarity(coin) != null ? `rarity ${mintageRarity(coin)}` : '',
   ].join(' ').toLowerCase();
   return q.split(/\s+/).filter(Boolean).every(token => haystack.includes(token));
 }

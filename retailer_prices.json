@@ -1,5 +1,5 @@
 {
-  "_notes": "Legacy/manual price references. A price is treated as current only when it has a recent checkedAt timestamp (within seven days); otherwise the saved URL is shown as a search link. eBay affiliate sold-search links are retained.",
+  "_notes": "Manual asking-price observations include checkedAt and are shown as current for seven days, then fall back to source links. Dealer prices are asking prices, never sold evidence. eBay affiliate sold-search links are retained.",
   "s1_bluey": {
     "ramint": { "price": 20.00, "available": true, "url": "https://eshop.ramint.gov.au/2024-1-bluey-uncirculated-coin/111344/" },
     "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+Dollarbuck+Bluey&LH_Sold=1&LH_Complete=1&_sop=15" }
@@ -26,18 +26,24 @@
   },
   "s2_xmas_unc": {
     "ramint": { "price": 20.00, "available": true, "url": "https://eshop.ramint.gov.au/2025-1-bluey-christmas-coloured-uncirculated-coin/112241/" },
+    "nova_coins": { "price": 30.00, "available": true, "checkedAt": 1791197100, "url": "https://www.novacoins.com.au/products/2025-1-coloured-uncirculated-coin-bluey-christmas" },
+    "aussie_coins_direct": { "price": 45.00, "available": true, "checkedAt": 1791197100, "url": "https://aussiecoinsdirect.com.au/collections/bluey/products/bluey" },
     "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2025+Bluey+Christmas+uncirculated&LH_Sold=1&LH_Complete=1&_sop=15" }
   },
   "s2_xmas_silv": {
     "ramint": { "price": 100.00, "available": true, "url": "https://eshop.ramint.gov.au/2025-1-bluey-christmas-silver-proof-coin/112242/" },
+    "nova_coins": { "price": 450.00, "available": true, "checkedAt": 1791197100, "url": "https://www.novacoins.com.au/products/2025-1-bluey-christmas-coloured-fine-silver-proof-coin" },
     "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2025+Bluey+Christmas+silver+proof&LH_Sold=1&LH_Complete=1&_sop=15" }
   },
   "s3_folder": {
     "ramint": { "price": 34.00, "available": true, "url": "https://eshop.ramint.gov.au/2026-bluey-2-collection-folder/112460/" },
+    "nova_coins": { "price": 39.00, "available": true, "checkedAt": 1791197100, "url": "https://www.novacoins.com.au/products/2026-2-uncirculated-collection-folder-and-five-coin-set-bluey" },
+    "aussie_coins_direct": { "price": 45.00, "available": true, "checkedAt": 1791197100, "url": "https://aussiecoinsdirect.com.au/collections/bluey/products/2026-2-uncirculated-collection-folder-and-five-coin-set-bluey" },
     "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+collection+folder&LH_Sold=1&LH_Complete=1&_sop=15" }
   },
   "s3_proof_ab": {
     "ramint": { "price": 60.00, "available": true, "url": "https://eshop.ramint.gov.au/2026-2-bluey-2-coloured-proof-aluminium-bronze-coin/112463/" },
+    "nova_coins": { "price": 190.00, "available": true, "checkedAt": 1791197100, "url": "https://www.novacoins.com.au/products/2026-bluey-2-coloured-albr-proof-coin" },
     "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+proof+aluminium+bronze&LH_Sold=1&LH_Complete=1&_sop=15" }
   },
   "s3_proof_silv": {
@@ -139,14 +145,17 @@
   },
   "s3_camping_privy": {
     "ramint": { "price": 20.00, "available": true, "url": "https://eshop.ramint.gov.au/2026-2-bluey-2-camping-privy-mark-uncirculated-coin/112485/" },
+    "nova_coins": { "price": 45.00, "available": true, "checkedAt": 1791197100, "url": "https://www.novacoins.com.au/products/2026-2-camping-bluey-uncirculated-coin-in-card-with-privy-mark" },
     "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Camping+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15" }
   },
   "s3_babyrace_privy": {
     "ramint": { "price": 20.00, "available": true, "url": "https://eshop.ramint.gov.au/2026-2-bluey-2-baby-race-privy-mark-uncirculated-coin/112486/" },
+    "nova_coins": { "price": 45.00, "available": true, "checkedAt": 1791197100, "url": "https://www.novacoins.com.au/products/2026-2-baby-race-bluey-uncirculated-coin-in-card-with-privy-mark" },
     "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Baby+Race+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15" }
   },
   "s3_granny_privy": {
     "ramint": { "price": 20.00, "available": true, "url": "https://eshop.ramint.gov.au/2026-2-bluey-2-granny-mobile-privy-mark-uncirculated-coin/112487/" },
+    "nova_coins": { "price": 40.00, "available": true, "checkedAt": 1791197100, "url": "https://www.novacoins.com.au/products/2026-2-granny-mobile-bluey-uncirculated-coin-in-card-with-privy-mark-copy" },
     "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Granny+Mobile+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15" }
   },
   "s3_heeler_family_privy": {
@@ -183,5 +192,9 @@
   },
   "s3_pin_muffin": {
     "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=Muffin+Pin+Cover+2026&LH_Sold=1&LH_Complete=1&_sop=15" }
+  },
+  "s4_cricket_unc": {
+    "nova_coins": { "price": 25.00, "available": true, "checkedAt": 1791197100, "url": "https://www.novacoins.com.au/products/2027-1-bluey-cricket-coloured-uncirculated-coin" },
+    "aussie_coins_direct": { "price": 25.00, "available": true, "checkedAt": 1791197100, "url": "https://aussiecoinsdirect.com.au/collections/bluey/products/2027-1-bluey-cricket-coloured-uncirculated-coin" }
   }
 }

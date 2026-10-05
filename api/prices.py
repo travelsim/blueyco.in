@@ -314,7 +314,7 @@ def _usable_ebay(data):
     if not isinstance(data, dict) or data.get('error'):
         return False
     return any(_has_value(data.get(key)) for key in (
-        'average_price', 'median_price', 'products', 'results',
+        'average_price', 'median_price', 'products', 'historical_products', 'results',
     ))
 
 
@@ -371,6 +371,13 @@ def _tag_ebay_urls(ebay_data, coin_id):
                     product['link'], coin_id=coin_id, source='ebay_sold')
             tagged_products.append(product)
         tagged['products'] = tagged_products
+    history = tagged.get('historical_products')
+    if isinstance(history, list):
+        tagged['historical_products'] = [
+            {**item, 'link': _affiliate_url(item.get('link'), coin_id=coin_id, source='ebay_sold')}
+            if isinstance(item, dict) and isinstance(item.get('link'), str) else item
+            for item in history
+        ]
     return tagged
 
 
@@ -432,12 +439,15 @@ def _product_quantity(title):
     return 1
 
 
-def _product_matches_coin(product, coin, now=None):
+def _product_matches_coin(product, coin, now=None, max_age_days=90):
     """Conservative sold-record gate: date, identity tokens and product quantity."""
     now = time.time() if now is None else now
     title = str(product.get('title') or '')
     sold_at = _sold_timestamp(product.get('date_sold'))
-    if not title or sold_at is None or not 0 <= now - sold_at <= 90 * 24 * 3600:
+    age = None if sold_at is None else now - sold_at
+    if not title or age is None or age < 0:
+        return False
+    if max_age_days is not None and age > max_age_days * 24 * 3600:
         return False
 
     query = str(coin.get('ebay_kw') or '')
@@ -470,13 +480,22 @@ def _product_matches_coin(product, coin, now=None):
 
 
 def _quality_filter_ebay(data, coin, now=None):
-    """Recompute summaries only from dated, title-matched, same-quantity sales."""
+    """Keep older matched sales as history; use only recent sales for current stats."""
     if not isinstance(data, dict):
         return data
-    products = []
-    for product in (data.get('products') or []):
-        if not isinstance(product, dict) or not _product_matches_coin(product, coin, now=now):
+    now = time.time() if now is None else now
+    current_products = []
+    historical_products = []
+    inputs = list(data.get('historical_products') or []) + list(data.get('products') or [])
+    seen = set()
+    for product in inputs:
+        if not isinstance(product, dict) or not _product_matches_coin(product, coin, now=now, max_age_days=None):
             continue
+        dedupe_key = str(product.get('item_id') or product.get('link') or (
+            product.get('title'), product.get('date_sold'), product.get('sale_price')))
+        if dedupe_key in seen:
+            continue
+        seen.add(dedupe_key)
         currency = str(product.get('currency') or '').strip().lower()
         if currency not in {'au', 'aud', 'a$'}:
             continue
@@ -486,14 +505,19 @@ def _quality_filter_ebay(data, coin, now=None):
             continue
         if sale_price <= 0:
             continue
-        products.append({**product, 'sale_price': sale_price})
-    products.sort(key=lambda p: _sold_timestamp(p.get('date_sold')) or 0, reverse=True)
-    prices = [p['sale_price'] for p in products]
+        normalized = {**product, 'sale_price': sale_price}
+        age = now - (_sold_timestamp(product.get('date_sold')) or now)
+        (current_products if age <= 90 * 24 * 3600 else historical_products).append(normalized)
+    current_products.sort(key=lambda p: _sold_timestamp(p.get('date_sold')) or 0, reverse=True)
+    historical_products.sort(key=lambda p: _sold_timestamp(p.get('date_sold')) or 0, reverse=True)
+    prices = [p['sale_price'] for p in current_products]
     result = dict(data)
-    result['products'] = products
+    result['products'] = current_products
+    result['historical_products'] = historical_products
+    result['historical_count'] = len(historical_products)
     result['raw_results'] = data.get('total_results', data.get('results'))
-    result['results'] = result['total_results'] = len(products)
-    result['matched_results'] = len(products)
+    result['results'] = result['total_results'] = len(current_products)
+    result['matched_results'] = len(current_products)
     if prices:
         ordered = sorted(prices)
         mid = len(ordered) // 2
@@ -586,6 +610,10 @@ def _apply_fetched(result, fetched, coin):
     if _usable_ebay(ebay):
         ebay = dict(ebay)
         ebay['fetchedAt'] = time.time()
+        previous = result.get('ebay') or {}
+        # A live refresh replaces current summaries but must not erase earlier
+        # RapidAPI completed-sale observations that remain useful as history.
+        ebay['historical_products'] = list(previous.get('historical_products') or []) + list(previous.get('products') or [])
         result['ebay'] = _quality_filter_ebay(ebay, coin)
     coinxchange = _quality_filter_coinxchange(fetched.get('coinxchange'), coin)
     if _usable_coinxchange(coinxchange):

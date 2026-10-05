@@ -79,6 +79,7 @@ def _fallback(retailer, keywords, coin_id, manual):
             'price': price,
             'available': entry.get('available', True) if price is not None else None,
             'price_type': 'asking' if price is not None else None,
+            'checkedAt': checked_at if price is not None else None,
             'url': legacy.affiliate_url(
                 entry.get('url') or retailer['search_url'].replace('{q}', q),
                 coin_id=coin_id, source='ebay_search'),
