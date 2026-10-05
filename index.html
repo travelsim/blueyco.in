@@ -251,7 +251,6 @@
   }
   .card-meta2 { font-size: 0.72rem; color: var(--muted); margin-top: 4px; display: flex; gap: 8px; flex-wrap: wrap; }
   .rarity { background: #fff3cd; color: #856404; padding: 1px 6px; border-radius: 4px; font-weight: 600; }
-  .market-range { background: #d4edda; color: #155724; padding: 1px 6px; border-radius: 4px; font-weight: 600; }
 
   .card-body { padding: 14px 18px; }
   .coin-source-link { display: inline-block; margin: 0 0 10px; font-size: 0.78rem; color: var(--blue); }
@@ -2315,17 +2314,12 @@ function buildCard(coin) {
     hdr.append(el('span', 'mint-price', `Mint $${mintPriceText}`));
   }
 
-  // Rarity + Market range (new rich data)
-  if (coin.rarity != null || (coin.marketLow != null && coin.marketHigh != null)) {
+  // Rarity is catalog metadata. Static marketLow/marketHigh values have no
+  // source or observation date, so never present them as current market facts.
+  if (coin.rarity != null) {
     const meta2 = el('div', 'card-meta2');
-    if (coin.rarity != null) {
-      const r = el('span', 'rarity', `Rarity ${coin.rarity}`);
-      meta2.append(r);
-    }
-    if (coin.marketLow != null && coin.marketHigh != null) {
-      const m = el('span', 'market-range', `Market $${coin.marketLow}–$${coin.marketHigh}`);
-      meta2.append(m);
-    }
+    const r = el('span', 'rarity', `Rarity ${coin.rarity}`);
+    meta2.append(r);
     hdr.append(meta2);
   }
 
