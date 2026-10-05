@@ -56,7 +56,12 @@ def _manual():
 
 
 def _fallback(retailer, keywords, coin_id, manual):
-    """Manual override if present, otherwise a plain search link."""
+    """Manual override if present, otherwise a plain search link.
+
+    eBay URLs are routed through the shared EPN affiliate wrapper (a
+    no-op for other retailers, and for eBay when no campaign is
+    configured), so buy-options links never ship untagged.
+    """
     entry = (manual.get(coin_id) or {}).get(retailer['id'])
     if entry:
         q = urllib.parse.quote(keywords)
@@ -65,7 +70,9 @@ def _fallback(retailer, keywords, coin_id, manual):
             'name': retailer['name'],
             'price': entry.get('price'),
             'available': entry.get('available', True),
-            'url': entry.get('url') or retailer['search_url'].replace('{q}', q),
+            'url': legacy.affiliate_url(
+                entry.get('url') or retailer['search_url'].replace('{q}', q),
+                coin_id=coin_id, source='ebay_search'),
             'link_only': entry.get('price') is None,
         }]
     return legacy._link_only_option(retailer, keywords, coin_id=coin_id)

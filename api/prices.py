@@ -274,11 +274,11 @@ def _fetch_ebay(coin, timeout=UPSTREAM_TIMEOUT):
         try:
             with urllib.request.urlopen(req, timeout=timeout) as r:
                 data = json.loads(r.read())
-                return {
+                return _tag_ebay_urls({
                     "products": data.get("products", [])[:20],
                     "average_price": data.get("average_price"),
                     "total_results": data.get("total_results", 0),
-                }
+                }, coin.get('id', ''))
         except Exception as e:
             # Keep upstream response details, URLs, and credentials out of logs.
             print(f"eBay fetch failed for {coin.get('id', 'unknown')}: {type(e).__name__}")
@@ -424,6 +424,73 @@ def _usable_coinxchange(data):
     ))
 
 
+def _affiliate_url(raw_url, coin_id='', source='ebay'):
+    """Serverless mirror of server.affiliate_url (same params, same guards).
+
+    Reads EPN_CAMPAIGN_ID live from the environment so Vercel config and
+    tests take effect without a module reload. Never hardcodes a campaign
+    ID: without one, eBay URLs stay valid ordinary URLs. Never
+    double-tags, and preserves query parameters/URL encoding by appending
+    rather than rebuilding the URL.
+    """
+    campaign = os.environ.get('EPN_CAMPAIGN_ID', '')
+    if not raw_url or not raw_url.startswith('https://www.ebay.com.au'):
+        return raw_url
+    if not campaign:
+        return raw_url
+    if 'campid=' in raw_url or 'mkevt=' in raw_url:
+        return raw_url
+    custom_id = f'blueycoin-{source}-{coin_id}' if coin_id else 'blueycoin'
+    separator = '&' if '?' in raw_url else '?'
+    return (
+        f"{raw_url}{separator}"
+        f"mkrid=705-53470-19255-0&siteid=15"
+        f"&campid={campaign}"
+        f"&customid={custom_id}"
+        f"&toolid=10001&mkevt=1"
+    )
+
+
+def _tag_ebay_urls(ebay_data, coin_id):
+    """Tag outbound eBay URLs in one served eBay payload (copied, not mutated).
+
+    Covers upstream sold-listing product links and the upstream manual
+    search URL (response_url). Non-eBay values pass through untouched.
+    """
+    if not isinstance(ebay_data, dict):
+        return ebay_data
+    tagged = dict(ebay_data)
+    if isinstance(tagged.get('response_url'), str):
+        tagged['response_url'] = _affiliate_url(
+            tagged['response_url'], coin_id=coin_id, source='ebay_search')
+    products = tagged.get('products')
+    if isinstance(products, list):
+        tagged_products = []
+        for product in products:
+            if isinstance(product, dict) and isinstance(product.get('link'), str):
+                product = dict(product)
+                product['link'] = _affiliate_url(
+                    product['link'], coin_id=coin_id, source='ebay_sold')
+            tagged_products.append(product)
+        tagged['products'] = tagged_products
+    return tagged
+
+
+def _tag_manual_ebay(manual_entry, coin_id):
+    """Tag the manual eBay search URL in one coin's manual entry (copied)."""
+    if not isinstance(manual_entry, dict):
+        return manual_entry
+    ebay_entry = manual_entry.get('ebay')
+    if not isinstance(ebay_entry, dict) or not isinstance(ebay_entry.get('url'), str):
+        return manual_entry
+    tagged = dict(manual_entry)
+    tagged_ebay = dict(ebay_entry)
+    tagged_ebay['url'] = _affiliate_url(
+        tagged_ebay['url'], coin_id=coin_id, source='ebay_search')
+    tagged['ebay'] = tagged_ebay
+    return tagged
+
+
 def _apply_fetched(result, fetched):
     """Merge only usable upstream data, preserving a durable fallback."""
     if not isinstance(fetched, dict):
@@ -444,9 +511,9 @@ def _cached_snapshot(coins, base_cache, manual):
         if not isinstance(cached, dict):
             cached = {}
         snapshot[cid] = {
-            'ebay': cached.get('ebay'),
+            'ebay': _tag_ebay_urls(cached.get('ebay'), cid),
             'coinxchange': cached.get('coinxchange'),
-            'manual': manual.get(cid),
+            'manual': _tag_manual_ebay(manual.get(cid), cid),
         }
     return snapshot
 
