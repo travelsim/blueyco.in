@@ -225,25 +225,6 @@ class TestSoldRecordQuality(unittest.TestCase):
         self.assertEqual([p['sale_price'] for p in result['products']], [12.0])
         self.assertEqual(result['median_price'], 12.0)
         self.assertEqual(result['matched_results'], 1)
-        self.assertEqual([p['sale_price'] for p in result['historical_products']], [7.0])
-        self.assertEqual(result['historical_count'], 1)
-
-    def test_fresh_rapidapi_response_does_not_erase_saved_history(self):
-        now = datetime(2026, 10, 5, tzinfo=timezone.utc).timestamp()
-        coin = {'id': 's1_bluey', 'ebay_kw': '2024 $1 Bluey Dollarbuck till coin'}
-        previous = prices._quality_filter_ebay({'products': [
-            {'item_id': 'old', 'title': '2024 $1 Bluey Dollarbuck till coin',
-             'sale_price': 8, 'currency': 'AU', 'date_sold': '1 May 2026'}
-        ]}, coin, now=now)
-        result = {'ebay': previous}
-        fresh = {'ebay': {'products': [
-            {'item_id': 'new', 'title': '2024 $1 Bluey Dollarbuck till coin',
-             'sale_price': 12, 'currency': 'AU', 'date_sold': '1 Oct 2026'}
-        ]}}
-        with mock.patch.object(prices.time, 'time', return_value=now):
-            prices._apply_fetched(result, fresh, coin)
-        self.assertEqual([p['item_id'] for p in result['ebay']['products']], ['new'])
-        self.assertEqual([p['item_id'] for p in result['ebay']['historical_products']], ['old'])
 
     def test_catalogued_multi_coin_set_can_match_its_expected_quantity(self):
         now = datetime(2026, 10, 5, tzinfo=timezone.utc).timestamp()

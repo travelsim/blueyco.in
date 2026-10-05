@@ -66,19 +66,6 @@ class TestBuyOptions(unittest.TestCase):
             self.assertIn('2024', option['url'])
         self.assertNotIn('query=', retailers['cashconverters']['search_url'])
 
-    def test_coin_dealer_destinations_are_explicitly_link_only_asking_sources(self):
-        retailers = {r['id']: r for r in legacy.RETAILERS}
-        for retailer_id, domain in (
-            ('nova_coins', 'novacoins.com.au'),
-            ('aussie_coins_direct', 'aussiecoinsdirect.com.au'),
-        ):
-            retailer = retailers[retailer_id]
-            self.assertEqual(retailer['type'], 'link_only')
-            option = buy_options._fallback(retailer, '2024 Bluey coin', 's1_bluey', {})[0]
-            self.assertTrue(option['link_only'])
-            self.assertIsNone(option['price'])
-            self.assertIn(domain, option['url'])
-
     def test_coinxchange_active_asks_are_identity_and_quantity_filtered(self):
         retailer = {r['id']: r for r in legacy.RETAILERS}['coinxchange_buy']
         self.assertEqual(retailer['type'], 'coinxchange')

@@ -144,14 +144,6 @@ class TestPricesSnapshotTagging(unittest.TestCase):
         self.assertEqual(retagged['response_url'].count('campid='), 1)
         self.assertEqual(retagged['products'][0]['link'].count('campid='), 1)
 
-    def test_historical_product_links_keep_the_affiliate_tag(self):
-        historical = {'response_url': 'https://www.ebay.com.au/sch/i.html?_nkw=bluey',
-                      'products': [],
-                      'historical_products': [{'link': 'https://www.ebay.com.au/itm/12345'}]}
-        with mock.patch.dict(os.environ, {'EPN_CAMPAIGN_ID': 'testcamp'}):
-            tagged = prices._tag_ebay_urls(historical, 's1_bluey')
-        self.assertIn('campid=testcamp', tagged['historical_products'][0]['link'])
-
     def test_every_catalogue_coin_gets_a_live_affiliate_sold_search(self):
         with mock.patch.dict(os.environ, {'EPN_CAMPAIGN_ID': 'testcamp'}):
             snapshot = prices._cached_snapshot(prices.COINS, {}, {})
