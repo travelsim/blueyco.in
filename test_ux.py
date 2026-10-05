@@ -135,6 +135,10 @@ class TestHonestCopy(unittest.TestCase):
         desc = re.search(r'<meta name="description" content="([^"]+)"', INDEX).group(1)
         self.assertIn('48 coins', desc)
 
+    def test_static_market_ranges_are_not_presented_as_current_market_facts(self):
+        self.assertNotIn('Market ${coin.marketLow}', INDEX)
+        self.assertNotIn('market-range', INDEX)
+
     def test_no_unverified_social_proof_claims(self):
         hero = INDEX.split('class="hero"')[1].split('</section>')[0]
         self.assertNotIn('trusted by serious collectors', hero.lower())
