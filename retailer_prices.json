@@ -196,5 +196,9 @@
   "s4_cricket_unc": {
     "nova_coins": { "price": 25.00, "available": true, "checkedAt": 1791197100, "url": "https://www.novacoins.com.au/products/2027-1-bluey-cricket-coloured-uncirculated-coin" },
     "aussie_coins_direct": { "price": 25.00, "available": true, "checkedAt": 1791197100, "url": "https://aussiecoinsdirect.com.au/collections/bluey/products/2027-1-bluey-cricket-coloured-uncirculated-coin" }
+  },
+  "s4_cricket_proof": {
+    "ebay": { "price": null, "available": true, "useAsLinkOnly": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2027%20Bluey%20Cricket%20%241%20silver%20proof&LH_BIN=1&_sop=15&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=blueycoin-ebay_search-s4_cricket_proof&toolid=10001&mkevt=1" },
+    "gumtree": { "price": null, "available": true, "url": "https://www.gumtree.com.au/s-2027+bluey+cricket+%241+silver+proof/k0" }
   }
 }

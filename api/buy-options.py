@@ -128,6 +128,12 @@ def get_buy_options(coin_id, keywords):
                 results = future.result() or []
             except Exception as e:
                 print(f"buy-options error [{retailer['id']}]: {e}")
+        manual_entry = (manual.get(coin_id) or {}).get(retailer['id']) or {}
+        if (results and manual_entry.get('useAsLinkOnly') is True and
+                all(option.get('link_only') or option.get('price') is None for option in results)):
+            # Preserve a deliberately supplied, coin-specific search URL when
+            # the live provider could only produce a generic link-only result.
+            results = _fallback(retailer, keywords, coin_id, manual)
         if not results:
             # Unfinished or failed scrape still yields an actionable link.
             options.extend(_fallback(retailer, keywords, coin_id, manual))
