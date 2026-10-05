@@ -1144,6 +1144,7 @@ def get_buy_options(coin_id, keywords):
                     'price':       m.get('price'),
                     'available':   m.get('available', True),
                     'price_type':  'asking' if m.get('price') is not None else None,
+                    'checkedAt':   m.get('checkedAt'),
                     'url':         affiliate_url(
                         m.get('url') or r['search_url'].replace('{q}', q),
                         coin_id=coin_id, source='ebay_search'),

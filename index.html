@@ -2669,9 +2669,15 @@ function renderBuyOptions(panel, options) {
     const row  = el('div', 'retailer-row');
     const name = el('div', 'ret-name', safeText(opt.name));
 
-    // Name + optional subtitle (e.g. eBay item condition)
-    if (opt.subtitle) {
-      const sub = el('div', 'ret-sub', safeText(opt.subtitle));
+    // Show the observed date for manual asking prices, and conditions where present.
+    const subtitles = [];
+    if (opt.subtitle) subtitles.push(safeText(opt.subtitle));
+    if (opt.checkedAt) {
+      const checked = new Date(Number(opt.checkedAt) * 1000).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
+      subtitles.push(`Asking price checked ${checked}`);
+    }
+    if (subtitles.length) {
+      const sub = el('div', 'ret-sub', subtitles.join(' · '));
       name.append(sub);
     }
 
