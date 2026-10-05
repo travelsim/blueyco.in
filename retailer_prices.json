@@ -1,5 +1,5 @@
 {
-  "_notes": "Manual price overrides. RAMint prices from RAM eShop (eshop.ramint.gov.au). CoinXchange prices are scraped live. For eBay, prices come from RapidAPI.",
+  "_notes": "Legacy/manual price references. A price is treated as current only when it has a recent checkedAt timestamp (within seven days); otherwise the saved URL is shown as a search link. eBay affiliate sold-search links are retained.",
   "s1_bluey": {
     "ramint": { "price": 20.00, "available": true, "url": "https://eshop.ramint.gov.au/2024-1-bluey-uncirculated-coin/111344/" },
     "ebay": { "price": null, "available": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+Dollarbuck+Bluey&LH_Sold=1&LH_Complete=1&_sop=15" }

@@ -1,62 +1,43 @@
-# BlueyCoin Deployment Notes
+# Bluey Coin Tracker deployment and pricing
 
-_Last updated: 2026-06-06_
+_Verified 5 October 2026._
 
-## Current production owner
+## Production
 
-**Canonical live app:** `https://blueyco.in/` on **Render**.
+- Canonical URL: <https://blueyco.in>
+- Serving platform: Vercel serverless.
+- Canonical repository: `travelsim/blueyco.in`.
+- Price API: `GET /api/prices`.
+- Retailer search API: `POST /api/buy-options`.
+- Static site entry point: `index.html`.
 
-Evidence from live response headers:
+`server.py` remains the shared Python library and local development server. Its background thread and local JSON cache are not the production refresh mechanism.
 
-- `rndr-id: ...`
-- `x-render-origin-server: BaseHTTP/0.6 Python/3.14.3`
-- DNS resolves to Render static IPs behind Cloudflare.
+## Pricing evidence and access
 
-## Vercel status
+- eBay completed-sale results come from the configured RapidAPI integration. Only records with recent dates, Australian currency, matching product identity, and the expected coin quantity may contribute to displayed summaries.
+- Saved eBay records older than 90 days are not shown as current prices. Each catalogue item has an eBay completed-sale search link, tagged through the eBay Partner Network when `EPN_CAMPAIGN_ID` is configured.
+- Retailer prices in Where to Buy are asking prices. Manual prices require a `checkedAt` timestamp within seven days; otherwise only the source link is returned.
+- CoinXchange and Cash Converters prohibit automated access without written permission. Their scrapers are disabled; direct user search links remain. Gumtree is link-only because it blocks automated requests and has no completed-sale history.
+- Do not re-enable a source scraper without documented permission or an official supported API.
 
-`https://blueycoin.vercel.app/` is a separate static/prototype deployment from the sister repo `travelsim/blueycoin`.
+## Environment
 
-Do **not** treat Vercel as production for the dynamic tracker until these blockers are resolved:
+Configure these in the Vercel project settings, never in the repository:
 
-1. `vercel.json` in this repo is stale. It pins `python3.9` while `pyproject.toml` requires `>=3.11`; current Vercel Python runtime support differs from that old config.
-2. Vercel only has `api/prices.py`; it does **not** have the live `POST /api/buy-options` endpoint used by `index.html`.
-3. The dynamic Render app depends on a long-lived process model: background refresh thread, in-memory cache, and local JSON cache/history files. Vercel serverless is stateless/frozen between invocations; porting needs a DB/KV plus scheduled refresh.
-4. `api/prices.py` is only a fallback/partial serverless price endpoint, not a full replacement for `server.py`.
+| Variable | Purpose |
+| --- | --- |
+| `EPN_CAMPAIGN_ID` | eBay Partner Network campaign tag |
+| `RAPIDAPI_KEY` | eBay completed-sales API credential |
+| `RAPIDAPI_LIVE_REFRESH` | Explicitly enables bounded eBay refresh requests |
+| `RAPIDAPI_REFRESH_LIMIT` | Maximum coins refreshed per invocation, capped at five |
+| `RAPIDAPI_MIN_INTERVAL` | Minimum interval between upstream requests; at least 1.2 seconds |
 
-## Required production environment variables on Render
+The live refresh is opt-in. Check the RapidAPI subscription allowance and Vercel execution limits before enabling scheduled refreshes. There is currently no scheduled refresh configured in this repository.
 
-Set these in the Render service dashboard for `blueyco.in`:
+## Release checks
 
-| Var | Purpose | Status |
-| --- | --- | --- |
-| `EPN_CAMPAIGN_ID` | eBay Partner Network affiliate links (`campid`) | `5339153744` known locally; must be set on Render |
-| `RAPIDAPI_KEY` | eBay sold-price lookup API | needed for fresh eBay data |
-
-Local `.env` is only for `run_local.py` and is gitignored. Render does not read it.
-
-## Cache persistence notes
-
-`server.py` persists runtime cache to:
-
-- `ebay_cache.json`
-- `price_history.json`
-
-Render disk can be ephemeral across deploys/restarts unless a persistent disk is configured. The committed JSON files are seed/fallback data only. For robust production persistence, move these to a managed store (Render disk, Postgres, Supabase, Redis/KV, etc.).
-
-## Safe path for now
-
-1. Keep `blueyco.in` canonical on Render.
-2. Set `EPN_CAMPAIGN_ID=5339153744` on Render and redeploy.
-3. Set `RAPIDAPI_KEY` on Render and redeploy.
-4. Push tested changes from the `ws3-backup` branch to a review branch, then merge to `main` only after Render env vars are present.
-
-## If migrating dynamic tracker to Vercel later
-
-Porting work required:
-
-- Rewrite Python API functions into Vercel's current handler shape.
-- Add `api/buy-options.py` equivalent to `server.py`'s `POST /api/buy-options`.
-- Replace background thread refresh with Vercel Cron.
-- Replace local JSON persistence with a DB/KV.
-- Update `vercel.json` runtime to a supported Python version compatible with `pyproject.toml`.
-- Add integration tests that exercise `/api/prices`, `/api/buy-options`, and affiliate wrapping under the Vercel function environment.
+1. Run focused pricing, buy-options, affiliate, and regression tests.
+2. Confirm a Vercel preview passes for the change.
+3. After merge, verify production `/`, `/api/prices`, and `/api/buy-options`.
+4. Inspect rendered coin cards: stale sold records must not show as current prices, live eBay completed-sale links must carry the EPN tag, and retailer asking prices must be labeled separately.

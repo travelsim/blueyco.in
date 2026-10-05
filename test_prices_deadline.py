@@ -1,5 +1,6 @@
 import time
 import unittest
+from datetime import datetime, timezone
 from unittest import mock
 
 from api import prices
@@ -24,7 +25,7 @@ class TestPricesDeadline(unittest.TestCase):
         self.assertFalse(complete)
         self.assertEqual(len(snapshot), 40)
         self.assertIsNone(snapshot['c3']['coinxchange'])
-        self.assertEqual(snapshot['c0']['coinxchange']['average_price'], 10.0)
+        self.assertIsNone(snapshot['c0']['coinxchange'])
         self.assertIn('manual', snapshot['c3'])
 
     def test_complete_snapshot_is_cached(self):
@@ -50,7 +51,7 @@ class TestPricesDeadline(unittest.TestCase):
             deadline=1,
         )
         self.assertIsNotNone(snapshot['s1_bluey']['ebay'])
-        self.assertIsNotNone(snapshot['s1_bluey']['coinxchange'])
+        self.assertIsNone(snapshot['s1_bluey']['coinxchange'])
 
 
 if __name__ == '__main__':
@@ -58,19 +59,9 @@ if __name__ == '__main__':
 
 
 class TestCoinXchangeDelegation(unittest.TestCase):
-    def test_prices_uses_server_sold_parser(self):
-        calls = []
-
-        class FakeLegacy:
-            @staticmethod
-            def _scrape_coinxchange(term, sold_only=True):
-                calls.append((term, sold_only))
-                return [{'price': 12.0, 'title': 't', 'url': 'u'}]
-
-        with mock.patch.object(prices, '_legacy', return_value=FakeLegacy):
-            listings = prices._scrape_coinxchange('Bluey')
-        self.assertEqual(calls, [('Bluey', True)])
-        self.assertEqual(prices._summarise(listings)['min_price'], 12.0)
+    def test_prices_does_not_access_coinxchange_automatically(self):
+        with mock.patch.object(prices, '_http_get', side_effect=AssertionError('network access')):
+            self.assertEqual(prices._scrape_coinxchange('Bluey'), [])
 
 
 class TestPricesRateLimit(unittest.TestCase):
@@ -83,7 +74,9 @@ class TestPricesRateLimit(unittest.TestCase):
         coin = {'id': 'a', 'search': 'x', 'ebay_kw': 'x'}
         baseline = {
             'a': {
-                'ebay': {'average_price': 12.95, 'products': [{'title': 'cached'}]},
+                'ebay': {'average_price': 12.95, 'products': [
+                    {'title': 'x', 'sale_price': 12.95, 'currency': 'AU',
+                     'date_sold': '1 Oct 2026'}]},
                 'coinxchange': {'average_price': 10.0},
             }
         }
@@ -96,13 +89,15 @@ class TestPricesRateLimit(unittest.TestCase):
 
         self.assertTrue(complete)
         self.assertEqual(snapshot['a']['ebay']['average_price'], 12.95)
-        self.assertEqual(snapshot['a']['coinxchange']['average_price'], 10.0)
+        self.assertIsNone(snapshot['a']['coinxchange'])
 
     def test_429_does_not_replace_cached_ebay(self):
         coin = {'id': 'a', 'search': 'x', 'ebay_kw': 'x'}
         baseline = {
             'a': {
-                'ebay': {'average_price': 12.95, 'products': [{'title': 'cached'}]},
+                'ebay': {'average_price': 12.95, 'products': [
+                    {'title': 'x', 'sale_price': 12.95, 'currency': 'AU',
+                     'date_sold': '1 Oct 2026'}]},
                 'coinxchange': None,
             }
         }
@@ -159,3 +154,31 @@ class TestPricesRateLimit(unittest.TestCase):
         self.assertEqual(len(calls), 3)
         self.assertEqual(max_active, 1)
         self.assertEqual(sum(1 for item in snapshot.values() if item['ebay']), 3)
+
+
+class TestSoldRecordQuality(unittest.TestCase):
+    def test_title_quantity_and_date_gate_excludes_mismatches(self):
+        now = datetime(2026, 10, 5, tzinfo=timezone.utc).timestamp()
+        coin = {'id': 's1_bluey', 'ebay_kw': '2024 $1 Bluey Dollarbuck till coin'}
+        products = [
+            {'title': '2024 $1 Bluey Dollarbuck Uncirculated Coin', 'sale_price': 12.0,
+             'currency': 'AU', 'date_sold': '1 Oct 2026'},
+            {'title': 'PAIR of Bingo & Bluey UNC Coins, 2x $1', 'sale_price': 9.95,
+             'currency': 'AU', 'date_sold': '2 Oct 2026'},
+            {'title': '2023 $1 Bluey Dollarbuck Coin', 'sale_price': 8.0,
+             'currency': 'AU', 'date_sold': '2 Oct 2026'},
+            {'title': '2024 $1 Bluey Dollarbuck Coin', 'sale_price': 7.0,
+             'currency': 'AU', 'date_sold': '1 May 2026'},
+        ]
+        result = prices._quality_filter_ebay({'products': products}, coin, now=now)
+        self.assertEqual([p['sale_price'] for p in result['products']], [12.0])
+        self.assertEqual(result['median_price'], 12.0)
+        self.assertEqual(result['matched_results'], 1)
+
+    def test_catalogued_multi_coin_set_can_match_its_expected_quantity(self):
+        now = datetime(2026, 10, 5, tzinfo=timezone.utc).timestamp()
+        coin = {'id': 's1_10_coin_folder_set',
+                'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set'}
+        record = {'title': '2024 Bluey 10-Coin Collection Folder Tube Set',
+                  'sale_price': 80, 'currency': 'AUD', 'date_sold': '1 Oct 2026'}
+        self.assertTrue(prices._product_matches_coin(record, coin, now=now))
