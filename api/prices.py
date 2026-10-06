@@ -508,10 +508,28 @@ def _quality_filter_ebay(data, coin, now=None):
     now = time.time() if now is None else now
     current_products = []
     historical_products = []
-    inputs = list(data.get('historical_products') or []) + list(data.get('products') or [])
+    # Prefer the current product snapshot when one item ID appears in both
+    # current and historical data; a refreshed sale can supersede a stale copy.
+    inputs = list(data.get('products') or []) + list(data.get('historical_products') or [])
     seen = set()
     for product in inputs:
-        if not isinstance(product, dict) or not _product_matches_coin(product, coin, now=now, max_age_days=None):
+        if not isinstance(product, dict):
+            continue
+        # The CSV importer accepts only rows James has marked Retained and
+        # keeps their explicit catalog ID. Preserve that reviewed mapping even
+        # when the strict API title matcher rejects a legitimate packaging or
+        # product-name variant; the checks below still enforce date, currency,
+        # positive price, duplicate and 90-day rules.
+        reviewed_csv_match = (
+            product.get('source_type') == 'user_imported_csv'
+            and product.get('record_status') == 'Retained'
+            and product.get('coin_id') == coin.get('id')
+        )
+        if reviewed_csv_match:
+            sold_at = _sold_timestamp(product.get('date_sold'))
+            if not product.get('title') or sold_at is None or sold_at > now:
+                continue
+        elif not _product_matches_coin(product, coin, now=now, max_age_days=None):
             continue
         dedupe_key = str(product.get('item_id') or product.get('link') or (
             product.get('title'), product.get('date_sold'), product.get('sale_price')))
@@ -659,12 +677,20 @@ def _cached_snapshot(coins, base_cache, manual, manual_ebay_sales=None):
         if isinstance(imported_ebay, dict) and isinstance(imported_ebay.get('products'), list):
             ebay = {**imported_ebay, **cached_ebay}
             ebay['products'] = (
-                list(cached_ebay.get('products') or [])
-                + list(imported_ebay.get('products') or [])
+                list(imported_ebay.get('products') or [])
+                + list(cached_ebay.get('products') or [])
             )
             ebay['manual_import'] = imported_ebay.get('import_metadata')
-            if not ebay.get('response_url'):
-                ebay['response_url'] = imported_ebay.get('response_url')
+            if imported_ebay.get('response_url'):
+                ebay['response_url'] = imported_ebay['response_url']
+            fetched_values = []
+            for source in (cached_ebay, imported_ebay):
+                try:
+                    fetched_values.append(float(source.get('fetchedAt')))
+                except (TypeError, ValueError):
+                    continue
+            if fetched_values:
+                ebay['fetchedAt'] = max(fetched_values)
         else:
             ebay = cached_ebay
         ebay = _quality_filter_ebay(ebay, coin)

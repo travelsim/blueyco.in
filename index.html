@@ -2538,9 +2538,11 @@ function buildCard(coin) {
   if (hasMedian) {
     const saleCount = Number(ebay.results || ebay.matched_results || currentSales.length);
     const checked = new Date(Number(ebay.fetchedAt) * 1000).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
-    const pastedSalesCount = currentSales.filter(product => product.source_type === 'user_pasted_search').length;
-    const saleSummary = pastedSalesCount
-      ? `${pastedSalesCount} manually filtered sales · broader eBay matches · ${checked}`
+    const manualSalesCount = currentSales.filter(product =>
+      product.source_type === 'user_pasted_search' || product.source_type === 'user_imported_csv'
+    ).length;
+    const saleSummary = manualSalesCount
+      ? `Includes ${manualSalesCount} user-supplied sales · not API-verified · ${checked}`
       : `${saleCount} matched sold ${saleCount === 1 ? 'result' : 'results'} · checked ${checked}`;
     priceCard.append(el('div', 'metric-footnote', saleSummary));
   }
