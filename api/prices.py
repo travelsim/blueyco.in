@@ -250,7 +250,7 @@ COINS = [
     {'id': 's3_pin_sleepytime', 'ebay_kw': '2026 Bluey Sleepy Time stamp pin cover', 'search': '2026 Bluey Sleepy Time pin cover'},
     # Series 4 — 2027 Cricket episode collectible coins (RAM launch prices).
     {'id': 's4_cricket_unc', 'ebay_kw': '2027 $1 Bluey Cricket Rusty coloured uncirculated coin card', 'search': '2027 Bluey Cricket $1 uncirculated'},
-    {'id': 's4_cricket_proof', 'ebay_kw': '2027 $1 Bluey Cricket silver proof coin cricket ball tin', 'search': '2027 Bluey Cricket $1 silver proof'},
+    {'id': 's4_cricket_proof', 'ebay_kw': '2027 $1 Bluey Cricket Rusty coloured silver proof coin', 'search': '2027 Bluey Cricket $1 silver proof'},
     {'id': 's3_folder', 'ebay_kw': '2026 $2 Bluey collection folder five coin set', 'search': '2026 Bluey collection folder five coin set'},
     # Series 1 tube sets — these ship in the frontend catalogue and in
     # server.py; they were missing here so they never received live prices.
