@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "coins": {
+    "s4_cricket_unc": {
+      "source_type": "user_pasted_search",
+      "currency": "AU",
+      "fetchedAt": 1791255600,
+      "query": "2027 $1 Bluey Cricket Rusty coloured uncirculated coin card",
+      "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2027+%241+Bluey+Cricket+Rusty+coloured+uncirculated+coin+card&LH_Sold=1&LH_Complete=1",
+      "results": 13,
+      "total_results": 13,
+      "matched_results": 13,
+      "average_price": 27.56,
+      "median_price": 27.99,
+      "min_price": 23.95,
+      "max_price": 32.5,
+      "import_metadata": {
+        "source": "User-pasted eBay AU completed and sold search results",
+        "captured_on": "2026-10-06",
+        "exact_query_matches": 0,
+        "selection": "Manually retained single-item results explicitly identifying the 2027 Bluey Cricket uncirculated coin or coin card. Prices are the displayed item prices, excluding postage.",
+        "excluded": [
+          "Silver proof results",
+          "Multi-coin lots, sets, pairs and quantity listings",
+          "Pre-order and presale listings",
+          "Accepted Best Offer rows where the actual paid price was unclear",
+          "Broad results without enough title detail to identify the uncirculated issue"
+        ],
+        "limitations": [
+          "The exact search returned zero matches; these records came from the broader results section.",
+          "The pasted text did not include individual listing URLs or item IDs, so none are represented as verified listing links.",
+          "Some retained titles do not state whether the presentation card was included."
+        ]
+      },
+      "products": [
+        {
+          "title": "2027 $1 Bluey Cricket Coloured Uncirculated Coin",
+          "sale_price": 29,
+          "currency": "AU",
+          "date_sold": "4 Oct 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 2.99,
+          "seller": "coinsaustralia_official",
+          "source_type": "user_pasted_search"
+        },
+        {
+          "title": "2027 Australia Bluey Cricket $1 Colour Aluminium-Bronze Uncirculated Coin",
+          "sale_price": 25,
+          "currency": "AU",
+          "date_sold": "29 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "thompsonscoins",
+          "source_type": "user_pasted_search"
+        },
+        {
+          "title": "Australia 2027 $1 Bluey Cricket Coloured Uncirculated Coin, FREE POSTAGE",
+          "sale_price": 27.99,
+          "currency": "AU",
+          "date_sold": "5 Oct 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "iswrightsydney",
+          "source_type": "user_pasted_search"
+        },
+        {
+          "title": "Australia 2027 Bluey Cricket. Coloured Uncirculated Coin .",
+          "sale_price": 24.99,
+          "currency": "AU",
+          "date_sold": "2 Oct 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 7.49,
+          "seller": "iswrightsydney",
+          "source_type": "user_pasted_search"
+        },
+        {
+          "title": "2027 AUSTRALIA COLOURED $1 BLUEY CRICKET DOLLAR UNCIRCULATED COIN -TRACKING POST",
+          "sale_price": 24.99,
+          "currency": "AU",
+          "date_sold": "6 Oct 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 6.99,
+          "seller": "strathrm",
+          "source_type": "user_pasted_search"
+        },
+        {
+          "title": "2027 Australia Bluey Cricket $1 Colour Aluminium-Bronze Uncirculated Coin",
+          "sale_price": 23.95,
+          "currency": "AU",
+          "date_sold": "29 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "sa-online-budget",
+          "source_type": "user_pasted_search"
+        },
+        {
+          "title": "2027 Royal Australian Mint $1 Coloured Uncirculated Coin - Bluey Cricket",
+          "sale_price": 25,
+          "currency": "AU",
+          "date_sold": "5 Oct 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 7.5,
+          "seller": "collecthobbyplay",
+          "source_type": "user_pasted_search"
+        },
+        {
+          "title": "Australia 2027 $1 Bluey Cricket Coloured Uncirculated Coin",
+          "sale_price": 24.95,
+          "currency": "AU",
+          "date_sold": "4 Oct 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 7.5,
+          "seller": "max_stern",
+          "source_type": "user_pasted_search"
+        },
+        {
+          "title": "2027 AUSTRALIA COLOURED $1 BLUEY CRICKET DOLLAR UNCIRCULATED COIN - IN STOCK NOW",
+          "sale_price": 30,
+          "currency": "AU",
+          "date_sold": "24 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "reddragonltd",
+          "source_type": "user_pasted_search"
+        },
+        {
+          "title": "2027 $1 Bluey Cricket Card Coin AUSTRALIA COLOURED Coin",
+          "sale_price": 29.95,
+          "currency": "AU",
+          "date_sold": "23 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 8.95,
+          "seller": "pjswagman",
+          "source_type": "user_pasted_search"
+        },
+        {
+          "title": "2027 $1 BLUEY CRICKET COLOURED UNC carded Coin",
+          "sale_price": 30,
+          "currency": "AU",
+          "date_sold": "22 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 9,
+          "seller": "wholehearted2021",
+          "source_type": "user_pasted_search"
+        },
+        {
+          "title": "AUSTRALIA 2027 COLOURED $1 BLUEY CRICKET DOLLAR UNCIRCULATED COIN -TRACKING POST",
+          "sale_price": 32.5,
+          "currency": "AU",
+          "date_sold": "1 Oct 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "strathrm",
+          "source_type": "user_pasted_search"
+        },
+        {
+          "title": "2027 AUSTRALIA COLOURED $1 BLUEY CRICKET DOLLAR UNCIRCULATED COIN - IN STOCK NOW",
+          "sale_price": 30,
+          "currency": "AU",
+          "date_sold": "28 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "reddragonltd",
+          "source_type": "user_pasted_search"
+        }
+      ]
+    }
+  }
+}

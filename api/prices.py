@@ -300,6 +300,22 @@ def _load_base_cache():
     return {}
 
 
+def _load_manual_ebay_sales():
+    for candidate in (
+        'manual_ebay_sales.json',
+        '/var/task/manual_ebay_sales.json',
+        os.path.join(os.path.dirname(__file__), '..', 'manual_ebay_sales.json'),
+    ):
+        try:
+            with open(candidate, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            coins = data.get('coins') if isinstance(data, dict) else None
+            return coins if isinstance(coins, dict) else {}
+        except Exception:
+            continue
+    return {}
+
+
 def _load_manual():
     # Vercel deploys from the project root, but the working directory at
     # function runtime is the project root too — try both paths.
@@ -628,14 +644,30 @@ def _apply_fetched(result, fetched, coin):
         result['coinxchange'] = coinxchange
 
 
-def _cached_snapshot(coins, base_cache, manual):
+def _cached_snapshot(coins, base_cache, manual, manual_ebay_sales=None):
     snapshot = {}
+    manual_ebay_sales = manual_ebay_sales or {}
     for coin in coins:
         cid = coin['id']
         cached = base_cache.get(cid, {})
         if not isinstance(cached, dict):
             cached = {}
-        ebay = _quality_filter_ebay(cached.get('ebay'), coin)
+        cached_ebay = cached.get('ebay') or {}
+        if not isinstance(cached_ebay, dict):
+            cached_ebay = {}
+        imported_ebay = manual_ebay_sales.get(cid) or {}
+        if isinstance(imported_ebay, dict) and isinstance(imported_ebay.get('products'), list):
+            ebay = {**imported_ebay, **cached_ebay}
+            ebay['products'] = (
+                list(cached_ebay.get('products') or [])
+                + list(imported_ebay.get('products') or [])
+            )
+            ebay['manual_import'] = imported_ebay.get('import_metadata')
+            if not ebay.get('response_url'):
+                ebay['response_url'] = imported_ebay.get('response_url')
+        else:
+            ebay = cached_ebay
+        ebay = _quality_filter_ebay(ebay, coin)
         coinxchange = _quality_filter_coinxchange(cached.get('coinxchange'), coin)
         manual_entry = manual.get(cid)
         if not isinstance(manual_entry, dict):
@@ -720,8 +752,9 @@ def _build_payload(coins=None, fetch_coin=None, deadline=None):
 
     base_cache = _load_base_cache()
     manual = _load_manual()
+    manual_ebay_sales = _load_manual_ebay_sales()
     if fetch_coin is None:
-        snapshot = _cached_snapshot(coins, base_cache, manual)
+        snapshot = _cached_snapshot(coins, base_cache, manual, manual_ebay_sales)
         refresh_ids = _rapidapi_refresh_ids(coins)
         complete = True
 
@@ -744,6 +777,14 @@ def _build_payload(coins=None, fetch_coin=None, deadline=None):
                     if _usable_ebay(ebay_data):
                         ebay_data = dict(ebay_data)
                         ebay_data['fetchedAt'] = time.time()
+                        previous = snapshot[coin['id']].get('ebay') or {}
+                        ebay_data['historical_products'] = (
+                            list(ebay_data.get('historical_products') or [])
+                            + list(previous.get('historical_products') or [])
+                            + list(previous.get('products') or [])
+                        )
+                        if previous.get('manual_import'):
+                            ebay_data['manual_import'] = previous['manual_import']
                         snapshot[coin['id']]['ebay'] = _tag_ebay_urls(
                             _quality_filter_ebay(ebay_data, coin), coin['id'])
                 except Exception as e:
@@ -764,7 +805,7 @@ def _build_payload(coins=None, fetch_coin=None, deadline=None):
     # Don't block on stragglers; their sockets time out on their own.
     pool.shutdown(wait=False, cancel_futures=True)
 
-    snapshot = _cached_snapshot(coins, base_cache, manual)
+    snapshot = _cached_snapshot(coins, base_cache, manual, manual_ebay_sales)
     for future, coin in futures.items():
         cid = coin['id']
         result = snapshot[cid]

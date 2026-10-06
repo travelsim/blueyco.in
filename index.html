@@ -2280,9 +2280,9 @@ function formatAUD(val) {
   return '$' + Number(val).toFixed(2);
 }
 
-function calcPremium(avg, mintPrice) {
-  if (!mintPrice || !avg || isNaN(avg)) return null;
-  return (((avg - mintPrice) / mintPrice) * 100).toFixed(1);
+function calcPremium(referencePrice, mintPrice) {
+  if (!mintPrice || !referencePrice || isNaN(referencePrice)) return null;
+  return (((referencePrice - mintPrice) / mintPrice) * 100).toFixed(1);
 }
 
 function parseMintage(raw) {
@@ -2470,13 +2470,13 @@ function buildCard(coin) {
   const ebay      = coinEntry.ebay      || null;
   const hasEbay = _hasFreshEbaySales(ebay);
   const currentSales = hasEbay ? _currentEbayProducts(ebay) : [];
-  const feedAverage = hasEbay ? parseFloat(ebay.average_price) : NaN;
-  const avg = hasEbay
-    ? (Number.isFinite(feedAverage) && feedAverage > 0 ? feedAverage : _averageOfProducts(ebay))
+  const feedMedian = hasEbay ? parseFloat(ebay.median_price) : NaN;
+  const median = hasEbay
+    ? (Number.isFinite(feedMedian) && feedMedian > 0 ? feedMedian : _medianOfProducts(ebay))
     : null;
-  const hasAverage = Number.isFinite(avg) && avg > 0;
-  const refPrice = hasAverage ? avg : null;
-  const premium = hasAverage ? calcPremium(avg, coin.mintPrice) : null;
+  const hasMedian = Number.isFinite(median) && median > 0;
+  const refPrice = hasMedian ? median : null;
+  const premium = hasMedian ? calcPremium(median, coin.mintPrice) : null;
   const premiumValue = premium == null ? null : Number(premium);
 
   const card = el('div', 'coin-card');
@@ -2518,14 +2518,14 @@ function buildCard(coin) {
   const rarity = mintageRarity(coin);
   const metrics = el('div', 'coin-metrics');
   const priceCard = el('section', 'metric-card metric-price');
-  priceCard.setAttribute('aria-label', hasAverage && coin.mintPrice != null
-    ? 'Average eBay sold price and gain from issue price'
-    : hasAverage ? 'Average eBay sold price' : 'Issue price');
-  const priceHeading = hasAverage ? 'eBay AU sold average' : (coin.mintPrice != null ? 'Original issue price' : 'Price');
-  const priceValue = hasAverage ? avg : coin.mintPrice;
+  priceCard.setAttribute('aria-label', hasMedian && coin.mintPrice != null
+    ? 'Median eBay sold price and gain from issue price'
+    : hasMedian ? 'Median eBay sold price' : 'Issue price');
+  const priceHeading = hasMedian ? 'eBay AU sold median' : (coin.mintPrice != null ? 'Original issue price' : 'Price');
+  const priceValue = hasMedian ? median : coin.mintPrice;
   priceCard.append(el('div', 'metric-kicker', priceHeading));
   priceCard.append(el('div', 'metric-amount', priceValue == null ? '—' : formatAUD(priceValue)));
-  if (hasAverage && coin.mintPrice != null) {
+  if (hasMedian && coin.mintPrice != null) {
     const issueRow = el('div', 'metric-issue-row');
     issueRow.append(el('span', 'metric-issue-label', `Issue ${formatAUD(coin.mintPrice)}`));
     if (premiumValue != null) {
@@ -2535,10 +2535,14 @@ function buildCard(coin) {
     }
     priceCard.append(issueRow);
   }
-  if (hasAverage) {
+  if (hasMedian) {
     const saleCount = Number(ebay.results || ebay.matched_results || currentSales.length);
     const checked = new Date(Number(ebay.fetchedAt) * 1000).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
-    priceCard.append(el('div', 'metric-footnote', `${saleCount} matched sold ${saleCount === 1 ? 'result' : 'results'} · checked ${checked}`));
+    const pastedSalesCount = currentSales.filter(product => product.source_type === 'user_pasted_search').length;
+    const saleSummary = pastedSalesCount
+      ? `${pastedSalesCount} manually filtered sales · broader eBay matches · ${checked}`
+      : `${saleCount} matched sold ${saleCount === 1 ? 'result' : 'results'} · checked ${checked}`;
+    priceCard.append(el('div', 'metric-footnote', saleSummary));
   }
 
   const supplyCard = el('section', 'metric-card metric-supply');
@@ -2597,7 +2601,7 @@ function buildCard(coin) {
     body.append(sourceLink);
   }
 
-  // Keep a direct sold-search link available alongside the matched averages.
+  // Keep a direct sold-search link available alongside the matched-sale median.
   const soldSearchUrl = safeUrl(ebay && ebay.response_url) ||
     safeUrl(coinEntry.manual && coinEntry.manual.ebay && coinEntry.manual.ebay.url);
   if (soldSearchUrl) {
@@ -2630,7 +2634,7 @@ function buildCard(coin) {
   body.append(sellPanel);
 
   // Recent eBay sales toggle
-  if (hasAverage && currentSales.length) {
+  if (hasMedian && currentSales.length) {
     const toggleBtn = el('button', 'toggle-sales', 'See recent sold listings ▾');
     const salesList = el('div', 'sales-list');
     salesList.id = `sales-${coin.id}`;
@@ -2874,7 +2878,7 @@ function handleSell(coinId, referenceValue) {
   while (panel.firstChild) panel.removeChild(panel.firstChild);
   panel.append(el('div', 'sp-title', 'Sell This Coin'));
   if (referenceValue != null) {
-    panel.append(el('div', 'sp-value', `Reference value: ${formatAUD(referenceValue)} (eBay AU average sold)`));
+    panel.append(el('div', 'sp-value', `Reference value: ${formatAUD(referenceValue)} (eBay AU median sold)`));
   }
 
   const ebayLink = el('a', 'sp-link ebay', 'List on eBay AU →');
@@ -2884,7 +2888,7 @@ function handleSell(coinId, referenceValue) {
   panel.append(ebayLink);
 
   panel.append(el('div', 'sp-note',
-    'You create and manage the listing yourself on eBay — this average is a reference only, not a quote or offer.'));
+    'You create and manage the listing yourself on eBay — this median is a reference only, not a quote or offer.'));
 }
 
 // ────────────────────────────────────────────────
@@ -2918,9 +2922,15 @@ function _currentEbayProducts(ebay) {
   });
 }
 
-function _averageOfProducts(ebay) {
-  const prices = _currentEbayProducts(ebay).map(product => parseFloat(product.sale_price));
-  return prices.length ? Math.round((prices.reduce((sum, price) => sum + price, 0) / prices.length) * 100) / 100 : null;
+function _medianOfProducts(ebay) {
+  const prices = _currentEbayProducts(ebay)
+    .map(product => parseFloat(product.sale_price))
+    .filter(price => Number.isFinite(price) && price > 0)
+    .sort((a, b) => a - b);
+  if (!prices.length) return null;
+  const middle = Math.floor(prices.length / 2);
+  const median = prices.length % 2 ? prices[middle] : (prices[middle - 1] + prices[middle]) / 2;
+  return Math.round(median * 100) / 100;
 }
 
 function _hasFreshEbaySales(ebay) {
@@ -2932,12 +2942,12 @@ function _hasFreshEbaySales(ebay) {
   return _currentEbayProducts(ebay).length > 0;
 }
 
-// Price cards, collection sorting, and portfolio values all use the matched-sale average.
+// Price cards, collection sorting, and portfolio values all use the matched-sale median.
 function _referencePrice(coin) {
   const ebay = _coinEbay(coin);
   if (!_hasFreshEbaySales(ebay)) return null;
-  const avg = parseFloat(ebay.average_price);
-  return avg > 0 ? avg : _averageOfProducts(ebay);
+  const median = parseFloat(ebay.median_price);
+  return median > 0 ? median : _medianOfProducts(ebay);
 }
 
 function _sortCoins(list) {

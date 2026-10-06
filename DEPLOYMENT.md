@@ -16,6 +16,7 @@ _Verified 5 October 2026._
 ## Pricing evidence and access
 
 - eBay completed-sale results come from the configured RapidAPI integration. Only records with matching product identity, Australian currency and expected quantity contribute to a current summary. Records older than 90 days remain available under Historical eBay sales, clearly excluded from current price statistics. A later live refresh carries previously saved matched records forward instead of discarding them.
+- `manual_ebay_sales.json` is the versioned JSON store for individually recorded eBay sales supplied from a pasted search. These rows are labelled as user-pasted data and are not API-verified. Keep the source query, capture date, item price, delivery price and filtering limits with each import; do not invent listing IDs or item URLs when they are absent.
 - Each catalogue item has an eBay completed-sale search link, tagged through the eBay Partner Network when `EPN_CAMPAIGN_ID` is configured; historical eBay item links are tagged too.
 - Card mintage rarity is computed from catalogued mintage figures: 1 is the largest published mintage, 10 the smallest; equal mintages share a score and unpublished mintages are unrated. This is a relative supply indicator, not a market-value estimate.
 - Retailer prices in Where to Buy are asking prices. Manual prices require a `checkedAt` timestamp within seven days; otherwise only the source link is returned.
