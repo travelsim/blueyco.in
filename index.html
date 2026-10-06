@@ -931,6 +931,18 @@
       flex-wrap: wrap;
     }
     .dashboard-footer-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .swap-tools { display: grid; gap: 12px; padding: 22px 28px; border-top: 1px solid var(--border); background: #fff; }
+    .swap-tools h3 { margin: 0 0 4px; font-size: 1.08rem; color: var(--navy); }
+    .swap-tools p { margin: 0; color: var(--slate); font-size: .9rem; }
+    .swap-tools-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    #swap-share-input { width: 100%; resize: vertical; min-height: 76px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; font: 13px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; color: var(--navy); }
+    .swap-privacy { font-size: .78rem !important; }
+    .swap-results { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; padding: 14px; background: #f7f6f1; border-radius: 12px; color: var(--navy); }
+    .swap-results:empty { display: none; }
+    .swap-results strong { display: block; margin-bottom: 6px; }
+    .swap-results ul { margin: 0; padding-left: 20px; }
+    .swap-results li { margin: 3px 0; }
+    .swap-results > .swap-privacy { grid-column: 1 / -1; }
     .subtle-button {
       background: #fff;
       color: var(--navy);
@@ -1032,6 +1044,9 @@
       .dashboard-footer { padding: 14px 18px; }
       .dashboard-footer-actions { width: 100%; }
       .dashboard-footer-actions .subtle-button { flex: 1; }
+      .swap-tools { padding: 18px; }
+      .swap-tools-actions > button { flex: 1; }
+      .swap-results { grid-template-columns: 1fr; }
       .shop-toolbar-meta { width: 100%; margin-left: 0; justify-content: space-between; }
       #shop-grid { grid-template-columns: 1fr; }
       .card-actions { grid-template-columns: 1fr; }
@@ -1184,6 +1199,21 @@
         <button onclick="frameOwnedCoins()" class="subtle-button subtle-button-accent">Frame coins I own</button>
         <button id="reset-collection" onclick="resetCollection()" class="subtle-button">Reset</button>
       </div>
+    </div>
+
+    <div class="swap-tools" aria-labelledby="swap-tools-title">
+      <div>
+        <h3 id="swap-tools-title">Share your collection and find swaps</h3>
+        <p>Your collection stays in this browser. Create a share link, then paste another collector’s link to find items each of you wants.</p>
+      </div>
+      <div class="swap-tools-actions">
+        <button class="subtle-button subtle-button-accent" type="button" onclick="createCollectionShare()">Create my share link</button>
+        <button class="subtle-button" type="button" onclick="compareCollectionShare()">Compare collections</button>
+      </div>
+      <label class="sr-only" for="swap-share-input">Your share link or another collector’s share link</label>
+      <textarea id="swap-share-input" rows="3" placeholder="Create your link, or paste another collector’s share link here"></textarea>
+      <p class="swap-privacy">Share links show only the coin IDs you mark as owned or wanted. Anyone with the link can view them. Blueycoin does not upload or store this information.</p>
+      <div id="swap-results" class="swap-results" role="status" aria-live="polite"></div>
     </div>
   </div>
 </section>
@@ -1789,13 +1819,112 @@ window.showDesignModal = showDesignModal;
 
 let collection = JSON.parse(localStorage.getItem('blueycoin_collection') || '{}');
 let wishlist   = JSON.parse(localStorage.getItem('blueycoin_wishlist') || '{}');
+let swapProfile = null;
 
 function saveCollection() {
   localStorage.setItem('blueycoin_collection', JSON.stringify(collection));
+  renderSwapMatches();
 }
 
 function saveWishlist() {
   localStorage.setItem('blueycoin_wishlist', JSON.stringify(wishlist));
+  renderSwapMatches();
+}
+
+function createCollectionShare() {
+  const profile = {
+    v: 1,
+    owned: Object.keys(collection).filter(id => collection[id]),
+    wanted: Object.keys(wishlist).filter(id => wishlist[id]),
+  };
+  const token = btoa(JSON.stringify(profile)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+  const shareUrl = `${location.origin}${location.pathname}#swap=${token}`;
+  const input = document.getElementById('swap-share-input');
+  if (input) {
+    input.value = shareUrl;
+    input.focus();
+    input.select();
+  }
+  renderSwapMatches();
+  toast('Share link ready. Copy it to send your collection to another collector.', 'success');
+}
+
+function decodeCollectionShare(value) {
+  const trimmed = String(value || '').trim();
+  let token = trimmed;
+  if (/^https?:\/\//i.test(trimmed)) {
+    const parsed = new URL(trimmed);
+    token = new URLSearchParams(parsed.hash.slice(1)).get('swap') || '';
+  } else if (trimmed.startsWith('#')) {
+    token = new URLSearchParams(trimmed.slice(1)).get('swap') || '';
+  }
+  token = token.replace(/-/g, '+').replace(/_/g, '/');
+  if (!token || !/^[A-Za-z0-9+/]*={0,2}$/.test(token)) throw new Error('That share link is not valid.');
+  token += '='.repeat((4 - token.length % 4) % 4);
+  const profile = JSON.parse(atob(token));
+  if (profile.v !== 1 || !Array.isArray(profile.owned) || !Array.isArray(profile.wanted)) {
+    throw new Error('That share link uses an unsupported format.');
+  }
+  const known = new Set((window.COINS || []).map(coin => coin.id));
+  return {
+    owned: new Set(profile.owned.filter(id => typeof id === 'string' && known.has(id))),
+    wanted: new Set(profile.wanted.filter(id => typeof id === 'string' && known.has(id))),
+  };
+}
+
+function compareCollectionShare() {
+  const input = document.getElementById('swap-share-input');
+  try {
+    swapProfile = decodeCollectionShare(input ? input.value : '');
+    renderSwapMatches();
+    document.getElementById('swap-results')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } catch (error) {
+    swapProfile = null;
+    renderSwapMatches(error.message || 'Could not read that share link.');
+  }
+}
+
+function renderSwapMatches(errorMessage = '') {
+  const result = document.getElementById('swap-results');
+  if (!result) return;
+  result.replaceChildren();
+  if (errorMessage) {
+    result.textContent = errorMessage;
+    return;
+  }
+  if (!swapProfile) {
+    result.textContent = 'Swap matching is ready when you compare another collector’s share link.';
+    return;
+  }
+  const coins = new Map((window.COINS || []).map(coin => [coin.id, coin]));
+  const iCanOffer = [...swapProfile.wanted].filter(id => collection[id] && !swapProfile.owned.has(id));
+  const theyCanOffer = [...swapProfile.owned].filter(id => wishlist[id] && !collection[id]);
+  const addGroup = (title, ids) => {
+    const group = document.createElement('div');
+    const heading = document.createElement('strong');
+    heading.textContent = title;
+    group.appendChild(heading);
+    if (!ids.length) {
+      const empty = document.createElement('p');
+      empty.textContent = 'No matches yet.';
+      group.appendChild(empty);
+    } else {
+      const list = document.createElement('ul');
+      ids.forEach(id => {
+        const item = document.createElement('li');
+        item.textContent = coins.get(id)?.name || id;
+        list.appendChild(item);
+      });
+      group.appendChild(list);
+    }
+    result.appendChild(group);
+  };
+  addGroup(`You own · they want (${iCanOffer.length})`, iCanOffer);
+  addGroup(`They own · you want (${theyCanOffer.length})`, theyCanOffer);
+  const note = document.createElement('p');
+  note.className = 'swap-privacy';
+  note.textContent = 'These are collector-to-collector matches, not verified offers. Contact each other directly to agree condition, postage and terms.';
+  result.appendChild(note);
 }
 
 function updateDashboardStats() {
@@ -1891,6 +2020,7 @@ function renderDashboard() {
   });
 
   updateDashboardStats();
+  renderSwapMatches();
 }
 
 function toggleDashboardCoins() {
@@ -1966,6 +2096,18 @@ window.initDashboard = initDashboard;
 document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('dashboard')) {
     initDashboard();
+    const share = new URLSearchParams(location.hash.slice(1)).get('swap');
+    if (share) {
+      const input = document.getElementById('swap-share-input');
+      if (input) input.value = `${location.origin}${location.pathname}#swap=${share}`;
+      try {
+        swapProfile = decodeCollectionShare(share);
+        renderSwapMatches();
+        document.getElementById('swap-results')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } catch (error) {
+        renderSwapMatches(error.message || 'Could not read that share link.');
+      }
+    }
   }
   // Mobile menu: toggles the dropdown panel without ever overlapping the logo.
   var toggle = document.getElementById('nav-toggle');
