@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#3d3a63">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:;">
 <title>Blueycoin — Australia's Most Complete Bluey Coin Resource</title>
-<meta name="description" content="Track 58 Bluey collectibles, including coins and stamps, with official mintage data, market evidence, product images and a collection dashboard.">
+<meta name="description" content="Track 65 Bluey collectibles, including coins and stamps, with official mintage data, market evidence, product images and a collection dashboard.">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" id="canonical-url" href="https://blueyco.in/">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -220,11 +220,13 @@
     background: var(--card);
     border-radius: 16px;
     box-shadow: var(--shadow);
-    border: 1.5px solid var(--border);
+    border: 2px solid #263a5b;
     overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s;
   }
-  .coin-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(30,144,212,0.15); }
+  .coin-card { box-shadow: 0 6px 0 rgba(38,58,91,.16), 0 12px 26px rgba(38,58,91,.10); }
+  .coin-card { border-top-color:var(--coin-accent,#ffbf3f); }
+  .coin-card:hover { transform: translateY(-3px) rotate(-.15deg); box-shadow: 0 9px 0 rgba(38,58,91,.13), 0 18px 34px rgba(30,144,212,.18); }
   .coin-collector-notes { margin: 0 0 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; background: #f8fafc; color: var(--text); font-size: .8rem; }
   .coin-collector-notes > strong { display: block; margin-bottom: 5px; color: var(--navy); }
   .coin-variant-note { margin: 5px 0 0; }
@@ -242,13 +244,14 @@
 
   .card-header {
     padding: 16px 18px 12px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 2px dashed #d8e2ef;
     display: flex;
     align-items: flex-start;
     gap: 12px;
+    background: linear-gradient(115deg, #fff8dc, #eef8ff 75%);
   }
-  .series-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
-  .card-title { font-family: 'Fredoka', sans-serif; font-weight: 800; font-size: 0.95rem; line-height: 1.3; flex: 1; }
+  .series-dot { width: 13px; height: 13px; border: 2px solid #263a5b; border-radius: 50%; margin-top: 4px; flex-shrink: 0; box-shadow: 0 2px 0 rgba(38,58,91,.15); }
+  .card-title { font-family: 'Fredoka', sans-serif; font-weight: 800; font-size: 1.04rem; line-height: 1.3; flex: 1; color: #1e3152; }
   .card-meta  { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
   .mint-price {
     font-size: 0.78rem;
@@ -262,7 +265,32 @@
   .card-meta2 { font-size: 0.72rem; color: var(--muted); margin-top: 4px; display: flex; gap: 8px; flex-wrap: wrap; }
   .catalog-facts { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
   .catalog-fact { font-size:.7rem; line-height:1.4; padding:3px 8px; border-radius:999px; background:#f1f5f9; color:#475569; white-space:nowrap; }
-  .catalog-fact.rarity { background:#fff3cd; color:#856404; font-weight:700; }
+  .coin-metrics { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:9px; margin:0 0 14px; }
+  .metric-card { min-width:0; border:2px solid #263a5b; border-radius:16px; padding:11px; box-shadow:0 4px 0 rgba(38,58,91,.12); }
+  .metric-price { background:linear-gradient(145deg,#fff1a8,#ffe17c); position:relative; overflow:hidden; }
+  @supports (background: color-mix(in srgb, red 20%, white)) {
+    .metric-price { background:linear-gradient(145deg,color-mix(in srgb,var(--coin-accent,#ffbf3f) 22%,white),color-mix(in srgb,var(--coin-accent,#ffbf3f) 9%,white)); }
+  }
+  .metric-price::after { content:'✦'; position:absolute; right:10px; top:3px; font-size:1.45rem; color:rgba(255,255,255,.9); transform:rotate(12deg); }
+  .metric-supply { background:linear-gradient(145deg,#e3f5ff,#f1ecff); }
+  .metric-kicker { color:#334765; font-size:.68rem; line-height:1.2; font-weight:900; letter-spacing:.045em; text-transform:uppercase; }
+  .metric-amount { margin-top:3px; color:#1e3152; font-family:'Fredoka',sans-serif; font-size:clamp(1.25rem,5vw,1.75rem); font-weight:900; line-height:1.08; letter-spacing:-.02em; overflow-wrap:anywhere; }
+  .metric-price .metric-amount { font-size:clamp(1.4rem,5.7vw,2rem); }
+  .metric-footnote { margin-top:6px; color:#52627a; font-size:.68rem; line-height:1.35; }
+  .metric-issue-row { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:5px; margin-top:9px; padding-top:7px; border-top:1px dashed rgba(38,58,91,.32); font-size:.68rem; }
+  .metric-issue-label { color:#4b5b72; font-weight:700; }
+  .metric-issue-value { color:#1e3152; font-family:'Fredoka',sans-serif; font-size:.92rem; }
+  .gain-pill { display:inline-flex; align-items:center; gap:3px; border:1.5px solid #19754a; border-radius:999px; padding:3px 7px; background:#dcfce7; color:#14532d; font-size:.67rem; font-weight:900; white-space:nowrap; }
+  .gain-pill.down { border-color:#a63b36; background:#ffe3df; color:#8c2925; }
+  .metric-supply .metric-amount { font-size:clamp(1.14rem,4.8vw,1.55rem); }
+  .supply-caption { margin-top:2px; color:#52627a; font-size:.68rem; line-height:1.3; font-weight:700; }
+  .supply-detail { margin-top:5px; color:#52627a; font-size:.66rem; line-height:1.3; }
+  .rarity-score-row { display:flex; align-items:center; justify-content:space-between; gap:5px; margin-top:9px; padding-top:7px; border-top:1px dashed rgba(38,58,91,.25); }
+  .rarity-score-label { color:#334765; font-size:.62rem; font-weight:900; letter-spacing:.045em; text-transform:uppercase; }
+  .rarity-score { border:1.5px solid #b74a29; border-radius:999px; padding:2px 7px; background:#ff9f43; color:#4b210b; font-family:'Fredoka',sans-serif; font-size:.78rem; font-weight:900; white-space:nowrap; }
+  .rarity-track { display:grid; grid-template-columns:repeat(10,1fr); gap:2px; margin-top:6px; }
+  .rarity-track span { height:5px; border-radius:999px; background:rgba(38,58,91,.15); }
+  .rarity-track span.active { background:#f28c28; box-shadow:0 1px 0 rgba(113,48,13,.22); }
   .historical-sales { border-left:2px solid #cbd5e1; margin:8px 0 10px 8px; padding-left:10px; opacity:.92; }
   .historical-sales .sales-list-title { color:#64748b; }
 
@@ -289,38 +317,6 @@
   .stat-value { font-family: 'Fredoka', sans-serif; font-weight: 900; font-size: 1.1rem; color: var(--text); margin-top: 1px; }
   .stat-value.up   { color: #0e7a4e; }
   .stat-value.down { color: var(--red); }
-
-  /* ── COINXCHANGE ROW ── */
-  .cx-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(46,196,182,0.07);
-    border: 1px solid rgba(46,196,182,0.25);
-    border-radius: 8px;
-    padding: 6px 10px;
-    margin-bottom: 10px;
-    text-decoration: none;
-    color: inherit;
-    transition: background 0.15s;
-  }
-  .cx-row:hover { background: rgba(46,196,182,0.14); }
-  .cx-badge {
-    font-size: 0.66rem;
-    font-weight: 900;
-    color: var(--teal);
-    background: rgba(46,196,182,0.15);
-    border-radius: 4px;
-    padding: 2px 5px;
-    letter-spacing: 0.3px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .cx-stats { display: flex; gap: 10px; align-items: baseline; flex: 1; flex-wrap: wrap; }
-  .cx-stat  { display: flex; gap: 3px; align-items: baseline; font-size: 0.78rem; }
-  .cx-val   { font-family: 'Fredoka', sans-serif; font-weight: 800; color: var(--text); }
-  .cx-lbl   { color: var(--muted); font-size: 0.70rem; }
-  .cx-arrow { color: var(--teal); font-size: 0.72rem; flex-shrink: 0; }
 
   /* ── MINI CHART ── */
   .chart-wrap { height: 80px; position: relative; margin-bottom: 12px; }
@@ -380,8 +376,6 @@
   .sp-link { display: block; text-align: center; padding: 8px 10px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; text-decoration: none; margin-bottom: 8px; }
   .sp-link.ebay { background: var(--blue); color: #fff; }
   .sp-link.ebay:hover { background: #2e2b4d; }
-  .sp-link.cx { background: var(--teal); color: #fff; }
-  .sp-link.cx:hover { background: #429a94; }
   .sp-note { font-size: 0.70rem; color: var(--muted); font-style: italic; margin-top: 4px; }
 
   /* ── LAST UPDATED ── */
@@ -995,26 +989,11 @@
     .coin-card:hover { transform: none; box-shadow: 0 8px 22px -14px rgba(61,58,99,.5); }
     .card-header { padding: 14px 16px 10px; }
     .card-body { padding: 12px 16px 16px; }
-    .coin-card .stats-row { grid-template-columns: repeat(2, 1fr); margin-bottom: 10px; }
-    .coin-card .stat-box:nth-child(2) { display: none; }
-    .coin-card:not(.details-open) .cx-row,
-    .coin-card:not(.details-open) .chart-wrap,
-    .coin-card:not(.details-open) .last-updated,
-    .coin-card:not(.details-open) .toggle-sales,
-    .coin-card:not(.details-open) .sales-list { display: none; }
-    .card-details-toggle {
-      width: 100%;
-      background: none;
-      border: none;
-      color: var(--slate);
-      cursor: pointer;
-      font: inherit;
-      font-size: 0.78rem;
-      font-weight: 700;
-      padding: 2px 0 10px;
-      text-align: left;
-    }
-    .card-details-toggle:hover { color: var(--navy); }
+    .coin-metrics { grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); gap:7px; }
+    .metric-card { padding:9px; border-radius:14px; }
+    .metric-price .metric-amount { font-size:clamp(1.32rem,6vw,1.75rem); }
+    .metric-supply .metric-amount { font-size:clamp(1.06rem,4.8vw,1.38rem); }
+    .gain-pill { font-size:.62rem; padding:2px 6px; }
     .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .card-actions .sell-btn {
       margin-top: 0;
@@ -1156,7 +1135,7 @@
       Start your collection
     </a>
     <div class="hero-meta">
-      58 tracked products · official mintages and product images
+      65 tracked products · official mintages and product images
     </div>
   </div>
 </section>
@@ -1193,7 +1172,7 @@
 
     <div class="dashboard-footer">
       <button id="dashboard-toggle" class="subtle-button" onclick="toggleDashboardCoins()" aria-expanded="false">
-        Show all 58 tracked products
+        Show all 65 tracked products
       </button>
       <div class="dashboard-footer-actions">
         <button onclick="frameOwnedCoins()" class="subtle-button subtle-button-accent">Frame coins I own</button>
@@ -2190,70 +2169,83 @@ document.addEventListener('DOMContentLoaded', () => {
 // ────────────────────────────────────────────────
 window.COINS = [
   // Series 1 — 2024 Dollarbucks ($1)
-  { id: 's1_bluey', series: 'series1_september', name: 'Bluey $1 Dollarbuck (till coin)', keywords: 'bluey 2024 dollarbucks till', denomination: 1, year: 2024, mintage: 1250000, mintPrice: null, color: false, marketLow: 5, marketHigh: 20, sourceUrl: 'https://www.ramint.gov.au/collect/national-coin-collection/corporate-partnerships/australia-post-programs/bluey-dollarbucks', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Dollarbuck+Bluey' },
-  { id: 's1_bingo', series: 'series1_september', name: 'Bingo $1 Dollarbuck (till coin)', keywords: 'bingo 2024 dollarbucks till', denomination: 1, year: 2024, mintage: 1250000, mintPrice: null, color: false, marketLow: 5, marketHigh: 20, sourceUrl: 'https://www.ramint.gov.au/collect/national-coin-collection/corporate-partnerships/australia-post-programs/bluey-dollarbucks', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Dollarbuck+Bingo' },
-  { id: 's1_proof_silver', series: 'series1_september', name: 'Bluey Dollarbucks $1 Fine Silver Coloured Proof', keywords: '2024 bluey dollarbucks silver proof', denomination: 1, year: 2024, mintage: 2650, mintPrice: 99, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://ramint.runfair.com/en-GB/au/2024-1-dollar-fine-silver-coloured-proof-coin-bluey-dollarbucks', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Dollarbucks+silver+proof' },
-  { id: 's1_proof_coloured', series: 'series1_september', name: 'Bluey Dollarbucks $1 Coloured Proof', keywords: '2024 bluey dollarbucks coloured proof', denomination: 1, year: 2024, mintage: 5000, mintPrice: 50, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://ramint.runfair.com/en-US/au/2024-1-dollar-coloured-proof-coin-bluey-dollarbucks', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Dollarbucks+coloured+proof' },
-  { id: 's1_10_coin_folder_set', series: 'series1_september', name: '10-Coin Tube and Folder Set', keywords: 'folder tube 2024 set', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 29, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-391/stamp-bulletin-391.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+10+coin+tube+folder+set' },
-  { id: 's1_coloured_insert_variant', series: 'series1_september', name: 'Bluey Special-Coloured $1 Tube-Set Variant', keywords: 'bluey 2024 coloured special variant tube set', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage; 1-in-10 set chance', mintPrice: null, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://ramint.runfair.com/en-US/au/2024-1-dollar-uncirculated-ten-coin-collection-folder-and-tube-bluey-dollarbucks', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+coloured+special+coin+tube+set' },
-  { id: 's1_auspost_stamp_pack', series: 'series1_september', name: 'Bluey 2024 MyStamps Pack', keywords: '2024 Bluey MyStamps house shaped stamp pack Australia Post', denomination: null, year: 2024, mintage: null, mintageLabel: 'Stamp print quantity unpublished', mintPrice: 21, color: '#5279a8', marketLow: null, marketHigh: null, sourceUrl: 'https://www.bluey.tv/blog/the-bluey-dollarbuck-coin-collection-and-stamp-pack-have-arrived-at-australia-post/', sourceLabel: 'Australia Post stamp issue details ↗', cxUrl: 'https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+MyStamps+pack' },
-  { id: 's1_impressions_pnc_colour', series: 'series1_november', name: 'Bluey Limited-Edition Coloured Coin PNC', keywords: '2024 Bluey limited edition coloured coin PNC', denomination: 1, year: 2024, mintage: 1300, mintageLabel: '1,300 covers produced', mintPrice: 80, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/impressions/impressions-catalogue-2024.pdf', cxUrl: 'https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+limited+edition+coloured+coin+PNC' },
-  { id: 's1_impressions_pnc_2coin', series: 'series1_november', name: 'Bluey Limited-Edition 2-Coin PNC', keywords: '2024 Bluey limited edition 2 coin PNC', denomination: 1, year: 2024, mintage: 3000, mintageLabel: '3,000 covers produced', mintPrice: 100, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/impressions/impressions-catalogue-2024.pdf', cxUrl: 'https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+limited+edition+2+coin+PNC' },
-  { id: 's1_impressions_pnc_3coin', series: 'series1_november', name: 'Bluey Limited-Edition 3-Coin PNC', keywords: '2024 Bluey limited edition 3 coin PNC envelope privy', denomination: 1, year: 2024, mintage: 700, mintageLabel: '700 covers produced', mintPrice: 120, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/impressions/impressions-catalogue-2024.pdf', cxUrl: 'https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+limited+edition+3+coin+PNC' },
-  { id: 's1_impressions_pnc_silver', series: 'series1_november', name: 'Bluey Limited-Edition Silver Proof Prestige PNC', keywords: '2024 Bluey limited edition silver proof prestige PNC', denomination: 1, year: 2024, mintage: 150, mintageLabel: '150 covers produced', mintPrice: 190, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/impressions/impressions-catalogue-2024.pdf', cxUrl: 'https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+limited+edition+silver+proof+prestige+PNC' },
-  { id: 's1_coloured_bluey', series: 'series1_june', name: 'Bluey $1 Coloured Uncirculated Coin', keywords: '2024 bluey coloured uncirculated', denomination: 1, year: 2024, mintage: 30000, mintPrice: 20, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://ramint.runfair.com/en-US/au/bluey-dollarbucks-1-dollar-uncirculated-coin-2024', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+coloured+Dollarbucks+uncirculated' },
-  { id: 's1_coloured_heelers', series: 'series1_june', name: 'The Heelers $1 Coloured Uncirculated Coin', keywords: '2024 heelers coloured uncirculated', denomination: 1, year: 2024, mintage: 30000, mintPrice: 20, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://ramint.runfair.com/en-US/au/heelers-bluey-dollarbucks-1-dollar-uncirculated-coin-2024', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Heelers+coloured+Dollarbucks+uncirculated' },
-  { id: 's1_coloured_grannies', series: 'series1_june', name: 'The Grannies $1 Coloured Uncirculated Coin', keywords: '2024 grannies coloured uncirculated', denomination: 1, year: 2024, mintage: 30000, mintPrice: 20, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://ramint.runfair.com/en-US/au/grannies-bluey-dollarbucks-1-dollar-uncirculated-coin-2024', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Grannies+coloured+Dollarbucks+uncirculated' },
-  { id: 's1_three_coin_set', series: 'series1_june', name: 'Bluey Dollarbucks Three-Coin Set', keywords: '2024 bluey dollarbucks three coin set coloured', denomination: 1, year: 2024, mintage: 30000, mintPrice: 55, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://ramint.runfair.com/en-GB/au/bluey-dollarbucks-three-coin-set', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Dollarbucks+Three-Coin+Set' },
-  { id: 's1_card_bluey', series: 'series1_september', name: 'Bluey $1 Privy Mark Coin in Card', keywords: '2024 bluey privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Privy+Mark+Coin+in+Card' },
-  { id: 's1_card_heelers', series: 'series1_september', name: 'The Heelers $1 Privy Mark Coin in Card', keywords: '2024 heelers privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+The+Heelers+Privy+Mark+Coin+in+Card' },
-  { id: 's1_card_bingo', series: 'series1_september', name: 'Bingo $1 Privy Mark Coin in Card', keywords: '2024 bingo privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Bingo+Privy+Mark+Coin+in+Card' },
-  { id: 's1_card_muffinsocks', series: 'series1_september', name: 'Muffin & Socks $1 Privy Mark Coin in Card', keywords: '2024 muffin socks privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Muffin+Socks+Privy+Mark+Coin+in+Card' },
-  { id: 's1_card_stripes', series: 'series1_september', name: 'Stripe, Trixie & Nana $1 Privy Mark Coin in Card', keywords: '2024 stripe trixie nana privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Stripe+Trixie+Nana+Privy+Mark+Coin+in+Card' },
-  { id: 's1_card_radfrisky', series: 'series1_september', name: 'Rad & Frisky $1 Privy Mark Coin in Card', keywords: '2024 rad frisky privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Rad+Frisky+Privy+Mark+Coin+in+Card' },
-  { id: 's1_card_blueyfriends', series: 'series1_september', name: 'Bluey & Friends $1 Privy Mark Coin in Card', keywords: '2024 bluey friends privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Friends+Privy+Mark+Coin+in+Card' },
-  { id: 's1_card_blueybingofriends', series: 'series1_september', name: 'Bluey, Bingo & Friends $1 Privy Mark Coin in Card', keywords: '2024 bluey bingo friends privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Bingo+Friends+Privy+Mark+Coin+in+Card' },
-  { id: 's1_card_mumdad', series: 'series1_september', name: 'Mum & Dad $1 Privy Mark Coin in Card', keywords: '2024 mum dad privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Mum+Dad+Privy+Mark+Coin+in+Card' },
-  { id: 's1_card_grannies', series: 'series1_september', name: 'The Grannies $1 Privy Mark Coin in Card', keywords: '2024 grannies privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Grannies+Privy+Mark+Coin+in+Card' },
-  { id: 's1_pnc_bluey', series: 'series1_september', name: 'Bluey $1 Postal Numismatic Cover', keywords: '2024 bluey pnc postal numismatic cover', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+PNC' },
-  { id: 's1_pnc_family', series: 'series1_september', name: 'Bluey & Her Family $1 Postal Numismatic Cover', keywords: '2024 bluey family pnc', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Family+PNC' },
-  { id: 's1_pnc_bingo', series: 'series1_september', name: 'Bingo $1 Postal Numismatic Cover', keywords: '2024 bingo pnc postal numismatic cover', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Bingo+PNC' },
-  { id: 's1_pnc_muffinsocks', series: 'series1_september', name: 'Muffin & Socks $1 Postal Numismatic Cover', keywords: '2024 muffin socks pnc', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Muffin+Socks+PNC' },
-  { id: 's1_pnc_stripes', series: 'series1_september', name: 'Stripe, Trixie & Nana $1 Postal Numismatic Cover', keywords: '2024 stripe trixie nana pnc', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Stripe+Trixie+Nana+PNC' },
-  { id: 's1_pnc_radfrisky', series: 'series1_september', name: 'Rad & Frisky $1 Postal Numismatic Cover', keywords: '2024 rad frisky pnc', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Rad+Frisky+PNC' },
-  { id: 's1_pnc_blueyfriends', series: 'series1_september', name: 'Bluey & Friends $1 Postal Numismatic Cover', keywords: '2024 bluey friends pnc', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Friends+PNC' },
-  { id: 's1_pnc_blueybingofriends', series: 'series1_september', name: 'Bluey, Bingo & Friends $1 Postal Numismatic Cover', keywords: '2024 bluey bingo friends pnc', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Bingo+Friends+PNC' },
-  { id: 's1_pnc_mumdad', series: 'series1_september', name: 'Mum & Dad $1 Postal Numismatic Cover', keywords: '2024 mum dad pnc', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Mum+Dad+PNC' },
-  { id: 's1_pnc_grannies', series: 'series1_september', name: 'The Grannies $1 Postal Numismatic Cover', keywords: '2024 grannies pnc postal numismatic cover', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf', cxUrl: 'https://www.coinxchange.com.au/buy?search=2024+Bluey+Grannies+PNC' },
+  { id: 's1_bluey', series: 'series1_september', name: 'Bluey $1 Dollarbuck (till coin)', keywords: 'bluey 2024 dollarbucks till', denomination: 1, year: 2024, mintage: 1250000, mintPrice: null, color: false, marketLow: 5, marketHigh: 20, sourceUrl: 'https://www.ramint.gov.au/collect/national-coin-collection/corporate-partnerships/australia-post-programs/bluey-dollarbucks' },
+  { id: 's1_bingo', series: 'series1_september', name: 'Bingo $1 Dollarbuck (till coin)', keywords: 'bingo 2024 dollarbucks till', denomination: 1, year: 2024, mintage: 1250000, mintPrice: null, color: false, marketLow: 5, marketHigh: 20, sourceUrl: 'https://www.ramint.gov.au/collect/national-coin-collection/corporate-partnerships/australia-post-programs/bluey-dollarbucks' },
+  { id: 's1_proof_silver', series: 'series1_september', name: 'Bluey Dollarbucks $1 Fine Silver Coloured Proof', keywords: '2024 bluey dollarbucks silver proof', denomination: 1, year: 2024, mintage: 2650, mintPrice: 99, color: true, marketLow: null, marketHigh: null, productCode: '11367', issueQuantity: 2500, ramProductName: '$1 Ag Coloured Proof Coin - Australia Post Bluey', sourceUrl: 'https://ramint.runfair.com/en-GB/au/2024-1-dollar-fine-silver-coloured-proof-coin-bluey-dollarbucks' },
+  { id: 's1_proof_coloured', series: 'series1_september', name: 'Bluey Dollarbucks $1 Coloured Proof', keywords: '2024 bluey dollarbucks coloured proof', denomination: 1, year: 2024, mintage: 5000, mintPrice: 50, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://ramint.runfair.com/en-US/au/2024-1-dollar-coloured-proof-coin-bluey-dollarbucks' },
+  { id: 's1_10_coin_folder_set', series: 'series1_september', name: '10-Coin Tube and Folder Set', keywords: 'folder tube 2024 set', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 29, color: true, marketLow: null, marketHigh: null, productCode: '11448', issueQuantity: 157500, ramProductName: '$1 Ten-Coin Uncirculated Set - Bluey', sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-391/stamp-bulletin-391.pdf' },
+  { id: 's1_coloured_insert_variant', series: 'series1_september', name: 'Bluey Special-Coloured $1 Tube-Set Variant', keywords: 'bluey 2024 coloured special variant tube set', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage; 1-in-10 set chance', mintPrice: null, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://ramint.runfair.com/en-US/au/2024-1-dollar-uncirculated-ten-coin-collection-folder-and-tube-bluey-dollarbucks' },
+  { id: 's1_auspost_stamp_pack', series: 'series1_september', name: 'Bluey 2024 MyStamps Pack', keywords: '2024 Bluey MyStamps house shaped stamp pack Australia Post', denomination: null, year: 2024, mintage: null, mintageLabel: 'Stamp print quantity unpublished', mintPrice: 21, color: '#5279a8', marketLow: null, marketHigh: null, sourceUrl: 'https://www.bluey.tv/blog/the-bluey-dollarbuck-coin-collection-and-stamp-pack-have-arrived-at-australia-post/', sourceLabel: 'Australia Post stamp issue details ↗' },
+  { id: 's1_impressions_pnc_colour', series: 'series1_november', name: 'Bluey Limited-Edition Coloured Coin PNC', keywords: '2024 Bluey limited edition coloured coin PNC', denomination: 1, year: 2024, mintage: 1300, mintageLabel: '1,300 covers produced', mintPrice: 80, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/impressions/impressions-catalogue-2024.pdf' },
+  { id: 's1_impressions_pnc_2coin', series: 'series1_november', name: 'Bluey Limited-Edition 2-Coin PNC', keywords: '2024 Bluey limited edition 2 coin PNC', denomination: 1, year: 2024, mintage: 3000, mintageLabel: '3,000 covers produced', mintPrice: 100, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/impressions/impressions-catalogue-2024.pdf' },
+  { id: 's1_impressions_pnc_3coin', series: 'series1_november', name: 'Bluey Limited-Edition 3-Coin PNC', keywords: '2024 Bluey limited edition 3 coin PNC envelope privy', denomination: 1, year: 2024, mintage: 700, mintageLabel: '700 covers produced', mintPrice: 120, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/impressions/impressions-catalogue-2024.pdf' },
+  { id: 's1_impressions_pnc_silver', series: 'series1_november', name: 'Bluey Limited-Edition Silver Proof Prestige PNC', keywords: '2024 Bluey limited edition silver proof prestige PNC', denomination: 1, year: 2024, mintage: 150, mintageLabel: '150 covers produced', mintPrice: 190, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/impressions/impressions-catalogue-2024.pdf' },
+  { id: 's1_coloured_bluey', series: 'series1_june', name: 'Bluey $1 Coloured Uncirculated Coin', keywords: '2024 bluey coloured uncirculated', denomination: 1, year: 2024, mintage: 30000, mintPrice: 20, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://ramint.runfair.com/en-US/au/bluey-dollarbucks-1-dollar-uncirculated-coin-2024' },
+  { id: 's1_coloured_heelers', series: 'series1_june', name: 'The Heelers $1 Coloured Uncirculated Coin', keywords: '2024 heelers coloured uncirculated', denomination: 1, year: 2024, mintage: 30000, mintPrice: 20, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://ramint.runfair.com/en-US/au/heelers-bluey-dollarbucks-1-dollar-uncirculated-coin-2024' },
+  { id: 's1_coloured_grannies', series: 'series1_june', name: 'The Grannies $1 Coloured Uncirculated Coin', keywords: '2024 grannies coloured uncirculated', denomination: 1, year: 2024, mintage: 30000, mintPrice: 20, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://ramint.runfair.com/en-US/au/grannies-bluey-dollarbucks-1-dollar-uncirculated-coin-2024' },
+  { id: 's1_three_coin_set', series: 'series1_june', name: 'Bluey Dollarbucks Three-Coin Set', keywords: '2024 bluey dollarbucks three coin set coloured', denomination: 1, year: 2024, mintage: 30000, mintPrice: 55, color: true, marketLow: null, marketHigh: null, productCode: '11368', issueQuantity: 22500, ramProductName: '$1 Three-Coin Uncirculated Set - Bluey - Dollarbucks', sourceUrl: 'https://ramint.runfair.com/en-GB/au/bluey-dollarbucks-three-coin-set' },
+  { id: 's1_card_bluey', series: 'series1_september', name: 'Bluey $1 Privy Mark Coin in Card', keywords: '2024 bluey privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_card_heelers', series: 'series1_september', name: 'The Heelers $1 Privy Mark Coin in Card', keywords: '2024 heelers privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_card_bingo', series: 'series1_september', name: 'Bingo $1 Privy Mark Coin in Card', keywords: '2024 bingo privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_card_muffinsocks', series: 'series1_september', name: 'Muffin & Socks $1 Privy Mark Coin in Card', keywords: '2024 muffin socks privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_card_stripes', series: 'series1_september', name: 'Stripe, Trixie & Nana $1 Privy Mark Coin in Card', keywords: '2024 stripe trixie nana privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_card_radfrisky', series: 'series1_september', name: 'Rad & Frisky $1 Privy Mark Coin in Card', keywords: '2024 rad frisky privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_card_blueyfriends', series: 'series1_september', name: 'Bluey & Friends $1 Privy Mark Coin in Card', keywords: '2024 bluey friends privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_card_blueybingofriends', series: 'series1_september', name: 'Bluey, Bingo & Friends $1 Privy Mark Coin in Card', keywords: '2024 bluey bingo friends privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_card_mumdad', series: 'series1_september', name: 'Mum & Dad $1 Privy Mark Coin in Card', keywords: '2024 mum dad privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_card_grannies', series: 'series1_september', name: 'The Grannies $1 Privy Mark Coin in Card', keywords: '2024 grannies privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  // Series 1 September PNCs — Royal Australian Mint 2024–25 Annual Report,
+  // Appendix E Table 13 (printed pp. 82–83). Names, codes, quantities and
+  // mintages are the RAM record verbatim (curly quotes/hyphens normalised).
+  // Codes 11428/11635 and 11430/11637 are distinct products: keep separate.
+  { id: 's1_pnc_bluey', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - PNC', keywords: '2024 bluey pnc postal numismatic cover envelope privymark 11428', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11428', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_family', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Heeler Family - PNC', keywords: '2024 bluey family heeler pnc envelope privymark 11429', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11429', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_bingo', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Bingo - PNC', keywords: '2024 bingo pnc postal numismatic cover envelope privymark 11430', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11430', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_muffinsocks', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Socks & Muffin - PNC', keywords: '2024 muffin socks pnc envelope privymark 11431', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11431', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_radfrisky', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Rad & Frisky - PNC', keywords: '2024 rad frisky pnc envelope privymark 11432', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11432', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_stripes', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Nana, Uncle Striped & Trixie - PNC', keywords: '2024 bluey nana striped trixie pnc envelope privymark 11433', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11433', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_blueybingofriends', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Bluey, Bingo & Friends - PNC', keywords: '2024 bluey bingo friends pnc envelope privymark 11434', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11434', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_blueyfriends', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Bluey & Friends - PNC', keywords: '2024 bluey friends pnc envelope privymark 11435', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11435', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_mumdad', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Chillo & Bandit - PNC', keywords: '2024 bluey chillo bandit pnc envelope privymark 11436', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11436', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_grannies', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Grannies - PNC', keywords: '2024 grannies pnc postal numismatic cover envelope privymark 11437', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11437', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  // Further 2024 $1 PNCs from the same RAM table (printed pp. 83–85).
+  // Standard (non-envelope) PNC program; distinct records from 11428/11430 above.
+  { id: 's1_proof_anniv_11624', series: 'series1_september', name: '$1 Coloured Proof Coin - 5th Anniversary of Bluey', keywords: '2024 bluey 5th anniversary coloured proof 11624', denomination: 1, year: 2024, mintage: 5000, mintPrice: null, color: true, marketLow: null, marketHigh: null, productCode: '11624', issueQuantity: 5000, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_11635', series: 'series1_september', name: '$1 Uncirculated Coin - Bluey - PNC', keywords: '2024 bluey pnc postal numismatic cover standard 11635', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 7500, productCode: '11635', mintPrice: null, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_11637', series: 'series1_september', name: '$1 Uncirculated Coin - Bluey - Bingo - PNC', keywords: '2024 bluey bingo pnc postal numismatic cover standard 11637', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11637', mintPrice: null, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_11638', series: 'series1_september', name: '$1 Uncirculated Coin - Bluey - Socks & Muffin - PNC', keywords: '2024 bluey socks muffin pnc postal numismatic cover standard 11638', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11638', mintPrice: null, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_11640', series: 'series1_september', name: '$1 Uncirculated Coin - Bluey - Nana, Uncle Stripes & Trixie - PNC', keywords: '2024 bluey nana stripes trixie pnc postal numismatic cover standard 11640', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11640', mintPrice: null, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_11641', series: 'series1_september', name: '$1 Uncirculated Coin - Bluey - Friends Pose - PNC', keywords: '2024 bluey friends pose pnc postal numismatic cover standard 11641', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11641', mintPrice: null, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_11645', series: 'series1_september', name: '$1 Coloured Proof Coin - Bluey - PNC', keywords: '2024 bluey coloured proof pnc postal numismatic cover 11645', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 150, productCode: '11645', mintPrice: null, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
 
   // Series 2 — 2025 Christmas
-  { id: 's2_xmas_unc', series: 'series2', name: '$1 Coloured Uncirculated Christmas Coin', keywords: 'christmas 2025 coloured', denomination: 1, year: 2025, mintage: 125000, mintPrice: 20, color: true, marketLow: 35, marketHigh: 80, cxUrl: 'https://www.coinxchange.com.au/buy?search=2025+Bluey+Christmas+uncirculated' },
-  { id: 's2_xmas_silv', series: 'series2', name: '$1 Coloured Silver Proof Christmas Coin', keywords: 'christmas 2025 silver proof', denomination: 1, year: 2025, mintage: 10000, mintPrice: 100, color: true, marketLow: 250, marketHigh: 700, cxUrl: 'https://www.coinxchange.com.au/buy?search=2025+Bluey+Christmas+silver+proof' },
+  { id: 's2_xmas_unc', series: 'series2', name: '$1 Coloured Uncirculated Christmas Coin', keywords: 'christmas 2025 coloured', denomination: 1, year: 2025, mintage: 125000, mintPrice: 20, color: true, marketLow: 35, marketHigh: 80 },
+  { id: 's2_xmas_silv', series: 'series2', name: '$1 Coloured Silver Proof Christmas Coin', keywords: 'christmas 2025 silver proof', denomination: 1, year: 2025, mintage: 10000, mintPrice: 100, color: true, marketLow: 250, marketHigh: 700 },
 
   // Series 3 — 2026 Bluey $2
-  { id: 's3_folder', series: 'series3', name: 'Collection Folder & Five-Coin Set', keywords: 'folder set 2026 rain sleepytime camping baby race granny mobile', denomination: 2, year: 2026, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 34, color: true, marketLow: 40, marketHigh: 90, sourceUrl: 'https://www.ramint.gov.au/about-us/whats-new/cheese-crackers-bluey-returns-new-coin-collection', collectionVariants: [{ label: 'Unopened tube', detail: 'The five coins are concealed. Each tube has a 1-in-10 chance of containing the special-coloured Sleepytime coin.' }, { label: 'Opened tube', detail: 'Check the contents. Record the coloured Sleepytime coin separately if present; otherwise the standard Sleepytime design is included.' }], collectionNote: 'The folder has two extra spaces for the coloured Bluey and Bingo $2 till coins. Those designs are found separately in change at participating Australia Post stores; they are not included in the five-coin tube.', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+collection+folder+five+coin+set' },
-  { id: 's3_rain_privy', series: 'series3', name: 'Rain Privy Mark $2', keywords: 'privy mark rain 2026', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, marketLow: 80, marketHigh: 200, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Rain+Privy+Mark' },
-  { id: 's3_sleepytime_privy', series: 'series3', name: 'Sleepytime Privy Mark $2', keywords: 'privy mark sleepytime 2026', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, marketLow: 80, marketHigh: 200, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Sleepytime+Privy+Mark' },
-  { id: 's3_camping_privy', series: 'series3', name: 'Camping Privy Mark $2', keywords: 'privy mark camping 2026', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, marketLow: 80, marketHigh: 200, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Camping+Privy+Mark' },
-  { id: 's3_babyrace_privy', series: 'series3', name: 'Baby Race Privy Mark $2', keywords: 'privy mark baby race 2026', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, marketLow: 80, marketHigh: 200, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Baby+Race+Privy+Mark' },
-  { id: 's3_granny_privy', series: 'series3', name: 'Granny Mobile Privy Mark $2', keywords: 'privy mark granny mobile 2026', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, marketLow: 80, marketHigh: 200, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Granny+Mobile+Privy+Mark' },
-  { id: 's3_proof_ab', series: 'series3', name: 'Coloured Aluminium-Bronze Proof $2', keywords: 'proof aluminium bronze 2026', denomination: 2, year: 2026, mintage: 10500, mintPrice: 60, color: true, marketLow: 120, marketHigh: 300, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+proof+aluminium+bronze' },
-  { id: 's3_proof_silv', series: 'series3', name: 'Coloured Silver Proof $2', keywords: 'proof silver 2026', denomination: 2, year: 2026, mintage: 10000, mintPrice: 115, color: true, marketLow: 250, marketHigh: 700, cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+silver+proof' },
-  { id: 's3_maxicard_pack', series: 'series3', name: 'Bluey Pre-Paid Concertina Maxicard Pack', keywords: '2026 Bluey five maxicard designs prepaid postage', denomination: null, year: 2026, mintage: null, mintageLabel: 'Mintage unpublished', mintPrice: 60, color: '#5279a8', marketLow: null, marketHigh: null, collectionNote: 'Five Bluey maxicard designs with worldwide postage and foiled postmarks, as listed in Australia Post Stamp Bulletin 401.', sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2026/stamp-bulletin-401/stamp-bulletin-401.pdf', sourceLabel: 'Australia Post Stamp Bulletin 401 ↗', cxUrl: 'https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+prepaid+concertina+maxicard+pack' },
-  { id: 's3_sleepytime_insert', series: 'series3', name: 'Sleepytime Coloured Insert Variant', keywords: 'sleepytime 2026 insert', denomination: 2, year: 2026, mintage: null, mintageLabel: '1-in-10 chance per tube; not sold separately by the Mint', mintPrice: null, color: true, marketLow: 120, marketHigh: 400, collectionNote: 'A special-coloured Sleepytime coin is randomly packed in approximately one in ten 2026 five-coin tubes. It is a set-discovery variant, not a separate Mint retail issue.', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Sleepytime+insert' },
-  { id: 's3_till_bluey', series: 'series3', name: 'Coloured $2 Till Coin', keywords: 'till coin 2026 coloured', denomination: 2, year: 2026, mintage: null, mintageLabel: 'Circulating till coin (Face value $2)', mintPrice: null, color: true, marketLow: 30, marketHigh: 70, collectionNote: 'One of two additional coloured $2 designs that fit the 2026 folder. Bluey and Bingo till coins are obtained separately in change at participating Australia Post stores.', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+till+coin' },
-  { id: 's3_till_bingo', series: 'series3', name: 'Bingo Coloured Till Coin', keywords: 'till coin 2026 bingo', denomination: 2, year: 2026, mintage: null, mintageLabel: 'Circulating till coin (Face value $2)', mintPrice: null, color: true, marketLow: 30, marketHigh: 70, collectionNote: 'One of two additional coloured $2 designs that fit the 2026 folder. Bluey and Bingo till coins are obtained separately in change at participating Australia Post stores.', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bingo+till+coin' },
-  { id: 's3_pnc_bluey', series: 'series3', name: 'Bluey For Real Life PNC', keywords: 'pnc 2026 bluey for real life', denomination: 2, year: 2026, mintage: 10000, mintageLabel: '10,000 PNCs produced', mintPrice: 27, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2026/stamp-bulletin-401/stamp-bulletin-401.pdf', sourceLabel: 'AusPost Stamp Bulletin 401 ↗', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+For+Real+Life+PNC' },
-  { id: 's3_pnc_bingo', series: 'series3', name: 'Bingo Hooray PNC', keywords: 'pnc 2026 bingo hooray', denomination: 2, year: 2026, mintage: 10000, mintageLabel: '10,000 PNCs produced', mintPrice: 27, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2026/stamp-bulletin-401/stamp-bulletin-401.pdf', sourceLabel: 'AusPost Stamp Bulletin 401 ↗', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bingo+Hooray+PNC' },
-  { id: 's3_pin_babyrace', series: 'series3', name: 'Baby Race Stamp and Pin Cover', keywords: 'pin cover 2026 baby race', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-baby-race-2336511int', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Baby+Race+pin+cover' },
-  { id: 's3_pin_camping', series: 'series3', name: 'Camping Stamp and Pin Cover', keywords: 'pin cover 2026 camping', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-camping-2336512int', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Camping+pin+cover' },
-  { id: 's3_pin_granny', series: 'series3', name: 'Granny Mobile Stamp and Pin Cover', keywords: 'pin cover 2026 granny mobile', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-granny-mobile-2336513int', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Granny+Mobile+pin+cover' },
-  { id: 's3_pin_rain', series: 'series3', name: 'Rain Stamp and Pin Cover', keywords: 'pin cover 2026 rain', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-rain-2336514int', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Rain+pin+cover' },
-  { id: 's3_pin_sleepytime', series: 'series3', name: 'Sleepy Time Stamp and Pin Cover', keywords: 'pin cover 2026 sleepy time', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-sleepy-time-2336515int', cxUrl: 'https://www.coinxchange.com.au/buy?search=2026+Bluey+Sleepy+Time+pin+cover' },
+  { id: 's3_folder', series: 'series3', name: 'Collection Folder & Five-Coin Set', keywords: 'folder set 2026 rain sleepytime camping baby race granny mobile', denomination: 2, year: 2026, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 34, color: true, marketLow: 40, marketHigh: 90, sourceUrl: 'https://www.ramint.gov.au/about-us/whats-new/cheese-crackers-bluey-returns-new-coin-collection', collectionVariants: [{ label: 'Unopened tube', detail: 'The five coins are concealed. Each tube has a 1-in-10 chance of containing the special-coloured Sleepytime coin.' }, { label: 'Opened tube', detail: 'Check the contents. Record the coloured Sleepytime coin separately if present; otherwise the standard Sleepytime design is included.' }], collectionNote: 'The folder has two extra spaces for the coloured Bluey and Bingo $2 till coins. Those designs are found separately in change at participating Australia Post stores; they are not included in the five-coin tube.' },
+  { id: 's3_rain_privy', series: 'series3', name: 'Rain Privy Mark $2', keywords: 'privy mark rain 2026', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, marketLow: 80, marketHigh: 200 },
+  { id: 's3_sleepytime_privy', series: 'series3', name: 'Sleepytime Privy Mark $2', keywords: 'privy mark sleepytime 2026', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, marketLow: 80, marketHigh: 200 },
+  { id: 's3_camping_privy', series: 'series3', name: 'Camping Privy Mark $2', keywords: 'privy mark camping 2026', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, marketLow: 80, marketHigh: 200 },
+  { id: 's3_babyrace_privy', series: 'series3', name: 'Baby Race Privy Mark $2', keywords: 'privy mark baby race 2026', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, marketLow: 80, marketHigh: 200 },
+  { id: 's3_granny_privy', series: 'series3', name: 'Granny Mobile Privy Mark $2', keywords: 'privy mark granny mobile 2026', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, marketLow: 80, marketHigh: 200 },
+  { id: 's3_proof_ab', series: 'series3', name: 'Coloured Aluminium-Bronze Proof $2', keywords: 'proof aluminium bronze 2026', denomination: 2, year: 2026, mintage: 10500, mintPrice: 60, color: true, marketLow: 120, marketHigh: 300 },
+  { id: 's3_proof_silv', series: 'series3', name: 'Coloured Silver Proof $2', keywords: 'proof silver 2026', denomination: 2, year: 2026, mintage: 10000, mintPrice: 115, color: true, marketLow: 250, marketHigh: 700 },
+  { id: 's3_maxicard_pack', series: 'series3', name: 'Bluey Pre-Paid Concertina Maxicard Pack', keywords: '2026 Bluey five maxicard designs prepaid postage', denomination: null, year: 2026, mintage: null, mintageLabel: 'Mintage unpublished', mintPrice: 60, color: '#5279a8', marketLow: null, marketHigh: null, collectionNote: 'Five Bluey maxicard designs with worldwide postage and foiled postmarks, as listed in Australia Post Stamp Bulletin 401.', sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2026/stamp-bulletin-401/stamp-bulletin-401.pdf', sourceLabel: 'Australia Post Stamp Bulletin 401 ↗' },
+  { id: 's3_sleepytime_insert', series: 'series3', name: 'Sleepytime Coloured Insert Variant', keywords: 'sleepytime 2026 insert', denomination: 2, year: 2026, mintage: null, mintageLabel: '1-in-10 chance per tube; not sold separately by the Mint', mintPrice: null, color: true, marketLow: 120, marketHigh: 400, collectionNote: 'A special-coloured Sleepytime coin is randomly packed in approximately one in ten 2026 five-coin tubes. It is a set-discovery variant, not a separate Mint retail issue.' },
+  { id: 's3_till_bluey', series: 'series3', name: 'Coloured $2 Till Coin', keywords: 'till coin 2026 coloured', denomination: 2, year: 2026, mintage: null, mintageLabel: 'Circulating till coin (Face value $2)', mintPrice: null, color: true, marketLow: 30, marketHigh: 70, collectionNote: 'One of two additional coloured $2 designs that fit the 2026 folder. Bluey and Bingo till coins are obtained separately in change at participating Australia Post stores.' },
+  { id: 's3_till_bingo', series: 'series3', name: 'Bingo Coloured Till Coin', keywords: 'till coin 2026 bingo', denomination: 2, year: 2026, mintage: null, mintageLabel: 'Circulating till coin (Face value $2)', mintPrice: null, color: true, marketLow: 30, marketHigh: 70, collectionNote: 'One of two additional coloured $2 designs that fit the 2026 folder. Bluey and Bingo till coins are obtained separately in change at participating Australia Post stores.' },
+  { id: 's3_pnc_bluey', series: 'series3', name: 'Bluey For Real Life PNC', keywords: 'pnc 2026 bluey for real life', denomination: 2, year: 2026, mintage: 10000, mintageLabel: '10,000 PNCs produced', mintPrice: 27, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2026/stamp-bulletin-401/stamp-bulletin-401.pdf', sourceLabel: 'AusPost Stamp Bulletin 401 ↗' },
+  { id: 's3_pnc_bingo', series: 'series3', name: 'Bingo Hooray PNC', keywords: 'pnc 2026 bingo hooray', denomination: 2, year: 2026, mintage: 10000, mintageLabel: '10,000 PNCs produced', mintPrice: 27, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2026/stamp-bulletin-401/stamp-bulletin-401.pdf', sourceLabel: 'AusPost Stamp Bulletin 401 ↗' },
+  { id: 's3_pin_babyrace', series: 'series3', name: 'Baby Race Stamp and Pin Cover', keywords: 'pin cover 2026 baby race', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-baby-race-2336511int' },
+  { id: 's3_pin_camping', series: 'series3', name: 'Camping Stamp and Pin Cover', keywords: 'pin cover 2026 camping', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-camping-2336512int' },
+  { id: 's3_pin_granny', series: 'series3', name: 'Granny Mobile Stamp and Pin Cover', keywords: 'pin cover 2026 granny mobile', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-granny-mobile-2336513int' },
+  { id: 's3_pin_rain', series: 'series3', name: 'Rain Stamp and Pin Cover', keywords: 'pin cover 2026 rain', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-rain-2336514int' },
+  { id: 's3_pin_sleepytime', series: 'series3', name: 'Sleepy Time Stamp and Pin Cover', keywords: 'pin cover 2026 sleepy time', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-sleepy-time-2336515int' },
 
   // Series 4 — 2027 Cricket episode ($1; official RAM specifications).
-  { id: 's4_cricket_unc', series: 'series4', name: 'Cricket $1 Coloured Uncirculated', keywords: 'cricket rusty bluey 2027 carded 200000 mintage', denomination: 1, year: 2027, mintage: 200000, mintPrice: 25, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/about-us/whats-new/bluey-cricket-collectible-coins-celebrating-aussie-tradition', cxUrl: 'https://www.coinxchange.com.au/buy?search=2027+Bluey+Cricket+uncirculated' },
-  { id: 's4_cricket_proof', series: 'series4', name: 'Cricket $1 Coloured Silver Proof', keywords: 'cricket rusty bluey 2027 silver proof cricket ball tin 20000 mintage', denomination: 1, year: 2027, mintage: 20000, mintPrice: 112.5, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/about-us/whats-new/bluey-cricket-collectible-coins-celebrating-aussie-tradition', cxUrl: 'https://www.coinxchange.com.au/buy?search=2027+Bluey+Cricket+silver+proof' },
+  { id: 's4_cricket_unc', series: 'series4', name: 'Cricket $1 Coloured Uncirculated', keywords: 'cricket rusty bluey 2027 carded 200000 mintage', denomination: 1, year: 2027, mintage: 200000, mintPrice: 25, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/about-us/whats-new/bluey-cricket-collectible-coins-celebrating-aussie-tradition' },
+  { id: 's4_cricket_proof', series: 'series4', name: 'Cricket $1 Coloured Silver Proof', keywords: 'cricket rusty bluey 2027 silver proof cricket ball tin 20000 mintage', denomination: 1, year: 2027, mintage: 20000, mintPrice: 112.5, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/about-us/whats-new/bluey-cricket-collectible-coins-celebrating-aussie-tradition' },
 
 ];
 
@@ -2272,7 +2264,7 @@ function mintageRarity(coin, catalog = window.COINS || []) {
 // ────────────────────────────────────────────────
 // STATE
 // ────────────────────────────────────────────────
-let coinData     = {};   // { coinId: { ebay: {...}, coinxchange: {...} } }
+let coinData     = {};   // { coinId: { ebay: {...} } }
 let activeSeries = 'all';
 let searchQuery  = '';   // raw user input, lowercased in the filter fn
 let sortMode     = 'default';
@@ -2301,9 +2293,9 @@ function formatAUD(val) {
   return '$' + Number(val).toFixed(2);
 }
 
-function calcPremium(avg, mintPrice) {
-  if (!mintPrice || !avg || isNaN(avg)) return null;
-  return (((avg - mintPrice) / mintPrice) * 100).toFixed(1);
+function calcPremium(referencePrice, mintPrice) {
+  if (!mintPrice || !referencePrice || isNaN(referencePrice)) return null;
+  return (((referencePrice - mintPrice) / mintPrice) * 100).toFixed(1);
 }
 
 function parseMintage(raw) {
@@ -2456,11 +2448,9 @@ const COIN_PRODUCT_IMAGES = {
   s1_pnc_family: { src: 'coin-images/2024-pnc-family.jpg', alt: 'Official Australia Post 2024 Bluey and Her Family $1 postal numismatic cover', source: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-391/stamp-bulletin-391.pdf' },
   s1_pnc_bingo: { src: 'coin-images/2024-pnc-bingo.jpg', alt: 'Official Australia Post 2024 Bingo $1 postal numismatic cover', source: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-391/stamp-bulletin-391.pdf' },
   s1_pnc_muffinsocks: { src: 'coin-images/2024-pnc-muffin-socks.jpg', alt: 'Official Australia Post 2024 Muffin and Socks $1 postal numismatic cover', source: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-391/stamp-bulletin-391.pdf' },
-  s1_pnc_stripes: { src: 'coin-images/2024-pnc-stripe-trixie-nana.jpg', alt: 'Official Australia Post 2024 Stripe, Trixie and Nana $1 postal numismatic cover', source: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-391/stamp-bulletin-391.pdf' },
   s1_pnc_radfrisky: { src: 'coin-images/2024-pnc-rad-frisky.jpg', alt: 'Official Australia Post 2024 Rad and Frisky $1 postal numismatic cover', source: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-391/stamp-bulletin-391.pdf' },
   s1_pnc_blueyfriends: { src: 'coin-images/2024-pnc-bluey-friends.jpg', alt: 'Official Australia Post 2024 Bluey and Friends $1 postal numismatic cover', source: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-391/stamp-bulletin-391.pdf' },
   s1_pnc_blueybingofriends: { src: 'coin-images/2024-pnc-bluey-bingo-friends.jpg', alt: 'Official Australia Post 2024 Bluey, Bingo and Friends $1 postal numismatic cover', source: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-391/stamp-bulletin-391.pdf' },
-  s1_pnc_mumdad: { src: 'coin-images/2024-pnc-mum-dad.jpg', alt: 'Official Australia Post 2024 Mum and Dad $1 postal numismatic cover', source: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-391/stamp-bulletin-391.pdf' },
   s1_pnc_grannies: { src: 'coin-images/2024-pnc-grannies.jpg', alt: 'Official Australia Post 2024 The Grannies $1 postal numismatic cover', source: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-391/stamp-bulletin-391.pdf' },
   s2_xmas_unc: { src: 'coin-images/2025-unc.png', alt: '2025 Bluey Christmas $1 uncirculated coin in its presentation card', source: 'https://www.ramint.gov.au/about-us/whats-new/get-christmas-spirit-bluey' },
   s2_xmas_silv: { src: 'coin-images/2025-proof.png', alt: '2025 Bluey Christmas $1 silver proof coin in its bauble packaging', source: 'https://www.ramint.gov.au/about-us/whats-new/get-christmas-spirit-bluey' },
@@ -2489,50 +2479,40 @@ const COIN_PRODUCT_IMAGES = {
 function buildCard(coin) {
   const coinEntry = coinData[coin.id] || {};
   const ebay      = coinEntry.ebay      || null;
-  const cx        = coinEntry.coinxchange || null;
-
   const hasEbay = _hasFreshEbaySales(ebay);
-  const avg     = hasEbay ? parseFloat(ebay.average_price) : null;
-  const minP    = hasEbay ? parseFloat(ebay.min_price)     : null;
-  const maxP    = hasEbay ? parseFloat(ebay.max_price)     : null;
-  // Median preferred over mean: eBay keyword searches mix single coins with
-  // pairs, lots and rolls, which inflates the average several-fold.
-  const med     = hasEbay ? (parseFloat(ebay.median_price) || _medianOfProducts(ebay)) : null;
-  const refPrice = hasEbay ? (med || avg) : null;
-  const premium = calcPremium(refPrice, coin.mintPrice);
-  const premStr = premium !== null ? `${premium > 0 ? '+' : ''}${premium}%` : '';
-  const premCls = premium > 0 ? 'up' : (premium < 0 ? 'down' : '');
+  const currentSales = hasEbay ? _currentEbayProducts(ebay) : [];
+  const feedMedian = hasEbay ? parseFloat(ebay.median_price) : NaN;
+  const median = hasEbay
+    ? (Number.isFinite(feedMedian) && feedMedian > 0 ? feedMedian : _medianOfProducts(ebay))
+    : null;
+  const hasMedian = Number.isFinite(median) && median > 0;
+  const refPrice = hasMedian ? median : null;
+  const premium = hasMedian ? calcPremium(median, coin.mintPrice) : null;
+  const premiumValue = premium == null ? null : Number(premium);
 
   const card = el('div', 'coin-card');
   card.id = `card-${coin.id}`;
   card.dataset.series = coin.series;
+  card.style.setProperty('--coin-accent', typeof coin.color === 'string' ? coin.color : '#ffbf3f');
 
   // ── Header ──
   const hdr = el('div', 'card-header');
   const dot = el('div', 'series-dot');
-  dot.style.background = coin.color;
+  dot.style.background = typeof coin.color === 'string' ? coin.color : '#ffbf3f';
 
   const tw = el('div');
   tw.style.flex = '1';
   tw.append(el('div', 'card-title', coin.name));
   const facts = el('div', 'catalog-facts');
-  facts.append(el('span', 'catalog-fact', `${coin.denomination ? '$' + coin.denomination : 'Collectable'} · ${coin.year}`));
-  facts.append(el('span', 'catalog-fact', coin.mintage != null
-    ? (coin.mintageLabel || `Mintage ${Number(coin.mintage).toLocaleString('en-AU')}`)
-    : (coin.mintageLabel || 'Mintage unpublished')));
-  if (coin.issueQuantity != null) facts.append(el('span', 'catalog-fact', `RAM reported quantity ${Number(coin.issueQuantity).toLocaleString('en-AU')} coins`));
-  if (coin.mintPrice != null) facts.append(el('span', 'catalog-fact', `Issue price ${formatAUD(coin.mintPrice)}`));
-  const rarity = mintageRarity(coin);
-  facts.append(el('span', 'catalog-fact rarity', rarity == null ? 'Rarity unrated' : `Mintage rarity ${rarity}/10`));
-  facts.title = 'Relative to catalog items with a published mintage: 1 is the largest mintage and 10 is the smallest.';
+  facts.append(el('span', 'catalog-fact', `${coin.denomination ? '$' + coin.denomination : 'Collectable'} · ${coin.year}${coin.productCode ? ` · RAM ${coin.productCode}` : ''}`));
   tw.append(facts);
   hdr.append(dot, tw);
 
   // ── Body ──
   const body = el('div', 'card-body');
 
-  // eBay stats
-if (coin.collectionVariants || coin.collectionNote) {
+  // Collection notes
+  if (coin.collectionVariants || coin.collectionNote) {
     const notes = el('div', 'coin-collector-notes');
     if (coin.collectionVariants) {
       notes.append(el('strong', '', 'Folder condition'));
@@ -2546,36 +2526,85 @@ if (coin.collectionVariants || coin.collectionNote) {
     body.append(notes);
   }
 
-  const statsRow = el('div', 'stats-row');
-
-  const refLabel = med ? 'eBay Median Sold' : 'eBay Avg Sold';
-
-  const avgBox = el('div', 'stat-box');
-  avgBox.append(el('div', 'stat-label', refLabel), el('div', 'stat-value', formatAUD(refPrice)));
-  if (med && avg && Math.abs(med - avg) / avg > 0.15) {
-    avgBox.title = `Mean sold ${formatAUD(avg)} is inflated by lots and multi-coin sets; the median single-coin price is ${formatAUD(med)}.`;
+  const rarity = mintageRarity(coin);
+  const metrics = el('div', 'coin-metrics');
+  const priceCard = el('section', 'metric-card metric-price');
+  priceCard.setAttribute('aria-label', hasMedian && coin.mintPrice != null
+    ? 'Median eBay sold price and gain from issue price'
+    : hasMedian ? 'Median eBay sold price' : 'Issue price');
+  const priceHeading = hasMedian ? 'eBay AU sold median' : (coin.mintPrice != null ? 'Original issue price' : 'Price');
+  const priceValue = hasMedian ? median : coin.mintPrice;
+  priceCard.append(el('div', 'metric-kicker', priceHeading));
+  priceCard.append(el('div', 'metric-amount', priceValue == null ? '—' : formatAUD(priceValue)));
+  if (hasMedian && coin.mintPrice != null) {
+    const issueRow = el('div', 'metric-issue-row');
+    issueRow.append(el('span', 'metric-issue-label', `Issue ${formatAUD(coin.mintPrice)}`));
+    if (premiumValue != null) {
+      const gain = el('span', `gain-pill${premiumValue < 0 ? ' down' : ''}`, `${premiumValue > 0 ? '▲ +' : premiumValue < 0 ? '▼ ' : ''}${premium}%`);
+      gain.setAttribute('aria-label', `${premiumValue > 0 ? 'Gain' : premiumValue < 0 ? 'Loss' : 'Change'} of ${premium}% from issue price`);
+      issueRow.append(gain);
+    }
+    priceCard.append(issueRow);
+  }
+  if (hasMedian) {
+    const saleCount = Number(ebay.results || ebay.matched_results || currentSales.length);
+    const checked = new Date(Number(ebay.fetchedAt) * 1000).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
+    const manualSalesCount = currentSales.filter(product =>
+      product.source_type === 'user_pasted_search' || product.source_type === 'user_imported_csv'
+    ).length;
+    const saleSummary = manualSalesCount
+      ? `Includes ${manualSalesCount} user-supplied sales · not API-verified · ${checked}`
+      : `${saleCount} matched sold ${saleCount === 1 ? 'result' : 'results'} · checked ${checked}`;
+    priceCard.append(el('div', 'metric-footnote', saleSummary));
   }
 
-  const minBox = el('div', 'stat-box');
-  minBox.append(el('div', 'stat-label', 'eBay Min'), el('div', 'stat-value', formatAUD(minP)));
-
-  const thirdBox = el('div', 'stat-box');
-  const thirdLbl = coin.mintPrice ? 'Premium' : 'eBay Max';
-  const thirdVal = coin.mintPrice ? (premStr || formatAUD(maxP)) : formatAUD(maxP);
-  const tv       = el('div', 'stat-value', thirdVal);
-  if (premCls) tv.classList.add(premCls);
-  thirdBox.append(el('div', 'stat-label', thirdLbl), tv);
-
-  if (hasEbay) {
-    statsRow.append(avgBox, minBox, thirdBox);
-    body.append(statsRow);
-  } else {
-    body.append(el('div', 'market-data-note', 'No recent verified sold-price data for this coin.'));
+  const supplyCard = el('section', 'metric-card metric-supply');
+  supplyCard.setAttribute('aria-label', 'Mintage and relative rarity');
+  supplyCard.append(el('div', 'metric-kicker', 'Mintage'));
+  const mintageValue = coin.mintage != null
+    ? Number(coin.mintage).toLocaleString('en-AU')
+    : (/unlimited/i.test(coin.mintageLabel || '') ? 'Unlimited' : /circulating/i.test(coin.mintageLabel || '') ? 'Circulating' : 'Unpublished');
+  supplyCard.append(el('div', 'metric-amount', mintageValue));
+  let supplyCaption = coin.mintage != null ? 'published coins' : 'mintage';
+  let supplyDetail = '';
+  if (coin.mintageLabel) {
+    const label = String(coin.mintageLabel);
+    if (coin.mintage != null) {
+      const remainder = label.replace(/^\s*[\d,]+\s*/, '').trim();
+      if (remainder && remainder !== 'produced') supplyCaption = remainder;
+    } else if (/unlimited/i.test(label)) {
+      supplyDetail = label.split(';').slice(1).join(';').trim();
+    } else if (/circulating/i.test(label)) {
+      supplyCaption = label.replace(/^circulating\s*/i, '').split('(')[0].trim() || 'issue';
+      supplyDetail = label.includes('(') ? label.slice(label.indexOf('(')).trim() : '';
+    } else if (/unpublished/i.test(label)) {
+      supplyCaption = label.replace(/unpublished/i, '').replace(/^[\s:;,-]+|[\s:;,-]+$/g, '').trim() || 'mintage';
+    } else {
+      supplyCaption = label;
+    }
   }
+  supplyCard.append(el('div', 'supply-caption', supplyCaption));
+  if (coin.issueQuantity != null || coin.productCode) supplyDetail = [`RAM product ${coin.productCode}`, coin.issueQuantity != null ? `Reported product quantity: ${Number(coin.issueQuantity).toLocaleString('en-AU')} units` : null].filter(Boolean).join(' · ');
+  if (supplyDetail) supplyCard.append(el('div', 'supply-detail', supplyDetail));
+  const rarityRow = el('div', 'rarity-score-row');
+  rarityRow.append(el('span', 'rarity-score-label', 'Mintage rarity'));
+  rarityRow.append(el('strong', 'rarity-score', rarity == null ? 'Unrated' : `${rarity}/10`));
+  rarityRow.title = 'Relative mintage score: 1 is the largest published mintage and 10 is the smallest. Unpublished mintage is unrated.';
+  supplyCard.append(rarityRow);
+  if (rarity != null) {
+    const track = el('div', 'rarity-track');
+    track.setAttribute('role', 'img');
+    track.setAttribute('aria-label', `Mintage rarity ${rarity} out of 10`);
+    for (let i = 1; i <= 10; i++) {
+      const pip = el('span', i <= rarity ? 'active' : '');
+      pip.setAttribute('aria-hidden', 'true');
+      track.append(pip);
+    }
+    supplyCard.append(track);
+  }
+  metrics.append(priceCard, supplyCard);
+  body.append(metrics);
 
-  const detailsBtn = el('button', 'card-details-toggle', 'Show market details');
-  detailsBtn.type = 'button';
-  detailsBtn.setAttribute('aria-expanded', 'false');
   const ramDetailsUrl = coin.sourceUrl || RAM_RELEASES[coin.series];
   if (ramDetailsUrl) {
     const sourceLink = el('a', 'coin-source-link', (coin.sourceLabel || 'Official issue details ↗'));
@@ -2584,10 +2613,8 @@ if (coin.collectionVariants || coin.collectionNote) {
     sourceLink.rel = 'noopener noreferrer';
     body.append(sourceLink);
   }
-  body.append(detailsBtn);
 
-  // Keep an actionable current sold-search link visible even when the saved
-  // evidence is stale or empty. This is a live search, not a verified price.
+  // Keep a direct sold-search link available alongside the matched-sale median.
   const soldSearchUrl = safeUrl(ebay && ebay.response_url) ||
     safeUrl(coinEntry.manual && coinEntry.manual.ebay && coinEntry.manual.ebay.url);
   if (soldSearchUrl) {
@@ -2596,66 +2623,6 @@ if (coin.collectionVariants || coin.collectionNote) {
     soldSearch.target = '_blank';
     soldSearch.rel = 'sponsored noopener noreferrer';
     body.append(soldSearch);
-  }
-
-  // CoinXchange completed sales are separate from active buy-now asks.
-  if (cx && cx.average_price) {
-    const href = safeUrl(cx.search_url) || safeUrl(coin.cxUrl) || 'https://www.coinxchange.com.au/buy?search=bluey';
-    const cxRow = el('a', 'cx-row');
-    cxRow.href   = href;
-    cxRow.target = '_blank';
-    cxRow.rel    = 'noopener noreferrer';
-    cxRow.title  = 'View completed CoinXchange sales. Sale price excludes postage.';
-
-    const badge = el('span', 'cx-badge', 'CoinXchange SOLD');
-    const stats = el('div', 'cx-stats');
-
-    const avgStat = el('span', 'cx-stat');
-    avgStat.append(el('span', 'cx-lbl', 'Mean sold '), el('span', 'cx-val', formatAUD(cx.average_price)));
-
-    const minStat = el('span', 'cx-stat');
-    minStat.append(el('span', 'cx-lbl', 'Median '), el('span', 'cx-val', formatAUD(cx.median_price)));
-
-    if (cx.count) {
-      const cntStat = el('span', 'cx-stat');
-      cntStat.append(el('span', 'cx-val', String(cx.count)), el('span', 'cx-lbl', ' listings'));
-      stats.append(avgStat, minStat, cntStat);
-    } else {
-      stats.append(avgStat, minStat);
-    }
-
-    cxRow.append(badge, stats, el('span', 'cx-arrow', '↗'));
-    body.append(cxRow);
-  }
-
-  if (cx && cx.average_price) {
-    body.append(el('div', 'market-data-note', `Completed CoinXchange sales; sold price excludes postage. Checked ${new Date(cx.fetchedAt * 1000).toLocaleDateString('en-AU')}.`));
-    const cxSales = el('div', 'cx-sales-list');
-    (cx.products || []).slice(0, 3).forEach(sale => {
-      const row = el('div', 'cx-sale-row');
-      row.append(
-        el('span', 'cx-sale-price', formatAUD(sale.price)),
-        el('span', 'cx-sale-title', safeText(sale.title)),
-        el('span', 'cx-sale-date', safeText(sale.sold_date))
-      );
-      if (sale.postage != null && sale.postage > 0) {
-        row.append(el('span', 'cx-sale-postage', `+ ${formatAUD(sale.postage)} postage`));
-      }
-      cxSales.append(row);
-    });
-    if (cxSales.childElementCount) body.append(cxSales);
-  } else if (cx && cx.fetchedAt) {
-    const checked = new Date(cx.fetchedAt * 1000).toLocaleDateString('en-AU');
-    body.append(el('div', 'market-data-note', `CoinXchange checked ${checked}; no recent product-matched sold records.`));
-  }
-
-  // Mini chart
-  if (hasEbay) {
-    const chartWrap = el('div', 'chart-wrap');
-    const canvas    = document.createElement('canvas');
-    canvas.id       = `chart-${coin.id}`;
-    chartWrap.append(canvas);
-    body.append(chartWrap);
   }
 
   // Where to Buy button
@@ -2668,7 +2635,7 @@ if (coin.collectionVariants || coin.collectionNote) {
   const sellBtn = el('button', 'sell-btn');
   sellBtn.id = `sell-btn-${coin.id}`;
   sellBtn.textContent = 'Sell My Coin';
-  sellBtn.addEventListener('click', () => handleSell(coin.id, refPrice, Boolean(med)));
+  sellBtn.addEventListener('click', () => handleSell(coin.id, refPrice));
 
   const actions = el('div', 'card-actions');
   actions.append(buyBtn, sellBtn);
@@ -2679,38 +2646,22 @@ if (coin.collectionVariants || coin.collectionNote) {
   sellPanel.id = `sell-panel-${coin.id}`;
   body.append(sellPanel);
 
-  // Last updated
-  const updParts = [];
-  if (ebay && ebay.fetchedAt) {
-    const d = new Date(ebay.fetchedAt * 1000);
-    const checked = d.toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
-    updParts.push(_hasFreshEbaySales(ebay)
-      ? `eBay sold records checked ${checked} · ${ebay.results || 0} matched sales`
-      : `eBay saved records are stale · last checked ${checked}`);
-    if (ebay.historical_count) updParts.push(`${ebay.historical_count} older matched sales retained as history`);
-  }
-  if (cx && cx.fetchedAt) {
-    const d = new Date(cx.fetchedAt * 1000);
-    updParts.push(`CoinXchange sales checked ${d.toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' })}`);
-  }
-  if (updParts.length) {
-    body.append(el('div', 'last-updated', updParts.join('  ·  ')));
-  }
-
   // Recent eBay sales toggle
-  if (hasEbay) {
-    const toggleBtn = el('button', 'toggle-sales', 'Show recent sales ▾');
+  if (hasMedian && currentSales.length) {
+    const toggleBtn = el('button', 'toggle-sales', 'See recent sold listings ▾');
     const salesList = el('div', 'sales-list');
     salesList.id = `sales-${coin.id}`;
+    toggleBtn.setAttribute('aria-expanded', 'false');
 
     toggleBtn.addEventListener('click', () => {
       salesList.classList.toggle('open');
-      toggleBtn.textContent = salesList.classList.contains('open')
-        ? 'Hide recent sales ▴' : 'Show recent sales ▾';
+      const open = salesList.classList.contains('open');
+      toggleBtn.setAttribute('aria-expanded', String(open));
+      toggleBtn.textContent = open ? 'Hide sold listings ▴' : 'See recent sold listings ▾';
     });
 
-    salesList.append(el('div', 'sales-list-title', 'Recent eBay AU Sold'));
-    ebay.products.slice(0, 8).forEach(p => {
+    salesList.append(el('div', 'sales-list-title', 'Matched eBay AU sold listings'));
+    currentSales.slice(0, 8).forEach(p => {
       const row      = el('div', 'sale-row');
       const raw      = safeText(p.title);
       const short    = raw.length > 42 ? raw.substring(0, 42) + '…' : raw;
@@ -2768,13 +2719,6 @@ if (coin.collectionVariants || coin.collectionNote) {
   buyPanel.id = `buy-panel-${coin.id}`;
   buyPanel.append(el('div', 'bp-title', 'Where to Buy'));
   body.append(buyPanel);
-
-  detailsBtn.addEventListener('click', () => {
-    const expanded = card.classList.toggle('details-open');
-    detailsBtn.textContent = expanded ? 'Hide market details' : 'Show market details';
-    detailsBtn.setAttribute('aria-expanded', String(expanded));
-    if (expanded) window.dispatchEvent(new Event('resize'));
-  });
 
   const product = COIN_PRODUCT_IMAGES[coin.id];
   if (product) {
@@ -2856,6 +2800,9 @@ async function handleBuyNow(coinId, keywords) {
 function renderBuyOptions(panel, options) {
   // Remove everything after the title
   while (panel.childNodes.length > 1) panel.removeChild(panel.lastChild);
+  options = (options || []).filter(opt =>
+    !/coinxchange/i.test(`${opt.retailer_id || ''} ${opt.name || ''}`)
+  );
 
   if (!options || options.length === 0) {
     panel.append(el('div', 'bp-note', 'No retailer data found.'));
@@ -2924,7 +2871,7 @@ function renderBuyOptions(panel, options) {
 // ────────────────────────────────────────────────
 // SELL MY COIN
 // ────────────────────────────────────────────────
-function handleSell(coinId, referenceValue, isMedian) {
+function handleSell(coinId, referenceValue) {
   const btn   = document.getElementById(`sell-btn-${coinId}`);
   const panel = document.getElementById(`sell-panel-${coinId}`);
   if (!btn || !panel) return;
@@ -2943,12 +2890,9 @@ function handleSell(coinId, referenceValue, isMedian) {
 
   while (panel.firstChild) panel.removeChild(panel.firstChild);
   panel.append(el('div', 'sp-title', 'Sell This Coin'));
-  panel.append(el('div', 'sp-value',
-    referenceValue
-      ? 'Reference value: ' + formatAUD(referenceValue)
-        + (isMedian ? ' (eBay AU median sold)' : ' (eBay AU avg sold)')
-      : 'No recent sold-price data for this coin yet.'
-  ));
+  if (referenceValue != null) {
+    panel.append(el('div', 'sp-value', `Reference value: ${formatAUD(referenceValue)} (eBay AU median sold)`));
+  }
 
   const ebayLink = el('a', 'sp-link ebay', 'List on eBay AU →');
   ebayLink.href   = 'https://www.ebay.com.au/sl/sell';
@@ -2956,14 +2900,8 @@ function handleSell(coinId, referenceValue, isMedian) {
   ebayLink.rel    = 'noopener noreferrer';
   panel.append(ebayLink);
 
-  const cxLink = el('a', 'sp-link cx', 'List on CoinXchange →');
-  cxLink.href   = 'https://www.coinxchange.com.au/sell';
-  cxLink.target = '_blank';
-  cxLink.rel    = 'noopener noreferrer';
-  panel.append(cxLink);
-
   panel.append(el('div', 'sp-note',
-    'You create and manage the listing yourself on the marketplace — this is a reference price only, not a quote or offer.'));
+    'You create and manage the listing yourself on eBay — this median is a reference only, not a quote or offer.'));
 }
 
 // ────────────────────────────────────────────────
@@ -2974,6 +2912,8 @@ function _coinMatchesSearch(coin, q) {
   const haystack = [
     coin.name,
     coin.keywords,
+    coin.productCode ? String(coin.productCode) : '',
+    coin.ramProductName || '',
     String(coin.year || ''),
     coin.mintage ? String(coin.mintage) : '',
     coin.series,
@@ -2986,18 +2926,26 @@ function _coinEbay(coin) {
   return (coinData[coin.id] || {}).ebay || {};
 }
 
-// Median of the listed sold prices, used when the feed carries no median of
-// its own. The mean is badly skewed on eBay because a broad keyword search
-// returns lots, pairs and rolls alongside single coins — for s1_bluey the mean
-// sat near $44 while a single uncirculated coin trades around $12-15.
+function _currentEbayProducts(ebay) {
+  const now = Date.now();
+  const maxAge = 90 * 24 * 60 * 60 * 1000;
+  return ((ebay && ebay.products) || []).filter(product => {
+    const soldAt = Date.parse(product.date_sold || '');
+    const price = parseFloat(product.sale_price);
+    const age = now - soldAt;
+    return Number.isFinite(soldAt) && age <= maxAge && age >= -24 * 60 * 60 * 1000 && Number.isFinite(price) && price > 0;
+  });
+}
+
 function _medianOfProducts(ebay) {
-  const prices = ((ebay && ebay.products) || [])
-    .map(p => parseFloat(p.sale_price))
-    .filter(p => p > 0)
+  const prices = _currentEbayProducts(ebay)
+    .map(product => parseFloat(product.sale_price))
+    .filter(price => Number.isFinite(price) && price > 0)
     .sort((a, b) => a - b);
   if (!prices.length) return null;
-  const mid = Math.floor(prices.length / 2);
-  return prices.length % 2 ? prices[mid] : (prices[mid - 1] + prices[mid]) / 2;
+  const middle = Math.floor(prices.length / 2);
+  const median = prices.length % 2 ? prices[middle] : (prices[middle - 1] + prices[middle]) / 2;
+  return Math.round(median * 100) / 100;
 }
 
 function _hasFreshEbaySales(ebay) {
@@ -3006,23 +2954,15 @@ function _hasFreshEbaySales(ebay) {
   const maxAge = 90 * 24 * 60 * 60 * 1000;
   const fetchedAt = Number(ebay.fetchedAt) * 1000;
   if (!Number.isFinite(fetchedAt) || now - fetchedAt > maxAge || fetchedAt - now > 24 * 60 * 60 * 1000) return false;
-  return ebay.products.some(product => {
-    const soldAt = Date.parse(product.date_sold || '');
-    return Number.isFinite(soldAt) && now - soldAt <= maxAge && soldAt - now <= 24 * 60 * 60 * 1000;
-  });
+  return _currentEbayProducts(ebay).length > 0;
 }
 
-// The figure used for premium, sorting and portfolio value: the feed's median
-// when present, otherwise a median of its sold prices, and only then the mean.
+// Price cards, collection sorting, and portfolio values all use the matched-sale median.
 function _referencePrice(coin) {
   const ebay = _coinEbay(coin);
   if (!_hasFreshEbaySales(ebay)) return null;
   const median = parseFloat(ebay.median_price);
-  if (median > 0) return median;
-  const derived = _medianOfProducts(ebay);
-  if (derived) return derived;
-  const avg = parseFloat(ebay.average_price);
-  return avg > 0 ? avg : null;
+  return median > 0 ? median : _medianOfProducts(ebay);
 }
 
 function _sortCoins(list) {

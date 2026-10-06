@@ -217,12 +217,22 @@ COINS = [
     {'id': 's1_pnc_family', 'ebay_kw': '2024 Bluey Her Family postal numismatic cover PNC', 'search': '2024 Bluey Her Family PNC'},
     {'id': 's1_pnc_bingo', 'ebay_kw': '2024 Bingo postal numismatic cover PNC', 'search': '2024 Bluey Bingo PNC postal numismatic cover'},
     {'id': 's1_pnc_muffinsocks', 'ebay_kw': '2024 Bluey Muffin Socks postal numismatic cover PNC', 'search': '2024 Bluey Muffin Socks PNC'},
-    {'id': 's1_pnc_stripes', 'ebay_kw': '2024 Bluey Stripe Trixie Nana postal numismatic cover PNC', 'search': '2024 Bluey Stripe Trixie Nana PNC'},
+    {'id': 's1_pnc_stripes', 'ebay_kw': '2024 Bluey Nana Striped Trixie postal numismatic cover PNC envelope privymark', 'search': '2024 Bluey Nana Striped Trixie PNC'},
     {'id': 's1_pnc_radfrisky', 'ebay_kw': '2024 Bluey Rad Frisky postal numismatic cover PNC', 'search': '2024 Bluey Rad Frisky PNC'},
     {'id': 's1_pnc_blueyfriends', 'ebay_kw': '2024 Bluey Friends postal numismatic cover PNC', 'search': '2024 Bluey Friends PNC'},
     {'id': 's1_pnc_blueybingofriends', 'ebay_kw': '2024 Bluey Bingo Friends postal numismatic cover PNC', 'search': '2024 Bluey Bingo Friends PNC'},
-    {'id': 's1_pnc_mumdad', 'ebay_kw': '2024 Bluey Mum Dad postal numismatic cover PNC', 'search': '2024 Bluey Mum Dad PNC'},
+    {'id': 's1_pnc_mumdad', 'ebay_kw': '2024 Bluey Chillo Bandit postal numismatic cover PNC envelope privymark', 'search': '2024 Bluey Chillo Bandit PNC'},
     {'id': 's1_pnc_grannies', 'ebay_kw': '2024 Bluey Grannies postal numismatic cover PNC', 'search': '2024 Bluey Grannies PNC'},
+    # Further 2024 $1 PNCs + 5th Anniversary proof from RAM 2024-25 Annual
+    # Report Appendix E Table 13 (codes 11624-11645; 11635/11637 are distinct
+    # records from the 11428/11430 envelope PNCs, not dedupes).
+    {'id': 's1_proof_anniv_11624', 'ebay_kw': '2024 $1 Bluey 5th anniversary coloured proof coin', 'search': '2024 Bluey 5th anniversary proof'},
+    {'id': 's1_pnc_11635', 'ebay_kw': '2024 Bluey $1 postal numismatic cover PNC', 'search': '2024 Bluey standard PNC'},
+    {'id': 's1_pnc_11637', 'ebay_kw': '2024 Bluey Bingo postal numismatic cover PNC', 'search': '2024 Bluey Bingo standard PNC'},
+    {'id': 's1_pnc_11638', 'ebay_kw': '2024 Bluey Socks Muffin postal numismatic cover PNC', 'search': '2024 Bluey Socks Muffin PNC'},
+    {'id': 's1_pnc_11640', 'ebay_kw': '2024 Bluey Nana Stripes Trixie postal numismatic cover PNC', 'search': '2024 Bluey Nana Stripes Trixie PNC'},
+    {'id': 's1_pnc_11641', 'ebay_kw': '2024 Bluey Friends Pose postal numismatic cover PNC', 'search': '2024 Bluey Friends Pose PNC'},
+    {'id': 's1_pnc_11645', 'ebay_kw': '2024 Bluey coloured proof postal numismatic cover PNC', 'search': '2024 Bluey coloured proof PNC'},
     {'id': 's2_xmas_unc', 'ebay_kw': '2025 $1 Bluey Christmas coloured uncirculated coin', 'search': '2025 Bluey Christmas uncirculated'},
     {'id': 's2_xmas_silv', 'ebay_kw': '2025 $1 Bluey Christmas silver proof coin', 'search': '2025 Bluey Christmas silver proof'},
     {'id': 's3_rain', 'ebay_kw': '2026 $2 Bluey Rain privy mark uncirculated coin', 'search': '2026 Bluey Rain privy mark'},
@@ -250,7 +260,7 @@ COINS = [
     {'id': 's3_pin_sleepytime', 'ebay_kw': '2026 Bluey Sleepy Time stamp pin cover', 'search': '2026 Bluey Sleepy Time pin cover'},
     # Series 4 — 2027 Cricket episode collectible coins (RAM launch prices).
     {'id': 's4_cricket_unc', 'ebay_kw': '2027 $1 Bluey Cricket Rusty coloured uncirculated coin card', 'search': '2027 Bluey Cricket $1 uncirculated'},
-    {'id': 's4_cricket_proof', 'ebay_kw': '2027 $1 Bluey Cricket silver proof coin cricket ball tin', 'search': '2027 Bluey Cricket $1 silver proof'},
+    {'id': 's4_cricket_proof', 'ebay_kw': '2027 $1 Bluey Cricket Rusty coloured silver proof coin', 'search': '2027 Bluey Cricket $1 silver proof'},
     {'id': 's3_folder', 'ebay_kw': '2026 $2 Bluey collection folder five coin set', 'search': '2026 Bluey collection folder five coin set'},
     # Series 1 tube sets — these ship in the frontend catalogue and in
     # server.py; they were missing here so they never received live prices.
@@ -295,6 +305,22 @@ def _load_base_cache():
         try:
             with open(candidate, 'r', encoding='utf-8') as f:
                 return json.load(f)
+        except Exception:
+            continue
+    return {}
+
+
+def _load_manual_ebay_sales():
+    for candidate in (
+        'manual_ebay_sales.json',
+        '/var/task/manual_ebay_sales.json',
+        os.path.join(os.path.dirname(__file__), '..', 'manual_ebay_sales.json'),
+    ):
+        try:
+            with open(candidate, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            coins = data.get('coins') if isinstance(data, dict) else None
+            return coins if isinstance(coins, dict) else {}
         except Exception:
             continue
     return {}
@@ -492,10 +518,28 @@ def _quality_filter_ebay(data, coin, now=None):
     now = time.time() if now is None else now
     current_products = []
     historical_products = []
-    inputs = list(data.get('historical_products') or []) + list(data.get('products') or [])
+    # Prefer the current product snapshot when one item ID appears in both
+    # current and historical data; a refreshed sale can supersede a stale copy.
+    inputs = list(data.get('products') or []) + list(data.get('historical_products') or [])
     seen = set()
     for product in inputs:
-        if not isinstance(product, dict) or not _product_matches_coin(product, coin, now=now, max_age_days=None):
+        if not isinstance(product, dict):
+            continue
+        # The CSV importer accepts only rows James has marked Retained and
+        # keeps their explicit catalog ID. Preserve that reviewed mapping even
+        # when the strict API title matcher rejects a legitimate packaging or
+        # product-name variant; the checks below still enforce date, currency,
+        # positive price, duplicate and 90-day rules.
+        reviewed_csv_match = (
+            product.get('source_type') == 'user_imported_csv'
+            and product.get('record_status') == 'Retained'
+            and product.get('coin_id') == coin.get('id')
+        )
+        if reviewed_csv_match:
+            sold_at = _sold_timestamp(product.get('date_sold'))
+            if not product.get('title') or sold_at is None or sold_at > now:
+                continue
+        elif not _product_matches_coin(product, coin, now=now, max_age_days=None):
             continue
         dedupe_key = str(product.get('item_id') or product.get('link') or (
             product.get('title'), product.get('date_sold'), product.get('sale_price')))
@@ -628,14 +672,38 @@ def _apply_fetched(result, fetched, coin):
         result['coinxchange'] = coinxchange
 
 
-def _cached_snapshot(coins, base_cache, manual):
+def _cached_snapshot(coins, base_cache, manual, manual_ebay_sales=None):
     snapshot = {}
+    manual_ebay_sales = manual_ebay_sales or {}
     for coin in coins:
         cid = coin['id']
         cached = base_cache.get(cid, {})
         if not isinstance(cached, dict):
             cached = {}
-        ebay = _quality_filter_ebay(cached.get('ebay'), coin)
+        cached_ebay = cached.get('ebay') or {}
+        if not isinstance(cached_ebay, dict):
+            cached_ebay = {}
+        imported_ebay = manual_ebay_sales.get(cid) or {}
+        if isinstance(imported_ebay, dict) and isinstance(imported_ebay.get('products'), list):
+            ebay = {**imported_ebay, **cached_ebay}
+            ebay['products'] = (
+                list(imported_ebay.get('products') or [])
+                + list(cached_ebay.get('products') or [])
+            )
+            ebay['manual_import'] = imported_ebay.get('import_metadata')
+            if imported_ebay.get('response_url'):
+                ebay['response_url'] = imported_ebay['response_url']
+            fetched_values = []
+            for source in (cached_ebay, imported_ebay):
+                try:
+                    fetched_values.append(float(source.get('fetchedAt')))
+                except (TypeError, ValueError):
+                    continue
+            if fetched_values:
+                ebay['fetchedAt'] = max(fetched_values)
+        else:
+            ebay = cached_ebay
+        ebay = _quality_filter_ebay(ebay, coin)
         coinxchange = _quality_filter_coinxchange(cached.get('coinxchange'), coin)
         manual_entry = manual.get(cid)
         if not isinstance(manual_entry, dict):
@@ -720,8 +788,9 @@ def _build_payload(coins=None, fetch_coin=None, deadline=None):
 
     base_cache = _load_base_cache()
     manual = _load_manual()
+    manual_ebay_sales = _load_manual_ebay_sales()
     if fetch_coin is None:
-        snapshot = _cached_snapshot(coins, base_cache, manual)
+        snapshot = _cached_snapshot(coins, base_cache, manual, manual_ebay_sales)
         refresh_ids = _rapidapi_refresh_ids(coins)
         complete = True
 
@@ -744,6 +813,14 @@ def _build_payload(coins=None, fetch_coin=None, deadline=None):
                     if _usable_ebay(ebay_data):
                         ebay_data = dict(ebay_data)
                         ebay_data['fetchedAt'] = time.time()
+                        previous = snapshot[coin['id']].get('ebay') or {}
+                        ebay_data['historical_products'] = (
+                            list(ebay_data.get('historical_products') or [])
+                            + list(previous.get('historical_products') or [])
+                            + list(previous.get('products') or [])
+                        )
+                        if previous.get('manual_import'):
+                            ebay_data['manual_import'] = previous['manual_import']
                         snapshot[coin['id']]['ebay'] = _tag_ebay_urls(
                             _quality_filter_ebay(ebay_data, coin), coin['id'])
                 except Exception as e:
@@ -764,7 +841,7 @@ def _build_payload(coins=None, fetch_coin=None, deadline=None):
     # Don't block on stragglers; their sockets time out on their own.
     pool.shutdown(wait=False, cancel_futures=True)
 
-    snapshot = _cached_snapshot(coins, base_cache, manual)
+    snapshot = _cached_snapshot(coins, base_cache, manual, manual_ebay_sales)
     for future, coin in futures.items():
         cid = coin['id']
         result = snapshot[cid]

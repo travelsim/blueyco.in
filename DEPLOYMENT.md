@@ -1,6 +1,6 @@
 # Bluey Coin Tracker deployment and pricing
 
-_Verified 5 October 2026._
+_Verified 6 October 2026._
 
 ## Production
 
@@ -16,6 +16,7 @@ _Verified 5 October 2026._
 ## Pricing evidence and access
 
 - eBay completed-sale results come from the configured RapidAPI integration. Only records with matching product identity, Australian currency and expected quantity contribute to a current summary. Records older than 90 days remain available under Historical eBay sales, clearly excluded from current price statistics. A later live refresh carries previously saved matched records forward instead of discarding them.
+- `manual_ebay_sales.json` is the versioned JSON store for individually recorded eBay AU sold results supplied by the owner, including reviewed CSV imports. Preserve each row's catalog ID, source search, capture date, displayed item price, item ID, listing URL and original listing text when supplied. Rows remain labelled as user-supplied and are not API-verified. Current medians use only valid AUD results from the latest 90 days; older retained rows stay in sale history. Do not invent missing listing IDs or item URLs.
 - Each catalogue item has an eBay completed-sale search link, tagged through the eBay Partner Network when `EPN_CAMPAIGN_ID` is configured; historical eBay item links are tagged too.
 - Card mintage rarity is computed from catalogued mintage figures: 1 is the largest published mintage, 10 the smallest; equal mintages share a score and unpublished mintages are unrated. This is a relative supply indicator, not a market-value estimate.
 - Retailer prices in Where to Buy are asking prices. Manual prices require a `checkedAt` timestamp within seven days; otherwise only the source link is returned.
