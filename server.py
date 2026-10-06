@@ -73,7 +73,7 @@ STATIC_FILES = {
     '/favicon.svg': ('favicon.svg', 'image/svg+xml'),
 }
 
-# ── COIN CATALOGUE (57 tracked products) ────────────────────────────────────
+# ── PRICING CATALOGUE (58 IDs: 53 current items + 5 historical IDs) ────────────────────────────────────
 COINS = [
     # Series 1 - 2024 Dollarbucks
     {'id': 's1_bluey', 'ebay_kw': '2024 $1 Bluey Dollarbuck till coin', 'search': '2024 Bluey Dollarbuck Bluey till coin'},
@@ -82,6 +82,7 @@ COINS = [
     {'id': 's1_proof_coloured', 'ebay_kw': '2024 $1 Bluey Dollarbucks coloured proof coin', 'search': '2024 Bluey Dollarbucks coloured proof'},
     {'id': 's1_10_coin_folder_set', 'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set', 'search': '2024 Bluey ten coin collection folder tube'},
     {'id': 's1_coloured_insert_variant', 'ebay_kw': '2024 Bluey special coloured coin one in ten tube set', 'search': '2024 Bluey special coloured tube set coin'},
+    {'id': 's1_auspost_stamp_pack', 'ebay_kw': '2024 Bluey MyStamps pack 12 house shaped stamps', 'search': '2024 Bluey MyStamps pack 12 house shaped stamps'},
     {'id': 's1_coloured_bluey', 'ebay_kw': '2024 Bluey coloured uncirculated dollarbuck coin card', 'search': '2024 Bluey coloured uncirculated dollarbuck'},
     {'id': 's1_coloured_heelers', 'ebay_kw': '2024 Bluey Heelers coloured uncirculated dollarbuck', 'search': '2024 Bluey Heelers coloured dollarbuck'},
     {'id': 's1_coloured_grannies', 'ebay_kw': '2024 Bluey Grannies coloured uncirculated dollarbuck', 'search': '2024 Bluey Grannies coloured dollarbuck'},
@@ -144,20 +145,6 @@ COIN_BY_ID = {c['id']: c for c in COINS}
 
 # ── RETAILERS (Buy Now panel) ─────────────────────────────────────────────────
 RETAILERS = [
-    {
-        'id':         'ramint',
-        'name':       'Royal Australian Mint',
-        'base_url':   'https://eshop.ramint.gov.au',
-        'search_url': 'https://eshop.ramint.gov.au/catalogsearch/result/?q={q}',
-        'type':       'jsonld',
-    },
-    {
-        'id':         'auspost',
-        'name':       'Australia Post',
-        'base_url':   'https://auspost.com.au',
-        'search_url': 'https://auspost.com.au/shop/search?SearchTerm=bluey',
-        'type':       'link_only',
-    },
     {
         'id':         'ebay',
         'name':       'eBay AU',
