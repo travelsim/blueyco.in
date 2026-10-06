@@ -41,7 +41,9 @@ jobs:
       - name: Refresh matched completed-sale data
         env:
           RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
-        run: python scripts/refresh_ebay.py --offset "${{ inputs.offset }}" --limit "${{ inputs.limit }}"
+          OFFSET: ${{ inputs.offset }}
+          LIMIT: ${{ inputs.limit }}
+        run: python scripts/refresh_ebay.py --offset "$OFFSET" --limit "$LIMIT"
       - name: Commit refreshed snapshot
         run: |
           if git diff --quiet -- ebay_cache.json; then
