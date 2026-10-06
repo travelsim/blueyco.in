@@ -2869,6 +2869,7 @@ function renderBuyOptions(panel, options) {
     // Show the observed date for manual asking prices, and conditions where present.
     const subtitles = [];
     if (opt.subtitle) subtitles.push(safeText(opt.subtitle));
+    if (opt.title) subtitles.push(`Listing: ${safeText(opt.title)}`);
     if (opt.checkedAt) {
       const checked = new Date(Number(opt.checkedAt) * 1000).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
       subtitles.push(`Asking price checked ${checked}`);
@@ -2883,7 +2884,7 @@ function renderBuyOptions(panel, options) {
     if (!opt.link_only && opt.price != null) {
       priceEl = el('span', 'ret-price', `${opt.price_type === 'asking' ? 'Ask ' : ''}${formatAUD(opt.price)}`);
     } else {
-      priceEl = el('span', 'ret-price link-only', 'Listings');
+      priceEl = el('span', 'ret-price link-only', opt.retailer_id === 'ebay' ? 'Live listings' : 'Listings');
     }
 
     // Stock badge (only for priced options)
@@ -2912,6 +2913,9 @@ function renderBuyOptions(panel, options) {
 
     row.append(name, priceEl, badge, link);
     panel.append(row);
+    if (opt.retailer_id === 'ebay' && opt.link_only) {
+      panel.append(el('div', 'bp-note', 'Live eBay offer details are temporarily unavailable. Open eBay to check current listings and prices.'));
+    }
   });
 
   panel.append(el('div', 'bp-note', 'Priced results are current asking prices, not completed sales. Dealer search links may show higher retail asks; no price is shown until it can be checked and dated.'));

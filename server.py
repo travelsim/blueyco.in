@@ -1053,9 +1053,11 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
             'retailer_id': retailer['id'],
             'name':        retailer['name'],
             'price':       it['price'],
+            'price_type':  'asking',
             'available':   True,
             'url':         affiliate_url(safe_link, coin_id=coin_id, source='ebay_buy'),
             'link_only':   False,
+            'title':       it.get('title') or '',
             'subtitle':    it.get('subtitle'),
         })
 
