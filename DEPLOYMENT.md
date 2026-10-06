@@ -37,7 +37,9 @@ Configure these in the Vercel project settings, never in the repository:
 | `RAPIDAPI_REFRESH_LIMIT` | Maximum coins refreshed per invocation, capped at five |
 | `RAPIDAPI_MIN_INTERVAL` | Minimum interval between upstream requests; at least 1.2 seconds |
 
-The live refresh is opt-in. Check the RapidAPI subscription allowance and Vercel execution limits before enabling scheduled refreshes. There is currently no scheduled refresh configured in this repository.
+The Vercel live refresh is opt-in and instance-local; it does not persist newly fetched records into the production snapshot. The `Refresh eBay sold-price snapshot` GitHub Actions workflow provides a durable, manual batch refresh. It handles at most five catalog coins per run, waits at least 1.2 seconds between upstream requests, preserves older matched sales, and commits `ebay_cache.json` only after every request in the batch succeeds. A successful commit deploys the updated snapshot through Vercel.
+
+Before using the workflow, add `RAPIDAPI_KEY` as a repository Actions secret (Settings → Secrets and variables → Actions). The workflow accepts a zero-based `offset` and a `limit` from 1 to 5; successive offsets 0, 5, 10, ... cover the catalog. Check the RapidAPI subscription allowance before each batch. It is manual only; no recurring schedule is enabled, and no RapidAPI requests run on normal site traffic.
 
 ## Release checks
 
