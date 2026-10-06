@@ -922,6 +922,32 @@ def _get_ebay_token():
     return token
 
 
+def _ebay_oauth_http_error_summary(error):
+    """Return only bounded, non-secret OAuth error fields suitable for logs."""
+    details = []
+    try:
+        payload = json.loads(error.read(8192).decode('utf-8', 'replace'))
+    except Exception:
+        payload = {}
+
+    if isinstance(payload, dict):
+        for field in ('error', 'error_description'):
+            value = payload.get(field)
+            if not isinstance(value, str):
+                continue
+            for secret in (EBAY_CLIENT_ID, EBAY_CLIENT_SECRET):
+                if secret:
+                    value = value.replace(secret, '[redacted]')
+            value = ' '.join(''.join(
+                char if char.isprintable() else ' ' for char in value
+            ).split())[:240]
+            if value:
+                details.append(f'{field}={value!r}')
+
+    status = getattr(error, 'code', 'unknown')
+    return f'HTTP {status}' + (f'; {"; ".join(details)}' if details else '')
+
+
 def _ebay_browse_search(keywords, limit=5):
     """
     Query eBay's own Browse API for active Buy It Now listings.
@@ -933,8 +959,11 @@ def _ebay_browse_search(keywords, limit=5):
 
     try:
         token = _get_ebay_token()
+    except urllib.error.HTTPError as e:
+        print(f'eBay OAuth token error: {_ebay_oauth_http_error_summary(e)}')
+        return []
     except Exception as e:
-        print(f'eBay OAuth token error: {e}')
+        print(f'eBay OAuth token error: {type(e).__name__}')
         return []
 
     params = urllib.parse.urlencode({
