@@ -132,8 +132,12 @@ class TestCartBadgeReflectsState(unittest.TestCase):
 
 class TestHonestCopy(unittest.TestCase):
     def test_meta_description_coin_count_matches_the_catalogue(self):
+        ids = re.findall(r"\{\s*id:\s*'([^']+)'\s*,\s*series:", INDEX)
+        count = len(ids)
+        self.assertGreater(count, 0)
+        self.assertEqual(len(set(ids)), count)
         desc = re.search(r'<meta name="description" content="([^"]+)"', INDEX).group(1)
-        self.assertIn('58 Bluey collectibles, including coins and stamps', desc)
+        self.assertIn(f'{count} Bluey collectibles, including coins and stamps', desc)
 
     def test_static_market_ranges_are_not_presented_as_current_market_facts(self):
         self.assertNotIn('Market ${coin.marketLow}', INDEX)
