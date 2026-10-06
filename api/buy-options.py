@@ -111,11 +111,14 @@ def get_buy_options(coin_id, keywords):
     now = time.time()
     hit = _cache.get(coin_id)
     if hit and now - hit['fetchedAt'] < CACHE_TTL:
-        return hit['options'], True
+        return [option for option in hit['options']
+                if 'coinxchange' not in f"{option.get('retailer_id', '')} {option.get('name', '')}".lower()], True
 
     manual = _manual()
     pool = ThreadPoolExecutor(max_workers=MAX_WORKERS)
-    futures = {pool.submit(_scrape, r, keywords, coin_id): r for r in legacy.RETAILERS}
+    retailers = [r for r in legacy.RETAILERS
+                 if 'coinxchange' not in f"{r.get('id', '')} {r.get('name', '')} {r.get('type', '')}".lower()]
+    futures = {pool.submit(_scrape, r, keywords, coin_id): r for r in retailers}
     done, pending = wait(futures, timeout=DEADLINE)
     pool.shutdown(wait=False, cancel_futures=True)
 
@@ -145,6 +148,8 @@ def get_buy_options(coin_id, keywords):
                 option.setdefault('price_type', 'asking')
         options.extend(results)
 
+    options = [o for o in options
+               if 'coinxchange' not in f"{o.get('retailer_id', '')} {o.get('name', '')}".lower()]
     priced = sorted(
         [o for o in options if not o.get('link_only') and o.get('price') is not None],
         key=lambda o: o['price'],
