@@ -1,0 +1,55 @@
+name: Refresh eBay sold-price snapshot
+
+on:
+  workflow_dispatch:
+    inputs:
+      offset:
+        description: Zero-based starting catalog position (use 0, 5, 10, ...)
+        required: true
+        default: '0'
+        type: string
+      limit:
+        description: Coins in this run (maximum 5)
+        required: true
+        default: '5'
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-ebay-snapshot
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate credentials and batch size
+        env:
+          RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
+          OFFSET: ${{ inputs.offset }}
+          LIMIT: ${{ inputs.limit }}
+        run: |
+          test -n "$RAPIDAPI_KEY" || { echo 'RAPIDAPI_KEY Actions secret is not configured'; exit 1; }
+          python -c 'import os; o=int(os.environ["OFFSET"]); n=int(os.environ["LIMIT"]); assert o >= 0 and 1 <= n <= 5, "offset must be >= 0 and limit 1..5"'
+      - name: Refresh matched completed-sale data
+        env:
+          RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
+        run: python scripts/refresh_ebay.py --offset "${{ inputs.offset }}" --limit "${{ inputs.limit }}"
+      - name: Commit refreshed snapshot
+        run: |
+          if git diff --quiet -- ebay_cache.json; then
+            echo 'No snapshot changes to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ebay_cache.json
+          git commit -m 'data: refresh eBay completed sales'
+          git push
