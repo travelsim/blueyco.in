@@ -73,7 +73,7 @@ STATIC_FILES = {
     '/favicon.svg': ('favicon.svg', 'image/svg+xml'),
 }
 
-# ── PRICING CATALOGUE (58 IDs: 53 current items + 5 historical IDs) ────────────────────────────────────
+# ── PRICING CATALOGUE (63 IDs: 58 current items + 5 historical IDs) ────────────────────────────────────
 COINS = [
     # Series 1 - 2024 Dollarbucks
     {'id': 's1_bluey', 'ebay_kw': '2024 $1 Bluey Dollarbuck till coin', 'search': '2024 Bluey Dollarbuck Bluey till coin'},
@@ -83,6 +83,10 @@ COINS = [
     {'id': 's1_10_coin_folder_set', 'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set', 'search': '2024 Bluey ten coin collection folder tube'},
     {'id': 's1_coloured_insert_variant', 'ebay_kw': '2024 Bluey special coloured coin one in ten tube set', 'search': '2024 Bluey special coloured tube set coin'},
     {'id': 's1_auspost_stamp_pack', 'ebay_kw': '2024 Bluey MyStamps pack 12 house shaped stamps', 'search': '2024 Bluey MyStamps pack 12 house shaped stamps'},
+    {'id': 's1_impressions_pnc_colour', 'ebay_kw': '2024 Bluey limited edition coloured coin PNC', 'search': '2024 Bluey limited edition coloured coin PNC'},
+    {'id': 's1_impressions_pnc_2coin', 'ebay_kw': '2024 Bluey limited edition 2 coin PNC', 'search': '2024 Bluey limited edition 2 coin PNC'},
+    {'id': 's1_impressions_pnc_3coin', 'ebay_kw': '2024 Bluey limited edition 3 coin PNC envelope privy', 'search': '2024 Bluey limited edition 3 coin PNC'},
+    {'id': 's1_impressions_pnc_silver', 'ebay_kw': '2024 Bluey limited edition silver proof prestige PNC', 'search': '2024 Bluey limited edition silver proof prestige PNC'},
     {'id': 's1_coloured_bluey', 'ebay_kw': '2024 Bluey coloured uncirculated dollarbuck coin card', 'search': '2024 Bluey coloured uncirculated dollarbuck'},
     {'id': 's1_coloured_heelers', 'ebay_kw': '2024 Bluey Heelers coloured uncirculated dollarbuck', 'search': '2024 Bluey Heelers coloured dollarbuck'},
     {'id': 's1_coloured_grannies', 'ebay_kw': '2024 Bluey Grannies coloured uncirculated dollarbuck', 'search': '2024 Bluey Grannies coloured dollarbuck'},
@@ -125,6 +129,7 @@ COINS = [
     {'id': 's3_granny_privy', 'ebay_kw': '2026 $2 Bluey Granny Mobile Privy Mark coin', 'search': '2026 Bluey Granny Mobile Privy Mark'},
     {'id': 's3_proof_ab', 'ebay_kw': '2026 $2 Bluey coloured proof aluminium bronze coin', 'search': '2026 Bluey proof aluminium bronze'},
     {'id': 's3_proof_silv', 'ebay_kw': '2026 $2 Bluey coloured silver proof coin', 'search': '2026 Bluey silver proof'},
+    {'id': 's3_maxicard_pack', 'ebay_kw': '2026 Bluey prepaid concertina maxicard pack five designs', 'search': '2026 Bluey prepaid concertina maxicard pack'},
     {'id': 's3_sleepytime_insert', 'ebay_kw': '2026 $2 Bluey Sleepytime Coloured Insert coin', 'search': '2026 Bluey Sleepytime insert'},
     {'id': 's3_till_bluey', 'ebay_kw': '2026 $2 Bluey coloured till coin circulation', 'search': '2026 Bluey Bingo coloured coin pair'},
     {'id': 's3_till_bingo', 'ebay_kw': '2026 $2 Bingo coloured till coin circulation', 'search': '2026 Bluey Bingo coloured coin pair'},

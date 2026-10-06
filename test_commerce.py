@@ -123,7 +123,7 @@ class TestMedianPricing(unittest.TestCase):
 
 class TestAffiliateDisclosure(unittest.TestCase):
     def test_footer_discloses_epn_and_non_affiliation(self):
-        footer = INDEX.split('<footer>')[1].split('</footer>')[0]
+        footer = INDEX.split('<footer id="site-footer">')[1].split('</footer>')[0]
         self.assertIn('eBay Partner Network', footer)
         self.assertIn('not affiliated', footer.lower())
 

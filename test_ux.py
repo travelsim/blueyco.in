@@ -133,7 +133,7 @@ class TestCartBadgeReflectsState(unittest.TestCase):
 class TestHonestCopy(unittest.TestCase):
     def test_meta_description_coin_count_matches_the_catalogue(self):
         desc = re.search(r'<meta name="description" content="([^"]+)"', INDEX).group(1)
-        self.assertIn('48 coins', desc)
+        self.assertIn('58 Bluey collectibles, including coins and stamps', desc)
 
     def test_static_market_ranges_are_not_presented_as_current_market_facts(self):
         self.assertNotIn('Market ${coin.marketLow}', INDEX)
@@ -149,7 +149,7 @@ class TestHonestCopy(unittest.TestCase):
 
 class TestClutterReduction(unittest.TestCase):
     def test_navigation_has_one_frames_destination(self):
-        nav = INDEX.split('<header class="nav">')[1].split('</header>')[0]
+        nav = INDEX.split('<header class="nav" id="site-header">')[1].split('</header>')[0]
         self.assertEqual(nav.count('href="#shop"'), 1)
         self.assertIn('>Collection<', nav)
         self.assertIn('>Price Guide<', nav)
