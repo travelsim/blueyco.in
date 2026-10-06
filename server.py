@@ -73,7 +73,7 @@ STATIC_FILES = {
     '/favicon.svg': ('favicon.svg', 'image/svg+xml'),
 }
 
-# ── COIN CATALOGUE (53 tracked products) ────────────────────────────────────
+# ── PRICING CATALOGUE (58 IDs: 53 current items + 5 historical IDs) ────────────────────────────────────
 COINS = [
     # Series 1 - 2024 Dollarbucks
     {'id': 's1_bluey', 'ebay_kw': '2024 $1 Bluey Dollarbuck till coin', 'search': '2024 Bluey Dollarbuck Bluey till coin'},
