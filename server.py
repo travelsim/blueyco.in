@@ -1032,15 +1032,12 @@ def _ebay_rapidapi_search(keywords):
 
 def _ebay_live_options(retailer, keywords, coin_id=''):
     """
-    Fetch active eBay AU Buy It Now listings for the Buy-Now panel.
-    Prefers eBay's own Browse API (EBAY_CLIENT_ID/EBAY_CLIENT_SECRET); falls
-    back to the RapidAPI real-time-ebay reseller (RAPIDAPI_KEY) if that
-    yields nothing; falls back to a plain search link if neither is
-    configured or both fail. EPN affiliate wrapping is applied either way.
+    Fetch active eBay AU Buy It Now listings from eBay's Browse API.
+    RAPIDAPI_KEY belongs to the completed-sales service, not the unconfigured
+    real-time-ebay host; trying to reuse it there produced HTTP 404s. If
+    Browse API credentials are unavailable, return an affiliate search link.
     """
     items = _ebay_browse_search(keywords, limit=5)
-    if not items:
-        items = _ebay_rapidapi_search(keywords)
     if not items:
         return _link_only_option(retailer, keywords, coin_id=coin_id)
 
@@ -1053,9 +1050,11 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
             'retailer_id': retailer['id'],
             'name':        retailer['name'],
             'price':       it['price'],
+            'price_type':  'asking',
             'available':   True,
             'url':         affiliate_url(safe_link, coin_id=coin_id, source='ebay_buy'),
             'link_only':   False,
+            'title':       it.get('title') or '',
             'subtitle':    it.get('subtitle'),
         })
 

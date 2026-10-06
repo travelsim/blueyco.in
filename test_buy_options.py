@@ -82,6 +82,25 @@ class TestBuyOptions(unittest.TestCase):
         self.assertEqual(options[0]['price_type'], 'asking')
         self.assertEqual(options[0]['title'], '2024 Bluey Dollarbuck till coin')
 
+    def test_ebay_live_offer_keeps_title_price_label_and_affiliate_link(self):
+        retailer = {r['id']: r for r in legacy.RETAILERS}['ebay']
+        listing = {
+            'price': 12.5,
+            'title': '2024 Bluey Dollarbuck till coin - uncirculated',
+            'url': 'https://www.ebay.com.au/itm/12345',
+            'subtitle': 'Uncirculated',
+        }
+        with mock.patch.object(legacy, 'EPN_CAMPAIGN_ID', 'test-campaign'):
+            with mock.patch.object(legacy, '_ebay_browse_search', return_value=[listing]):
+                with mock.patch.object(legacy, '_ebay_rapidapi_search') as fallback:
+                    option = legacy._ebay_live_options(retailer, '2024 Bluey Dollarbuck till coin', 's1_bluey')[0]
+                    fallback.assert_not_called()
+        self.assertEqual(option['title'], listing['title'])
+        self.assertEqual(option['price'], 12.5)
+        self.assertEqual(option['price_type'], 'asking')
+        self.assertFalse(option['link_only'])
+        self.assertIn('campid=', option['url'])
+
     def test_manual_price_without_recent_check_date_is_search_only(self):
         manual = {'s1_bluey': {'ramint': {
             'price': 42.0, 'url': 'https://example.test/bluey',
