@@ -38,14 +38,15 @@ class TestBuyOptions(unittest.TestCase):
                 self.assertFalse(seen_link_only, 'priced option after a link-only option')
 
     def test_manual_override_takes_priority(self):
-        manual = {'s1_bluey': {'ramint': {
+        manual = {'s1_bluey': {'coinxchange_buy': {
             'price': 42.0, 'checkedAt': time.time(),
             'url': 'https://example.test/bluey',
         }}}
         original = buy_options._manual
         buy_options._manual = lambda: manual
         try:
-            option = buy_options._fallback(legacy.RETAILERS[0], '2024 Bluey', 's1_bluey', manual)[0]
+            retailer = next(r for r in legacy.RETAILERS if r['id'] == 'coinxchange_buy')
+            option = buy_options._fallback(retailer, '2024 Bluey', 's1_bluey', manual)[0]
         finally:
             buy_options._manual = original
         self.assertEqual(option['price'], 42.0)

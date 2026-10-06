@@ -254,11 +254,11 @@ class TestBuyOptionsFallbackTagging(unittest.TestCase):
 
     def test_non_ebay_manual_url_never_tagged(self):
         legacy.EPN_CAMPAIGN_ID = 'testcamp'
-        ramint = [r for r in legacy.RETAILERS if r['id'] == 'ramint'][0]
-        manual = {'s1_bluey': {'ramint': {
-            'price': 20.0, 'url': 'https://eshop.ramint.gov.au/coin/111344/'}}}
-        option = buy_options._fallback(ramint, 'Bluey', 's1_bluey', manual)[0]
-        self.assertEqual(option['url'], 'https://eshop.ramint.gov.au/coin/111344/')
+        coinxchange = [r for r in legacy.RETAILERS if r['id'] == 'coinxchange_buy'][0]
+        manual = {'s1_bluey': {'coinxchange_buy': {
+            'price': 20.0, 'url': 'https://www.coinxchange.com.au/buy?search=Bluey'}}}
+        option = buy_options._fallback(coinxchange, 'Bluey', 's1_bluey', manual)[0]
+        self.assertEqual(option['url'], 'https://www.coinxchange.com.au/buy?search=Bluey')
 
 
 if __name__ == '__main__':
