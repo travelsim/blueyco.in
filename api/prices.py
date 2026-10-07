@@ -192,8 +192,9 @@ COINS = [
     {'id': 's1_bingo', 'ebay_kw': '2024 $1 Bingo Dollarbuck till coin', 'search': '2024 $1 Bingo Dollarbuck till coin'},
     {'id': 's1_proof_silver', 'ebay_kw': '2024 $1 Bluey Dollarbucks fine silver coloured proof', 'search': '2024 $1 Bluey Dollarbucks fine silver coloured proof'},
     {'id': 's1_proof_coloured', 'ebay_kw': '2024 $1 Bluey Dollarbucks coloured proof coin', 'search': '2024 $1 Bluey Dollarbucks coloured proof coin'},
-    {'id': 's1_10_coin_folder_set', 'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set', 'search': '2024 $1 Bluey ten coin collection folder tube set'},
-    {'id': 's1_coloured_insert_variant', 'ebay_kw': '2024 Bluey special coloured coin one in ten tube set', 'search': '2024 Bluey special coloured coin one in ten tube set'},
+    {'id': 's1_10_coin_folder_set', 'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set sealed unopened', 'search': '2024 $1 Bluey ten coin collection folder tube set sealed unopened'},
+    {'id': 's1_10_coin_folder_opened', 'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set opened', 'search': '2024 $1 Bluey ten coin collection folder tube set opened'},
+    {'id': 's1_coloured_insert_variant', 'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set special coloured coin', 'search': '2024 $1 Bluey ten coin collection folder tube set special coloured coin'},
     {'id': 's1_auspost_stamp_pack', 'ebay_kw': '2024 Bluey MyStamps pack 12 house shaped stamps', 'search': '2024 Bluey MyStamps pack 12 house shaped stamps'},
     {'id': 's1_impressions_pnc_colour', 'ebay_kw': '2024 Bluey limited edition coloured coin PNC', 'search': '2024 Bluey limited edition coloured coin PNC'},
     {'id': 's1_impressions_pnc_2coin', 'ebay_kw': '2024 Bluey limited edition 2 coin PNC', 'search': '2024 Bluey limited edition 2 coin PNC'},
@@ -482,11 +483,11 @@ def _product_matches_coin(product, coin, now=None, max_age_days=90):
     if years and not years.issubset(title_tokens):
         return False
 
-    for variant in {'proof', 'silver', 'coloured', 'colored', 'privy', 'postal', 'pnc', 'card'}:
+    for variant in {'proof', 'silver', 'coloured', 'colored', 'privy', 'postal', 'pnc', 'card', 'sealed', 'unopened', 'opened', 'special'}:
         if variant in title_tokens and variant not in query_tokens:
             return False
     # ...and the formats the query asks for must be present in the title.
-    for group in (('proof',), ('silver',), ('privy', 'privymark'), ('pnc', 'postal'), ('maxicard',)):
+    for group in (('proof',), ('silver',), ('privy', 'privymark'), ('pnc', 'postal'), ('maxicard',), ('sealed', 'unopened'), ('special',)):
         if set(group) & query_tokens and not set(group) & title_tokens:
             return False
     unrequested_names = (title_tokens & _NAMED_VARIANT_TOKENS) - (query_tokens & _NAMED_VARIANT_TOKENS)

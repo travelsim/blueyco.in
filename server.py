@@ -80,8 +80,9 @@ COINS = [
     {'id': 's1_bingo', 'ebay_kw': '2024 $1 Bingo Dollarbuck till coin', 'search': '2024 $1 Bingo Dollarbuck till coin'},
     {'id': 's1_proof_silver', 'ebay_kw': '2024 $1 Bluey Dollarbucks fine silver coloured proof', 'search': '2024 $1 Bluey Dollarbucks fine silver coloured proof'},
     {'id': 's1_proof_coloured', 'ebay_kw': '2024 $1 Bluey Dollarbucks coloured proof coin', 'search': '2024 $1 Bluey Dollarbucks coloured proof coin'},
-    {'id': 's1_10_coin_folder_set', 'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set', 'search': '2024 $1 Bluey ten coin collection folder tube set'},
-    {'id': 's1_coloured_insert_variant', 'ebay_kw': '2024 Bluey special coloured coin one in ten tube set', 'search': '2024 Bluey special coloured coin one in ten tube set'},
+    {'id': 's1_10_coin_folder_set', 'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set sealed unopened', 'search': '2024 $1 Bluey ten coin collection folder tube set sealed unopened'},
+    {'id': 's1_10_coin_folder_opened', 'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set opened', 'search': '2024 $1 Bluey ten coin collection folder tube set opened'},
+    {'id': 's1_coloured_insert_variant', 'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set special coloured coin', 'search': '2024 $1 Bluey ten coin collection folder tube set special coloured coin'},
     {'id': 's1_auspost_stamp_pack', 'ebay_kw': '2024 Bluey MyStamps pack 12 house shaped stamps', 'search': '2024 Bluey MyStamps pack 12 house shaped stamps'},
     {'id': 's1_impressions_pnc_colour', 'ebay_kw': '2024 Bluey limited edition coloured coin PNC', 'search': '2024 Bluey limited edition coloured coin PNC'},
     {'id': 's1_impressions_pnc_2coin', 'ebay_kw': '2024 Bluey limited edition 2 coin PNC', 'search': '2024 Bluey limited edition 2 coin PNC'},
@@ -850,6 +851,7 @@ def _coinxchange_quantity(text):
 # without this a "silver proof" query accepts plain uncirculated listings.
 _REQUIRED_VARIANTS = (
     ('proof',), ('silver',), ('privy', 'privymark'), ('pnc', 'postal'), ('maxicard',),
+    ('sealed', 'unopened'), ('special',),
 )
 # Listings that are never the collectable itself.
 _JUNK_TITLE_TOKENS = {
@@ -883,6 +885,12 @@ def _ebay_query(keywords):
         negatives.append('pnc')
     if _coinxchange_quantity(keywords) == 1 and not tokens & {'set', 'folder', 'pack'}:
         negatives.append('set')
+    if tokens & {'folder', 'tube'}:
+        # Tube/folder sets come sealed, opened, or with the special coloured coin.
+        if 'special' not in tokens:
+            negatives.append('special')
+        if 'opened' in tokens:
+            negatives += ['sealed', 'unopened']
     negatives += [
         t for t in _NAMED_VARIANTS
         if t not in tokens and not any(t in fam and fam & tokens for fam in _NAME_FAMILIES)
@@ -901,7 +909,7 @@ def _coinxchange_title_matches(title, keywords):
     years = {token for token in query_tokens if re.fullmatch(r'20\d{2}', token)}
     if not title_tokens or (years and not years.issubset(title_tokens)):
         return False
-    for variant in {'proof', 'silver', 'coloured', 'colored', 'privy', 'postal', 'pnc', 'card'}:
+    for variant in {'proof', 'silver', 'coloured', 'colored', 'privy', 'postal', 'pnc', 'card', 'sealed', 'unopened', 'opened', 'special'}:
         if variant in title_tokens and variant not in query_tokens:
             return False
     named_variants = set(_NAMED_VARIANTS)
