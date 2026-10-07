@@ -2740,17 +2740,37 @@ function buildCard(coin) {
     image.loading = 'lazy';
     image.decoding = 'async';
     const credit = el('figcaption', 'coin-product-credit');
-    const link = el('a', '', 'Product image: Royal Australian Mint');
-    link.href = product.source;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    credit.append(link);
+    const credit_ = productImageCredit(product.source);
+    if (credit_.url) {
+      const link = el('a', '', credit_.label);
+      link.href = credit_.url;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      credit.append(link);
+    } else {
+      credit.textContent = credit_.label;
+    }
     figure.append(image, credit);
     card.append(hdr, figure, body);
   } else {
     card.append(hdr, body);
   }
   return card;
+}
+
+// Credit line for a product photo: names the real source instead of assuming the Mint.
+function productImageCredit(source) {
+  const text = String(source || '');
+  if (!/^https?:\/\//.test(text)) {
+    if (/^Owner photo/i.test(text)) return { label: 'Product image: owner photo', url: null };
+    if (/Australia Post/i.test(text)) return { label: 'Product image: Australia Post', url: null };
+    if (/mycollectables/i.test(text)) return { label: 'Product image: MyCollectables', url: null };
+    return { label: 'Product image', url: null };
+  }
+  let host = '';
+  try { host = new URL(text).hostname.replace(/^www\./, ''); } catch (e) { return { label: 'Product image', url: null }; }
+  const names = { 'ramint.gov.au': 'Royal Australian Mint', 'ramint.runfair.com': 'Royal Australian Mint', 'collectables.auspost.com.au': 'Australia Post', 'auspost.com.au': 'Australia Post', 'bluey.tv': 'Bluey official site', 'mycollectables.com.au': 'MyCollectables', 'grabcoins.com.au': 'GrabCoins' };
+  return { label: 'Product image: ' + (names[host] || host), url: text };
 }
 
 // ────────────────────────────────────────────────
