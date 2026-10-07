@@ -226,13 +226,6 @@ COINS = [
     # Further 2024 $1 PNCs + 5th Anniversary proof from RAM 2024-25 Annual
     # Report Appendix E Table 13 (codes 11624-11645; 11635/11637 are distinct
     # records from the 11428/11430 envelope PNCs, not dedupes).
-    {'id': 's1_proof_anniv_11624', 'ebay_kw': '2024 $1 Bluey 5th anniversary coloured proof coin', 'search': '2024 Bluey 5th anniversary proof'},
-    {'id': 's1_pnc_11635', 'ebay_kw': '2024 Bluey $1 postal numismatic cover PNC', 'search': '2024 Bluey standard PNC'},
-    {'id': 's1_pnc_11637', 'ebay_kw': '2024 Bluey Bingo postal numismatic cover PNC', 'search': '2024 Bluey Bingo standard PNC'},
-    {'id': 's1_pnc_11638', 'ebay_kw': '2024 Bluey Socks Muffin postal numismatic cover PNC', 'search': '2024 Bluey Socks Muffin PNC'},
-    {'id': 's1_pnc_11640', 'ebay_kw': '2024 Bluey Nana Stripes Trixie postal numismatic cover PNC', 'search': '2024 Bluey Nana Stripes Trixie PNC'},
-    {'id': 's1_pnc_11641', 'ebay_kw': '2024 Bluey Friends Pose postal numismatic cover PNC', 'search': '2024 Bluey Friends Pose PNC'},
-    {'id': 's1_pnc_11645', 'ebay_kw': '2024 Bluey coloured proof postal numismatic cover PNC', 'search': '2024 Bluey coloured proof PNC'},
     {'id': 's2_xmas_unc', 'ebay_kw': '2025 $1 Bluey Christmas coloured uncirculated coin', 'search': '2025 Bluey Christmas uncirculated'},
     {'id': 's2_xmas_silv', 'ebay_kw': '2025 $1 Bluey Christmas silver proof coin', 'search': '2025 Bluey Christmas silver proof'},
     {'id': 's3_rain', 'ebay_kw': '2026 $2 Bluey Rain privy mark uncirculated coin', 'search': '2026 Bluey Rain privy mark'},

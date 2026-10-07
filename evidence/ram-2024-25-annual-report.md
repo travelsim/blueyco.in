@@ -48,13 +48,13 @@ Other Bluey rows in the same table:
 |-------|----------------------------------------------------------------------------|--------|-----------|-------------------------|
 | 11367 | $1 Ag Coloured Proof Coin – Australia Post Bluey                            | 2,500  | 2,650     | s1_proof_silver         |
 | 11368 | $1 Three-Coin Uncirculated Set – Bluey – Dollarbucks                        | 22,500 | 30,000    | s1_three_coin_set       |
-| 11624 | $1 Coloured Proof Coin – 5th Anniversary of Bluey                          | 5,000  | 5,000     | s1_proof_anniv_11624 (new) |
-| 11635 | $1 Uncirculated Coin – Bluey – PNC                                         | 7,500  | Unlimited | s1_pnc_11635 (new)      |
-| 11637 | $1 Uncirculated Coin – Bluey – Bingo – PNC                                 | 6,500  | Unlimited | s1_pnc_11637 (new)      |
-| 11638 | $1 Uncirculated Coin – Bluey – Socks & Muffin – PNC                        | 6,500  | Unlimited | s1_pnc_11638 (new)      |
-| 11640 | $1 Uncirculated Coin – Bluey – Nana, Uncle Stripes & Trixie – PNC          | 6,500  | Unlimited | s1_pnc_11640 (new)      |
-| 11641 | $1 Uncirculated Coin – Bluey – Friends Pose – PNC                          | 6,500  | Unlimited | s1_pnc_11641 (new)      |
-| 11645 | $1 Coloured Proof Coin – Bluey – PNC                                       | 150    | Unlimited | s1_pnc_11645 (new)      |
+| 11624 | $1 Coloured Proof Coin – 5th Anniversary of Bluey                          | 5,000  | 5,000     | s1_proof_anniv_11624 (not a catalogue record, see correction) |
+| 11635 | $1 Uncirculated Coin – Bluey – PNC                                         | 7,500  | Unlimited | s1_pnc_11635 (not a catalogue record, see correction) |
+| 11637 | $1 Uncirculated Coin – Bluey – Bingo – PNC                                 | 6,500  | Unlimited | s1_pnc_11637 (not a catalogue record, see correction) |
+| 11638 | $1 Uncirculated Coin – Bluey – Socks & Muffin – PNC                        | 6,500  | Unlimited | s1_pnc_11638 (not a catalogue record, see correction) |
+| 11640 | $1 Uncirculated Coin – Bluey – Nana, Uncle Stripes & Trixie – PNC          | 6,500  | Unlimited | s1_pnc_11640 (not a catalogue record, see correction) |
+| 11641 | $1 Uncirculated Coin – Bluey – Friends Pose – PNC                          | 6,500  | Unlimited | s1_pnc_11641 (not a catalogue record, see correction) |
+| 11645 | $1 Coloured Proof Coin – Bluey – PNC                                       | 150    | Unlimited | s1_pnc_11645 (not a catalogue record, see correction) |
 
 ## Spelling resolutions (follow RAM exactly; do not normalise across codes)
 
@@ -73,6 +73,10 @@ Other Bluey rows in the same table:
   existing Series 4 Cricket catalog facts are unchanged; no mintages invented.
 - No "in Card" rows. The ten `s1_card_*` carded privy-mark records are unchanged
   by this update (they pre-date it and cite the report URL as a general source).
+
+## Correction 2026-10-07: only 10 PNC designs are retail products
+
+Australia Post Stamp Bulletin 391 (collectables.auspost.com.au, 2024) lists exactly ten Bluey PNCs at $25.95 (items 2278401-2278410) plus a $260 ten-PNC set limited to 1,000 sets. The annual-report rows 11635, 11637, 11638, 11640, 11641 and 11645 have no retail listing, price, image or sold evidence, so the six `s1_pnc_116xx` records were removed rather than shown as separate products. Their codes may be channel or manufacturing line items for the same covers; unresolved. Row 11645 (150) coincides with the Impressions silver proof prestige PNC (150) and row 11624 (5,000) with `s1_proof_coloured` (5,000); 11624 is now recorded as that coin's product code, inferred from the matching quantity.
 
 ## Catalog mapping notes / open items for owner review
 
