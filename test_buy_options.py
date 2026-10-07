@@ -80,7 +80,21 @@ class TestBuyOptions(unittest.TestCase):
             return []
         with mock.patch.object(legacy, '_ebay_browse_search', side_effect=fake):
             legacy._ebay_live_options(retailer, '2024 $1 Bluey Dollarbuck Bluey coin uncirculated', 's1_bluey')
-        self.assertEqual(seen, ['2024 $1 Bluey Dollarbuck Bluey coin uncirculated'])
+        self.assertEqual(seen, ['2024 $1 Bluey Dollarbucks Bluey uncirculated'])
+
+    def test_till_coin_query_drops_till_and_matches_plural_titles(self):
+        retailer = {r['id']: r for r in legacy.RETAILERS}['ebay']
+        raw = [{'title': '2024 Bluey $1 Dollarbucks Uncirculated Coin RAM', 'price': 4.5, 'url': 'https://www.ebay.com.au/itm/1'},
+               {'title': '2024 Bluey $1 Dollarbucks Proof Coin', 'price': 600.0, 'url': 'https://www.ebay.com.au/itm/2'},
+               {'title': '2024 Bingo $1 Dollarbucks Uncirculated', 'price': 5.0, 'url': 'https://www.ebay.com.au/itm/3'}]
+        seen = []
+        def fake(q, limit=5):
+            seen.append(q)
+            return raw
+        with mock.patch.object(legacy, '_ebay_browse_search', side_effect=fake):
+            out = legacy._ebay_live_options(retailer, '2024 $1 Bluey Dollarbuck till coin', 's1_bluey')
+        self.assertEqual(seen, ['2024 $1 Bluey Dollarbucks'])
+        self.assertEqual([o['price'] for o in out], [4.5])
 
     def test_coinxchange_active_asks_are_identity_and_quantity_filtered(self):
         retailer = {r['id']: r for r in legacy.RETAILERS}['coinxchange_buy']
