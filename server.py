@@ -1092,6 +1092,14 @@ def _ebay_rapidapi_search(keywords):
     return items
 
 
+def _browse_keywords(keywords):
+    """Browse query: drop words sellers rarely use and pluralise Dollarbuck."""
+    drop = {'till', 'coin', 'circulation'}
+    words = [('Dollarbucks' if w.lower() == 'dollarbuck' else w)
+             for w in str(keywords or '').split() if w.lower() not in drop]
+    return ' '.join(words)
+
+
 def _ebay_live_options(retailer, keywords, coin_id=''):
     """
     Fetch active eBay AU Buy It Now listings from eBay's Browse API.
@@ -1104,8 +1112,11 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
     # The Browse 'q' parameter is capped in length, so the exclusion list from
     # _ebay_query() (used for the search link) is not sent; the title gate below
     # does that filtering.
-    items = [it for it in _ebay_browse_search(keywords, limit=100)
-             if _coinxchange_title_matches(it.get('title'), keywords)]
+    # Till/circulation coins are listed as just '2024 Bluey $1 Dollarbucks', so
+    # 'till'/'coin' in the query would hide them; match on the cleaned keywords.
+    browse_kw = _browse_keywords(keywords)
+    items = [it for it in _ebay_browse_search(browse_kw, limit=100)
+             if _coinxchange_title_matches(re.sub(r'(?i)(?<![a-z])dollarbuck(?![a-z])', 'Dollarbucks', it.get('title') or ''), browse_kw)]
     if not items:
         return _link_only_option(retailer, keywords, coin_id=coin_id)
 
