@@ -57,9 +57,9 @@ class TestBuyOptions(unittest.TestCase):
         self.assertFalse(option['link_only'])
         self.assertEqual(option['price_type'], 'asking')
 
-    def test_cash_converters_and_gumtree_remain_search_only(self):
+    def test_gumtree_remains_search_only_and_resellers_are_gone(self):
         retailers = {r['id']: r for r in legacy.RETAILERS}
-        for retailer_id in ('cashconverters', 'gumtree'):
+        for retailer_id in ('gumtree',):
             retailer = retailers[retailer_id]
             self.assertEqual(retailer['type'], 'link_only')
             with mock.patch.object(legacy, '_http_get', side_effect=AssertionError('network access')):
@@ -68,7 +68,19 @@ class TestBuyOptions(unittest.TestCase):
             self.assertTrue(option['link_only'])
             self.assertIsNone(option['price'])
             self.assertIn('2024', option['url'])
-        self.assertNotIn('query=', retailers['cashconverters']['search_url'])
+        for removed in ('cashconverters', 'nova_coins', 'aussie_coins_direct'):
+            self.assertNotIn(removed, retailers)
+
+    def test_browse_query_is_plain_keywords_not_the_long_exclusion_query(self):
+        # eBay's Browse 'q' is length-limited; the long -(...) query 400'd in production.
+        retailer = {r['id']: r for r in legacy.RETAILERS}['ebay']
+        seen = []
+        def fake(q, limit=5):
+            seen.append(q)
+            return []
+        with mock.patch.object(legacy, '_ebay_browse_search', side_effect=fake):
+            legacy._ebay_live_options(retailer, '2024 $1 Bluey Dollarbuck Bluey coin uncirculated', 's1_bluey')
+        self.assertEqual(seen, ['2024 $1 Bluey Dollarbuck Bluey coin uncirculated'])
 
     def test_coinxchange_active_asks_are_identity_and_quantity_filtered(self):
         retailer = {r['id']: r for r in legacy.RETAILERS}['coinxchange_buy']
