@@ -61,7 +61,7 @@
         {
           "@type": "Question",
           "name": "Where can I buy official Bluey coins?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Check official Royal Australian Mint and Australia Post product pages, or use the Buy Options panel for eBay and Gumtree searches and current eBay asking prices. Sold searches are shown separately from active listings." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Check official Royal Australian Mint and Australia Post product pages, or use the Buy Options panel for current eBay and CoinXchange asking prices. Sold searches are shown separately from active listings." }
         },
         {
           "@type": "Question",
@@ -286,8 +286,26 @@
   .rarity-track { display:grid; grid-template-columns:repeat(10,1fr); gap:2px; margin-top:6px; }
   .rarity-track span { height:5px; border-radius:999px; background:rgba(38,58,91,.15); }
   .rarity-track span.active { background:#f28c28; box-shadow:0 1px 0 rgba(113,48,13,.22); }
-  .historical-sales { border-left:2px solid #cbd5e1; margin:8px 0 10px 8px; padding-left:10px; opacity:.92; }
-  .historical-sales .sales-list-title { color:#64748b; }
+  .sale-source { font-size:.68rem; font-weight:700; color:var(--muted); border:1px solid var(--border); border-radius:4px; padding:0 4px; flex:none; }
+  .value-trend { margin-top:6px; }
+  .value-trend > summary { cursor:pointer; list-style:none; }
+  .value-trend > summary::-webkit-details-marker { display:none; }
+  .value-trend[open] > summary { margin-bottom:6px; }
+  .trend-svg { width:100%; height:auto; display:block; }
+  .trend-grid { stroke:#e2e8f0; stroke-width:1; }
+  .trend-axis { font-size:9px; fill:#64748b; }
+  .trend-line { fill:none; stroke:#0f766e; stroke-width:2; stroke-linejoin:round; }
+  .trend-issue { stroke:#94a3b8; stroke-width:1; stroke-dasharray:4 3; }
+  .trend-pt-ebay { fill:#1e90d4; fill-opacity:.55; stroke:#1e90d4; }
+  .trend-pt-cx { fill:#f59e0b; fill-opacity:.6; stroke:#b45309; }
+  .trend-median-pt { fill:#0f766e; }
+  .trend-legend { display:flex; flex-wrap:wrap; gap:4px 12px; font-size:.72rem; color:var(--muted); margin-top:4px; }
+  .trend-key::before { display:inline-block; margin-right:4px; }
+  .trend-key-ebay::before { content:'●'; color:#1e90d4; }
+  .trend-key-cx::before { content:'■'; color:#f59e0b; }
+  .trend-key-line::before { content:'━'; color:#0f766e; }
+  .trend-key-issue::before { content:'┄'; color:#64748b; }
+  .trend-note { font-size:.72rem; color:var(--muted); margin:4px 0 0; }
 
   .card-body { padding: 14px 18px; }
   .card-header { align-items: center; }
@@ -2304,7 +2322,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
     <div class="faq-item">
       <h3>Where can I buy official Bluey coins?</h3>
-      <p>Check official Royal Australian Mint and Australia Post product pages, or use the Buy Options panel for eBay and Gumtree searches and current eBay asking prices. Sold searches are shown separately from active listings.</p>
+      <p>Check official Royal Australian Mint and Australia Post product pages, or use the Buy Options panel for current eBay and CoinXchange asking prices. Sold searches are shown separately from active listings.</p>
     </div>
     <div class="faq-item">
       <h3>What is the rarest Bluey coin?</h3>
@@ -2643,12 +2661,9 @@ const COIN_PRODUCT_IMAGES = {
 function buildCard(coin) {
   const coinEntry = coinData[coin.id] || {};
   const ebay      = coinEntry.ebay      || null;
-  const hasEbay = _hasFreshEbaySales(ebay);
-  const currentSales = hasEbay ? _currentEbayProducts(ebay) : [];
-  const feedMedian = hasEbay ? parseFloat(ebay.median_price) : NaN;
-  const median = hasEbay
-    ? (Number.isFinite(feedMedian) && feedMedian > 0 ? feedMedian : _medianOfProducts(ebay))
-    : null;
+  const currentSales = _currentSoldRecords(coinEntry);
+  const hasEbay = currentSales.length > 0;
+  const median = hasEbay ? _referenceFromEntry(coinEntry) : null;
   const hasMedian = Number.isFinite(median) && median > 0;
   const refPrice = hasMedian ? median : null;
   const premium = hasMedian ? calcPremium(median, coin.mintPrice) : null;
@@ -2710,8 +2725,9 @@ function buildCard(coin) {
     priceCard.append(issueRow);
   }
   if (hasMedian) {
-    const saleCount = Number(ebay.results || ebay.matched_results || currentSales.length);
-    const checked = new Date(Number(ebay.fetchedAt) * 1000).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
+    const saleCount = currentSales.length;
+    const fetchedTimes = [ebay, coinEntry.coinxchange].map(d => Number(d && d.fetchedAt) * 1000).filter(Number.isFinite);
+    const checked = new Date(Math.max.apply(null, fetchedTimes)).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
     const manualSalesCount = currentSales.filter(product =>
       product.source_type === 'user_pasted_search' || product.source_type === 'user_imported_csv'
     ).length;
@@ -2798,7 +2814,7 @@ function buildCard(coin) {
   sellPanel.id = `sell-panel-${coin.id}`;
   body.append(sellPanel);
 
-  // Recent eBay sales toggle
+  // Recent sold listings toggle (eBay AU + CoinXchange)
   if (hasMedian && currentSales.length) {
     const toggleBtn = el('button', 'toggle-sales', 'See recent sold listings ▾');
     const salesList = el('div', 'sales-list');
@@ -2812,20 +2828,24 @@ function buildCard(coin) {
       toggleBtn.textContent = open ? 'Hide sold listings ▴' : 'See recent sold listings ▾';
     });
 
-    salesList.append(el('div', 'sales-list-title', 'Matched eBay AU sold listings'));
+    const sources = Array.from(new Set(currentSales.map(p => p.source)));
+    salesList.append(el('div', 'sales-list-title', `Matched sold listings · ${sources.join(' + ')}`));
     currentSales.slice(0, 8).forEach(p => {
       const row      = el('div', 'sale-row');
       const raw      = safeText(p.title);
       const short    = raw.length > 42 ? raw.substring(0, 42) + '…' : raw;
       row.append(
-        el('span', 'sale-price', formatAUD(parseFloat(p.sale_price))),
+        el('span', 'sale-price', formatAUD(p.price)),
         el('span', 'sale-title', short),
-        el('span', 'sale-date',  safeText(p.date_sold))
+        el('span', 'sale-source', p.source === 'CoinXchange' ? 'CX' : 'eBay'),
+        el('span', 'sale-date',  safeText(p.date))
       );
       const href = safeUrl(p.link);
       if (href) {
         const a = el('a', 'view-ebay', '↗');
-        a.href = href; a.target = '_blank'; a.rel = 'sponsored noopener noreferrer';
+        a.href = href; a.target = '_blank';
+        a.rel = p.source === 'eBay AU' ? 'sponsored noopener noreferrer' : 'noopener noreferrer';
+        a.setAttribute('aria-label', `View ${p.source} sold listing`);
         row.append(a);
       }
       salesList.append(row);
@@ -2834,37 +2854,8 @@ function buildCard(coin) {
     body.append(toggleBtn, salesList);
   }
 
-  const historicalSales = ebay && Array.isArray(ebay.historical_products) ? ebay.historical_products : [];
-  if (historicalSales.length) {
-    const historyBtn = el('button', 'toggle-sales', `Show historical eBay sales (${historicalSales.length})`);
-    const historyList = el('div', 'sales-list historical-sales');
-    historyList.id = `historical-sales-${coin.id}`;
-    historyBtn.setAttribute('aria-expanded', 'false');
-    historyBtn.addEventListener('click', () => {
-      historyList.classList.toggle('open');
-      const open = historyList.classList.contains('open');
-      historyBtn.setAttribute('aria-expanded', String(open));
-      historyBtn.textContent = open ? 'Hide historical sales' : `Show historical eBay sales (${historicalSales.length})`;
-    });
-    historyList.append(el('div', 'sales-list-title', 'Historical eBay AU sold · older than 90 days · not used in current price'));
-    historicalSales.slice(0, 12).forEach(p => {
-      const row = el('div', 'sale-row');
-      const raw = safeText(p.title);
-      row.append(
-        el('span', 'sale-price', formatAUD(parseFloat(p.sale_price))),
-        el('span', 'sale-title', raw.length > 42 ? raw.substring(0, 42) + '…' : raw),
-        el('span', 'sale-date', safeText(p.date_sold))
-      );
-      const href = safeUrl(p.link);
-      if (href) {
-        const a = el('a', 'view-ebay', '↗');
-        a.href = href; a.target = '_blank'; a.rel = 'sponsored noopener noreferrer';
-        row.append(a);
-      }
-      historyList.append(row);
-    });
-    body.append(historyBtn, historyList);
-  }
+  const trend = buildTrendSection(coin, coinEntry);
+  if (trend) body.append(trend);
 
   // Buy panel (populated on demand)
   const buyPanel = el('div', 'buy-panel');
@@ -3053,9 +3044,6 @@ async function handleBuyNow(coinId, keywords) {
 function renderBuyOptions(panel, options) {
   // Remove everything after the title
   while (panel.childNodes.length > 1) panel.removeChild(panel.lastChild);
-  options = (options || []).filter(opt =>
-    !/coinxchange/i.test(`${opt.retailer_id || ''} ${opt.name || ''}`)
-  );
 
   if (!options || options.length === 0) {
     panel.append(el('div', 'bp-note', 'No buying options found.'));
@@ -3190,15 +3178,16 @@ function _currentEbayProducts(ebay) {
   });
 }
 
-function _medianOfProducts(ebay) {
-  const prices = _currentEbayProducts(ebay)
-    .map(product => parseFloat(product.sale_price))
-    .filter(price => Number.isFinite(price) && price > 0)
-    .sort((a, b) => a - b);
-  if (!prices.length) return null;
-  const middle = Math.floor(prices.length / 2);
-  const median = prices.length % 2 ? prices[middle] : (prices[middle - 1] + prices[middle]) / 2;
+function _medianOfPrices(prices) {
+  const sorted = prices.filter(price => Number.isFinite(price) && price > 0).sort((a, b) => a - b);
+  if (!sorted.length) return null;
+  const middle = Math.floor(sorted.length / 2);
+  const median = sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
   return Math.round(median * 100) / 100;
+}
+
+function _medianOfProducts(ebay) {
+  return _medianOfPrices(_currentEbayProducts(ebay).map(product => parseFloat(product.sale_price)));
 }
 
 function _hasFreshEbaySales(ebay) {
@@ -3210,12 +3199,176 @@ function _hasFreshEbaySales(ebay) {
   return _currentEbayProducts(ebay).length > 0;
 }
 
+// Sold evidence from both marketplaces, normalised to one shape. eBay rows use
+// sale_price/date_sold/link; CoinXchange rows use price/sold_date/url.
+function _normSold(p, source) {
+  const date = p.date_sold || p.sold_date || '';
+  return {
+    price: parseFloat(p.sale_price != null ? p.sale_price : p.price),
+    soldAt: Date.parse(date),
+    title: p.title,
+    source_type: p.source_type,
+    link: p.link || p.url,
+    date,
+    source,
+  };
+}
+
+function _validSold(r) {
+  return Number.isFinite(r.price) && r.price > 0 && Number.isFinite(r.soldAt);
+}
+
+function _sourceIsFresh(data) {
+  const fetchedAt = Number(data && data.fetchedAt) * 1000;
+  const now = Date.now();
+  return Number.isFinite(fetchedAt) && now - fetchedAt <= 90 * 24 * 60 * 60 * 1000 && fetchedAt - now <= 24 * 60 * 60 * 1000;
+}
+
+function _allSoldRecords(entry) {
+  const ebay = (entry && entry.ebay) || {};
+  const cx = (entry && entry.coinxchange) || {};
+  const out = [];
+  [ebay.products, ebay.historical_products].forEach(list => (list || []).forEach(p => out.push(_normSold(p, 'eBay AU'))));
+  [cx.products, cx.historical_products].forEach(list => (list || []).forEach(p => out.push(_normSold(p, 'CoinXchange'))));
+  return out.filter(_validSold).sort((a, b) => b.soldAt - a.soldAt);
+}
+
+// Sales from the last 90 days, from sources whose snapshot is itself fresh.
+function _currentSoldRecords(entry) {
+  const ebay = (entry && entry.ebay) || {};
+  const cx = (entry && entry.coinxchange) || {};
+  const now = Date.now();
+  const maxAge = 90 * 24 * 60 * 60 * 1000;
+  const inWindow = r => _validSold(r) && now - r.soldAt <= maxAge && now - r.soldAt >= -24 * 60 * 60 * 1000;
+  const out = [];
+  if (_sourceIsFresh(ebay)) (ebay.products || []).forEach(p => out.push(_normSold(p, 'eBay AU')));
+  if (_sourceIsFresh(cx)) (cx.products || []).forEach(p => out.push(_normSold(p, 'CoinXchange')));
+  return out.filter(inWindow).sort((a, b) => b.soldAt - a.soldAt);
+}
+
+// Estimated value: median of recent sold prices across eBay AU and CoinXchange.
+// With eBay data alone the server-computed median is kept.
+function _referenceFromEntry(entry) {
+  const current = _currentSoldRecords(entry);
+  if (!current.length) return null;
+  const ebay = (entry && entry.ebay) || {};
+  if (!current.some(r => r.source === 'CoinXchange')) {
+    const feedMedian = parseFloat(ebay.median_price);
+    if (Number.isFinite(feedMedian) && feedMedian > 0) return feedMedian;
+  }
+  return _medianOfPrices(current.map(r => r.price));
+}
+
 // Price cards, collection sorting, and portfolio values all use the matched-sale median.
 function _referencePrice(coin) {
-  const ebay = _coinEbay(coin);
-  if (!_hasFreshEbaySales(ebay)) return null;
-  const median = parseFloat(ebay.median_price);
-  return median > 0 ? median : _medianOfProducts(ebay);
+  return _referenceFromEntry(coinData[coin.id] || {});
+}
+
+// ── Value trend chart (inline SVG, no external library) ──
+const SVG_NS = 'http://www.w3.org/2000/svg';
+function svgEl(name, attrs, text) {
+  const node = document.createElementNS(SVG_NS, name);
+  Object.keys(attrs || {}).forEach(k => node.setAttribute(k, attrs[k]));
+  if (text != null) node.textContent = text;
+  return node;
+}
+
+function _shortDate(ms) {
+  return new Date(ms).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: '2-digit' });
+}
+
+function _monthlyMedians(records) {
+  const buckets = {};
+  records.forEach(r => {
+    const d = new Date(r.soldAt);
+    const key = d.getFullYear() * 12 + d.getMonth();
+    (buckets[key] = buckets[key] || []).push(r);
+  });
+  return Object.keys(buckets).map(Number).sort((a, b) => a - b).map(key => {
+    const list = buckets[key];
+    const times = list.map(r => r.soldAt).sort((a, b) => a - b);
+    return { soldAt: times[Math.floor(times.length / 2)], price: _medianOfPrices(list.map(r => r.price)), count: list.length };
+  });
+}
+
+function buildTrendSection(coin, entry) {
+  const records = _allSoldRecords(entry);
+  if (records.length < 2) return null;
+
+  const details = el('details', 'value-trend');
+  details.id = `trend-${coin.id}`;
+  const summary = el('summary', 'toggle-sales', `Value trend (${records.length} sales)`);
+  details.append(summary);
+  details.addEventListener('toggle', () => {
+    if (details.open && !details.querySelector('svg')) details.append(buildTrendChart(coin, records));
+  });
+  return details;
+}
+
+function buildTrendChart(coin, records) {
+  const W = 320, H = 180, L = 46, R = 10, T = 10, B = 26;
+  const times = records.map(r => r.soldAt);
+  const prices = records.map(r => r.price);
+  let tMin = Math.min.apply(null, times), tMax = Math.max.apply(null, times);
+  if (tMax === tMin) { tMin -= 86400000; tMax += 86400000; }
+  const pMinRaw = Math.min.apply(null, prices), pMaxRaw = Math.max.apply(null, prices);
+  const issue = Number(coin.mintPrice);
+  const showIssue = Number.isFinite(issue) && issue > 0 && issue >= pMinRaw * 0.5 && issue <= pMaxRaw * 1.5;
+  let lo = Math.min(pMinRaw, showIssue ? issue : Infinity);
+  let hi = Math.max(pMaxRaw, showIssue ? issue : -Infinity);
+  const pad = (hi - lo) * 0.12 || hi * 0.1 || 1;
+  lo = Math.max(0, lo - pad); hi = hi + pad;
+  const x = t => L + (t - tMin) / (tMax - tMin) * (W - L - R);
+  const y = p => T + (1 - (p - lo) / (hi - lo)) * (H - T - B);
+
+  const monthly = _monthlyMedians(records);
+  const first = monthly[0], last = monthly[monthly.length - 1];
+  const direction = last.price > first.price ? 'up' : last.price < first.price ? 'down' : 'flat';
+  const label = `Sold prices for ${coin.name}: ${records.length} sales from ${_shortDate(Math.min.apply(null, times))} to ${_shortDate(Math.max.apply(null, times))}. ` +
+    (monthly.length > 1
+      ? `Monthly median moved ${direction} from ${formatAUD(first.price)} to ${formatAUD(last.price)}.`
+      : `Median ${formatAUD(first.price)}.`);
+
+  const wrap = el('div', 'trend-wrap');
+  const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, class: 'trend-svg', role: 'img', 'aria-label': label });
+  svg.append(svgEl('title', {}, label));
+
+  for (let i = 0; i <= 3; i++) {
+    const p = lo + (hi - lo) * i / 3;
+    svg.append(svgEl('line', { x1: L, x2: W - R, y1: y(p), y2: y(p), class: 'trend-grid' }));
+    svg.append(svgEl('text', { x: L - 5, y: y(p) + 3, class: 'trend-axis', 'text-anchor': 'end' }, formatAUD(Math.round(p)).replace(/\.00$/, '')));
+  }
+  [tMin, (tMin + tMax) / 2, tMax].forEach((t, i) => {
+    svg.append(svgEl('text', { x: x(t), y: H - 8, class: 'trend-axis', 'text-anchor': i === 0 ? 'start' : i === 2 ? 'end' : 'middle' }, _shortDate(t)));
+  });
+  if (showIssue) {
+    svg.append(svgEl('line', { x1: L, x2: W - R, y1: y(issue), y2: y(issue), class: 'trend-issue' }));
+  }
+  if (monthly.length > 1) {
+    svg.append(svgEl('polyline', { points: monthly.map(m => `${x(m.soldAt).toFixed(1)},${y(m.price).toFixed(1)}`).join(' '), class: 'trend-line' }));
+  }
+  records.forEach(r => {
+    const cx = x(r.soldAt), cy = y(r.price);
+    const tip = `${formatAUD(r.price)} · ${r.source} · ${safeText(r.date)}`;
+    const mark = r.source === 'CoinXchange'
+      ? svgEl('rect', { x: cx - 3.5, y: cy - 3.5, width: 7, height: 7, class: 'trend-pt trend-pt-cx' })
+      : svgEl('circle', { cx, cy, r: 3.5, class: 'trend-pt trend-pt-ebay' });
+    mark.append(svgEl('title', {}, tip));
+    svg.append(mark);
+  });
+  monthly.forEach(m => svg.append(svgEl('circle', { cx: x(m.soldAt), cy: y(m.price), r: 2.5, class: 'trend-median-pt' })));
+  wrap.append(svg);
+
+  const legend = el('div', 'trend-legend');
+  legend.append(
+    el('span', 'trend-key trend-key-ebay', 'eBay AU sold'),
+    el('span', 'trend-key trend-key-cx', 'CoinXchange sold'),
+    el('span', 'trend-key trend-key-line', 'Monthly median')
+  );
+  if (showIssue) legend.append(el('span', 'trend-key trend-key-issue', 'Issue price'));
+  wrap.append(legend);
+  wrap.append(el('p', 'trend-note', 'Sold prices matched to this exact product. Older sales appear here but only the last 90 days feed the estimated value.'));
+  return wrap;
 }
 
 function _sortCoins(list) {
