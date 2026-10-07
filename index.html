@@ -936,6 +936,17 @@
       flex-wrap: wrap;
     }
     .dashboard-footer-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .share-pack { display: grid; gap: 12px; padding: 18px; border: 2px solid #263a5b; border-radius: 18px; background: linear-gradient(135deg,#e3f5ff,#fff1a8); box-shadow: 0 4px 0 rgba(38,58,91,.14); }
+    .share-pack h3 { margin: 0; font-family: 'Fredoka', sans-serif; color: #1e3152; }
+    .share-mood { margin: 0 !important; font-weight: 700; color: #1e3152 !important; }
+    .share-meter { height: 14px; border: 2px solid #263a5b; border-radius: 999px; background: #fff; overflow: hidden; }
+    .share-meter > span { display: block; height: 100%; width: 0; background: repeating-linear-gradient(45deg,#f28c28 0 10px,#ffbf3f 10px 20px); transition: width .4s; }
+    .share-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+    .share-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 8px 14px; border: 2px solid #263a5b; border-radius: 999px; background: #fff; color: #1e3152; font: inherit; font-size: .86rem; font-weight: 800; text-decoration: none; cursor: pointer; }
+    .share-btn:hover { background: #fff8dc; transform: translateY(-1px); }
+    .share-btn.primary { background: #f28c28; color: #fff; border-color: #b74a29; }
+    .share-opt { display: flex; gap: 8px; align-items: center; font-size: .82rem; color: #334765; }
+    .share-opt input { width: 20px; height: 20px; }
     .swap-tools { display: grid; gap: 12px; padding: 22px 28px; border-top: 1px solid var(--border); background: #fff; }
     .swap-tools h3 { margin: 0 0 4px; font-size: 1.08rem; color: var(--navy); }
     .swap-tools p { margin: 0; color: var(--slate); font-size: .9rem; }
@@ -1192,6 +1203,13 @@
     </div>
 
     <div class="swap-tools" aria-labelledby="swap-tools-title">
+      <section class="share-pack" aria-labelledby="share-pack-title">
+        <h3 id="share-pack-title">Show off your pack 🐾</h3>
+        <p class="share-mood" id="share-mood" role="status" aria-live="polite"></p>
+        <div class="share-meter" role="img" id="share-meter-wrap" aria-label="Collection progress"><span id="share-meter"></span></div>
+        <label class="share-opt"><input type="checkbox" id="share-include-list"> Include my coin list so friends can compare swaps</label>
+        <div class="share-buttons" id="share-buttons"></div>
+      </section>
       <div>
         <h3 id="swap-tools-title">Share your collection and find swaps</h3>
         <p>Your collection stays in this browser. Create a share link, then paste another collector’s link to find items each of you wants.</p>
@@ -1829,6 +1847,118 @@ function saveWishlist() {
   if (typeof refreshCollectRows === 'function') refreshCollectRows();
 }
 
+// ── Social sharing ──
+function shareStats() {
+  const coins = window.COINS || [];
+  const owned = coins.filter(c => collection[c.id]).length;
+  const total = coins.length;
+  return { owned, total, pct: total ? Math.round(owned / total * 100) : 0 };
+}
+
+function shareMood(s) {
+  if (!s.owned) return 'Your pack is empty… for now. Add a coin and the fun starts!';
+  if (s.pct >= 100) return 'Wackadoo! Every coin collected. Real-life legend!';
+  if (s.pct >= 75) return 'So close! Just a few more to finish the whole pack.';
+  if (s.pct >= 50) return 'Over halfway: this is a proper collector’s pack.';
+  if (s.pct >= 25) return 'Keepy-uppy going strong. The collection is growing!';
+  return 'A great start. Every big collection begins with one coin.';
+}
+
+function shareText(s) {
+  return s.owned
+    ? `I've collected ${s.owned} of ${s.total} Bluey coins and collectables (${s.pct}%)! Track yours on Blueycoin 🐾`
+    : 'Tracking every Bluey coin and collectable on Blueycoin 🐾';
+}
+
+function shareUrl() {
+  const base = location.origin + location.pathname;
+  const withList = document.getElementById('share-include-list')?.checked;
+  if (!withList) return base;
+  const profile = {
+    v: 1,
+    owned: Object.keys(collection).filter(id => collection[id]),
+    wanted: Object.keys(wishlist).filter(id => wishlist[id]),
+    offer: Object.keys(swapOffer).filter(id => swapOffer[id] && collection[id]),
+  };
+  const token = btoa(JSON.stringify(profile)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+  return `${base}#swap=${token}`;
+}
+
+function renderSharePanel() {
+  const box = document.getElementById('share-buttons');
+  if (!box) return;
+  const s = shareStats();
+  document.getElementById('share-mood').textContent = shareMood(s) + (s.total ? ` (${s.owned}/${s.total})` : '');
+  document.getElementById('share-meter').style.width = s.pct + '%';
+  document.getElementById('share-meter-wrap').setAttribute('aria-label', `Collection progress ${s.pct}%`);
+  box.replaceChildren();
+  const text = shareText(s), url = shareUrl();
+  const t = encodeURIComponent(text), u = encodeURIComponent(url);
+  const links = [
+    ['WhatsApp', `https://wa.me/?text=${t}%20${u}`],
+    ['Facebook', `https://www.facebook.com/sharer/sharer.php?u=${u}&quote=${t}`],
+    ['X', `https://twitter.com/intent/tweet?text=${t}&url=${u}`],
+    ['Reddit', `https://www.reddit.com/submit?url=${u}&title=${t}`],
+    ['Email', `mailto:?subject=${encodeURIComponent('My Bluey coin collection')}&body=${t}%0A%0A${u}`],
+  ];
+  if (navigator.share) {
+    const native = el('button', 'share-btn primary', '📤 Share…');
+    native.type = 'button';
+    native.addEventListener('click', () => navigator.share({ title: 'Blueycoin', text, url }).catch(() => {}));
+    box.append(native);
+  }
+  links.forEach(([name, href]) => {
+    const a = el('a', 'share-btn', name);
+    a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    box.append(a);
+  });
+  const copy = el('button', 'share-btn', '🔗 Copy link');
+  copy.type = 'button';
+  copy.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(text + ' ' + shareUrl()); toast('Copied. Paste it anywhere!', 'success'); }
+    catch (e) { toast('Could not copy automatically. Try Share instead.', 'info'); }
+  });
+  const card = el('button', 'share-btn', '🖼 Save my card');
+  card.type = 'button';
+  card.addEventListener('click', downloadShareCard);
+  box.append(copy, card);
+}
+
+function downloadShareCard() {
+  const s = shareStats();
+  const c = document.createElement('canvas');
+  c.width = 1080; c.height = 1080;
+  const g = c.getContext('2d');
+  const bg = g.createLinearGradient(0, 0, 1080, 1080);
+  bg.addColorStop(0, '#9bd8ff'); bg.addColorStop(1, '#fff1a8');
+  g.fillStyle = bg; g.fillRect(0, 0, 1080, 1080);
+  g.fillStyle = '#1e3152'; g.textAlign = 'center';
+  g.font = '800 64px Fredoka, sans-serif'; g.fillText('My Bluey coin pack', 540, 170);
+  g.beginPath(); g.arc(540, 480, 230, 0, Math.PI * 2);
+  g.fillStyle = '#fff'; g.fill(); g.lineWidth = 14; g.strokeStyle = '#263a5b'; g.stroke();
+  if (s.pct > 0) {
+    g.beginPath(); g.arc(540, 480, 230, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * (s.pct / 100));
+    g.lineWidth = 34; g.strokeStyle = '#f28c28'; g.lineCap = 'round'; g.stroke();
+  }
+  g.fillStyle = '#1e3152'; g.font = '800 150px Fredoka, sans-serif'; g.fillText(s.pct + '%', 540, 515);
+  g.font = '700 54px Fredoka, sans-serif'; g.fillText(`${s.owned} of ${s.total} collected`, 540, 800);
+  g.font = '600 40px "Open Sans", sans-serif'; g.fillText(shareMood(s), 540, 880, 960);
+  g.font = '800 46px Fredoka, sans-serif'; g.fillText('blueyco.in', 540, 990);
+  c.toBlob(blob => {
+    if (!blob) return;
+    const file = new File([blob], 'my-bluey-coin-pack.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ files: [file], text: shareText(s), url: shareUrl() }).catch(() => {});
+      return;
+    }
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = file.name; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+}
+
+document.addEventListener('change', e => { if (e.target && e.target.id === 'share-include-list') renderSharePanel(); });
+
 function createCollectionShare() {
   const profile = {
     v: 1,
@@ -1932,6 +2062,7 @@ function renderSwapMatches(errorMessage = '') {
 }
 
 function updateDashboardStats() {
+  if (typeof renderSharePanel === 'function') renderSharePanel();
   const coins = window.COINS || [];
   let owned = 0;
   let totalValue = 0;
