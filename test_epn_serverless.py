@@ -109,7 +109,8 @@ class TestPricesSnapshotTagging(unittest.TestCase):
 
     def _snapshot(self, coins):
         with mock.patch.object(prices, '_load_base_cache', return_value=self._baseline()), \
-             mock.patch.object(prices, '_load_manual', return_value=self._manual()):
+             mock.patch.object(prices, '_load_manual', return_value=self._manual()), \
+             mock.patch.object(prices, '_load_manual_ebay_sales', return_value={}):
             snapshot, complete = prices._build_payload(coins, deadline=1)
         return snapshot, complete
 

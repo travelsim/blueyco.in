@@ -198,13 +198,14 @@ class TestPricesRateLimit(unittest.TestCase):
              mock.patch.object(prices, 'RAPIDAPI_REFRESH_LIMIT', 3), \
              mock.patch.object(prices, '_fetch_ebay', side_effect=fake_fetch), \
              mock.patch.object(prices, '_load_base_cache', return_value={}), \
-             mock.patch.object(prices, '_load_manual', return_value={}):
+             mock.patch.object(prices, '_load_manual', return_value={}), \
+             mock.patch.object(prices, '_load_manual_ebay_sales', return_value={}):
             snapshot, complete = prices._build_payload(coins, deadline=1)
 
         self.assertTrue(complete)
         self.assertEqual(len(calls), 3)
         self.assertEqual(max_active, 1)
-        self.assertEqual(sum(1 for item in snapshot.values() if item['ebay']), 3)
+        self.assertEqual(sum(1 for item in snapshot.values() if (item['ebay'] or {}).get('fetchedAt')), 3)
 
 
 class TestSoldRecordQuality(unittest.TestCase):

@@ -23,7 +23,10 @@ class TestBuyOptions(unittest.TestCase):
     def test_every_retailer_yields_an_option(self):
         options, complete = buy_options.get_buy_options('s1_bluey', '2024 Bluey Dollarbuck Bluey')
         retailer_ids = {o['retailer_id'] for o in options}
+        # CoinXchange is disabled (no scraper, no link-only fallback) pending James's direct permission.
         for r in legacy.RETAILERS:
+            if r['id'] == 'coinxchange_buy':
+                continue
             self.assertIn(r['id'], retailer_ids)
         self.assertTrue(all(o.get('url') for o in options))
         self.assertTrue(complete)
