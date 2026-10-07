@@ -239,8 +239,6 @@
   .story-kicker { margin: 0; font-size: .76rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted) !important; }
   .coin-product-figure { margin: 0; padding: 12px 18px 0; text-align: center; }
   .coin-product-image { display: block; width: 100%; height: 190px; object-fit: contain; border-radius: 10px; background: #f8fafc; }
-  .coin-product-credit { margin-top: 5px; color: #64748b; font-size: .7rem; }
-  .coin-product-credit a { color: inherit; text-decoration: underline; }
 
   .card-header {
     padding: 16px 18px 12px;
@@ -250,7 +248,6 @@
     gap: 12px;
     background: linear-gradient(115deg, #fff8dc, #eef8ff 75%);
   }
-  .series-dot { width: 13px; height: 13px; border: 2px solid #263a5b; border-radius: 50%; margin-top: 4px; flex-shrink: 0; box-shadow: 0 2px 0 rgba(38,58,91,.15); }
   .card-title { font-family: 'Fredoka', sans-serif; font-weight: 800; font-size: 1.04rem; line-height: 1.3; flex: 1; color: #1e3152; }
   .card-meta  { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
   .mint-price {
@@ -263,8 +260,6 @@
     white-space: nowrap;
   }
   .card-meta2 { font-size: 0.72rem; color: var(--muted); margin-top: 4px; display: flex; gap: 8px; flex-wrap: wrap; }
-  .catalog-facts { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
-  .catalog-fact { font-size:.7rem; line-height:1.4; padding:3px 8px; border-radius:999px; background:#f1f5f9; color:#475569; white-space:nowrap; }
   .coin-metrics { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:9px; margin:0 0 14px; }
   .metric-card { min-width:0; border:2px solid #263a5b; border-radius:16px; padding:11px; box-shadow:0 4px 0 rgba(38,58,91,.12); }
   .metric-price { background:linear-gradient(145deg,#fff1a8,#ffe17c); position:relative; overflow:hidden; }
@@ -295,10 +290,7 @@
   .historical-sales .sales-list-title { color:#64748b; }
 
   .card-body { padding: 14px 18px; }
-  .coin-source-link { display: inline-block; margin: 0 0 10px; font-size: 0.78rem; color: var(--blue); }
-  .coin-source-link:hover { text-decoration-thickness: 2px; }
   .market-data-note { color: var(--muted); font-size: 0.82rem; padding: 8px 0; }
-  .sold-search-link { display: inline-block; margin: 0 0 10px; font-size: 0.78rem; font-weight: 700; color: var(--blue); }
   .cx-sales-list { border-left: 2px solid rgba(46,196,182,0.35); margin: -4px 0 12px 8px; padding-left: 10px; }
   .cx-sale-row { display: flex; gap: 8px; align-items: baseline; font-size: 0.74rem; padding: 3px 0; }
   .cx-sale-price { font-weight: 800; white-space: nowrap; }
@@ -1212,9 +1204,9 @@
   <div class="shop-toolbar">
     <select id="series-filter" onchange="filterFrames()" aria-label="Filter frames by series" style="padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);">
       <option value="">All Series</option>
-      <option value="series1_june">June 2024 Dollarbucks</option>
-      <option value="series1_september">September 2024 collection</option>
-      <option value="series1_november">November 2024 Impressions PNCs</option>
+      <option value="series1_june">Dollarbucks · June 2024</option>
+      <option value="series1_september">Dollarbucks · September 2024</option>
+      <option value="series1_november">Dollarbucks · November 2024 PNCs</option>
       <option value="series2">Series 2 (2025)</option>
       <option value="series3">Series 3 (2026)</option>
       <option value="series4">Series 4 (2027 Cricket)</option>
@@ -1350,9 +1342,9 @@
 
   <div class="series-tabs">
     <button class="tab-btn active" data-series="all">All Series</button>
-    <button class="tab-btn" data-series="series1_june">June 2024 - Three coloured coins</button>
-    <button class="tab-btn" data-series="series1_september">September 2024 - Ten-coin release</button>
-    <button class="tab-btn" data-series="series1_november">November 2024 - Impressions PNCs</button>
+    <button class="tab-btn" data-series="series1_june">Dollarbucks · June 2024 - Three coloured coins</button>
+    <button class="tab-btn" data-series="series1_september">Dollarbucks · September 2024 - Ten-coin release</button>
+    <button class="tab-btn" data-series="series1_november">Dollarbucks · November 2024 - Impressions PNCs</button>
     <button class="tab-btn" data-series="series2">Series 2 · 2025 Christmas</button>
     <button class="tab-btn" data-series="series3">Series 3 · 2026 Bluey 2</button>
     <button class="tab-btn" data-series="series4">Series 4 · 2027 Cricket</button>
@@ -1495,7 +1487,7 @@ function addBundleToCart(bundleType) {
     const s1Frames = FRAMES.filter(f => ['series1_june', 'series1_september', 'series1_november'].includes(f.series));
     cart = cart.concat(s1Frames);
     added = true;
-    toast(`Series 1 Complete Bundle (${s1Frames.length} frames) added — $799`, 'success');
+    toast(`Dollarbucks Complete Bundle (${s1Frames.length} frames) added — $799`, 'success');
   } else if (bundleType === 'full') {
     cart = cart.concat(FRAMES);
     added = true;
@@ -2407,9 +2399,9 @@ const RAM_RELEASES = {
 };
 
 const SERIES_LABELS = {
-  series1_june: 'June 2024',
-  series1_september: 'September 2024',
-  series1_november: 'November 2024 Impressions',
+  series1_june: 'Dollarbucks · June 2024',
+  series1_september: 'Dollarbucks · September 2024',
+  series1_november: 'Dollarbucks · November 2024 Impressions',
   series2: '2025 Christmas',
   series3: '2026 Bluey collection',
   series4: '2027 Cricket',
@@ -2497,16 +2489,10 @@ function buildCard(coin) {
 
   // ── Header ──
   const hdr = el('div', 'card-header');
-  const dot = el('div', 'series-dot');
-  dot.style.background = typeof coin.color === 'string' ? coin.color : '#ffbf3f';
-
   const tw = el('div');
   tw.style.flex = '1';
   tw.append(el('div', 'card-title', coin.name));
-  const facts = el('div', 'catalog-facts');
-  facts.append(el('span', 'catalog-fact', `${coin.denomination ? '$' + coin.denomination : 'Collectable'} · ${coin.year}${coin.productCode ? ` · RAM ${coin.productCode}` : ''}`));
-  tw.append(facts);
-  hdr.append(dot, tw);
+  hdr.append(tw);
 
   // ── Body ──
   const body = el('div', 'card-body');
@@ -2584,7 +2570,11 @@ function buildCard(coin) {
     }
   }
   supplyCard.append(el('div', 'supply-caption', supplyCaption));
-  if (coin.issueQuantity != null || coin.productCode) supplyDetail = [`RAM product ${coin.productCode}`, coin.issueQuantity != null ? `Reported product quantity: ${Number(coin.issueQuantity).toLocaleString('en-AU')} units` : null].filter(Boolean).join(' · ');
+  if (coin.issueQuantity != null) {
+    supplyCard.append(el('div', 'metric-kicker metric-kicker-production', 'Production'));
+    supplyCard.append(el('div', 'metric-amount', Number(coin.issueQuantity).toLocaleString('en-AU')));
+    supplyCard.append(el('div', 'supply-caption', 'units produced'));
+  }
   if (supplyDetail) supplyCard.append(el('div', 'supply-detail', supplyDetail));
   const rarityRow = el('div', 'rarity-score-row');
   rarityRow.append(el('span', 'rarity-score-label', 'Mintage rarity'));
@@ -2604,26 +2594,6 @@ function buildCard(coin) {
   }
   metrics.append(priceCard, supplyCard);
   body.append(metrics);
-
-  const ramDetailsUrl = coin.sourceUrl || RAM_RELEASES[coin.series];
-  if (ramDetailsUrl) {
-    const sourceLink = el('a', 'coin-source-link', (coin.sourceLabel || 'Official issue details ↗'));
-    sourceLink.href = safeUrl(ramDetailsUrl);
-    sourceLink.target = '_blank';
-    sourceLink.rel = 'noopener noreferrer';
-    body.append(sourceLink);
-  }
-
-  // Keep a direct sold-search link available alongside the matched-sale median.
-  const soldSearchUrl = safeUrl(ebay && ebay.response_url) ||
-    safeUrl(coinEntry.manual && coinEntry.manual.ebay && coinEntry.manual.ebay.url);
-  if (soldSearchUrl) {
-    const soldSearch = el('a', 'sold-search-link', 'Open live eBay sold search ↗');
-    soldSearch.href = soldSearchUrl;
-    soldSearch.target = '_blank';
-    soldSearch.rel = 'sponsored noopener noreferrer';
-    body.append(soldSearch);
-  }
 
   // Where to Buy button
   const buyBtn = el('button', 'buy-btn');
@@ -2728,18 +2698,7 @@ function buildCard(coin) {
     image.alt = product.alt;
     image.loading = 'lazy';
     image.decoding = 'async';
-    const credit = el('figcaption', 'coin-product-credit');
-    const credit_ = productImageCredit(product.source);
-    if (credit_.url) {
-      const link = el('a', '', credit_.label);
-      link.href = credit_.url;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      credit.append(link);
-    } else {
-      credit.textContent = credit_.label;
-    }
-    figure.append(image, credit);
+    figure.append(image);
     card.append(hdr, figure, body);
   } else {
     card.append(hdr, body);
@@ -2747,20 +2706,6 @@ function buildCard(coin) {
   return card;
 }
 
-// Credit line for a product photo: names the real source instead of assuming the Mint.
-function productImageCredit(source) {
-  const text = String(source || '');
-  if (!/^https?:\/\//.test(text)) {
-    if (/^Owner photo/i.test(text)) return { label: 'Product image: owner photo', url: null };
-    if (/Australia Post/i.test(text)) return { label: 'Product image: Australia Post', url: null };
-    if (/mycollectables/i.test(text)) return { label: 'Product image: MyCollectables', url: null };
-    return { label: 'Product image', url: null };
-  }
-  let host = '';
-  try { host = new URL(text).hostname.replace(/^www\./, ''); } catch (e) { return { label: 'Product image', url: null }; }
-  const names = { 'ramint.gov.au': 'Royal Australian Mint', 'ramint.runfair.com': 'Royal Australian Mint', 'collectables.auspost.com.au': 'Australia Post', 'auspost.com.au': 'Australia Post', 'bluey.tv': 'Bluey official site', 'mycollectables.com.au': 'MyCollectables', 'grabcoins.com.au': 'GrabCoins' };
-  return { label: 'Product image: ' + (names[host] || host), url: text };
-}
 
 // ────────────────────────────────────────────────
 // BUY NOW HANDLER

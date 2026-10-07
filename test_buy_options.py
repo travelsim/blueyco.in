@@ -137,6 +137,49 @@ class TestCatalogueParity(unittest.TestCase):
             self.assertTrue(coin.get('search'), coin['id'])
             self.assertTrue(coin.get('ebay_kw'), coin['id'])
 
+    def test_search_and_ebay_keywords_are_one_uniform_description(self):
+        legacy_by_id = legacy.COIN_BY_ID
+        for coin in prices.COINS:
+            self.assertEqual(coin['search'], coin['ebay_kw'], coin['id'])
+            self.assertEqual(legacy_by_id[coin['id']]['ebay_kw'], coin['ebay_kw'], coin['id'])
+            self.assertEqual(legacy_by_id[coin['id']]['search'], coin['search'], coin['id'])
+
+    def test_cricket_proof_and_uncirculated_are_not_cross_polluted(self):
+        unc = legacy.COIN_BY_ID['s4_cricket_unc']['search']
+        proof = legacy.COIN_BY_ID['s4_cricket_proof']['search']
+        unc_title = '2027 Bluey Cricket $1 Coloured Uncirculated Coin'
+        proof_title = '2027 Bluey Cricket $1 Coloured Silver Proof Coin'
+        self.assertTrue(legacy._coinxchange_title_matches(unc_title, unc))
+        self.assertFalse(legacy._coinxchange_title_matches(proof_title, unc))
+        self.assertTrue(legacy._coinxchange_title_matches(proof_title, proof))
+        self.assertFalse(legacy._coinxchange_title_matches(unc_title, proof))
+        for record_title, query in ((unc_title, proof), (proof_title, unc)):
+            record = {'title': record_title, 'sale_price': 30, 'currency': 'AUD', 'date_sold': '1 Oct 2026'}
+            now = time.mktime((2026, 10, 5, 0, 0, 0, 0, 0, 0))
+            self.assertFalse(prices._product_matches_coin(record, {'ebay_kw': query}, now=now))
+
+    def test_ebay_query_excludes_other_formats_and_characters(self):
+        query = legacy._ebay_query('2027 $1 Bluey Cricket coloured uncirculated coin')
+        self.assertTrue(query.startswith('2027 $1 Bluey Cricket coloured uncirculated coin -('))
+        self.assertIn('proof', query)
+        self.assertIn('bingo', query)
+        self.assertNotIn('cricket,', query.split(' -(')[1])
+        sleepy = legacy._ebay_query('2026 $2 Bluey Sleepytime privy mark uncirculated')
+        self.assertNotIn('sleepy', sleepy.split(' -(')[1])
+        self.assertNotIn('privy', sleepy.split(' -(')[1])
+
+    def test_ebay_live_offers_drop_unrelated_cheap_listings(self):
+        retailer = {r['id']: r for r in legacy.RETAILERS}['ebay']
+        listings = [
+            {'price': 3.0, 'title': '2027 Bluey Cricket sticker sheet', 'url': 'https://www.ebay.com.au/itm/1'},
+            {'price': 20.0, 'title': '2027 Bluey Cricket $1 Coloured Silver Proof Coin', 'url': 'https://www.ebay.com.au/itm/2'},
+            {'price': 40.0, 'title': '2027 Bluey Cricket $1 Coloured Uncirculated Coin', 'url': 'https://www.ebay.com.au/itm/3'},
+        ]
+        keywords = legacy.COIN_BY_ID['s4_cricket_unc']['search']
+        with mock.patch.object(legacy, '_ebay_browse_search', return_value=listings):
+            options = legacy._ebay_live_options(retailer, keywords, 's4_cricket_unc')
+        self.assertEqual([o['price'] for o in options], [40.0])
+
 
 class TestCoinXchangeParser(unittest.TestCase):
     def test_sold_record_parses_sale_price_date_and_postage_separately(self):
