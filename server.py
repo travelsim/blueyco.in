@@ -169,17 +169,6 @@ RETAILERS = [
         'search_url': 'https://www.coinxchange.com.au/buy?search={q}',
         'type':       'coinxchange',
     },
-    {
-        'id':         'gumtree',
-        'name':       'Gumtree AU',
-        'base_url':   'https://www.gumtree.com.au',
-        # Gumtree's URL-slug search wants words space-separated (%20, as
-        # produced by urllib.parse.quote below) — hyphens are treated as a
-        # literal joined phrase and mostly return nothing. With real spaces
-        # this resolves to a precise per-coin search.
-        'search_url': 'https://www.gumtree.com.au/s-{q}/k0',
-        'type':       'link_only',
-    },
 ]
 
 # ── IN-MEMORY STATE ──────────────────────────────────────────────────────────

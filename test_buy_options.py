@@ -23,10 +23,7 @@ class TestBuyOptions(unittest.TestCase):
     def test_every_retailer_yields_an_option(self):
         options, complete = buy_options.get_buy_options('s1_bluey', '2024 Bluey Dollarbuck Bluey')
         retailer_ids = {o['retailer_id'] for o in options}
-        # CoinXchange is disabled (no scraper, no link-only fallback) pending James's direct permission.
         for r in legacy.RETAILERS:
-            if r['id'] == 'coinxchange_buy':
-                continue
             self.assertIn(r['id'], retailer_ids)
         self.assertTrue(all(o.get('url') for o in options))
         self.assertTrue(complete)
@@ -57,19 +54,21 @@ class TestBuyOptions(unittest.TestCase):
         self.assertFalse(option['link_only'])
         self.assertEqual(option['price_type'], 'asking')
 
-    def test_gumtree_remains_search_only_and_resellers_are_gone(self):
+    def test_gumtree_and_resellers_are_gone_coinxchange_is_kept(self):
         retailers = {r['id']: r for r in legacy.RETAILERS}
-        for retailer_id in ('gumtree',):
-            retailer = retailers[retailer_id]
-            self.assertEqual(retailer['type'], 'link_only')
-            with mock.patch.object(legacy, '_http_get', side_effect=AssertionError('network access')):
-                self.assertEqual(buy_options._scrape(retailer, '2024 Bluey coin', 's1_bluey'), [])
-            option = buy_options._fallback(retailer, '2024 Bluey coin', 's1_bluey', {})[0]
-            self.assertTrue(option['link_only'])
-            self.assertIsNone(option['price'])
-            self.assertIn('2024', option['url'])
-        for removed in ('cashconverters', 'nova_coins', 'aussie_coins_direct'):
+        for removed in ('gumtree', 'cashconverters', 'nova_coins', 'aussie_coins_direct'):
             self.assertNotIn(removed, retailers)
+        self.assertEqual(retailers['coinxchange_buy']['type'], 'coinxchange')
+
+    def test_coinxchange_listings_reach_the_buy_panel(self):
+        raw = [{'price': 30.0, 'title': '2024 Bluey Dollarbuck till coin',
+                'url': 'https://www.coinxchange.com.au/buy/abc', 'currency': 'AUD', 'seller': 's'}]
+        retailer = {r['id']: r for r in legacy.RETAILERS}['coinxchange_buy']
+        with mock.patch.object(legacy, '_scrape_coinxchange', return_value=raw):
+            options = buy_options._scrape(retailer, '2024 Bluey Dollarbuck till coin', 's1_bluey')
+        self.assertEqual(options[0]['retailer_id'], 'coinxchange_buy')
+        self.assertEqual(options[0]['price'], 30.0)
+        self.assertEqual(options[0]['price_type'], 'asking')
 
     def test_browse_query_is_plain_keywords_not_the_long_exclusion_query(self):
         # eBay's Browse 'q' is length-limited; the long -(...) query 400'd in production.

@@ -109,7 +109,14 @@ class TestCheckoutHonesty(unittest.TestCase):
 class TestMedianPricing(unittest.TestCase):
     def test_reference_price_prefers_median_over_mean(self):
         self.assertIn('function _referencePrice(coin)', INDEX)
-        self.assertIn("const median = parseFloat(ebay.median_price);", INDEX)
+        self.assertIn("const feedMedian = parseFloat(ebay.median_price);", INDEX)
+        self.assertIn("function _referenceFromEntry(entry)", INDEX)
+
+    def test_estimated_value_and_sold_list_include_coinxchange(self):
+        self.assertIn("(cx.products || []).forEach(p => out.push(_normSold(p, 'CoinXchange')))", INDEX)
+        self.assertIn("current.some(r => r.source === 'CoinXchange')", INDEX)
+        self.assertNotIn('Show historical eBay sales', INDEX)
+        self.assertIn('function buildTrendChart(coin, records)', INDEX)
 
     def test_card_and_sort_use_the_reference_price(self):
         self.assertIn('const premium = hasMedian ? calcPremium(median, coin.mintPrice) : null;', INDEX)
@@ -118,7 +125,7 @@ class TestMedianPricing(unittest.TestCase):
 
     def test_median_helper_ignores_missing_prices(self):
         self.assertIn('function _medianOfProducts(ebay)', INDEX)
-        self.assertIn('.filter(price => Number.isFinite(price) && price > 0)', INDEX)
+        self.assertIn('prices.filter(price => Number.isFinite(price) && price > 0)', INDEX)
 
 
 class TestAffiliateDisclosure(unittest.TestCase):

@@ -590,7 +590,7 @@ def _quality_filter_coinxchange(data, coin, now=None):
     fetched_at = data.get('fetchedAt')
     if not fetched_at:
         return None
-    raw = data.get('products', data.get('listings', [])) or []
+    raw = list(data.get('products', data.get('listings', [])) or []) + list(data.get('historical_products') or [])
     normalized = []
     for item in raw:
         if not isinstance(item, dict):
@@ -610,14 +610,19 @@ def _quality_filter_coinxchange(data, coin, now=None):
     mid = len(ordered) // 2
     median = ordered[mid] if len(ordered) % 2 else (
         (ordered[mid - 1] + ordered[mid]) / 2 if ordered else None)
-    listings = [{
-        'price': p['sale_price'],
-        'title': p.get('title'),
-        'url': p.get('url'),
-        'sold_date': p.get('date_sold'),
-        'postage': p.get('postage'),
-        'currency': 'AUD',
-    } for p in products]
+    def _row(p):
+        return {
+            'price': p['sale_price'],
+            'title': p.get('title'),
+            'url': p.get('url'),
+            'sold_date': p.get('date_sold'),
+            'postage': p.get('postage'),
+            'currency': 'AUD',
+        }
+    listings = [_row(p) for p in products]
+    # Matched sales older than 90 days stay available for the value-trend
+    # chart; they never feed the current median above.
+    historical = [_row(p) for p in filtered.get('historical_products') or []]
     return {
         'source': 'CoinXchange',
         'currency': 'AUD',
@@ -627,6 +632,7 @@ def _quality_filter_coinxchange(data, coin, now=None):
         'results': len(products),
         'count': len(products),
         'products': listings,
+        'historical_products': historical,
         'listings': listings[:10],
         'search_url': data.get('search_url'),
         'average_price': round(sum(prices) / len(prices), 2) if prices else None,
