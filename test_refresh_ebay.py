@@ -2,7 +2,7 @@ import json
 import os
 import tempfile
 import unittest
-from datetime import datetime
+from datetime import datetime, timezone
 from unittest.mock import patch
 
 from scripts import refresh_ebay
@@ -40,7 +40,7 @@ class RefreshEbayTests(unittest.TestCase):
         with patch.object(refresh_ebay.prices, 'RAPIDAPI_KEY', 'configured'), \
              patch.object(refresh_ebay.prices, '_fetch_ebay', return_value={
                 'products': [{'title': '2024 Bluey coin', 'sale_price': 9.0,
-                               'currency': 'AU', 'date_sold': datetime.now().strftime('%d %b %Y'),
+                               'currency': 'AU', 'date_sold': datetime.now(timezone.utc).strftime('%d %b %Y'),
                                'item_id': 'new-1'}],
                  'total_results': 1,
              }):
