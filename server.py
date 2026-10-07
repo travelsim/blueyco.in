@@ -76,78 +76,79 @@ STATIC_FILES = {
 # ── PRICING CATALOGUE (70 IDs: 65 current items + 5 historical IDs) ────────────────────────────────────
 COINS = [
     # Series 1 - 2024 Dollarbucks
-    {'id': 's1_bluey', 'ebay_kw': '2024 $1 Bluey Dollarbuck till coin', 'search': '2024 Bluey Dollarbuck Bluey till coin'},
-    {'id': 's1_bingo', 'ebay_kw': '2024 $1 Bingo Dollarbuck till coin', 'search': '2024 Bluey Dollarbuck Bingo till coin'},
-    {'id': 's1_proof_silver', 'ebay_kw': '2024 $1 Bluey Dollarbucks fine silver coloured proof', 'search': '2024 Bluey Dollarbucks silver proof'},
-    {'id': 's1_proof_coloured', 'ebay_kw': '2024 $1 Bluey Dollarbucks coloured proof coin', 'search': '2024 Bluey Dollarbucks coloured proof'},
-    {'id': 's1_10_coin_folder_set', 'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set', 'search': '2024 Bluey ten coin collection folder tube'},
-    {'id': 's1_coloured_insert_variant', 'ebay_kw': '2024 Bluey special coloured coin one in ten tube set', 'search': '2024 Bluey special coloured tube set coin'},
+    {'id': 's1_bluey', 'ebay_kw': '2024 $1 Bluey Dollarbuck till coin', 'search': '2024 $1 Bluey Dollarbuck till coin'},
+    {'id': 's1_bingo', 'ebay_kw': '2024 $1 Bingo Dollarbuck till coin', 'search': '2024 $1 Bingo Dollarbuck till coin'},
+    {'id': 's1_proof_silver', 'ebay_kw': '2024 $1 Bluey Dollarbucks fine silver coloured proof', 'search': '2024 $1 Bluey Dollarbucks fine silver coloured proof'},
+    {'id': 's1_proof_coloured', 'ebay_kw': '2024 $1 Bluey Dollarbucks coloured proof coin', 'search': '2024 $1 Bluey Dollarbucks coloured proof coin'},
+    {'id': 's1_10_coin_folder_set', 'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set sealed unopened', 'search': '2024 $1 Bluey ten coin collection folder tube set sealed unopened'},
+    {'id': 's1_10_coin_folder_opened', 'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set opened', 'search': '2024 $1 Bluey ten coin collection folder tube set opened'},
+    {'id': 's1_coloured_insert_variant', 'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set special coloured coin', 'search': '2024 $1 Bluey ten coin collection folder tube set special coloured coin'},
     {'id': 's1_auspost_stamp_pack', 'ebay_kw': '2024 Bluey MyStamps pack 12 house shaped stamps', 'search': '2024 Bluey MyStamps pack 12 house shaped stamps'},
     {'id': 's1_impressions_pnc_colour', 'ebay_kw': '2024 Bluey limited edition coloured coin PNC', 'search': '2024 Bluey limited edition coloured coin PNC'},
     {'id': 's1_impressions_pnc_2coin', 'ebay_kw': '2024 Bluey limited edition 2 coin PNC', 'search': '2024 Bluey limited edition 2 coin PNC'},
-    {'id': 's1_impressions_pnc_3coin', 'ebay_kw': '2024 Bluey limited edition 3 coin PNC envelope privy', 'search': '2024 Bluey limited edition 3 coin PNC'},
+    {'id': 's1_impressions_pnc_3coin', 'ebay_kw': '2024 Bluey limited edition 3 coin PNC envelope privy', 'search': '2024 Bluey limited edition 3 coin PNC envelope privy'},
     {'id': 's1_impressions_pnc_silver', 'ebay_kw': '2024 Bluey limited edition silver proof prestige PNC', 'search': '2024 Bluey limited edition silver proof prestige PNC'},
-    {'id': 's1_coloured_bluey', 'ebay_kw': '2024 Bluey coloured uncirculated dollarbuck coin card', 'search': '2024 Bluey coloured uncirculated dollarbuck'},
-    {'id': 's1_coloured_heelers', 'ebay_kw': '2024 Bluey Heelers coloured uncirculated dollarbuck', 'search': '2024 Bluey Heelers coloured dollarbuck'},
-    {'id': 's1_coloured_grannies', 'ebay_kw': '2024 Bluey Grannies coloured uncirculated dollarbuck', 'search': '2024 Bluey Grannies coloured dollarbuck'},
-    {'id': 's1_three_coin_set', 'ebay_kw': '2024 Bluey Dollarbucks coloured three coin set', 'search': '2024 Bluey Dollarbucks three coin set'},
-    {'id': 's1_card_bluey', 'ebay_kw': '2024 Bluey $1 privy mark coin in card', 'search': '2024 Bluey privy mark coin in card'},
-    {'id': 's1_card_heelers', 'ebay_kw': '2024 Bluey The Heelers $1 privy mark coin card', 'search': '2024 Bluey Heelers privy mark coin in card'},
-    {'id': 's1_card_bingo', 'ebay_kw': '2024 Bluey Bingo $1 privy mark coin card', 'search': '2024 Bluey Bingo privy mark coin in card'},
-    {'id': 's1_card_muffinsocks', 'ebay_kw': '2024 Bluey Muffin Socks $1 privy mark coin card', 'search': '2024 Bluey Muffin Socks privy mark coin in card'},
-    {'id': 's1_card_stripes', 'ebay_kw': '2024 Bluey Stripe Trixie Nana $1 privy mark coin card', 'search': '2024 Bluey Stripe Trixie Nana privy mark coin in card'},
-    {'id': 's1_card_radfrisky', 'ebay_kw': '2024 Bluey Rad Frisky $1 privy mark coin card', 'search': '2024 Bluey Rad Frisky privy mark coin in card'},
-    {'id': 's1_card_blueyfriends', 'ebay_kw': '2024 Bluey and Friends $1 privy mark coin card', 'search': '2024 Bluey and Friends privy mark coin in card'},
-    {'id': 's1_card_blueybingofriends', 'ebay_kw': '2024 Bluey Bingo Friends $1 privy mark coin card', 'search': '2024 Bluey Bingo Friends privy mark coin in card'},
-    {'id': 's1_card_mumdad', 'ebay_kw': '2024 Bluey Mum Dad $1 privy mark coin card', 'search': '2024 Bluey Mum Dad privy mark coin in card'},
-    {'id': 's1_card_grannies', 'ebay_kw': '2024 Bluey Grannies $1 privy mark coin card', 'search': '2024 Bluey Grannies privy mark coin in card'},
-    {'id': 's1_pnc_bluey', 'ebay_kw': '2024 Bluey postal numismatic cover PNC', 'search': '2024 Bluey PNC postal numismatic cover'},
-    {'id': 's1_pnc_family', 'ebay_kw': '2024 Bluey Her Family postal numismatic cover PNC', 'search': '2024 Bluey Her Family PNC'},
-    {'id': 's1_pnc_bingo', 'ebay_kw': '2024 Bingo postal numismatic cover PNC', 'search': '2024 Bluey Bingo PNC postal numismatic cover'},
-    {'id': 's1_pnc_muffinsocks', 'ebay_kw': '2024 Bluey Muffin Socks postal numismatic cover PNC', 'search': '2024 Bluey Muffin Socks PNC'},
-    {'id': 's1_pnc_stripes', 'ebay_kw': '2024 Bluey Nana Striped Trixie postal numismatic cover PNC envelope privymark', 'search': '2024 Bluey Nana Striped Trixie PNC'},
-    {'id': 's1_pnc_radfrisky', 'ebay_kw': '2024 Bluey Rad Frisky postal numismatic cover PNC', 'search': '2024 Bluey Rad Frisky PNC'},
-    {'id': 's1_pnc_blueyfriends', 'ebay_kw': '2024 Bluey Friends postal numismatic cover PNC', 'search': '2024 Bluey Friends PNC'},
-    {'id': 's1_pnc_blueybingofriends', 'ebay_kw': '2024 Bluey Bingo Friends postal numismatic cover PNC', 'search': '2024 Bluey Bingo Friends PNC'},
-    {'id': 's1_pnc_mumdad', 'ebay_kw': '2024 Bluey Chillo Bandit postal numismatic cover PNC envelope privymark', 'search': '2024 Bluey Chillo Bandit PNC'},
-    {'id': 's1_pnc_grannies', 'ebay_kw': '2024 Bluey Grannies postal numismatic cover PNC', 'search': '2024 Bluey Grannies PNC'},
-    {'id': 's1_pnc_set_ten', 'ebay_kw': '2024 Bluey PNC set all 10 postal numismatic covers', 'search': '2024 Bluey 10 PNC set'},
+    {'id': 's1_coloured_bluey', 'ebay_kw': '2024 Bluey coloured uncirculated dollarbuck coin card', 'search': '2024 Bluey coloured uncirculated dollarbuck coin card'},
+    {'id': 's1_coloured_heelers', 'ebay_kw': '2024 Bluey Heelers coloured uncirculated dollarbuck', 'search': '2024 Bluey Heelers coloured uncirculated dollarbuck'},
+    {'id': 's1_coloured_grannies', 'ebay_kw': '2024 Bluey Grannies coloured uncirculated dollarbuck', 'search': '2024 Bluey Grannies coloured uncirculated dollarbuck'},
+    {'id': 's1_three_coin_set', 'ebay_kw': '2024 Bluey Dollarbucks coloured three coin set', 'search': '2024 Bluey Dollarbucks coloured three coin set'},
+    {'id': 's1_card_bluey', 'ebay_kw': '2024 Bluey $1 privy mark coin in card', 'search': '2024 Bluey $1 privy mark coin in card'},
+    {'id': 's1_card_heelers', 'ebay_kw': '2024 Bluey The Heelers $1 privy mark coin card', 'search': '2024 Bluey The Heelers $1 privy mark coin card'},
+    {'id': 's1_card_bingo', 'ebay_kw': '2024 Bluey Bingo $1 privy mark coin card', 'search': '2024 Bluey Bingo $1 privy mark coin card'},
+    {'id': 's1_card_muffinsocks', 'ebay_kw': '2024 Bluey Muffin Socks $1 privy mark coin card', 'search': '2024 Bluey Muffin Socks $1 privy mark coin card'},
+    {'id': 's1_card_stripes', 'ebay_kw': '2024 Bluey Stripe Trixie Nana $1 privy mark coin card', 'search': '2024 Bluey Stripe Trixie Nana $1 privy mark coin card'},
+    {'id': 's1_card_radfrisky', 'ebay_kw': '2024 Bluey Rad Frisky $1 privy mark coin card', 'search': '2024 Bluey Rad Frisky $1 privy mark coin card'},
+    {'id': 's1_card_blueyfriends', 'ebay_kw': '2024 Bluey and Friends $1 privy mark coin card', 'search': '2024 Bluey and Friends $1 privy mark coin card'},
+    {'id': 's1_card_blueybingofriends', 'ebay_kw': '2024 Bluey Bingo Friends $1 privy mark coin card', 'search': '2024 Bluey Bingo Friends $1 privy mark coin card'},
+    {'id': 's1_card_mumdad', 'ebay_kw': '2024 Bluey Mum Dad $1 privy mark coin card', 'search': '2024 Bluey Mum Dad $1 privy mark coin card'},
+    {'id': 's1_card_grannies', 'ebay_kw': '2024 Bluey Grannies $1 privy mark coin card', 'search': '2024 Bluey Grannies $1 privy mark coin card'},
+    {'id': 's1_pnc_bluey', 'ebay_kw': '2024 Bluey postal numismatic cover PNC', 'search': '2024 Bluey postal numismatic cover PNC'},
+    {'id': 's1_pnc_family', 'ebay_kw': '2024 Bluey Her Family postal numismatic cover PNC', 'search': '2024 Bluey Her Family postal numismatic cover PNC'},
+    {'id': 's1_pnc_bingo', 'ebay_kw': '2024 Bingo postal numismatic cover PNC', 'search': '2024 Bingo postal numismatic cover PNC'},
+    {'id': 's1_pnc_muffinsocks', 'ebay_kw': '2024 Bluey Muffin Socks postal numismatic cover PNC', 'search': '2024 Bluey Muffin Socks postal numismatic cover PNC'},
+    {'id': 's1_pnc_stripes', 'ebay_kw': '2024 Bluey Nana Striped Trixie postal numismatic cover PNC envelope privymark', 'search': '2024 Bluey Nana Striped Trixie postal numismatic cover PNC envelope privymark'},
+    {'id': 's1_pnc_radfrisky', 'ebay_kw': '2024 Bluey Rad Frisky postal numismatic cover PNC', 'search': '2024 Bluey Rad Frisky postal numismatic cover PNC'},
+    {'id': 's1_pnc_blueyfriends', 'ebay_kw': '2024 Bluey Friends postal numismatic cover PNC', 'search': '2024 Bluey Friends postal numismatic cover PNC'},
+    {'id': 's1_pnc_blueybingofriends', 'ebay_kw': '2024 Bluey Bingo Friends postal numismatic cover PNC', 'search': '2024 Bluey Bingo Friends postal numismatic cover PNC'},
+    {'id': 's1_pnc_mumdad', 'ebay_kw': '2024 Bluey Chillo Bandit postal numismatic cover PNC envelope privymark', 'search': '2024 Bluey Chillo Bandit postal numismatic cover PNC envelope privymark'},
+    {'id': 's1_pnc_grannies', 'ebay_kw': '2024 Bluey Grannies postal numismatic cover PNC', 'search': '2024 Bluey Grannies postal numismatic cover PNC'},
+    {'id': 's1_pnc_set_ten', 'ebay_kw': '2024 Bluey PNC set all 10 postal numismatic covers', 'search': '2024 Bluey PNC set all 10 postal numismatic covers'},
     # Further 2024 $1 PNCs + 5th Anniversary proof from RAM 2024-25 Annual
     # Report Appendix E Table 13 (codes 11624-11645; 11635/11637 are distinct
     # records from the 11428/11430 envelope PNCs, not dedupes).
 
     # Series 2 - 2025 Christmas
-    {'id': 's2_xmas_unc', 'ebay_kw': '2025 $1 Bluey Christmas coloured uncirculated coin', 'search': '2025 Bluey Christmas uncirculated'},
-    {'id': 's2_xmas_silv', 'ebay_kw': '2025 $1 Bluey Christmas silver proof coin', 'search': '2025 Bluey Christmas silver proof'},
+    {'id': 's2_xmas_unc', 'ebay_kw': '2025 $1 Bluey Christmas coloured uncirculated coin', 'search': '2025 $1 Bluey Christmas coloured uncirculated coin'},
+    {'id': 's2_xmas_silv', 'ebay_kw': '2025 $1 Bluey Christmas silver proof coin', 'search': '2025 $1 Bluey Christmas silver proof coin'},
 
     # Series 3 - 2026 Bluey $2
-    {'id': 's3_rain', 'ebay_kw': '2026 $2 Bluey Rain privy mark uncirculated coin', 'search': '2026 Bluey Rain privy mark'},
-    {'id': 's3_sleepytime', 'ebay_kw': '2026 $2 Bluey Sleepytime privy mark uncirculated', 'search': '2026 Bluey Sleepytime privy mark'},
-    {'id': 's3_camping', 'ebay_kw': '2026 $2 Bluey Camping privy mark uncirculated coin', 'search': '2026 Bluey Camping privy mark'},
-    {'id': 's3_babyrace', 'ebay_kw': '2026 $2 Bluey Baby Race privy mark uncirculated', 'search': '2026 Bluey Baby Race privy mark'},
-    {'id': 's3_granny', 'ebay_kw': '2026 $2 Bluey Granny Mobile privy mark uncirculated', 'search': '2026 Bluey Granny Mobile privy mark'},
-    {'id': 's3_rain_privy', 'ebay_kw': '2026 $2 Bluey Rain Privy Mark coin', 'search': '2026 Bluey Rain Privy Mark'},
-    {'id': 's3_sleepytime_privy', 'ebay_kw': '2026 $2 Bluey Sleepytime Privy Mark coin', 'search': '2026 Bluey Sleepytime Privy Mark'},
-    {'id': 's3_camping_privy', 'ebay_kw': '2026 $2 Bluey Camping Privy Mark coin', 'search': '2026 Bluey Camping Privy Mark'},
-    {'id': 's3_babyrace_privy', 'ebay_kw': '2026 $2 Bluey Baby Race Privy Mark coin', 'search': '2026 Bluey Baby Race Privy Mark'},
-    {'id': 's3_granny_privy', 'ebay_kw': '2026 $2 Bluey Granny Mobile Privy Mark coin', 'search': '2026 Bluey Granny Mobile Privy Mark'},
-    {'id': 's3_proof_ab', 'ebay_kw': '2026 $2 Bluey coloured proof aluminium bronze coin', 'search': '2026 Bluey proof aluminium bronze'},
-    {'id': 's3_proof_silv', 'ebay_kw': '2026 $2 Bluey coloured silver proof coin', 'search': '2026 Bluey silver proof'},
-    {'id': 's3_maxicard_pack', 'ebay_kw': '2026 Bluey prepaid concertina maxicard pack five designs', 'search': '2026 Bluey prepaid concertina maxicard pack'},
-    {'id': 's3_sleepytime_insert', 'ebay_kw': '2026 $2 Bluey Sleepytime Coloured Insert coin', 'search': '2026 Bluey Sleepytime insert'},
-    {'id': 's3_till_bluey', 'ebay_kw': '2026 $2 Bluey coloured till coin circulation', 'search': '2026 Bluey Bingo coloured coin pair'},
-    {'id': 's3_till_bingo', 'ebay_kw': '2026 $2 Bingo coloured till coin circulation', 'search': '2026 Bluey Bingo coloured coin pair'},
-    {'id': 's3_pnc_bluey', 'ebay_kw': '2026 Bluey For Real Life PNC Australia Post', 'search': '2026 Bluey For Real Life PNC'},
-    {'id': 's3_pnc_bingo', 'ebay_kw': '2026 Bingo Hooray PNC Australia Post', 'search': '2026 Bingo Hooray PNC'},
-    {'id': 's3_pin_babyrace', 'ebay_kw': '2026 Bluey Baby Race stamp pin cover', 'search': '2026 Bluey Baby Race pin cover'},
-    {'id': 's3_pin_camping', 'ebay_kw': '2026 Bluey Camping stamp pin cover', 'search': '2026 Bluey Camping pin cover'},
-    {'id': 's3_pin_granny', 'ebay_kw': '2026 Bluey Granny Mobile stamp pin cover', 'search': '2026 Bluey Granny Mobile pin cover'},
-    {'id': 's3_pin_rain', 'ebay_kw': '2026 Bluey Rain stamp pin cover', 'search': '2026 Bluey Rain pin cover'},
-    {'id': 's3_pin_sleepytime', 'ebay_kw': '2026 Bluey Sleepy Time stamp pin cover', 'search': '2026 Bluey Sleepy Time pin cover'},
+    {'id': 's3_rain', 'ebay_kw': '2026 $2 Bluey Rain privy mark uncirculated coin', 'search': '2026 $2 Bluey Rain privy mark uncirculated coin'},
+    {'id': 's3_sleepytime', 'ebay_kw': '2026 $2 Bluey Sleepytime privy mark uncirculated', 'search': '2026 $2 Bluey Sleepytime privy mark uncirculated'},
+    {'id': 's3_camping', 'ebay_kw': '2026 $2 Bluey Camping privy mark uncirculated coin', 'search': '2026 $2 Bluey Camping privy mark uncirculated coin'},
+    {'id': 's3_babyrace', 'ebay_kw': '2026 $2 Bluey Baby Race privy mark uncirculated', 'search': '2026 $2 Bluey Baby Race privy mark uncirculated'},
+    {'id': 's3_granny', 'ebay_kw': '2026 $2 Bluey Granny Mobile privy mark uncirculated', 'search': '2026 $2 Bluey Granny Mobile privy mark uncirculated'},
+    {'id': 's3_rain_privy', 'ebay_kw': '2026 $2 Bluey Rain Privy Mark coin', 'search': '2026 $2 Bluey Rain Privy Mark coin'},
+    {'id': 's3_sleepytime_privy', 'ebay_kw': '2026 $2 Bluey Sleepytime Privy Mark coin', 'search': '2026 $2 Bluey Sleepytime Privy Mark coin'},
+    {'id': 's3_camping_privy', 'ebay_kw': '2026 $2 Bluey Camping Privy Mark coin', 'search': '2026 $2 Bluey Camping Privy Mark coin'},
+    {'id': 's3_babyrace_privy', 'ebay_kw': '2026 $2 Bluey Baby Race Privy Mark coin', 'search': '2026 $2 Bluey Baby Race Privy Mark coin'},
+    {'id': 's3_granny_privy', 'ebay_kw': '2026 $2 Bluey Granny Mobile Privy Mark coin', 'search': '2026 $2 Bluey Granny Mobile Privy Mark coin'},
+    {'id': 's3_proof_ab', 'ebay_kw': '2026 $2 Bluey coloured proof aluminium bronze coin', 'search': '2026 $2 Bluey coloured proof aluminium bronze coin'},
+    {'id': 's3_proof_silv', 'ebay_kw': '2026 $2 Bluey coloured silver proof coin', 'search': '2026 $2 Bluey coloured silver proof coin'},
+    {'id': 's3_maxicard_pack', 'ebay_kw': '2026 Bluey prepaid concertina maxicard pack five designs', 'search': '2026 Bluey prepaid concertina maxicard pack five designs'},
+    {'id': 's3_sleepytime_insert', 'ebay_kw': '2026 $2 Bluey Sleepytime Coloured Insert coin', 'search': '2026 $2 Bluey Sleepytime Coloured Insert coin'},
+    {'id': 's3_till_bluey', 'ebay_kw': '2026 $2 Bluey coloured till coin circulation', 'search': '2026 $2 Bluey coloured till coin circulation'},
+    {'id': 's3_till_bingo', 'ebay_kw': '2026 $2 Bingo coloured till coin circulation', 'search': '2026 $2 Bingo coloured till coin circulation'},
+    {'id': 's3_pnc_bluey', 'ebay_kw': '2026 Bluey For Real Life PNC Australia Post', 'search': '2026 Bluey For Real Life PNC Australia Post'},
+    {'id': 's3_pnc_bingo', 'ebay_kw': '2026 Bingo Hooray PNC Australia Post', 'search': '2026 Bingo Hooray PNC Australia Post'},
+    {'id': 's3_pin_babyrace', 'ebay_kw': '2026 Bluey Baby Race stamp pin cover', 'search': '2026 Bluey Baby Race stamp pin cover'},
+    {'id': 's3_pin_camping', 'ebay_kw': '2026 Bluey Camping stamp pin cover', 'search': '2026 Bluey Camping stamp pin cover'},
+    {'id': 's3_pin_granny', 'ebay_kw': '2026 Bluey Granny Mobile stamp pin cover', 'search': '2026 Bluey Granny Mobile stamp pin cover'},
+    {'id': 's3_pin_rain', 'ebay_kw': '2026 Bluey Rain stamp pin cover', 'search': '2026 Bluey Rain stamp pin cover'},
+    {'id': 's3_pin_sleepytime', 'ebay_kw': '2026 Bluey Sleepy Time stamp pin cover', 'search': '2026 Bluey Sleepy Time stamp pin cover'},
     # Series 4 — 2027 Cricket episode collectible coins.
-    {'id': 's4_cricket_unc', 'ebay_kw': '2027 $1 Bluey Cricket Rusty coloured uncirculated coin card', 'search': '2027 Bluey Cricket $1 uncirculated'},
-    {'id': 's4_cricket_proof', 'ebay_kw': '2027 $1 Bluey Cricket silver proof coin cricket ball tin', 'search': '2027 Bluey Cricket $1 silver proof'},
-    {'id': 's3_folder', 'ebay_kw': '2026 $2 Bluey collection folder five coin set', 'search': '2026 Bluey collection folder five coin set'},
+    {'id': 's4_cricket_unc', 'ebay_kw': '2027 $1 Bluey Cricket coloured uncirculated coin', 'search': '2027 $1 Bluey Cricket coloured uncirculated coin'},
+    {'id': 's4_cricket_proof', 'ebay_kw': '2027 $1 Bluey Cricket coloured silver proof coin', 'search': '2027 $1 Bluey Cricket coloured silver proof coin'},
+    {'id': 's3_folder', 'ebay_kw': '2026 $2 Bluey collection folder five coin set', 'search': '2026 $2 Bluey collection folder five coin set'},
 
 ]
 COIN_BY_ID = {c['id']: c for c in COINS}
@@ -847,21 +848,72 @@ def _coinxchange_quantity(text):
     return int(match.group(1)) if match else 1
 
 
+# Product-format words the query asks for must appear in the listing title too:
+# without this a "silver proof" query accepts plain uncirculated listings.
+_REQUIRED_VARIANTS = (
+    ('proof',), ('silver',), ('privy', 'privymark'), ('pnc', 'postal'), ('maxicard',),
+    ('sealed', 'unopened'), ('special',),
+)
+# Listings that are never the collectable itself.
+_JUNK_TITLE_TOKENS = {
+    'replica', 'reproduction', 'fake', 'empty', 'sticker', 'stickers', 'poster',
+    'plush', 'toy', 'lego', 'magnet', 'keyring', 'damaged',
+}
+_NAMED_VARIANTS = (
+    'bingo', 'muffin', 'muffinsocks', 'socks', 'stripe', 'stripes', 'trixie',
+    'nana', 'rad', 'frisky', 'friend', 'friends', 'mum', 'dad', 'family',
+    'granny', 'grannies', 'rain', 'camping', 'cricket', 'sleepytime',
+    'sleepy', 'baby', 'race', 'heelers',
+)
+# Spelling/plural variants of one character or episode: a query naming any
+# member must not exclude the others from eBay results.
+_NAME_FAMILIES = (
+    {'muffin', 'muffinsocks', 'socks'}, {'stripe', 'stripes', 'trixie', 'nana'},
+    {'rad', 'frisky'}, {'friend', 'friends'}, {'mum', 'dad'},
+    {'granny', 'grannies'}, {'sleepytime', 'sleepy'}, {'baby', 'race'},
+)
+
+
+def _ebay_query(keywords):
+    """Keywords plus eBay minus-terms for formats and characters the coin is not.
+
+    Keeps a Cricket silver proof search from returning the uncirculated coin
+    (and vice versa) and one character's coin from returning another's.
+    """
+    tokens = set(re.findall(r'[a-z0-9]+', str(keywords or '').lower()))
+    negatives = [t for t in ('proof', 'silver', 'privy', 'lot', 'bulk', 'replica') if t not in tokens]
+    if not tokens & {'pnc', 'postal'}:
+        negatives.append('pnc')
+    if _coinxchange_quantity(keywords) == 1 and not tokens & {'set', 'folder', 'pack'}:
+        negatives.append('set')
+    if tokens & {'folder', 'tube'}:
+        # Tube/folder sets come sealed, opened, or with the special coloured coin.
+        if 'special' not in tokens:
+            negatives.append('special')
+        if 'opened' in tokens:
+            negatives += ['sealed', 'unopened']
+    negatives += [
+        t for t in _NAMED_VARIANTS
+        if t not in tokens and not any(t in fam and fam & tokens for fam in _NAME_FAMILIES)
+    ]
+    return f"{keywords} -({','.join(negatives)})" if negatives else str(keywords)
+
+
 def _coinxchange_title_matches(title, keywords):
     title_tokens = set(re.findall(r'[a-z0-9]+', str(title or '').lower()))
     query_tokens = set(re.findall(r'[a-z0-9]+', str(keywords or '').lower()))
+    if title_tokens & _JUNK_TITLE_TOKENS:
+        return False
+    for group in _REQUIRED_VARIANTS:
+        if set(group) & query_tokens and not set(group) & title_tokens:
+            return False
     years = {token for token in query_tokens if re.fullmatch(r'20\d{2}', token)}
     if not title_tokens or (years and not years.issubset(title_tokens)):
         return False
-    for variant in {'proof', 'silver', 'coloured', 'colored', 'privy', 'postal', 'pnc', 'card'}:
+    for variant in {'proof', 'silver', 'coloured', 'colored', 'privy', 'postal', 'pnc', 'card', 'sealed', 'unopened', 'opened', 'special'}:
         if variant in title_tokens and variant not in query_tokens:
             return False
-    named_variants = {
-        'bingo', 'muffin', 'muffinsocks', 'socks', 'stripe', 'stripes', 'trixie',
-        'nana', 'rad', 'frisky', 'friend', 'friends', 'mum', 'dad', 'family',
-        'granny', 'grannies', 'rain', 'camping', 'cricket', 'rusty', 'sleepytime',
-        'sleepy', 'baby', 'race',
-    }
+    named_variants = set(_NAMED_VARIANTS)
     if (title_tokens & named_variants) - (query_tokens & named_variants):
         return False
     stop = {'a', 'and', 'au', 'australia', 'australian', 'coin', 'coins', 'dollar',
@@ -1070,7 +1122,10 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
     real-time-ebay host; trying to reuse it there produced HTTP 404s. If
     Browse API credentials are unavailable, return an affiliate search link.
     """
-    items = _ebay_browse_search(keywords, limit=5)
+    # Cheapest-first over a wide page, then keep only titles that really are
+    # this coin; the 5 cheapest raw results are usually other products.
+    items = [it for it in _ebay_browse_search(_ebay_query(keywords), limit=50)
+             if _coinxchange_title_matches(it.get('title'), keywords)]
     if not items:
         return _link_only_option(retailer, keywords, coin_id=coin_id)
 
@@ -1095,7 +1150,7 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
 
 
 def _link_only_option(retailer, keywords, coin_id=''):
-    q = urllib.parse.quote(keywords)
+    q = urllib.parse.quote(_ebay_query(keywords) if retailer.get('id') == 'ebay' else keywords)
     raw_url = retailer['search_url'].replace('{q}', q)
     aff_url = affiliate_url(raw_url, coin_id=coin_id, source='ebay_search')
     return [{'retailer_id': retailer['id'], 'name': retailer['name'],

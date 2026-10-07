@@ -63,7 +63,9 @@ def _fallback(retailer, keywords, coin_id, manual):
     configured), so buy-options links never ship untagged.
     """
     entry = (manual.get(coin_id) or {}).get(retailer['id'])
-    if entry:
+    # eBay links are always generated from the coin's tightened query; the old
+    # hand-written eBay URLs were loose (some even pointed at sold pages).
+    if entry and retailer.get('id') != 'ebay':
         q = urllib.parse.quote(keywords)
         checked_at = entry.get('checkedAt')
         try:
