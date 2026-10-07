@@ -290,6 +290,19 @@
   .historical-sales .sales-list-title { color:#64748b; }
 
   .card-body { padding: 14px 18px; }
+  .card-header { align-items: center; }
+  .card-title { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card-format { flex: none; border: 1.5px solid #263a5b; border-radius: 999px; padding: 3px 10px; background: #fff; color: #1e3152; font-size: .72rem; font-weight: 900; letter-spacing: .03em; text-transform: uppercase; white-space: nowrap; }
+  .coin-detail { padding: 10px 18px 0; color: #52627a; font-size: .78rem; line-height: 1.4; }
+  .coin-detail strong { display: block; color: #1e3152; font-size: .84rem; }
+  .metric-price .metric-issue-label { font-size: 1rem; font-weight: 800; color: #1e3152; }
+  .metric-unknown { font-size: 1rem !important; color: #52627a !important; }
+  .card-collect { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 10px; }
+  .collect-btn { min-height: 40px; border: 2px solid #263a5b; border-radius: 12px; background: #fff; color: #1e3152; font: inherit; font-size: .82rem; font-weight: 800; padding: 6px 10px; cursor: pointer; }
+  .collect-btn:hover { background: #eef8ff; }
+  .collect-btn.on { background: #dcfce7; border-color: #19754a; color: #14532d; }
+  .collect-btn.collect-main { grid-column: 1 / -1; }
+  .collect-btn.collect-frame { background: #fff1a8; }
   .market-data-note { color: var(--muted); font-size: 0.82rem; padding: 8px 0; }
   .cx-sales-list { border-left: 2px solid rgba(46,196,182,0.35); margin: -4px 0 12px 8px; padding-left: 10px; }
   .cx-sale-row { display: flex; gap: 8px; align-items: baseline; font-size: 0.74rem; padding: 3px 0; }
@@ -1796,16 +1809,24 @@ window.showDesignModal = showDesignModal;
 
 let collection = JSON.parse(localStorage.getItem('blueycoin_collection') || '{}');
 let wishlist   = JSON.parse(localStorage.getItem('blueycoin_wishlist') || '{}');
+let swapOffer  = JSON.parse(localStorage.getItem('blueycoin_swap_offer') || '{}');
 let swapProfile = null;
 
 function saveCollection() {
   localStorage.setItem('blueycoin_collection', JSON.stringify(collection));
+  renderSwapMatches();
+  if (typeof refreshCollectRows === 'function') refreshCollectRows();
+}
+
+function saveSwapOffer() {
+  localStorage.setItem('blueycoin_swap_offer', JSON.stringify(swapOffer));
   renderSwapMatches();
 }
 
 function saveWishlist() {
   localStorage.setItem('blueycoin_wishlist', JSON.stringify(wishlist));
   renderSwapMatches();
+  if (typeof refreshCollectRows === 'function') refreshCollectRows();
 }
 
 function createCollectionShare() {
@@ -1813,6 +1834,7 @@ function createCollectionShare() {
     v: 1,
     owned: Object.keys(collection).filter(id => collection[id]),
     wanted: Object.keys(wishlist).filter(id => wishlist[id]),
+    offer: Object.keys(swapOffer).filter(id => swapOffer[id] && collection[id]),
   };
   const token = btoa(JSON.stringify(profile)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
   const shareUrl = `${location.origin}${location.pathname}#swap=${token}`;
@@ -1846,6 +1868,7 @@ function decodeCollectionShare(value) {
   return {
     owned: new Set(profile.owned.filter(id => typeof id === 'string' && known.has(id))),
     wanted: new Set(profile.wanted.filter(id => typeof id === 'string' && known.has(id))),
+    offer: new Set((Array.isArray(profile.offer) ? profile.offer : []).filter(id => typeof id === 'string' && known.has(id))),
   };
 }
 
@@ -1874,8 +1897,12 @@ function renderSwapMatches(errorMessage = '') {
     return;
   }
   const coins = new Map((window.COINS || []).map(coin => [coin.id, coin]));
-  const iCanOffer = [...swapProfile.wanted].filter(id => collection[id] && !swapProfile.owned.has(id));
-  const theyCanOffer = [...swapProfile.owned].filter(id => wishlist[id] && !collection[id]);
+  // Coins flagged "swap this coin" are the only ones offered; with none flagged, every owned coin counts.
+  const myOffers = Object.keys(swapOffer).filter(id => swapOffer[id] && collection[id]);
+  const iCanOffer = [...swapProfile.wanted].filter(id => collection[id] && !swapProfile.owned.has(id)
+    && (!myOffers.length || swapOffer[id]));
+  const theirPool = swapProfile.offer && swapProfile.offer.size ? swapProfile.offer : swapProfile.owned;
+  const theyCanOffer = [...theirPool].filter(id => wishlist[id] && !collection[id]);
   const addGroup = (title, ids) => {
     const group = document.createElement('div');
     const heading = document.createElement('strong');
@@ -2500,8 +2527,13 @@ function buildCard(coin) {
   const hdr = el('div', 'card-header');
   const tw = el('div');
   tw.style.flex = '1';
-  tw.append(el('div', 'card-title', coin.name));
-  hdr.append(tw);
+  const labels = cardLabels(coin);
+  const briefTitle = (coin.year ? coin.year + ' ' : '') + labels.title;
+  const titleEl = el('div', 'card-title', briefTitle);
+  titleEl.title = coin.name;
+  tw.style.minWidth = '0';
+  tw.append(titleEl);
+  hdr.append(tw, el('span', 'card-format', labels.format));
 
   // ── Body ──
   const body = el('div', 'card-body');
@@ -2525,9 +2557,9 @@ function buildCard(coin) {
   const metrics = el('div', 'coin-metrics');
   const priceCard = el('section', 'metric-card metric-price');
   priceCard.setAttribute('aria-label', hasMedian && coin.mintPrice != null
-    ? 'Median eBay sold price and gain from issue price'
-    : hasMedian ? 'Median eBay sold price' : 'Issue price');
-  const priceHeading = hasMedian ? 'eBay AU sold median' : (coin.mintPrice != null ? 'Original issue price' : 'Price');
+    ? 'Estimated value and gain from issue price'
+    : hasMedian ? 'Estimated value' : 'Issue price');
+  const priceHeading = hasMedian ? 'Estimated value' : (coin.mintPrice != null ? 'Original issue price' : 'Price');
   const priceValue = hasMedian ? median : coin.mintPrice;
   priceCard.append(el('div', 'metric-kicker', priceHeading));
   priceCard.append(el('div', 'metric-amount', priceValue == null ? '—' : formatAUD(priceValue)));
@@ -2547,10 +2579,10 @@ function buildCard(coin) {
     const manualSalesCount = currentSales.filter(product =>
       product.source_type === 'user_pasted_search' || product.source_type === 'user_imported_csv'
     ).length;
-    const saleSummary = manualSalesCount
-      ? `Includes ${manualSalesCount} user-supplied sales · not API-verified · ${checked}`
-      : `${saleCount} matched sold ${saleCount === 1 ? 'result' : 'results'} · checked ${checked}`;
-    priceCard.append(el('div', 'metric-footnote', saleSummary));
+    if (!manualSalesCount) {
+      priceCard.append(el('div', 'metric-footnote',
+        `${saleCount} matched sold ${saleCount === 1 ? 'result' : 'results'} · checked ${checked}`));
+    }
   }
 
   const supplyCard = el('section', 'metric-card metric-supply');
@@ -2579,10 +2611,13 @@ function buildCard(coin) {
     }
   }
   supplyCard.append(el('div', 'supply-caption', supplyCaption));
+  supplyCard.append(el('div', 'metric-kicker metric-kicker-production', 'Produced'));
   if (coin.issueQuantity != null) {
-    supplyCard.append(el('div', 'metric-kicker metric-kicker-production', 'Production'));
     supplyCard.append(el('div', 'metric-amount', Number(coin.issueQuantity).toLocaleString('en-AU')));
     supplyCard.append(el('div', 'supply-caption', 'units produced'));
+  } else {
+    supplyCard.append(el('div', 'metric-amount metric-unknown', 'Not published'));
+    supplyCard.append(el('div', 'supply-caption', 'no production figure yet'));
   }
   if (supplyDetail) supplyCard.append(el('div', 'supply-detail', supplyDetail));
   const rarityRow = el('div', 'rarity-score-row');
@@ -2615,6 +2650,8 @@ function buildCard(coin) {
   sellBtn.id = `sell-btn-${coin.id}`;
   sellBtn.textContent = 'Sell My Coin';
   sellBtn.addEventListener('click', () => handleSell(coin.id, refPrice));
+
+  body.append(buildCollectRow(coin));
 
   const actions = el('div', 'card-actions');
   actions.append(buyBtn, sellBtn);
@@ -2708,11 +2745,117 @@ function buildCard(coin) {
     image.loading = 'lazy';
     image.decoding = 'async';
     figure.append(image);
-    card.append(hdr, figure, body);
+    card.append(hdr, figure, buildDetail(coin, labels), body);
   } else {
-    card.append(hdr, body);
+    card.append(hdr, buildDetail(coin, labels), body);
   }
   return card;
+}
+
+// Short card title plus a format tag; the long official product name goes in
+// the detail block under the image.
+const CARD_LABELS = {
+  s1_bluey: ['Bluey', 'Till coin'], s1_bingo: ['Bingo', 'Till coin'],
+  s1_proof_silver: ['Bluey', 'Silver proof'], s1_proof_coloured: ['Bluey', 'Coloured proof'],
+  s1_10_coin_folder_set: ['Ten-coin folder', 'Set · sealed'], s1_10_coin_folder_opened: ['Ten-coin folder', 'Set · opened'],
+  s1_coloured_insert_variant: ['Ten-coin folder', 'Set + coloured coin'], s1_auspost_stamp_pack: ['MyStamps pack', 'Stamp pack'],
+  s1_impressions_pnc_colour: ['Bluey', 'Coloured PNC'], s1_impressions_pnc_2coin: ['Bluey 2-coin', 'PNC'],
+  s1_impressions_pnc_3coin: ['Bluey 3-coin', 'PNC'], s1_impressions_pnc_silver: ['Bluey', 'Silver proof PNC'],
+  s1_coloured_bluey: ['Bluey', 'Coloured UNC'], s1_coloured_heelers: ['The Heelers', 'Coloured UNC'],
+  s1_coloured_grannies: ['The Grannies', 'Coloured UNC'], s1_three_coin_set: ['Three-coin set', 'Set'],
+  s1_card_bluey: ['Bluey', 'Privy UNC'], s1_card_heelers: ['The Heelers', 'Privy UNC'], s1_card_bingo: ['Bingo', 'Privy UNC'],
+  s1_card_muffinsocks: ['Muffin & Socks', 'Privy UNC'], s1_card_stripes: ['Stripe, Trixie & Nana', 'Privy UNC'],
+  s1_card_radfrisky: ['Rad & Frisky', 'Privy UNC'], s1_card_blueyfriends: ['Bluey & Friends', 'Privy UNC'],
+  s1_card_blueybingofriends: ['Bluey, Bingo & Friends', 'Privy UNC'], s1_card_mumdad: ['Mum & Dad', 'Privy UNC'],
+  s1_card_grannies: ['The Grannies', 'Privy UNC'],
+  s1_pnc_bluey: ['Bluey', 'PNC'], s1_pnc_family: ['Heeler Family', 'PNC'], s1_pnc_bingo: ['Bingo', 'PNC'],
+  s1_pnc_muffinsocks: ['Muffin & Socks', 'PNC'], s1_pnc_radfrisky: ['Rad & Frisky', 'PNC'],
+  s1_pnc_stripes: ['Stripe, Trixie & Nana', 'PNC'], s1_pnc_blueybingofriends: ['Bluey, Bingo & Friends', 'PNC'],
+  s1_pnc_blueyfriends: ['Bluey & Friends', 'PNC'], s1_pnc_mumdad: ['Chilli & Bandit', 'PNC'],
+  s1_pnc_grannies: ['The Grannies', 'PNC'], s1_pnc_set_ten: ['All 10 designs', 'PNC set'],
+  s2_xmas_unc: ['Christmas', 'Coloured UNC'], s2_xmas_silv: ['Christmas', 'Silver proof'],
+  s3_folder: ['Five-coin folder', 'Folder set'],
+  s3_rain_privy: ['Rain', 'Privy UNC'], s3_sleepytime_privy: ['Sleepytime', 'Privy UNC'], s3_camping_privy: ['Camping', 'Privy UNC'],
+  s3_babyrace_privy: ['Baby Race', 'Privy UNC'], s3_granny_privy: ['Granny Mobile', 'Privy UNC'],
+  s3_proof_ab: ['Heeler family', 'Proof'], s3_proof_silv: ['Heeler family', 'Silver proof'],
+  s3_maxicard_pack: ['Maxicard pack', 'Maxicards'], s3_sleepytime_insert: ['Sleepytime', 'Insert variant'],
+  s3_till_bluey: ['Bluey', 'Till coin'], s3_till_bingo: ['Bingo', 'Till coin'],
+  s3_pnc_bluey: ['Bluey', 'PNC'], s3_pnc_bingo: ['Bingo', 'PNC'],
+  s3_pin_babyrace: ['Baby Race', 'Stamp & pin'], s3_pin_camping: ['Camping', 'Stamp & pin'], s3_pin_granny: ['Granny Mobile', 'Stamp & pin'],
+  s3_pin_rain: ['Rain', 'Stamp & pin'], s3_pin_sleepytime: ['Sleepy Time', 'Stamp & pin'],
+  s4_cricket_unc: ['Cricket', 'Coloured UNC'], s4_cricket_proof: ['Cricket', 'Silver proof'],
+};
+
+function cardLabels(coin) {
+  const known = CARD_LABELS[coin.id];
+  return known ? { title: known[0], format: known[1] } : { title: coin.name, format: 'Collectible' };
+}
+
+function buildDetail(coin, labels) {
+  const box = el('div', 'coin-detail');
+  box.append(el('strong', '', coin.name));
+  const bits = [];
+  if (coin.productCode) bits.push('Mint product ' + coin.productCode);
+  if (coin.denomination != null) bits.push('$' + coin.denomination + ' face value');
+  bits.push(labels.format);
+  box.append(document.createTextNode(bits.join(' · ')));
+  return box;
+}
+
+// ── Collection / swap / frame actions on each card ──
+function buildCollectRow(coin) {
+  const owned = !!collection[coin.id];
+  const row = el('div', 'card-collect');
+  row.dataset.coin = coin.id;
+
+  const own = el('button', 'collect-btn collect-main' + (owned ? ' on' : ''),
+    owned ? '✓ In my collection · Remove' : '+ Add to collection');
+  own.type = 'button';
+  own.dataset.act = 'own';
+  own.setAttribute('aria-pressed', String(owned));
+  own.addEventListener('click', () => {
+    if (collection[coin.id]) delete collection[coin.id]; else collection[coin.id] = true;
+    saveCollection();
+    renderDashboard();
+    refreshCollectRows(coin.id, 'own');
+  });
+
+  // Own it: offer it up. Don't own it: say you want it. Both feed the swap matcher.
+  const swap = el('button', 'collect-btn' + ((owned ? swapOffer[coin.id] : wishlist[coin.id]) ? ' on' : ''),
+    owned ? (swapOffer[coin.id] ? '⇄ Offered for swap' : '⇄ Swap this coin')
+          : (wishlist[coin.id] ? '⇄ Wanted in swaps' : '⇄ Swap for this coin'));
+  swap.type = 'button';
+  swap.dataset.act = 'swap';
+  swap.setAttribute('aria-pressed', String(!!(owned ? swapOffer[coin.id] : wishlist[coin.id])));
+  swap.addEventListener('click', () => {
+    const list = owned ? swapOffer : wishlist;
+    if (list[coin.id]) delete list[coin.id]; else list[coin.id] = true;
+    if (owned) saveSwapOffer(); else saveWishlist();
+    renderDashboard();
+    refreshCollectRows(coin.id, 'swap');
+  });
+
+  const frame = el('button', 'collect-btn collect-frame', owned ? '🖼 Frame this coin' : '🖼 Buy this coin framed');
+  frame.type = 'button';
+  frame.dataset.act = 'frame';
+  frame.addEventListener('click', () => {
+    addToCart('frame-' + coin.id);
+    if (!owned) handleBuyNow(coin.id, coin.keywords);
+  });
+
+  row.append(own, swap, frame);
+  return row;
+}
+
+function refreshCollectRows(focusCoinId, focusAct) {
+  const byId = new Map((window.COINS || []).map(c => [c.id, c]));
+  document.querySelectorAll('.card-collect').forEach(row => {
+    const coin = byId.get(row.dataset.coin);
+    if (!coin) return;
+    const fresh = buildCollectRow(coin);
+    row.replaceWith(fresh);
+    if (focusCoinId === coin.id && focusAct) fresh.querySelector('[data-act="' + focusAct + '"]')?.focus();
+  });
 }
 
 
