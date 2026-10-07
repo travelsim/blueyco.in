@@ -110,6 +110,20 @@ class TestBuyOptions(unittest.TestCase):
         self.assertEqual(options[0]['price_type'], 'asking')
         self.assertEqual(options[0]['title'], '2024 Bluey Dollarbuck till coin')
 
+    def test_coinxchange_matcher_accepts_real_till_coin_titles_and_rejects_bundles(self):
+        k = legacy._browse_keywords('till coin 2026 coloured')
+        for title in ('2026 $2 Bluey Till Coin - CIRC',
+                      '2026 $2 Bluey For Real Life Coloured Coin aUnc'):
+            self.assertTrue(legacy._coinxchange_title_matches(title, k, True), title)
+        bingo = legacy._browse_keywords('till coin 2026 bingo')
+        self.assertTrue(legacy._coinxchange_title_matches(
+            '2026 BLUEY BINGO HOORAY $2 COLOURED UNCIRCULATED COIN', bingo, True))
+        for title in ('2026 Winter Olympic $2 Coloured Coin',
+                      '2026 $2 Bluey Bingo Till Coin Set',
+                      '2026 Bluey Tube & Folder Set + 2 Till Coins',
+                      '2024 $1 Bluey Dollarbucks- Bingo ENVELOPE Privymark Carded Coin'):
+            self.assertFalse(legacy._coinxchange_title_matches(title, bingo, True), title)
+
     def test_ebay_live_offer_keeps_title_price_label_and_affiliate_link(self):
         retailer = {r['id']: r for r in legacy.RETAILERS}['ebay']
         listing = {
