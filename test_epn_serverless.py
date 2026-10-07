@@ -109,7 +109,8 @@ class TestPricesSnapshotTagging(unittest.TestCase):
 
     def _snapshot(self, coins):
         with mock.patch.object(prices, '_load_base_cache', return_value=self._baseline()), \
-             mock.patch.object(prices, '_load_manual', return_value=self._manual()):
+             mock.patch.object(prices, '_load_manual', return_value=self._manual()), \
+             mock.patch.object(prices, '_load_manual_ebay_sales', return_value={}):
             snapshot, complete = prices._build_payload(coins, deadline=1)
         return snapshot, complete
 
@@ -240,8 +241,10 @@ class TestBuyOptionsFallbackTagging(unittest.TestCase):
             'price': None,
             'url': 'https://www.ebay.com.au/sch/i.html?_nkw=Bluey&LH_Sold=1&_sop=15'}}}
         option = buy_options._fallback(self._ebay_retailer(), 'Bluey', 's1_bluey', manual)[0]
+        # Hand-written manual eBay URLs are ignored; the link is generated from
+        # the coin's own query and still affiliate-tagged.
         self.assertIn('campid=testcamp', option['url'])
-        self.assertIn('LH_Sold=1', option['url'])
+        self.assertNotIn('LH_Sold=1', option['url'])
         self.assertIn('customid=blueycoin-ebay_search-s1_bluey', option['url'])
         self.assertTrue(option['link_only'])
 
@@ -250,7 +253,9 @@ class TestBuyOptionsFallbackTagging(unittest.TestCase):
         raw = 'https://www.ebay.com.au/sch/i.html?_nkw=Bluey&LH_Sold=1&_sop=15'
         manual = {'s1_bluey': {'ebay': {'price': None, 'url': raw}}}
         option = buy_options._fallback(self._ebay_retailer(), 'Bluey', 's1_bluey', manual)[0]
-        self.assertEqual(option['url'], raw)
+        self.assertNotEqual(option['url'], raw)
+        self.assertNotIn('LH_Sold=1', option['url'])
+        self.assertNotIn('campid=', option['url'])
 
     def test_non_ebay_manual_url_never_tagged(self):
         legacy.EPN_CAMPAIGN_ID = 'testcamp'

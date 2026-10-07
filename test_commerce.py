@@ -112,13 +112,13 @@ class TestMedianPricing(unittest.TestCase):
         self.assertIn("const median = parseFloat(ebay.median_price);", INDEX)
 
     def test_card_and_sort_use_the_reference_price(self):
-        self.assertIn('const premium = calcPremium(refPrice, coin.mintPrice);', INDEX)
-        self.assertIn('_referencePrice(b) || 0', INDEX)
-        self.assertIn('_referencePrice(a) || Infinity', INDEX)
+        self.assertIn('const premium = hasMedian ? calcPremium(median, coin.mintPrice) : null;', INDEX)
+        self.assertIn('(_referencePrice(b) || 0) - (_referencePrice(a) || 0)', INDEX)
+        self.assertIn('(_referencePrice(a) || Infinity) - (_referencePrice(b) || Infinity)', INDEX)
 
     def test_median_helper_ignores_missing_prices(self):
         self.assertIn('function _medianOfProducts(ebay)', INDEX)
-        self.assertIn('.filter(p => p > 0)', INDEX)
+        self.assertIn('.filter(price => Number.isFinite(price) && price > 0)', INDEX)
 
 
 class TestAffiliateDisclosure(unittest.TestCase):
