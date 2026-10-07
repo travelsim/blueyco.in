@@ -170,20 +170,6 @@ RETAILERS = [
         'type':       'coinxchange',
     },
     {
-        'id':         'nova_coins',
-        'name':       'Nova Coins · dealer asking listings',
-        'base_url':   'https://www.novacoins.com.au',
-        'search_url': 'https://www.novacoins.com.au/collections/bluey-coins',
-        'type':       'link_only',
-    },
-    {
-        'id':         'aussie_coins_direct',
-        'name':       'Aussie Coins Direct · dealer asking listings',
-        'base_url':   'https://aussiecoinsdirect.com.au',
-        'search_url': 'https://aussiecoinsdirect.com.au/collections/bluey',
-        'type':       'link_only',
-    },
-    {
         'id':         'gumtree',
         'name':       'Gumtree AU',
         'base_url':   'https://www.gumtree.com.au',
@@ -192,15 +178,6 @@ RETAILERS = [
         # literal joined phrase and mostly return nothing. With real spaces
         # this resolves to a precise per-coin search.
         'search_url': 'https://www.gumtree.com.au/s-{q}/k0',
-        'type':       'link_only',
-    },
-    {
-        'id':         'cashconverters',
-        'name':       'Cash Converters',
-        'base_url':   'https://www.cashconverters.com.au',
-        # The site terms prohibit automated use; query= is also disallowed by
-        # robots.txt. A user-clicked search link remains available.
-        'search_url': 'https://www.cashconverters.com.au/search-results?q={q}',
         'type':       'link_only',
     },
 ]
@@ -1124,7 +1101,10 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
     """
     # Cheapest-first over a wide page, then keep only titles that really are
     # this coin; the 5 cheapest raw results are usually other products.
-    items = [it for it in _ebay_browse_search(_ebay_query(keywords), limit=50)
+    # The Browse 'q' parameter is capped in length, so the exclusion list from
+    # _ebay_query() (used for the search link) is not sent; the title gate below
+    # does that filtering.
+    items = [it for it in _ebay_browse_search(keywords, limit=100)
              if _coinxchange_title_matches(it.get('title'), keywords)]
     if not items:
         return _link_only_option(retailer, keywords, coin_id=coin_id)

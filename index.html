@@ -22,7 +22,7 @@
 <meta property="og:image:alt" content="Bluey $1 Dollarbuck 2024 in a display frame">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Blueycoin — Track every Bluey coin in one place">
-<meta name="twitter:description" content="A Bluey coin collector guide with Royal Australian Mint mintages, product images, eBay sold-search links, current retailer listings, and a collection tracker.">
+<meta name="twitter:description" content="A Bluey coin collector guide with Royal Australian Mint mintages, product images, eBay sold-search links, current eBay asking listings, and a collection tracker.">
 <meta name="twitter:image" content="https://blueyco.in/frames/blister-bluey-dollarbuck-2024.jpg">
 
 <script type="application/ld+json">
@@ -61,7 +61,7 @@
         {
           "@type": "Question",
           "name": "Where can I buy official Bluey coins?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Check official Royal Australian Mint and Australia Post product pages, or use the Buy Options panel for retailer search links and current asking prices. Sold searches are shown separately from active listings." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Check official Royal Australian Mint and Australia Post product pages, or use the Buy Options panel for eBay and Gumtree searches and current eBay asking prices. Sold searches are shown separately from active listings." }
         },
         {
           "@type": "Question",
@@ -2141,7 +2141,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
     <div class="faq-item">
       <h3>Where can I buy official Bluey coins?</h3>
-      <p>Check official Royal Australian Mint and Australia Post product pages, or use the Buy Options panel for retailer search links and current asking prices. Sold searches are shown separately from active listings.</p>
+      <p>Check official Royal Australian Mint and Australia Post product pages, or use the Buy Options panel for eBay and Gumtree searches and current eBay asking prices. Sold searches are shown separately from active listings.</p>
     </div>
     <div class="faq-item">
       <h3>What is the rarest Bluey coin?</h3>
@@ -2156,7 +2156,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </main>
 
 <footer id="site-footer">
-  eBay AU completed-sale search links · Current retailer asking-price links · Prices in AUD · Not financial advice · Built for collectors<br><br>
+  eBay AU completed-sale search links · Current eBay asking-price links · Prices in AUD · Not financial advice · Built for collectors<br><br>
   <small>Some links on this site are affiliate links through the eBay Partner Network (EPN). We may earn a commission if you make a purchase through these links, at no extra cost to you.</small><br><br>
   <small>Bluey Coin Tracker is an independent, fan-run collector guide. It is not affiliated with, endorsed by, or associated with Ludo Studio, BBC Studios, or the Royal Australian Mint.</small>
 </footer>
@@ -2759,7 +2759,7 @@ async function handleBuyNow(coinId, keywords) {
     renderBuyOptions(panel, data.options || []);
   } catch (err) {
     while (panel.childNodes.length > 1) panel.removeChild(panel.lastChild);
-    panel.append(el('div', 'bp-note', 'Could not load retailer prices. Try again later.'));
+    panel.append(el('div', 'bp-note', 'Could not load buying options. Try again later.'));
   }
 
   // Reset button
@@ -2779,7 +2779,7 @@ function renderBuyOptions(panel, options) {
   );
 
   if (!options || options.length === 0) {
-    panel.append(el('div', 'bp-note', 'No retailer data found.'));
+    panel.append(el('div', 'bp-note', 'No buying options found.'));
     return;
   }
 
