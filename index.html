@@ -684,6 +684,12 @@
   footer { text-align: center; padding: 24px; font-size: 0.78rem; color: var(--muted); border-top: 1px solid var(--border); }
 
   /* ── RESPONSIVE ── */
+  @media (pointer: coarse) {
+    .buy-btn, .sell-btn { min-height: 44px; }
+    .toggle-sales { min-height: 44px; display: inline-flex; align-items: center; }
+    .wish-btn { min-height: 44px; padding-left: 14px; padding-right: 14px; }
+    .coin-checkbox { width: 24px; height: 24px; }
+  }
   @media (max-width: 540px) {
     .coins-grid { grid-template-columns: 1fr; }
     .page-title { font-size: 1.5rem; }
