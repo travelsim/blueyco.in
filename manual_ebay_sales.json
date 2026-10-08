@@ -175,9 +175,9 @@
       "total_results": 26,
       "matched_results": 26,
       "average_price": 198.44,
-      "median_price": 202.00,
-      "min_price": 119.50,
-      "max_price": 219.00,
+      "median_price": 202.0,
+      "min_price": 119.5,
+      "max_price": 219.0,
       "import_metadata": {
         "source": "User-pasted eBay AU completed and sold search results",
         "captured_on": "2026-10-06",
@@ -198,32 +198,396 @@
         ]
       },
       "products": [
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 Bluey Cricket $1 Coloured Silver Proof Coin", "sale_price": 180.00, "currency": "AU", "date_sold": "24 Sep 2026", "buying_format": "Buy It Now", "shipping_price": 0, "seller": "thompsonscoins", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 $1 Coloured Silver Proof Coin - Bluey Cricket- New in Stock", "sale_price": 219.00, "currency": "AU", "date_sold": "23 Sep 2026", "buying_format": "Buy It Now", "shipping_price": 0, "seller": "trade.investment.australia", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single in-stock silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 $1 Bluey Cricket Coloured Silver Proof Coin - In stock - Ready to ship", "sale_price": 189.00, "currency": "AU", "date_sold": "2 Oct 2026", "buying_format": "Buy It Now", "shipping_price": 0, "seller": "fgiama", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single in-stock silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 $1 Coloured Silver Proof Coin - Bluey Cricket -", "sale_price": 199.98, "currency": "AU", "date_sold": "5 Oct 2026", "buying_format": "Buy It Now", "shipping_price": 0, "seller": "jusz_27", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 $1 Bluey Cricket Coloured Silver Proof Coin - In stock - Ready to ship", "sale_price": 210.58, "currency": "AU", "date_sold": "3 Oct 2026", "buying_format": "Buy It Now", "shipping_price": 0, "seller": "protenics", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single in-stock silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 $1 Coloured Silver Proof Coin - Bluey Cricket -", "sale_price": 218.48, "currency": "AU", "date_sold": "23 Sep 2026", "buying_format": "Buy It Now", "shipping_price": 0, "seller": "aussiemintedgems", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 Bluey Cricket Silver Proof Coloured $1 Coin / Rusty / In Hand", "sale_price": 210.00, "currency": "AU", "date_sold": "24 Sep 2026", "buying_format": "Buy It Now", "shipping_price": 9.90, "seller": "savvy_man", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single in-hand silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 Bluey Cricket $1 Coloured Silver Proof Coin***Ready to post", "sale_price": 209.00, "currency": "AU", "date_sold": "24 Sep 2026", "buying_format": "Buy It Now", "shipping_price": 0, "seller": "shirleymango1529", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single ready-to-post silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 $1 Coloured Silver Proof Bluey Cricket Coin", "sale_price": 211.64, "currency": "AU", "date_sold": "1 Oct 2026", "buying_format": "Buy It Now", "shipping_price": 11.00, "seller": "coin_cellar", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "In Stock - 2027 $1 Coloured Silver Proof Coin - Bluey Cricket", "sale_price": 209.00, "currency": "AU", "date_sold": "27 Sep 2026", "buying_format": "Buy It Now", "shipping_price": 0, "seller": "trade.investment.australia", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single in-stock silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 $1 Coloured Silver Proof Coin - Bluey Cricket", "sale_price": 200.00, "currency": "AU", "date_sold": "27 Sep 2026", "buying_format": "Buy It Now", "shipping_price": 0, "seller": "imekh_0", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 $1 Coloured Silver Proof Coin - Bluey Cricket - FREE SHIPPING", "sale_price": 204.00, "currency": "AU", "date_sold": "29 Sep 2026", "buying_format": "Buy It Now", "shipping_price": 0, "seller": "imekh_0", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 $1 Coloured Silver Proof Coin - Bluey Cricket - FREE SHIPPING", "sale_price": 207.00, "currency": "AU", "date_sold": "30 Sep 2026", "buying_format": "Buy It Now", "shipping_price": 0, "seller": "imekh_0", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 Australia Coloured $1 Bluey Cricket Silver Proof Coin", "sale_price": 205.00, "currency": "AU", "date_sold": "28 Sep 2026", "buying_format": "Buy It Now", "shipping_price": 0, "seller": "sa-online-budget", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 $1 Coloured Silver Proof Coloured Coin - Bluey Cricket", "sale_price": 190.44, "currency": "AU", "date_sold": "28 Sep 2026", "buying_format": "Buy It Now", "shipping_price": 14.70, "seller": "coinsrus-melb", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 $1 Coloured Silver Proof Coin - Bluey Cricket - RAM", "sale_price": 199.00, "currency": "AU", "date_sold": "24 Sep 2026", "buying_format": "Buy It Now", "shipping_price": 8.26, "seller": "jebus.sk", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 Australia Coloured $1 Bluey Cricket Silver Proof Coin - FREE SHIP", "sale_price": 198.95, "currency": "AU", "date_sold": "30 Sep 2026", "buying_format": "Buy It Now", "shipping_price": 0, "seller": "mabdam", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 $1 Bluey Cricket Coloured Silver Proof Coin RAM", "sale_price": 208.50, "currency": "AU", "date_sold": "24 Sep 2026", "buying_format": "Buy It Now", "shipping_price": 0, "seller": "da_green_dragon", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 $1 Coloured Silver Proof Coin - Bluey Cricket - FREE SHIPPING", "sale_price": 189.00, "currency": "AU", "date_sold": "22 Sep 2026", "buying_format": "Buy It Now", "shipping_price": 14.95, "seller": "pjswagman", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 Australia RAM Bluey Cricket $1 Coloured Fine Silver Proof Coin - In Stock", "sale_price": 119.50, "currency": "AU", "date_sold": "23 Sep 2026", "buying_format": "Buy It Now", "shipping_price": 12.00, "seller": "strathrm", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single in-stock silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 Australia RAM Bluey Cricket $1 Coloured Fine Silver Proof Coin - In Stock", "sale_price": 189.98, "currency": "AU", "date_sold": "4 Oct 2026", "buying_format": "Buy It Now", "shipping_price": 10.95, "seller": "strathrm", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single in-stock silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 $1 Bluey Cricket Coloured Silver Proof Coin - IN HAND - 2026 RAM/brand new", "sale_price": 180.00, "currency": "AU", "date_sold": "6 Oct 2026", "buying_format": "Buy It Now", "shipping_price": 12.00, "seller": "sherj2day", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single in-hand silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 Bluey Cricket $1 Coloured Silver Proof Coin - In Hand", "sale_price": 199.99, "currency": "AU", "date_sold": "3 Oct 2026", "buying_format": "Buy It Now", "shipping_price": 0, "seller": "an642572", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single in-hand silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 $1 Bluey Cricket Coloured Silver Proof Coin", "sale_price": 199.00, "currency": "AU", "date_sold": "1 Oct 2026", "buying_format": "Buy It Now", "shipping_price": 0, "seller": "hasja_7155", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 Australia Coloured $1 Bluey Cricket Silver Proof Coin", "sale_price": 207.40, "currency": "AU", "date_sold": "3 Oct 2026", "buying_format": "Buy It Now", "shipping_price": 8.26, "seller": "devero-61", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single silver proof; displayed fixed price; dated sold result." },
-        { "coin_id": "s4_cricket_proof", "coin_name": "Cricket $1 Coloured Silver Proof", "title": "2027 $1 Bluey Cricket Coloured Silver Proof Coin", "sale_price": 205.00, "currency": "AU", "date_sold": "4 Oct 2026", "buying_format": "Buy It Now", "shipping_price": 0, "seller": "hasja_7155", "source_type": "user_pasted_search", "best_offer": false, "record_status": "Retained", "record_reason": "Single silver proof; displayed fixed price; dated sold result." }
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 Bluey Cricket $1 Coloured Silver Proof Coin",
+          "sale_price": 180.0,
+          "currency": "AU",
+          "date_sold": "24 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "thompsonscoins",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 $1 Coloured Silver Proof Coin - Bluey Cricket- New in Stock",
+          "sale_price": 219.0,
+          "currency": "AU",
+          "date_sold": "23 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "trade.investment.australia",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single in-stock silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 $1 Bluey Cricket Coloured Silver Proof Coin - In stock - Ready to ship",
+          "sale_price": 189.0,
+          "currency": "AU",
+          "date_sold": "2 Oct 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "fgiama",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single in-stock silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 $1 Coloured Silver Proof Coin - Bluey Cricket -",
+          "sale_price": 199.98,
+          "currency": "AU",
+          "date_sold": "5 Oct 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "jusz_27",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 $1 Bluey Cricket Coloured Silver Proof Coin - In stock - Ready to ship",
+          "sale_price": 210.58,
+          "currency": "AU",
+          "date_sold": "3 Oct 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "protenics",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single in-stock silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 $1 Coloured Silver Proof Coin - Bluey Cricket -",
+          "sale_price": 218.48,
+          "currency": "AU",
+          "date_sold": "23 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "aussiemintedgems",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 Bluey Cricket Silver Proof Coloured $1 Coin / Rusty / In Hand",
+          "sale_price": 210.0,
+          "currency": "AU",
+          "date_sold": "24 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 9.9,
+          "seller": "savvy_man",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single in-hand silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 Bluey Cricket $1 Coloured Silver Proof Coin***Ready to post",
+          "sale_price": 209.0,
+          "currency": "AU",
+          "date_sold": "24 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "shirleymango1529",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single ready-to-post silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 $1 Coloured Silver Proof Bluey Cricket Coin",
+          "sale_price": 211.64,
+          "currency": "AU",
+          "date_sold": "1 Oct 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 11.0,
+          "seller": "coin_cellar",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "In Stock - 2027 $1 Coloured Silver Proof Coin - Bluey Cricket",
+          "sale_price": 209.0,
+          "currency": "AU",
+          "date_sold": "27 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "trade.investment.australia",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single in-stock silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 $1 Coloured Silver Proof Coin - Bluey Cricket",
+          "sale_price": 200.0,
+          "currency": "AU",
+          "date_sold": "27 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "imekh_0",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 $1 Coloured Silver Proof Coin - Bluey Cricket - FREE SHIPPING",
+          "sale_price": 204.0,
+          "currency": "AU",
+          "date_sold": "29 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "imekh_0",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 $1 Coloured Silver Proof Coin - Bluey Cricket - FREE SHIPPING",
+          "sale_price": 207.0,
+          "currency": "AU",
+          "date_sold": "30 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "imekh_0",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 Australia Coloured $1 Bluey Cricket Silver Proof Coin",
+          "sale_price": 205.0,
+          "currency": "AU",
+          "date_sold": "28 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "sa-online-budget",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 $1 Coloured Silver Proof Coloured Coin - Bluey Cricket",
+          "sale_price": 190.44,
+          "currency": "AU",
+          "date_sold": "28 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 14.7,
+          "seller": "coinsrus-melb",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 $1 Coloured Silver Proof Coin - Bluey Cricket - RAM",
+          "sale_price": 199.0,
+          "currency": "AU",
+          "date_sold": "24 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 8.26,
+          "seller": "jebus.sk",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 Australia Coloured $1 Bluey Cricket Silver Proof Coin - FREE SHIP",
+          "sale_price": 198.95,
+          "currency": "AU",
+          "date_sold": "30 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "mabdam",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 $1 Bluey Cricket Coloured Silver Proof Coin RAM",
+          "sale_price": 208.5,
+          "currency": "AU",
+          "date_sold": "24 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "da_green_dragon",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 $1 Coloured Silver Proof Coin - Bluey Cricket - FREE SHIPPING",
+          "sale_price": 189.0,
+          "currency": "AU",
+          "date_sold": "22 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 14.95,
+          "seller": "pjswagman",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 Australia RAM Bluey Cricket $1 Coloured Fine Silver Proof Coin - In Stock",
+          "sale_price": 119.5,
+          "currency": "AU",
+          "date_sold": "23 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 12.0,
+          "seller": "strathrm",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single in-stock silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 Australia RAM Bluey Cricket $1 Coloured Fine Silver Proof Coin - In Stock",
+          "sale_price": 189.98,
+          "currency": "AU",
+          "date_sold": "4 Oct 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 10.95,
+          "seller": "strathrm",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single in-stock silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 $1 Bluey Cricket Coloured Silver Proof Coin - IN HAND - 2026 RAM/brand new",
+          "sale_price": 180.0,
+          "currency": "AU",
+          "date_sold": "6 Oct 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 12.0,
+          "seller": "sherj2day",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single in-hand silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 Bluey Cricket $1 Coloured Silver Proof Coin - In Hand",
+          "sale_price": 199.99,
+          "currency": "AU",
+          "date_sold": "3 Oct 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "an642572",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single in-hand silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 $1 Bluey Cricket Coloured Silver Proof Coin",
+          "sale_price": 199.0,
+          "currency": "AU",
+          "date_sold": "1 Oct 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "hasja_7155",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 Australia Coloured $1 Bluey Cricket Silver Proof Coin",
+          "sale_price": 207.4,
+          "currency": "AU",
+          "date_sold": "3 Oct 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 8.26,
+          "seller": "devero-61",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "Cricket $1 Coloured Silver Proof",
+          "title": "2027 $1 Bluey Cricket Coloured Silver Proof Coin",
+          "sale_price": 205.0,
+          "currency": "AU",
+          "date_sold": "4 Oct 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0,
+          "seller": "hasja_7155",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single silver proof; displayed fixed price; dated sold result."
+        }
       ]
     },
     "s1_10_coin_folder_set": {
@@ -232,9 +596,9 @@
       "fetchedAt": 1791277858.734,
       "query": "0 results for 2024 $1 Bluey ten coin collection folder tube set",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+%241+Bluey+ten+coin+collection+folder+tube+set&LH_Sold=1&LH_Complete=1&_sop=15&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=blueycoin-ebay_search-s1_10_coin_folder_set&toolid=10001&mkevt=1",
-      "results": 3,
-      "total_results": 3,
-      "matched_results": 3,
+      "results": 4,
+      "total_results": 4,
+      "matched_results": 4,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -311,6 +675,16 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 11 Jul 2026\n2024 $1 Bluey Dollarbucks 10 Coin Set UNCIR Complete Set (Unopened) & Folder\nOpens in a new window or tab\nAU $70.06\n8 bids\n+AU $15.00 delivery\nView similar active items\nSell one like this\nmeanderave 100% positive (202)\nderosnopS"
+        },
+        {
+          "title": "2024 unopened bluey uncirculated Ten coin set",
+          "sale_price": 100.0,
+          "currency": "AU",
+          "date_sold": "24 May 2026",
+          "shipping_price": 10.0,
+          "seller": "luckycoin",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
         }
       ]
     },
@@ -1844,9 +2218,9 @@
       "fetchedAt": 1791277889.364,
       "query": "16 results for 2024 blue limited edition coloured coin pnc",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+limited+edition+coloured+coin+PNC&LH_Sold=1&LH_Complete=1&_sop=15&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=blueycoin-ebay_search-s1_impressions_pnc_colour&toolid=10001&mkevt=1",
-      "results": 5,
-      "total_results": 5,
-      "matched_results": 5,
+      "results": 7,
+      "total_results": 7,
+      "matched_results": 7,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -1963,6 +2337,26 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 28 Jul 2026\nAustralia BLUEY 2024 PNC COLOURED $1 Coin Limited To /3000 See Pics 4 Condition\nOpens in a new window or tab\nAU $185.00\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\nluckycatcoins 99.9% positive (2.2K)\nderosnopS"
+        },
+        {
+          "title": "Royal Australian Mint 2024 Bluey Bucks Limited Edition Coloured Coin $1 PNC",
+          "sale_price": 149.0,
+          "currency": "AU",
+          "date_sold": "11 May 2026",
+          "shipping_price": 12.0,
+          "seller": "trason-coins",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "2024 $1 Coloured Bluey Limited Edition PNC",
+          "sale_price": 190.0,
+          "currency": "AU",
+          "date_sold": "8 May 2026",
+          "shipping_price": 10.0,
+          "seller": "camscoins",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
         }
       ]
     },
@@ -2496,9 +2890,9 @@
       "fetchedAt": 1791277788.264,
       "query": "3 results for 2024 $1 blue dollar bucks fine silver coloured proof",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+%241+Bluey+Dollarbucks+fine+silver+coloured+proof&LH_Sold=1&LH_Complete=1&_sop=15&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=blueycoin-ebay_search-s1_proof_silver&toolid=10001&mkevt=1",
-      "results": 16,
-      "total_results": 16,
-      "matched_results": 16,
+      "results": 17,
+      "total_results": 17,
+      "matched_results": 17,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -2835,6 +3229,16 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 2 Oct 2026\n2024 RAM Bluey $1 Fine Silver Multi-Colour Proof Coin #0926/2650\nOpens in a new window or tab\nAU $1,250.00\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\nmennycoolthings 100% positive (141)\nderosnopS"
+        },
+        {
+          "title": "2024 PRICE DROPPED! BLUEY $1 Fine Silver Coloured Proof Coin",
+          "sale_price": 1100.0,
+          "currency": "AU",
+          "date_sold": "20 May 2026",
+          "shipping_price": 12.0,
+          "seller": "krista.luvs.coins",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
         }
       ]
     },
@@ -3520,9 +3924,9 @@
       "fetchedAt": 1791278175.67,
       "query": "77 results for 2025 $1 blue christmas coloured uncirculated coin",
       "response_url": "https://www.ebay.com.au/sch/9355/i.html?_nkw=2025+%241+Bluey+Christmas+coloured+uncirculated+coin&LH_Sold=1&LH_Complete=1&_ipg=60&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=blueycoin-ebay_search-s2_xmas_unc&toolid=10001&mkevt=1",
-      "results": 58,
-      "total_results": 58,
-      "matched_results": 58,
+      "results": 59,
+      "total_results": 59,
+      "matched_results": 59,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -4700,6 +5104,16 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 9 Jul 2026\n2025 Australia $1 One Dollar Bluey Coloured Christmas Uncirculated Coin IN HAND\nOpens in a new window or tab\nAU $35.00\n4 bids\nFree delivery\nView similar active items\nSell one like this\nmpkenz 100% positive (23)\nderosnopS"
+        },
+        {
+          "title": "2025 $1 Coloured UNC Xmas Bluey",
+          "sale_price": 25.0,
+          "currency": "AU",
+          "date_sold": "18 May 2026",
+          "shipping_price": 10.0,
+          "seller": "angjam",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
         }
       ]
     },
@@ -5405,9 +5819,9 @@
       "fetchedAt": 1791278436.032,
       "query": "3 results for 2026 Bingo Hooray PNC",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bingo+Hooray+PNC&LH_Sold=1&LH_Complete=1&_sop=15&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=blueycoin-ebay_search-s3_pnc_bingo&toolid=10001&mkevt=1",
-      "results": 1,
-      "total_results": 1,
-      "matched_results": 1,
+      "results": 2,
+      "total_results": 2,
+      "matched_results": 2,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -5444,6 +5858,16 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 31 Aug 2026\n⚪️UNC 2026 BLUEY ⭐️HOORAY $2 TWO DOLLAR COLOURED COIN UNCIRCULATED⭐️PNC\nOpens in a new window or tab\nAU $38.00\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\nprizefightr 100% positive (4.9K)\nderosnopS"
+        },
+        {
+          "title": "Bluey 2026 - Bingo - Hooray PNC",
+          "sale_price": 40.0,
+          "currency": "AU",
+          "date_sold": "25 May 2026",
+          "shipping_price": 12.5,
+          "seller": "miz2004",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
         }
       ]
     },
@@ -5541,9 +5965,9 @@
       "fetchedAt": 1791278250.024,
       "query": "28 results for 2026 $2 Bluey coloured proof aluminium bronze coin",
       "response_url": "https://www.ebay.com.au/sch/9355/i.html?_nkw=2026+%242+Bluey+coloured+proof+aluminium+bronze+coin&LH_Sold=1&LH_Complete=1&_ipg=60&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=blueycoin-ebay_search-s3_proof_ab&toolid=10001&mkevt=1",
-      "results": 12,
-      "total_results": 12,
-      "matched_results": 12,
+      "results": 24,
+      "total_results": 24,
+      "matched_results": 24,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -5800,6 +6224,126 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 3 Aug 2026\n2026 Bluey $2 Coloured AlBr Proof Coin ✅✅\nOpens in a new window or tab\nAU $185.00\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\ncharmedlife-4650 100% positive (117)\nderosnopS"
+        },
+        {
+          "title": "2026 Bluey $2 Coloured Proof Coin",
+          "sale_price": 140.0,
+          "currency": "AU",
+          "date_sold": "27 May 2026",
+          "shipping_price": 10.0,
+          "seller": "k33ny0",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "2026 Bluey $2 Coloured AlBr Proof Coin 10,500 mintage",
+          "sale_price": 198.0,
+          "currency": "AU",
+          "date_sold": "25 May 2026",
+          "shipping_price": 0.0,
+          "seller": "jaber96",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "2026 $2 Bluey Coloured Proof Coin",
+          "sale_price": 130.0,
+          "currency": "AU",
+          "date_sold": "24 May 2026",
+          "shipping_price": 0.0,
+          "seller": "k33ny0",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "2026 Bluey $2 Coloured AlBr Proof Coin - Limited to 10,500 minted!",
+          "sale_price": 175.0,
+          "currency": "AU",
+          "date_sold": "23 May 2026",
+          "shipping_price": 15.0,
+          "seller": "pepper79",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "Bluey 2026 Coloured AlBr Proof Coin",
+          "sale_price": 150.0,
+          "currency": "AU",
+          "date_sold": "22 May 2026",
+          "shipping_price": 0.0,
+          "seller": "dragon_sci",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "Bluey 2026 $2 Coloured Proof Coin - AlBr Bronze Coin (Low CoA #0121 of 10,500!)",
+          "sale_price": 260.0,
+          "currency": "AU",
+          "date_sold": "15 May 2026",
+          "shipping_price": 0.0,
+          "seller": "nicollex",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "Bluey 2026 $2 Coloured Proof Coin",
+          "sale_price": 200.0,
+          "currency": "AU",
+          "date_sold": "13 May 2026",
+          "shipping_price": 12.0,
+          "seller": "chrisl72",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "2026 Bluey coloured proof coin!",
+          "sale_price": 179.99,
+          "currency": "AU",
+          "date_sold": "13 May 2026",
+          "shipping_price": 12.5,
+          "seller": "lovecoins",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "2026 Bluey $2 Coloured Proof Coin",
+          "sale_price": 180.0,
+          "currency": "AU",
+          "date_sold": "13 May 2026",
+          "shipping_price": 12.0,
+          "seller": "chrisl72",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "2026 Bluey $2 Coloured AlBr Proof Coin",
+          "sale_price": 230.0,
+          "currency": "AU",
+          "date_sold": "9 May 2026",
+          "shipping_price": 0.0,
+          "seller": "terryg82",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "2026 Bluey coloured $2 proof coin",
+          "sale_price": 205.0,
+          "currency": "AU",
+          "date_sold": "9 May 2026",
+          "shipping_price": 12.0,
+          "seller": "eva",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "2026 Bluey $2 coloured proof coin",
+          "sale_price": 215.0,
+          "currency": "AU",
+          "date_sold": "9 May 2026",
+          "shipping_price": 12.0,
+          "seller": "eva",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
         }
       ]
     },
@@ -5809,9 +6353,9 @@
       "fetchedAt": 1791278258.371,
       "query": "1 result for 2026 $2 blue coloured silver proof coin",
       "response_url": "https://www.ebay.com.au/sch/9355/i.html?_nkw=2026+%242+Bluey+coloured+silver+proof+coin&LH_Sold=1&LH_Complete=1&_ipg=60&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=blueycoin-ebay_search-s3_proof_silv&toolid=10001&mkevt=1",
-      "results": 51,
-      "total_results": 51,
-      "matched_results": 51,
+      "results": 62,
+      "total_results": 62,
+      "matched_results": 62,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -6850,6 +7394,116 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 13 Jul 2026\nBluey 2026 $2 Fine Silver Coloured Proof Coin\nOpens in a new window or tab\nAU $215.38\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\npict2011 97.3% positive (596)\nderosnopS"
+        },
+        {
+          "title": "2026 $2 Bluey Coloured Silver Proof Coin - FIRE SALE",
+          "sale_price": 249.99,
+          "currency": "AU",
+          "date_sold": "22 May 2026",
+          "shipping_price": 15.0,
+          "seller": "hipeck",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "2026 Bluey Silver Proof Coin #8429",
+          "sale_price": 285.0,
+          "currency": "AU",
+          "date_sold": "21 May 2026",
+          "shipping_price": 0.0,
+          "seller": "tdscoins",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "2026 $2 Bluey Coloured Silver Proof Coin | 12,000 Mintage",
+          "sale_price": 270.0,
+          "currency": "AU",
+          "date_sold": "18 May 2026",
+          "shipping_price": 15.0,
+          "seller": "pepper79",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "2026 $2 Bluey Silver Coloured Proof Coin #1749",
+          "sale_price": 300.0,
+          "currency": "AU",
+          "date_sold": "17 May 2026",
+          "shipping_price": 0.0,
+          "seller": "tdscoins",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "2026 Bluey $2 Fine Silver Proof Coin",
+          "sale_price": 300.0,
+          "currency": "AU",
+          "date_sold": "15 May 2026",
+          "shipping_price": 0.0,
+          "seller": "willwong",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "2026 $2 BLUEY SILVER COLOURED PROOF COIN 12000 MINTAGE BRAND NEW - FREE SHIPPING",
+          "sale_price": 299.0,
+          "currency": "AU",
+          "date_sold": "14 May 2026",
+          "shipping_price": 0.0,
+          "seller": "wigleycoins",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "Bluey 2026 $2 Fine Silver Coloured Proof Coin",
+          "sale_price": 280.0,
+          "currency": "AU",
+          "date_sold": "13 May 2026",
+          "shipping_price": 12.0,
+          "seller": "chrisl72",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "2026 Bluey $2 Fine Silver Coloured Proof Coin Free Express Shipping",
+          "sale_price": 300.0,
+          "currency": "AU",
+          "date_sold": "12 May 2026",
+          "shipping_price": 0.0,
+          "seller": "leepohl",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "2026 $2 BLUEY SILVER COLOURED PROOF COIN 12000 MINTAGE",
+          "sale_price": 329.0,
+          "currency": "AU",
+          "date_sold": "9 May 2026",
+          "shipping_price": 0.0,
+          "seller": "jaber96",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "2026 $2 Fine Silver 99.99 Bluey Coin RAM COA #08044",
+          "sale_price": 265.0,
+          "currency": "AU",
+          "date_sold": "15 May 2026",
+          "shipping_price": 10.0,
+          "seller": "adaminski",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "Bluey 2026 $2 Coloured Silver Proof Coin- The Heeler Family.",
+          "sale_price": 330.0,
+          "currency": "AU",
+          "date_sold": "9 May 2026",
+          "shipping_price": 0.0,
+          "seller": "elizabethscoins",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
         }
       ]
     },
@@ -7007,9 +7661,9 @@
       "fetchedAt": 1791278374.71,
       "query": "0 results for 2026 Bluey Sleepytime Coloured Insert",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Sleepytime+Coloured+Insert&LH_Sold=1&LH_Complete=1&_sop=15&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=blueycoin-ebay_search-s3_sleepytime_insert&toolid=10001&mkevt=1",
-      "results": 6,
-      "total_results": 6,
-      "matched_results": 6,
+      "results": 7,
+      "total_results": 7,
+      "matched_results": 7,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -7146,6 +7800,16 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 9 Sep 2026\nBluey Coloured Sleepytime 2026 Two Dollar Coin Australia Sleepy Time $2 Blue UNC\nOpens in a new window or tab\nAU $229.95\nBuy It Now\nFree delivery\nLast one\nView similar active items\nSell one like this\ncoinpocket 99.9% positive (17.8K)\nderosnopS"
+        },
+        {
+          "title": "2026 Bluey coloured SleepyTime Unc coin",
+          "sale_price": 188.0,
+          "currency": "AU",
+          "date_sold": "8 May 2026",
+          "shipping_price": 12.0,
+          "seller": "coinsr'us",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
         }
       ]
     },
@@ -7492,6 +8156,28 @@
           "raw_listing_text": "Sold 17 Aug 2026\n2026 Australian BLUEY $2 TILL COIN \" Bluey for Real Life \"\nOpens in a new window or tab\nAU $4.99\n1 bid\n+AU $6.00 delivery\nView similar active items\nSell one like this\ndaytradermaremma 99.9% positive (108.5K)\nderosnopS"
         }
       ]
+    },
+    "s1_10_coin_folder_opened": {
+      "source_type": "user_pasted_search",
+      "currency": "AU",
+      "fetchedAt": 1791439554,
+      "query": "s1_10_coin_folder_opened",
+      "products": [
+        {
+          "title": "BLUEY COIN SET OF 10 2024 $1 UNCIRCULATED (opened)",
+          "sale_price": 110.0,
+          "currency": "AU",
+          "date_sold": "12 May 2026",
+          "shipping_price": 12.0,
+          "seller": "downundercoins",
+          "source_type": "user_pasted_search",
+          "import_id": "may2026-sold-paste-2026-10-08"
+        }
+      ],
+      "import_metadata": {},
+      "results": 1,
+      "total_results": 1,
+      "matched_results": 1
     }
   },
   "imports": [
@@ -7509,6 +8195,19 @@
       "limitations": [
         "User-supplied manual capture; not independently verified through an eBay API.",
         "The app recalculates current medians from sales dated within 90 days; older retained rows remain historical."
+      ]
+    },
+    {
+      "import_id": "may2026-sold-paste-2026-10-08",
+      "source_type": "user_pasted_search",
+      "captured_on": "2026-10-08",
+      "record_count": 100,
+      "retained_count": 31,
+      "selection": "eBay AU completed-sales paste (sold 8-27 May 2026). Only single-product titles matched to one catalogue coin by the strict title gate were retained; displayed item price excluding postage.",
+      "excluded": "Multi-coin sets, bundles, pairs, bags, folders with extra coins, year-less or ambiguous titles, and pair-priced till coin listings.",
+      "limitations": [
+        "User-pasted manual capture, not verified through an eBay API.",
+        "All rows are older than 90 days, so they feed the value-trend history, not the current median."
       ]
     }
   ]
