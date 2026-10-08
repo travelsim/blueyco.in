@@ -99,6 +99,26 @@ def _scrape_coinxchange(search_term):
         return None
 
 
+def _scrape_coinxchange_all(coin):
+    """Sold CoinXchange records for the catalogue query plus seller-wording variants.
+
+    Returns None when the primary request fails (so callers keep older data);
+    a failed variant is skipped. Records are de-duplicated before the strict gate.
+    """
+    primary = coin.get('ebay_kw') or coin.get('search') or ''
+    rows = _scrape_coinxchange(primary)
+    if rows is None:
+        return None
+    legacy = _legacy()
+    variants = legacy._query_variants(coin.get('id')) if legacy else []
+    rows = list(rows)
+    for query in variants:
+        extra = _scrape_coinxchange(query)
+        if extra:
+            rows += extra
+    return legacy._query_dedupe(rows, ('title', 'price', 'url', 'sold_date')) if legacy else rows
+
+
 def _legacy():
     here = os.path.dirname(os.path.abspath(__file__))
     for root in (os.path.dirname(here), here):
@@ -145,7 +165,7 @@ def _wait_for_rapidapi_slot(max_wait=None):
         return True
 
 
-def _fetch_ebay(coin, timeout=UPSTREAM_TIMEOUT):
+def _fetch_ebay(coin, timeout=UPSTREAM_TIMEOUT, keywords=None):
     if not RAPIDAPI_KEY:
         return None
 
@@ -154,7 +174,7 @@ def _fetch_ebay(coin, timeout=UPSTREAM_TIMEOUT):
     except (TypeError, ValueError):
         timeout = UPSTREAM_TIMEOUT
     payload = json.dumps({
-        'keywords': coin['ebay_kw'],
+        'keywords': keywords or coin['ebay_kw'],
         'max_search_results': '60',
         'site_id': '15',
         'remove_outliers': 'true',
@@ -762,7 +782,7 @@ def _fetch_coin(coin, fetch_ebay=False, fetch_coinxchange=False):
     coinxchange_data = None
     if fetch_coinxchange:
         try:
-            raw_listings = _scrape_coinxchange(coin.get('ebay_kw') or coin.get('search') or '')
+            raw_listings = _scrape_coinxchange_all(coin)
             if raw_listings is not None:
                 coinxchange_data = {
                     'products': raw_listings,

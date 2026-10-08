@@ -25,7 +25,7 @@ def refresh(limit=None):
     updates = 0
     for index, coin in enumerate(coins, 1):
         query = coin.get('ebay_kw') or coin.get('search') or ''
-        raw = prices._scrape_coinxchange(query)
+        raw = prices._scrape_coinxchange_all(coin)
         if raw is None:
             raise RuntimeError(f"CoinXchange request failed for {coin['id']}; stopping without saving.")
         checked_at = time.time()

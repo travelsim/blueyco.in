@@ -42,6 +42,18 @@ def refresh(offset=0, limit=MAX_BATCH_SIZE):
         fetched = prices._fetch_ebay(coin)
         if not isinstance(fetched, dict):
             raise RuntimeError(f"eBay request failed for {coin['id']}; stopping without saving.")
+        # Seller-wording variants add completed sales the catalogue query misses;
+        # a failed variant is skipped, the primary result is kept.
+        legacy = prices._legacy()
+        for query in (legacy._query_variants(coin['id']) if legacy else []):
+            extra = prices._fetch_ebay(coin, keywords=query)
+            if isinstance(extra, dict):
+                fetched = {
+                    **fetched,
+                    'products': legacy._query_dedupe(
+                        list(fetched.get('products') or []) + list(extra.get('products') or []),
+                        ('title', 'url', 'sale_price', 'date_sold')),
+                }
         previous = cache.get(coin['id'], {}).get('ebay') or {}
         merged = {
             **fetched,
