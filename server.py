@@ -825,6 +825,7 @@ _JUNK_TITLE_TOKENS = {
     'replica', 'reproduction', 'fake', 'empty', 'sticker', 'stickers', 'poster',
     'plush', 'toy', 'lego', 'magnet', 'keyring', 'damaged',
 }
+_BUNDLE_TOKENS = {'set', 'sets', 'folder', 'tube', 'bundle', 'collection', 'bag', 'bags', 'roll', 'lot', 'case'}
 _NAMED_VARIANTS = (
     'bingo', 'muffin', 'muffinsocks', 'socks', 'stripe', 'stripes', 'trixie',
     'nana', 'rad', 'frisky', 'friend', 'friends', 'mum', 'dad', 'family',
@@ -865,10 +866,17 @@ def _ebay_query(keywords):
     return f"{keywords} -({','.join(negatives)})" if negatives else str(keywords)
 
 
-def _coinxchange_title_matches(title, keywords):
+def _coinxchange_title_matches(title, keywords, allow_coloured=False):
     title_tokens = set(re.findall(r'[a-z0-9]+', str(title or '').lower()))
     query_tokens = set(re.findall(r'[a-z0-9]+', str(keywords or '').lower()))
     if title_tokens & _JUNK_TITLE_TOKENS:
+        return False
+    # Every tracked product is a Bluey issue; broad queries such as 'till coin
+    # 2026 coloured' otherwise match other series' coins.
+    if not any(t.startswith('bluey') for t in title_tokens):
+        return False
+    # Bundles are different products unless the query itself asks for one.
+    if (title_tokens & _BUNDLE_TOKENS) - query_tokens:
         return False
     for group in _REQUIRED_VARIANTS:
         if set(group) & query_tokens and not set(group) & title_tokens:
@@ -876,7 +884,10 @@ def _coinxchange_title_matches(title, keywords):
     years = {token for token in query_tokens if re.fullmatch(r'20\d{2}', token)}
     if not title_tokens or (years and not years.issubset(title_tokens)):
         return False
-    for variant in {'proof', 'silver', 'coloured', 'colored', 'privy', 'postal', 'pnc', 'card', 'sealed', 'unopened', 'opened', 'special'}:
+    unrequested = {'proof', 'silver', 'privy', 'privymark', 'envelope', 'postal', 'pnc', 'card', 'sealed', 'unopened', 'opened', 'special'}
+    if not allow_coloured:
+        unrequested |= {'coloured', 'colored'}
+    for variant in unrequested:
         if variant in title_tokens and variant not in query_tokens:
             return False
     named_variants = set(_NAMED_VARIANTS)
@@ -885,6 +896,9 @@ def _coinxchange_title_matches(title, keywords):
     stop = {'a', 'and', 'au', 'australia', 'australian', 'coin', 'coins', 'dollar',
             'dollars', 'for', 'in', 'new', 'of', 'the', 'unc', 'uncirculated', 'with'}
     identity = query_tokens - stop - years - {'1', '2'}
+    title_tokens |= {t + 's' for t in title_tokens if t.startswith('dollarbuck')}
+    if allow_coloured and 'till' in title_tokens:
+        title_tokens.add('coloured')  # 2026 till coins are the coloured ones, however titled
     if 'sleepytime' in identity and {'sleepy', 'time'}.issubset(title_tokens):
         title_tokens.add('sleepytime')
     if 'sleepy' in identity and 'sleepytime' in title_tokens:
@@ -897,10 +911,16 @@ def _coinxchange_title_matches(title, keywords):
 
 
 def _coinxchange_buy_options(retailer, keywords, coin_id=None):
+    # Till coins are listed as plain '2026 $2 Bluey ... Coloured Coin': drop the
+    # words sellers rarely use (as the eBay path does) before searching/matching.
+    orig_tokens = set(re.findall(r'[a-z0-9]+', str(keywords or '').lower()))
+    # The 2026 till coins are the coloured ones; for other years 'coloured' is a different product.
+    allow_coloured = 'till' in orig_tokens and '2026' in orig_tokens
+    keywords = _browse_keywords(keywords)
     q        = urllib.parse.quote(keywords)
     page_url = retailer['search_url'].replace('{q}', q)
-    listings = _scrape_coinxchange(keywords, sold_only=False)
-    listings = [l for l in listings if _coinxchange_title_matches(l.get('title'), keywords)]
+    listings = _scrape_coinxchange(keywords, sold_only=False) or []
+    listings = [l for l in listings if _coinxchange_title_matches(l.get('title'), keywords, allow_coloured)]
     if not listings:
         return [{'retailer_id': retailer['id'], 'name': retailer['name'],
                  'price': None, 'available': True, 'url': page_url, 'link_only': True}]
