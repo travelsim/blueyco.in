@@ -807,6 +807,7 @@ def _cashconverters_options(retailer, keywords):
 # not admit other products. Series words that sellers rarely use stay out of here.
 MAX_ACTIVE_QUERIES = 3   # primary + 2 variants for live buy-panel lookups (time-bounded)
 QUERY_VARIANTS = {
+    's1_auspost_stamp_pack': ['2024 Bluey MyStamps Pack of 12', '2024 Bluey MyStamps'],
     's1_proof_silver': ['2024 $1 Bluey Fine Silver Coloured Proof Coin',
                         'Royal Australian Mint 2024 Bluey $1 Coloured Proof Coin'],
     's1_10_coin_folder_set': ['2024 Bluey $1 10x Coin Tube Folder Sealed UNC',
