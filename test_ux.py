@@ -158,11 +158,20 @@ class TestClutterReduction(unittest.TestCase):
         self.assertIn('>Collection<', nav)
         self.assertIn('>Price Guide<', nav)
 
-    def test_dashboard_opens_as_a_six_coin_preview(self):
-        self.assertIn('dashboard-list-collapsed', INDEX)
-        self.assertIn('.dashboard-list-collapsed .coin-row:nth-child(n+7)', INDEX)
+    def test_collection_list_is_grouped_filterable_and_searchable(self):
+        self.assertIn('id="dash-search"', INDEX)
+        for name in ('all', 'owned', 'missing', 'wishlist'):
+            self.assertIn(f'data-filter="{name}"', INDEX)
         self.assertIn('function toggleDashboardCoins()', INDEX)
-        self.assertIn('aria-expanded="false"', INDEX)
+        self.assertIn('function setDashFilter(', INDEX)
+        self.assertIn("'dash-group'", INDEX)
+        # no stale hardcoded totals in the markup
+        self.assertNotIn('0 / 53', INDEX)
+        self.assertNotIn('Show all 60 tracked products', INDEX)
+
+    def test_dashboard_refreshes_when_prices_arrive(self):
+        body = INDEX.split('async function loadPrices()')[1].split('\n}\n')[0]
+        self.assertIn('renderDashboard()', body)
 
     def test_shop_defaults_to_photographed_frames(self):
         self.assertIn('let frameCatalogueExpanded = false', INDEX)

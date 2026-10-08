@@ -903,8 +903,7 @@
     @media (max-width: 640px) {
       .nav-links { gap: 16px; font-size: 0.9rem; }
       .nav-inner { flex-wrap: wrap; gap: 10px; }
-      .dashboard-stats { grid-template-columns: 1fr 1fr; }
-    }
+          }
     @media (prefers-reduced-motion: reduce) {
       .toast { transition: none; }
       * { scroll-behavior: auto !important; }
@@ -938,11 +937,39 @@
     .dashboard-stats { gap: 26px; }
     .dashboard-stats .stat-label { color: var(--slate); opacity: 1; }
     .dashboard-stats .stat-value { font-size: 1.2rem; }
-    .coin-row {
-      grid-template-columns: 32px minmax(220px, 1fr) 72px 90px 116px;
-      padding: 12px 28px;
-    }
-    .dashboard-list-collapsed .coin-row:nth-child(n+7) { display: none; }
+    .dash-progress { height: 6px; background: var(--border); }
+    .dash-progress > span { display: block; height: 100%; width: 0; background: var(--green); transition: width .35s; }
+    .dash-toolbar { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; padding: 14px 28px; border-bottom: 1px solid var(--border); background: #fff; }
+    .dash-search { flex: 1 1 220px; min-width: 0; min-height: 44px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 10px; font: inherit; font-size: 16px; background: #fff; }
+    .dash-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+    .dash-filter { min-height: 44px; padding: 8px 14px; border: 1px solid var(--border); border-radius: 999px; background: #fff; color: var(--navy); font: inherit; font-size: .85rem; font-weight: 700; cursor: pointer; }
+    .dash-filter:hover { border-color: var(--orange); }
+    .dash-filter.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .dash-count { opacity: .7; font-weight: 600; margin-left: 2px; }
+    .dash-group { border-bottom: 1px solid var(--border); }
+    .dash-group:last-child { border-bottom: none; }
+    .dash-group-head { display: flex; align-items: center; gap: 10px; padding: 0 28px; background: #fbfaf7; }
+    .dash-group-toggle { flex: 1; min-width: 0; min-height: 56px; display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 8px 0; border: 0; background: none; font: inherit; color: var(--navy); text-align: left; cursor: pointer; }
+    .dash-chevron { transition: transform .2s; font-size: .8rem; }
+    .dash-group.open .dash-chevron { transform: rotate(90deg); }
+    .dash-group-title { font-weight: 700; }
+    .dash-group-bar { display: block; height: 4px; margin-top: 6px; border-radius: 999px; background: var(--border); overflow: hidden; }
+    .dash-group-bar > span { display: block; height: 100%; background: var(--green); }
+    .dash-group-count { font-size: .85rem; font-weight: 700; color: var(--slate); white-space: nowrap; }
+    .dash-group-all { min-height: 44px; padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px; background: #fff; color: var(--navy); font: inherit; font-size: .78rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+    .dash-group-all:hover { border-color: var(--orange); }
+    .dash-group-body { display: none; }
+    .dash-group.open .dash-group-body { display: block; }
+    .dash-row { display: grid; grid-template-columns: 28px 48px minmax(0, 1fr) 100px 210px; align-items: center; gap: 12px; padding: 10px 28px; border-top: 1px solid var(--border); }
+    .dash-row:hover { background: #fbf9f4; }
+    .dash-row.is-owned .coin-name::after { content: ' ✓'; color: var(--green); }
+    .dash-valuewrap { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+    .dash-valuewrap .coin-value { min-width: 64px; }
+    .dash-thumb { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; background: var(--bg); border: 1px solid var(--border); }
+    .dash-thumb-empty { display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+    .dash-empty { padding: 36px 28px; text-align: center; color: var(--slate); }
+    .dash-empty button { margin-top: 12px; }
+    .dash-checkbox { width: 24px; height: 24px; }
     .dashboard-footer {
       padding: 14px 28px;
       background: #fbfaf7;
@@ -1046,7 +1073,8 @@
     @media (max-width: 900px) {
       .nav-inner { gap: 14px; }
       .nav-links { gap: 16px; }
-      .coin-row { grid-template-columns: 30px minmax(180px, 1fr) 66px 84px 108px; padding-inline: 20px; }
+      .dash-row { grid-template-columns: 28px 44px minmax(0, 1fr) 190px; padding-inline: 20px; }
+      .dash-row > .dash-badge { display: none; }
       .shop-intro { align-items: flex-start; flex-direction: column; }
     }
     @media (max-width: 640px) {
@@ -1057,9 +1085,18 @@
       .dashboard-section { padding-inline: 14px; }
       .dashboard-header { padding: 20px; }
       .dashboard-stats { width: 100%; justify-content: space-between; gap: 12px; }
-      .coin-row { grid-template-columns: 28px minmax(0,1fr) auto; padding: 12px 18px; }
-      .coin-row > div:nth-child(3) { display: none; }
-      .coin-row > div:nth-child(5) { grid-column: 2 / 4; }
+      .dashboard-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .dash-toolbar { padding: 12px 18px; }
+      .dash-filters { width: 100%; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .dash-filter { padding: 8px 4px; font-size: .78rem; }
+      .dash-group-head { padding: 0 14px; gap: 6px; }
+      .dash-group-all { padding: 6px 10px; }
+      .dash-row { grid-template-columns: 28px 44px minmax(0, 1fr); grid-template-areas: "chk img info" ". . val"; row-gap: 6px; padding: 12px 14px; }
+      .dash-row .coin-checkbox { grid-area: chk; }
+      .dash-row .dash-thumb { grid-area: img; }
+      .dash-row .dash-info { grid-area: info; }
+      .dash-row .dash-valuewrap { grid-area: val; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+      .dash-row .dash-valuewrap .coin-value { text-align: left; }
       .dashboard-footer { padding: 14px 18px; }
       .dashboard-footer-actions { width: 100%; }
       .dashboard-footer-actions .subtle-button { flex: 1; }
@@ -1187,38 +1224,49 @@
   <div class="dashboard-card">
     <div class="dashboard-header">
       <div>
-        <div class="dashboard-title">My Collection Dashboard</div>
-      <div class="dashboard-kicker">Tick off collectibles as your collection grows.</div>
+        <h2 class="dashboard-title">My Collection</h2>
+        <div class="dashboard-kicker">Tick off what you own, wishlist what you want. Saved in this browser only.</div>
       </div>
 
       <div class="dashboard-stats">
         <div class="stat">
-        <div class="stat-value" id="owned-count">0 / 53</div>
-          <div class="stat-label">Items Owned</div>
+          <div class="stat-value" id="owned-count">0 / 60</div>
+          <div class="stat-label">Items owned</div>
         </div>
         <div class="stat">
           <div class="stat-value" id="total-value">$0</div>
-          <div class="stat-label">Est. Market Value</div>
+          <div class="stat-label" id="value-note">Est. market value</div>
         </div>
         <div class="stat">
           <div class="stat-value" id="completion">0%</div>
-          <div class="stat-label">Completion</div>
+          <div class="stat-label">Complete</div>
         </div>
+      </div>
+    </div>
+    <div class="dash-progress" id="dash-progress" role="progressbar" aria-label="Collection complete" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="dash-progress-bar"></span></div>
+
+    <div class="dash-toolbar">
+      <input type="search" id="dash-search" class="dash-search" aria-label="Search your collection list" placeholder="Search products…" autocomplete="off">
+      <div class="dash-filters" role="group" aria-label="Show">
+        <button type="button" class="dash-filter active" data-filter="all" aria-pressed="true">All <span class="dash-count" data-count="all"></span></button>
+        <button type="button" class="dash-filter" data-filter="owned" aria-pressed="false">Owned <span class="dash-count" data-count="owned"></span></button>
+        <button type="button" class="dash-filter" data-filter="missing" aria-pressed="false">Missing <span class="dash-count" data-count="missing"></span></button>
+        <button type="button" class="dash-filter" data-filter="wishlist" aria-pressed="false">Wishlist <span class="dash-count" data-count="wishlist"></span></button>
       </div>
     </div>
 
     <!-- Dashboard Coin List -->
-    <div id="dashboard-coins" class="coin-list dashboard-list-collapsed">
+    <div id="dashboard-coins" class="coin-list dash-groups">
       <!-- Populated by JavaScript -->
     </div>
 
     <div class="dashboard-footer">
       <button id="dashboard-toggle" class="subtle-button" onclick="toggleDashboardCoins()" aria-expanded="false">
-        Show all 60 tracked products
+        Expand all series
       </button>
       <div class="dashboard-footer-actions">
         <button onclick="frameOwnedCoins()" class="subtle-button subtle-button-accent">Frame coins I own</button>
-        <button id="reset-collection" onclick="resetCollection()" class="subtle-button">Reset</button>
+        <button id="reset-collection" onclick="resetCollection()" class="subtle-button">Reset collection</button>
       </div>
     </div>
 
@@ -2081,6 +2129,35 @@ function renderSwapMatches(errorMessage = '') {
   result.appendChild(note);
 }
 
+// Collection list state; kept at module level because price cards re-render the list.
+const DASH_SERIES_ORDER = ['series1_june', 'series1_september', 'series1_november', 'series2', 'series3', 'series4'];
+const dashState = { filter: 'all', query: '', open: new Set(), seeded: false };
+
+function _dashGroups() {
+  const groups = new Map();
+  (window.COINS || []).forEach(coin => {
+    const key = coin.series || 'other';
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(coin);
+  });
+  const order = DASH_SERIES_ORDER.filter(k => groups.has(k)).concat([...groups.keys()].filter(k => !DASH_SERIES_ORDER.includes(k)));
+  return order.map(key => ({ key, label: SERIES_LABELS[key] || 'Other', coins: groups.get(key) }));
+}
+
+function _dashMatches(coin) {
+  const q = dashState.query;
+  if (q) {
+    const hay = `${coin.name} ${coin.year || ''} ${coin.keywords || ''} ${SERIES_LABELS[coin.series] || ''}`.toLowerCase();
+    if (!q.split(/\s+/).every(part => hay.includes(part))) return false;
+  }
+  switch (dashState.filter) {
+    case 'owned': return !!collection[coin.id];
+    case 'missing': return !collection[coin.id];
+    case 'wishlist': return !!wishlist[coin.id];
+    default: return true;
+  }
+}
+
 function updateDashboardStats() {
   if (typeof renderSharePanel === 'function') renderSharePanel();
   const coins = window.COINS || [];
@@ -2099,93 +2176,215 @@ function updateDashboardStats() {
     }
   });
 
-  const ownedEl = document.getElementById('owned-count');
-  const valueEl = document.getElementById('total-value');
-  const completionEl = document.getElementById('completion');
+  const pct = coins.length ? Math.round((owned / coins.length) * 100) : 0;
+  const set = (id, text) => { const node = document.getElementById(id); if (node) node.textContent = text; };
+  set('owned-count', `${owned} / ${coins.length}`);
+  set('completion', pct + '%');
+  if (!owned) {
+    set('total-value', '$0');
+    set('value-note', 'Est. market value');
+  } else if (!pricedOwned) {
+    set('total-value', '—');
+    set('value-note', 'No price data yet');
+  } else {
+    set('total-value', '$' + Math.round(totalValue).toLocaleString('en-AU'));
+    set('value-note', pricedOwned === owned ? 'Est. market value' : `Est. value · ${pricedOwned} of ${owned} priced`);
+  }
+  const bar = document.getElementById('dash-progress-bar');
+  if (bar) bar.style.width = pct + '%';
+  document.getElementById('dash-progress')?.setAttribute('aria-valuenow', String(pct));
 
-  if (ownedEl) ownedEl.textContent = `${owned} / ${coins.length}`;
-  if (valueEl) {
-    valueEl.textContent = pricedOwned === owned
-      ? '$' + Math.round(totalValue)
-      : (pricedOwned ? `Partial $${Math.round(totalValue)} (${pricedOwned} priced)` : 'No current data');
+  const counts = {
+    all: coins.length,
+    owned,
+    missing: coins.length - owned,
+    wishlist: coins.filter(c => wishlist[c.id]).length,
+  };
+  document.querySelectorAll('.dash-count').forEach(node => { node.textContent = counts[node.dataset.count]; });
+
+  document.querySelectorAll('.dash-group').forEach(group => {
+    const list = (_dashGroups().find(g => g.key === group.dataset.series) || { coins: [] }).coins;
+    const have = list.filter(c => collection[c.id]).length;
+    group.querySelector('.dash-group-count').textContent = `${have} / ${list.length}`;
+    group.querySelector('.dash-group-bar > span').style.width = (list.length ? Math.round(have / list.length * 100) : 0) + '%';
+    const all = group.querySelector('.dash-group-all');
+    all.textContent = have === list.length ? 'Clear all' : 'Mark all';
+    all.setAttribute('aria-label', `${have === list.length ? 'Clear all in' : 'Mark all owned in'} ${group.dataset.label}`);
+  });
+}
+
+function _dashRow(coin) {
+  const isOwned = !!collection[coin.id];
+  const isWishlisted = !!wishlist[coin.id];
+  const estValue = _referencePrice(coin);
+  const image = typeof COIN_PRODUCT_IMAGES !== 'undefined' ? COIN_PRODUCT_IMAGES[coin.id] : null;
+  const mintage = coin.mintage ? `${Number(coin.mintage).toLocaleString('en-AU')} minted` : (coin.mintageLabel || 'Mintage unpublished');
+  const rarity = mintageRarity(coin);
+
+  const row = document.createElement('div');
+  row.className = 'dash-row' + (isOwned ? ' is-owned' : '');
+  row.dataset.id = coin.id;
+
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.className = 'coin-checkbox dash-checkbox';
+  checkbox.checked = isOwned;
+  checkbox.dataset.id = coin.id;
+  checkbox.setAttribute('aria-label', `I own ${coin.name}`);
+
+  let thumb;
+  if (image) {
+    thumb = document.createElement('img');
+    thumb.className = 'dash-thumb';
+    thumb.src = image.src;
+    thumb.alt = '';
+    thumb.loading = 'lazy';
+    thumb.width = 48; thumb.height = 48;
+  } else {
+    thumb = el('div', 'dash-thumb dash-thumb-empty', '🪙');
+    thumb.setAttribute('aria-hidden', 'true');
   }
-  if (completionEl) {
-    const pct = coins.length ? Math.round((owned / coins.length) * 100) : 0;
-    completionEl.textContent = pct + '%';
-  }
+
+  const info = el('div', 'dash-info');
+  info.append(el('div', 'coin-name', coin.name), el('div', 'coin-meta', [coin.year, mintage].filter(Boolean).join(' · ')));
+
+  const badge = el('span', 'rarity-badge dash-badge', rarity == null ? 'Unrated' : `Mintage ${rarity}/10`);
+  badge.title = 'Relative mintage score: 1 is the largest catalog mintage; 10 is the smallest.';
+
+  const value = el('div', 'coin-value', estValue ? formatAUD(estValue) : '—');
+  if (!estValue) value.title = 'No recent matched sale';
+
+  const wish = el('button', 'wish-btn' + (isWishlisted ? ' wishlisted' : ''), isWishlisted ? '♥ Wishlisted' : '+ Wishlist');
+  wish.type = 'button';
+  wish.setAttribute('aria-pressed', String(isWishlisted));
+  wish.setAttribute('aria-label', `${isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}: ${coin.name}`);
+
+  const valueWrap = el('div', 'dash-valuewrap');
+  valueWrap.append(value, wish);
+
+  checkbox.addEventListener('change', () => {
+    if (checkbox.checked) collection[coin.id] = true; else delete collection[coin.id];
+    row.classList.toggle('is-owned', checkbox.checked);
+    saveCollection();
+    updateDashboardStats();
+  });
+  wish.addEventListener('click', () => {
+    if (wishlist[coin.id]) delete wishlist[coin.id]; else wishlist[coin.id] = true;
+    const on = !!wishlist[coin.id];
+    wish.textContent = on ? '♥ Wishlisted' : '+ Wishlist';
+    wish.classList.toggle('wishlisted', on);
+    wish.setAttribute('aria-pressed', String(on));
+    wish.setAttribute('aria-label', `${on ? 'Remove from wishlist' : 'Add to wishlist'}: ${coin.name}`);
+    saveWishlist();
+    updateDashboardStats();
+  });
+
+  row.append(checkbox, thumb, info, badge, valueWrap);
+  return row;
 }
 
 function renderDashboard() {
   const container = document.getElementById('dashboard-coins');
   if (!container) return;
+  const groups = _dashGroups();
 
-  const coins = window.COINS || [];
-  container.innerHTML = '';
+  // First visit: open the series with progress, else the first one, so the list is never a wall of closed headings.
+  if (!dashState.seeded && groups.length) {
+    dashState.seeded = true;
+    const started = groups.filter(g => g.coins.some(c => collection[c.id]));
+    (started.length ? started : [groups[0]]).forEach(g => dashState.open.add(g.key));
+  }
+  const filtering = !!(dashState.query || dashState.filter !== 'all');
 
-  coins.forEach(coin => {
-    const isOwned    = !!collection[coin.id];
-    const isWishlisted = !!wishlist[coin.id];
-    const estValue = _referencePrice(coin);
+  container.replaceChildren();
+  let shown = 0;
+  groups.forEach(group => {
+    const visible = group.coins.filter(_dashMatches);
+    if (filtering && !visible.length) return;
+    shown += visible.length;
+    const open = filtering || dashState.open.has(group.key);
 
-    const row = document.createElement('div');
-    row.className = 'coin-row';
-    row.innerHTML = `
-      <input type="checkbox" class="coin-checkbox" aria-label="Mark ${coin.name} as owned" ${isOwned ? 'checked' : ''} data-id="${coin.id}">
-      <div>
-        <div class="coin-name">${coin.name}</div>
-        <div class="coin-meta">${SERIES_LABELS[coin.series] || coin.series || 'Unsorted'}</div>
-      </div>
-      <div>
-        <span class="rarity-badge" title="Relative mintage score: 1 is the largest catalog mintage; 10 is the smallest.">${mintageRarity(coin) == null ? 'Unrated' : `Mintage ${mintageRarity(coin)}/10`}</span>
-      </div>
-      <div class="coin-value">${estValue ? formatAUD(estValue) : '—'}</div>
-      <div>
-        <button class="wish-btn${isWishlisted ? ' wishlisted' : ''}" data-id="${coin.id}">${isWishlisted ? '♥ Wishlisted' : '+ Wishlist'}</button>
-      </div>
-    `;
+    const section = el('section', 'dash-group' + (open ? ' open' : ''));
+    section.dataset.series = group.key;
+    section.dataset.label = group.label;
 
-    // Checkbox handler
-    const checkbox = row.querySelector('.coin-checkbox');
-    checkbox.addEventListener('change', (e) => {
-      if (e.target.checked) {
-        collection[coin.id] = true;
-      } else {
-        delete collection[coin.id];
-      }
+    const head = el('div', 'dash-group-head');
+    const toggle = el('button', 'dash-group-toggle');
+    toggle.type = 'button';
+    toggle.setAttribute('aria-expanded', String(open));
+    const chevron = el('span', 'dash-chevron', '▶');
+    chevron.setAttribute('aria-hidden', 'true');
+    const title = el('span', 'dash-group-title', group.label);
+    const bar = el('span', 'dash-group-bar'); bar.append(document.createElement('span'));
+    const titleWrap = el('span'); titleWrap.style.minWidth = '0'; titleWrap.append(title, bar);
+    toggle.append(chevron, titleWrap, el('span', 'dash-group-count'));
+    toggle.addEventListener('click', () => {
+      const now = !section.classList.contains('open');
+      section.classList.toggle('open', now);
+      toggle.setAttribute('aria-expanded', String(now));
+      if (now) dashState.open.add(group.key); else dashState.open.delete(group.key);
+    });
+
+    const all = el('button', 'dash-group-all', 'Mark all');
+    all.type = 'button';
+    all.addEventListener('click', () => {
+      const everyOwned = group.coins.every(c => collection[c.id]);
+      group.coins.forEach(c => { if (everyOwned) delete collection[c.id]; else collection[c.id] = true; });
       saveCollection();
-      updateDashboardStats();
+      renderDashboard();
+      toast(everyOwned ? `Cleared ${group.label}.` : `Marked all of ${group.label} as owned.`, 'success');
     });
+    head.append(toggle, all);
 
-    // Wishlist button — toggles real, persisted state
-    const wishBtn = row.querySelector('.wish-btn');
-    wishBtn.addEventListener('click', () => {
-      if (wishlist[coin.id]) {
-        delete wishlist[coin.id];
-        wishBtn.textContent = '+ Wishlist';
-        wishBtn.classList.remove('wishlisted');
-      } else {
-        wishlist[coin.id] = true;
-        wishBtn.textContent = '♥ Wishlisted';
-        wishBtn.classList.add('wishlisted');
-      }
-      saveWishlist();
-    });
-
-    container.appendChild(row);
+    const body = el('div', 'dash-group-body');
+    visible.forEach(coin => body.append(_dashRow(coin)));
+    section.append(head, body);
+    container.append(section);
   });
 
+  if (!shown) {
+    const empty = el('div', 'dash-empty');
+    empty.append(el('p', null, dashState.query ? `No products match “${dashState.query}”.` : (
+      dashState.filter === 'owned' ? 'You have not marked anything as owned yet.' :
+      dashState.filter === 'wishlist' ? 'Your wishlist is empty. Use “+ Wishlist” on anything you are hunting for.' :
+      'Nothing to show here.')));
+    const clear = el('button', 'subtle-button', 'Show everything');
+    clear.type = 'button';
+    clear.addEventListener('click', () => setDashFilter('all', ''));
+    empty.append(clear);
+    container.append(empty);
+  }
+
+  const expandBtn = document.getElementById('dashboard-toggle');
+  if (expandBtn) {
+    const allOpen = groups.length > 0 && groups.every(g => dashState.open.has(g.key));
+    expandBtn.setAttribute('aria-expanded', String(allOpen));
+    expandBtn.textContent = allOpen ? 'Collapse all series' : 'Expand all series';
+  }
   updateDashboardStats();
   renderSwapMatches();
 }
 
+function setDashFilter(filter, query) {
+  dashState.filter = filter;
+  if (query != null) {
+    dashState.query = query;
+    const input = document.getElementById('dash-search');
+    if (input) input.value = query;
+  }
+  document.querySelectorAll('.dash-filter').forEach(btn => {
+    const on = btn.dataset.filter === filter;
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-pressed', String(on));
+  });
+  renderDashboard();
+}
+
 function toggleDashboardCoins() {
-  const list = document.getElementById('dashboard-coins');
-  const button = document.getElementById('dashboard-toggle');
-  if (!list || !button) return;
-  const expanded = list.classList.toggle('dashboard-list-expanded');
-  list.classList.toggle('dashboard-list-collapsed', !expanded);
-  button.setAttribute('aria-expanded', String(expanded));
-  button.textContent = expanded ? 'Show fewer coins' : `Show all ${(window.COINS || []).length} coins`;
+  const groups = _dashGroups();
+  const allOpen = groups.every(g => dashState.open.has(g.key));
+  dashState.open = new Set(allOpen ? [] : groups.map(g => g.key));
+  renderDashboard();
 }
 
 function resetCollection() {
@@ -2201,7 +2400,7 @@ function resetCollection() {
     clearTimeout(resetCollection._timer);
     resetCollection._timer = setTimeout(() => {
       btn.dataset.armed = '0';
-      btn.textContent = 'Reset Collection';
+      btn.textContent = 'Reset collection';
       btn.classList.remove('danger-armed');
     }, 5000);
     return;
@@ -2209,7 +2408,7 @@ function resetCollection() {
 
   clearTimeout(resetCollection._timer);
   btn.dataset.armed = '0';
-  btn.textContent = 'Reset Collection';
+  btn.textContent = 'Reset collection';
   btn.classList.remove('danger-armed');
 
   collection = {};
@@ -2246,6 +2445,18 @@ function initDashboard() {
 }
 
 window.initDashboard = initDashboard;
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.dash-filter').forEach(btn => btn.addEventListener('click', () => setDashFilter(btn.dataset.filter)));
+  const search = document.getElementById('dash-search');
+  if (search) {
+    let timer;
+    search.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { dashState.query = search.value.trim().toLowerCase(); renderDashboard(); }, 120);
+    });
+  }
+});
 
 // Auto-init if the dashboard section exists
 document.addEventListener('DOMContentLoaded', () => {
@@ -2456,6 +2667,7 @@ async function loadPrices() {
     const data = await res.json();
     coinData = data;
     renderGrid();
+    if (typeof renderDashboard === 'function') renderDashboard();   // dashboard values depend on prices
   } catch (e) {
     console.warn('Could not load prices:', e.message);
   }
