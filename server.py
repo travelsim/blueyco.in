@@ -799,18 +799,80 @@ def _cashconverters_options(retailer, keywords):
     return _link_only_option(retailer, keywords)
 
 
+# ── ALTERNATE SEARCH QUERIES ─────────────────────────────────────────────────
+# Wording real sellers use on eBay AU / CoinXchange for the same product (taken
+# from observed sold and active listing titles, 8 Oct 2026). Each coin is searched
+# with its catalogue query first, then these, and results are merged and de-duplicated.
+# Every result must still pass the strict per-query title gate, so a wider net does
+# not admit other products. Series words that sellers rarely use stay out of here.
+MAX_ACTIVE_QUERIES = 3   # primary + 2 variants for live buy-panel lookups (time-bounded)
+QUERY_VARIANTS = {
+    's1_proof_silver': ['2024 $1 Bluey Fine Silver Coloured Proof Coin',
+                        'Royal Australian Mint 2024 Bluey $1 Coloured Proof Coin'],
+    's1_10_coin_folder_set': ['2024 Bluey $1 10x Coin Tube Folder Sealed UNC',
+                              '2024 Bluey $1 ten coin set unopened'],
+    's1_10_coin_folder_opened': ['2024 Bluey folder and opened coin tube',
+                                 '2024 Bluey $1 ten coin set opened'],
+    's1_three_coin_set': ['2024 Bluey Dollarbucks $1 X 3 coin Coloured RAM set UNC'],
+    's1_impressions_pnc_colour': ['2024 Bluey Coloured Coin Postal Numismatic Cover PNC',
+                                  '2024 $1 Coloured Bluey Limited Edition PNC',
+                                  'Royal Australian Mint 2024 Bluey Bucks Limited Edition Coloured Coin $1 PNC'],
+    's1_card_bingo': ['2024 $1 Bluey Dollarbucks Bingo Envelope Privymark Carded Coin'],
+    's1_card_blueyfriends': ['2024 $1 Bluey Dollarbucks Bluey And Friends Envelope Privymark Carded Coin'],
+    's1_card_blueybingofriends': ['2024 $1 Bluey Dollarbucks Bluey Bingo and Friends Envelope Privymark Coin'],
+    's1_card_mumdad': ['2024 $1 Bluey Dollarbucks Mum And Dad Envelope Privymark Carded Coin'],
+    's1_card_grannies': ['2024 $1 Bluey Dollarbucks The Grannies Envelope Privymark Carded Coin'],
+    's1_card_stripes': ['2024 $1 Bluey Dollarbucks Uncle Stripe Aunty Trixie Envelope Privymark Coin',
+                        '2024 Bluey Dollarbucks $1 Privy Mark Coin-in-Card Stripe Trixie and Nana'],
+    's2_xmas_unc': ['2025 Australia $1 One Dollar Bluey Coloured Christmas Uncirculated Coin',
+                    '2025 $1 Coloured Uncirculated Coin Bluey Christmas',
+                    'Bluey Christmas 2025 Dollar Buck $1 One Coloured Coin'],
+    's2_xmas_silv': ['2025 $1 Bluey Christmas Coloured Fine Silver Proof Coin'],
+    's3_till_bluey': ['2026 $2 Bluey Coloured Coin', '2026 Bluey $2 Coloured Coin Bluey till'],
+    's3_till_bingo': ['2026 $2 Bingo Coloured Coin'],
+    's3_proof_ab': ['2026 Bluey $2 Coloured AlBr Proof Coin', 'Bluey 2026 $2 Coloured Proof Coin'],
+    's3_proof_silv': ['2026 $2 Fine Silver Bluey Coloured Proof Coin', '2026 Bluey Silver Proof Coin'],
+    's3_sleepytime': ['Bluey 2026 $2 Coin in Card with Privy Mark Sleepytime'],
+    's3_sleepytime_privy': ['Bluey 2026 $2 Coin in Card with Privy Mark Sleepytime'],
+    's3_camping': ['2026 $2 Bluey Camping Privy Mark Coin in Card'],
+    's3_camping_privy': ['2026 $2 Bluey Camping Privy Mark Coin in Card'],
+    's3_folder': ['2026 Bluey $2 UNC Collector Folder tube', '2026 Bluey Tube Folder Set'],
+    's3_sleepytime_insert': ['2026 Bluey Rare Coloured Sleepytime Coin Folder Tube'],
+    's3_pnc_bingo': ['Bluey 2026 Bingo Hooray PNC'],
+}
+
+
+def _query_variants(coin_id, limit=None):
+    out = list(QUERY_VARIANTS.get(coin_id) or [])
+    return out[:limit] if limit is not None else out
+
+
+def _query_dedupe(rows, keys=('title', 'price', 'url', 'sold_date')):
+    seen, out = set(), []
+    for r in rows:
+        k = tuple(str(r.get(x) or '').lower() for x in keys)
+        if k in seen:
+            continue
+        seen.add(k)
+        out.append(r)
+    return out
+
+
 def _coinxchange_quantity(text):
     s = str(text or '').lower()
     if re.search(r'\bpair\b|\bpairs\b|\bboth\s+(?:bluey|bingo)\b', s):
         return 2
-    match = re.search(r'\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|twenty|fifty)\s*(?:-|\s)?\s*(?:coin|coins|piece|pieces|pcs)\b', s)
+    denominated = re.findall(r'\$\d+\s*coins?\b', s)
+    if len(denominated) >= 2:   # '$2 Coin & ... $2 Coin' is a bundle of that many coins
+        return len(denominated)
+    match = re.search(r'(?<![$\d])\b(\d+|one|two|three|four|five|six|seven|eight|nine|ten|twenty|fifty)\s*x?\s*(?:-|\s)?\s*(?:coin|coins|piece|pieces|pcs)\b', s)
     if match:
         return int(match.group(1)) if match.group(1).isdigit() else {
             'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5,
             'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10,
             'twenty': 20, 'fifty': 50,
         }[match.group(1)]
-    match = re.search(r'\b(?:bag|roll|pack)\s+of\s+(\d+)\b', s)
+    match = re.search(r'\b(?:bag|roll|pack|set)\s+of\s+(\d+)\b', s)
     return int(match.group(1)) if match else 1
 
 
@@ -913,15 +975,25 @@ def _coinxchange_title_matches(title, keywords, allow_coloured=False):
 def _coinxchange_buy_options(retailer, keywords, coin_id=None):
     # Till coins are listed as plain '2026 $2 Bluey ... Coloured Coin': drop the
     # words sellers rarely use (as the eBay path does) before searching/matching.
-    orig_tokens = set(re.findall(r'[a-z0-9]+', str(keywords or '').lower()))
-    # The 2026 till coins are the coloured ones; for other years 'coloured' is a different product.
-    allow_coloured = 'till' in orig_tokens and '2026' in orig_tokens
-    keywords = _browse_keywords(keywords)
-    q        = urllib.parse.quote(keywords)
-    page_url = retailer['search_url'].replace('{q}', q)
-    listings = _scrape_coinxchange(keywords, sold_only=False) or []
-    listings = [l for l in listings if _coinxchange_title_matches(l.get('title'), keywords, allow_coloured)]
-    if not listings:
+    # The catalogue query is tried first, then seller-wording variants, until
+    # enough matching asks are found.
+    queries = [keywords] + _query_variants(coin_id, MAX_ACTIVE_QUERIES - 1)
+    page_url = None
+    matched = []
+    for query in queries:
+        orig_tokens = set(re.findall(r'[a-z0-9]+', str(query or '').lower()))
+        # The 2026 till coins are the coloured ones; for other years 'coloured' is a different product.
+        allow_coloured = 'till' in orig_tokens and '2026' in orig_tokens
+        kw = _browse_keywords(query)
+        if page_url is None:
+            page_url = retailer['search_url'].replace('{q}', urllib.parse.quote(kw))
+        listings = _scrape_coinxchange(kw, sold_only=False) or []
+        matched += [l for l in listings if _coinxchange_title_matches(l.get('title'), kw, allow_coloured)]
+        matched = _query_dedupe(matched, ('title', 'price', 'url'))
+        if len(matched) >= 3:
+            break
+    matched.sort(key=lambda l: (l.get('price') is None, l.get('price') or 0))
+    if not matched:
         return [{'retailer_id': retailer['id'], 'name': retailer['name'],
                  'price': None, 'available': True, 'url': page_url, 'link_only': True}]
     return [{
@@ -934,7 +1006,7 @@ def _coinxchange_buy_options(retailer, keywords, coin_id=None):
         'currency':     'AUD',
         'price_type':   'asking',
         'link_only':   l['price'] is None,
-    } for l in listings[:3]]
+    } for l in matched[:3]]
 
 
 def _get_ebay_token():
@@ -1102,10 +1174,20 @@ def _ebay_rapidapi_search(keywords):
 
 
 def _browse_keywords(keywords):
-    """Browse query: drop words sellers rarely use and pluralise Dollarbuck."""
+    """Browse query: drop words sellers rarely use and pluralise Dollarbuck.
+
+    'coin' is kept after a quantity ('3 coin', 'ten coin') so set sizes survive.
+    """
     drop = {'till', 'coin', 'circulation'}
-    words = [('Dollarbucks' if w.lower() == 'dollarbuck' else w)
-             for w in str(keywords or '').split() if w.lower() not in drop]
+    qty = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '20', '50', 'x',
+           'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'twenty', 'fifty'}
+    words, prev = [], ''
+    for w in str(keywords or '').split():
+        lw = w.lower()
+        keep_coin = lw == 'coin' and (prev in qty or bool(re.fullmatch(r'\d+x?', prev)))
+        if lw not in drop or keep_coin:
+            words.append('Dollarbucks' if lw == 'dollarbuck' else w)
+        prev = lw
     return ' '.join(words)
 
 
@@ -1123,9 +1205,16 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
     # does that filtering.
     # Till/circulation coins are listed as just '2024 Bluey $1 Dollarbucks', so
     # 'till'/'coin' in the query would hide them; match on the cleaned keywords.
-    browse_kw = _browse_keywords(keywords)
-    items = [it for it in _ebay_browse_search(browse_kw, limit=100)
-             if _coinxchange_title_matches(re.sub(r'(?i)(?<![a-z])dollarbuck(?![a-z])', 'Dollarbucks', it.get('title') or ''), browse_kw)]
+    # Seller-wording variants widen the net; each result is gated against the
+    # query that found it.
+    items = []
+    for query in [keywords] + _query_variants(coin_id, MAX_ACTIVE_QUERIES - 1):
+        browse_kw = _browse_keywords(query)
+        items += [it for it in _ebay_browse_search(browse_kw, limit=100)
+                  if _coinxchange_title_matches(re.sub(r'(?i)(?<![a-z])dollarbuck(?![a-z])', 'Dollarbucks', it.get('title') or ''), browse_kw)]
+        items = _query_dedupe(items, ('title', 'price', 'url'))
+        if len(items) >= 3:
+            break
     if not items:
         return _link_only_option(retailer, keywords, coin_id=coin_id)
 
@@ -1237,7 +1326,7 @@ def get_buy_options(coin_id, keywords):
                 elif r['type'] == 'jsonld':
                     results = _jsonld_options(r, keywords)
                 elif r['type'] == 'coinxchange':
-                    results = _coinxchange_buy_options(r, keywords)
+                    results = _coinxchange_buy_options(r, keywords, coin_id=coin_id)
                 elif r['type'] == 'ebay_live':
                     results = _ebay_live_options(r, keywords, coin_id=coin_id)
                 elif r['type'] == 'cashconverters':

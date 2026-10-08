@@ -163,6 +163,116 @@ class TestBuyOptions(unittest.TestCase):
         self.assertNotIn('does_not_exist', legacy.COIN_BY_ID)
 
 
+class TestQueryVariants(unittest.TestCase):
+    """Seller-wording variants (from observed eBay AU / CoinXchange titles) widen the
+    search; every result must still pass the strict gate for the query that found it."""
+
+    @staticmethod
+    def _matches(coin_id, title):
+        import re
+        queries = [legacy.COIN_BY_ID[coin_id]['search']] + legacy._query_variants(coin_id)
+        for query in queries:
+            tokens = set(re.findall(r'[a-z0-9]+', query.lower()))
+            allow = 'till' in tokens and '2026' in tokens
+            if legacy._coinxchange_title_matches(title, legacy._browse_keywords(query), allow):
+                return True
+        return False
+
+    def test_variants_reference_real_coins_and_are_bounded(self):
+        for coin_id, variants in legacy.QUERY_VARIANTS.items():
+            self.assertIn(coin_id, legacy.COIN_BY_ID)
+            self.assertTrue(variants and all(v.strip() for v in variants))
+            self.assertLessEqual(len(variants), 3)
+
+    def test_real_seller_titles_are_found(self):
+        for coin_id, title in [
+            ('s1_three_coin_set', '2024 Bluey Dollarbucks $1 X 3 coin  Coloured RAM set UNC'),
+            ('s1_10_coin_folder_set', '2024 Bluey $1 10x Coin Tube & Folder - Sealed UNC'),
+            ('s1_10_coin_folder_opened', '2024 bluey folder and opened coin tube'),
+            ('s1_10_coin_folder_opened', 'BLUEY COIN SET OF 10 2024 $1 UNCIRCULATED (opened)'),
+            ('s1_impressions_pnc_colour', 'Bluey 2024 Coloured Coin Postal Numismatic Cover (PNC) LIMTED TO 3000 UNITS'),
+            ('s1_card_mumdad', "2024 $1 Bluey Dollarbucks- Mum And Dad 'ENVELOPE' Privymark Carded Coin"),
+            ('s1_card_grannies', "2024 $1 Bluey Dollarbucks- The Grannies 'ENVELOPE' Privymark Carded Coin"),
+            ('s1_card_bingo', "2024 $1 Bluey Dollarbucks- Bingo 'ENVELOPE' Privymark Carded Coin"),
+            ('s1_card_blueyfriends', "2024 $1 Bluey Dollarbucks- Bluey And Friends 'ENVELOPE' Privymark Carded Coin"),
+            ('s1_card_blueybingofriends', "2024 $1 Bluey Dollarbucks- Bluey, Bingo and Friends 'ENVELOPE' Privymark Coin"),
+            ('s1_card_stripes', "2024 $1 Bluey Dollarbucks- Uncle Stripe, Aunty Trixie 'ENVELOPE' Privymark Coin"),
+            ('s2_xmas_unc', '2025 Australia $1 One Dollar Bluey Coloured Christmas Uncirculated Coin'),
+            ('s2_xmas_unc', 'Bluey Christmas 2025 Dollar Buck $1 One Coloured Coin Australia Blue'),
+            ('s2_xmas_silv', '2025 $1 Bluey Christmas Coloured Fine Silver Proof Coin'),
+            ('s3_proof_ab', '2026 Bluey $2 Coloured AlBr Proof Coin - Limited to 10,500 minted!'),
+            ('s3_proof_silv', '2026 Bluey Silver Proof Coin #8429'),
+            ('s3_sleepytime_privy', 'Bluey 2026 $2 Coin in Card with Privy Mark - Sleepytime'),
+            ('s3_camping_privy', "2026 $2 Bluey Camping 'Privy Mark' Coin in Card"),
+            ('s3_pnc_bingo', 'Bluey 2026 - Bingo - Hooray PNC'),
+        ]:
+            self.assertTrue(self._matches(coin_id, title), (coin_id, title))
+
+    def test_wider_queries_still_reject_other_products(self):
+        for coin_id, title in [
+            ('s1_card_mumdad', "2024 $1 Bluey Dollarbucks- Bingo 'ENVELOPE' Privymark Carded Coin"),
+            ('s2_xmas_unc', '2025 $1 Bluey Christmas Coloured Fine Silver Proof Coin'),
+            ('s3_proof_ab', '2026 $2 Bluey Coloured Silver Proof Coin | 12,000 Mintage'),
+            ('s3_proof_silv', '2026 Bluey Silver Proof $2 Coin & Bluey Coloured Proof $2 Coin'),
+            ('s3_till_bluey', '2x 2026 Bluey $2 Coloured Coins - Bluey and Bingo Till Coins'),
+            ('s3_till_bluey', '2026 $2 Bluey Till Coin Bag (25 x $2 coins total)'),
+            ('s3_till_bingo', '2026 $2 Bluey Coloured Coins (till coins)'),
+        ]:
+            self.assertFalse(self._matches(coin_id, title), (coin_id, title))
+
+    def test_quantity_ignores_denomination_but_counts_sets(self):
+        self.assertEqual(legacy._coinxchange_quantity('Bluey 2026 $2 Coin in Card'), 1)
+        self.assertEqual(legacy._coinxchange_quantity('2024 Bluey $1 10x Coin Tube'), 10)
+        self.assertEqual(legacy._coinxchange_quantity('COIN SET OF 10 2024'), 10)
+        self.assertEqual(legacy._coinxchange_quantity('$2 Coin & Proof $2 Coin'), 2)
+
+    def test_browse_keywords_keep_set_size(self):
+        self.assertEqual(legacy._browse_keywords('2024 Bluey Dollarbucks $1 X 3 coin Coloured set'),
+                         '2024 Bluey Dollarbucks $1 X 3 coin Coloured set')
+        self.assertEqual(legacy._browse_keywords('2024 $1 Bluey Dollarbuck till coin'),
+                         '2024 $1 Bluey Dollarbucks')
+
+    def test_active_lookup_merges_variants_and_dedupes(self):
+        retailer = {'id': 'coinxchange_buy', 'name': 'CoinXchange',
+                    'search_url': 'https://www.coinxchange.com.au/buy?search={q}'}
+        calls = []
+
+        def fake_scrape(term, sold_only=True):
+            calls.append(term)
+            if 'Bingo Envelope' in term:
+                return [{'price': 40.0, 'title': "2024 $1 Bluey Dollarbucks- Bingo 'ENVELOPE' Privymark Carded Coin", 'url': 'u1'}]
+            return []
+
+        with mock.patch.object(legacy, '_scrape_coinxchange', side_effect=fake_scrape):
+            out = legacy._coinxchange_buy_options(retailer, legacy.COIN_BY_ID['s1_card_bingo']['search'], coin_id='s1_card_bingo')
+        self.assertEqual(len(calls), 2)  # catalogue query, then its one variant
+        self.assertEqual([o['price'] for o in out], [40.0])
+        self.assertFalse(out[0]['link_only'])
+
+    def test_active_lookup_stops_after_enough_matches(self):
+        retailer = {'id': 'coinxchange_buy', 'name': 'CoinXchange',
+                    'search_url': 'https://www.coinxchange.com.au/buy?search={q}'}
+        rows = [{'price': 10.0 + i, 'title': f'2025 $1 Bluey Christmas Coloured Coin {i}', 'url': f'u{i}'} for i in range(3)]
+        with mock.patch.object(legacy, '_scrape_coinxchange', return_value=rows) as scrape:
+            out = legacy._coinxchange_buy_options(retailer, legacy.COIN_BY_ID['s2_xmas_unc']['search'], coin_id='s2_xmas_unc')
+        self.assertEqual(scrape.call_count, 1)
+        self.assertEqual(len(out), 3)
+
+    def test_sold_lookup_merges_variants(self):
+        coin = {'id': 's1_card_bingo', 'search': 'x', 'ebay_kw': 'x'}
+        seen = []
+
+        def fake(term):
+            seen.append(term)
+            return [{'price': 40.0, 'title': term, 'url': None, 'sold_date': '1 May 2026'}]
+
+        with mock.patch.object(prices, '_scrape_coinxchange', side_effect=fake):
+            rows = prices._scrape_coinxchange_all(coin)
+        self.assertEqual(len(rows), 2)  # primary 'x' plus the one variant for this coin id
+        with mock.patch.object(prices, '_scrape_coinxchange', return_value=None):
+            self.assertIsNone(prices._scrape_coinxchange_all(coin))
+
+
 class TestCatalogueParity(unittest.TestCase):
     def test_prices_catalogue_matches_legacy_server(self):
         self.assertEqual(

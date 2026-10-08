@@ -98,7 +98,7 @@ def _scrape(retailer, keywords, coin_id):
         if kind == 'jsonld':
             return legacy._jsonld_options(retailer, keywords)
         if kind == 'coinxchange':
-            return legacy._coinxchange_buy_options(retailer, keywords)
+            return legacy._coinxchange_buy_options(retailer, keywords, coin_id=coin_id)
         if kind == 'ebay_live':
             return legacy._ebay_live_options(retailer, keywords, coin_id=coin_id)
         if kind == 'cashconverters':
