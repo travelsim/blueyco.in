@@ -185,6 +185,15 @@ class CollectionDataTests(unittest.TestCase):
         self.assertTrue(A.same_origin({'Host': 'blueyco.in', 'Origin': 'https://blueyco.in'}))
         self.assertFalse(A.same_origin({'Host': 'blueyco.in', 'Origin': 'https://evil.example'}))
 
+    def test_client_ip_prefers_the_vercel_header(self):
+        # A proxy in front of Vercel can rewrite x-forwarded-for; the vercel
+        # header survives it, so rate limiting must not key on the spoofable one.
+        self.assertEqual(A.client_ip({'X-Vercel-Forwarded-For': '203.0.113.7',
+                                      'X-Forwarded-For': '9.9.9.9'}), '203.0.113.7')
+        self.assertEqual(A.client_ip({'X-Forwarded-For': '9.9.9.9, 203.0.113.7'}), '9.9.9.9')
+        self.assertEqual(A.client_ip({'X-Real-IP': '198.51.100.4'}), '198.51.100.4')
+        self.assertEqual(A.client_ip({}), '')
+
 
 class HttpFlowTests(unittest.TestCase):
     """Drive the real handlers over HTTP with the in-memory store."""

@@ -352,5 +352,15 @@ def same_origin(headers):
 
 
 def client_ip(headers):
-    forwarded = headers.get('X-Forwarded-For') or ''
-    return forwarded.split(',')[0].strip() or headers.get('X-Real-IP', '')
+    """Best available client address for rate limiting.
+
+    Vercel overwrites X-Forwarded-For with the real public IP to prevent
+    spoofing (https://vercel.com/docs/headers/request-headers), and sets
+    X-Vercel-Forwarded-For identically — that one survives a proxy put in front
+    of Vercel. Prefer it, then fall back so plain local servers still rate limit.
+    """
+    for name in ('X-Vercel-Forwarded-For', 'X-Forwarded-For', 'X-Real-IP'):
+        value = (headers.get(name) or '').strip()
+        if value:
+            return value.split(',')[0].strip()
+    return ''
