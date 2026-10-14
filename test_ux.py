@@ -241,3 +241,18 @@ class TestSeoAeo(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class TestAuthUiPolish(unittest.TestCase):
+    def test_swap_note_follows_sign_in_state(self):
+        self.assertIn('id="swap-local-note"', INDEX)
+        self.assertIn("getElementById('swap-local-note')", INDEX)
+        self.assertIn('syncs across devices', INDEX)
+
+    def test_successful_sync_reports_time(self):
+        self.assertIn('toLocaleTimeString', INDEX)
+        self.assertIn("'Synced ' + new Date()", INDEX)
+
+    def test_google_button_is_centered_and_constrained(self):
+        self.assertIn('#google-signin { display: flex; justify-content: center; }', INDEX)
+        self.assertIn('#google-signin iframe { max-width: 100%; }', INDEX)

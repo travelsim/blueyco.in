@@ -1183,6 +1183,8 @@
     .auth-dialog form { display: grid; gap: 10px; }
     .auth-dialog input { min-height: 44px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 16px; }
     .auth-dialog .close-auth { float: right; border: 0; background: transparent; font-size: 1.4rem; cursor: pointer; }
+    #google-signin { display: flex; justify-content: center; }
+    #google-signin iframe { max-width: 100%; }
 
 </style>
 </head>
@@ -1294,7 +1296,7 @@
       </section>
       <div>
         <h3 id="swap-tools-title">Share your collection and find swaps</h3>
-        <p>Your collection stays in this browser. Create a share link, then paste another collector’s link to find items each of you wants.</p>
+        <p id="swap-local-note">Your collection stays in this browser. Create a share link, then paste another collector’s link to find items each of you wants.</p>
       </div>
       <div class="swap-tools-actions">
         <button class="subtle-button subtle-button-accent" type="button" onclick="createCollectionShare()">Create my share link</button>
@@ -1979,6 +1981,10 @@ function setAuthUser(user) {
     copy.textContent = 'Your collection is currently saved in this browser.';
     open.hidden = false; logout.hidden = true;
   }
+  const swapNote = document.getElementById('swap-local-note');
+  if (swapNote) swapNote.textContent = authUser
+    ? 'Your collection syncs across devices. Create a share link, then paste another collector’s link to find items each of you wants.'
+    : 'Your collection stays in this browser. Create a share link, then paste another collector’s link to find items each of you wants.';
 }
 
 async function authFetch(path, options = {}) {
@@ -1992,6 +1998,7 @@ async function syncAuthCollection() {
   if (!authUser) return;
   await authFetch('/api/collection', { method: 'PUT', body: JSON.stringify({ data: authData() }) });
   trackEvent('Collection Remote Synced');
+  setAuthStatus('Synced ' + new Date().toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' }) + '.');
 }
 
 function scheduleAuthSync() {
