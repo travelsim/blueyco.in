@@ -1526,7 +1526,12 @@ const ANALYTICS_EVENTS = new Set([
   'Search',
   'Where to Buy',
   'Add to Cart',
-  'Custom Frame Submit Attempt'
+  'Custom Frame Submit Attempt',
+  'Sign In Open',
+  'Sign In Magic Requested',
+  'Sign In Complete',
+  'Sign Out',
+  'Collection Remote Synced'
 ]);
 
 // Provider-agnostic hook: repoint this one function at GA4 or Plausible later.
@@ -1986,6 +1991,7 @@ async function authFetch(path, options = {}) {
 async function syncAuthCollection() {
   if (!authUser) return;
   await authFetch('/api/collection', { method: 'PUT', body: JSON.stringify({ data: authData() }) });
+  trackEvent('Collection Remote Synced');
 }
 
 function scheduleAuthSync() {
@@ -1996,6 +2002,7 @@ function scheduleAuthSync() {
 
 async function finishAuth(data) {
   setAuthUser(data.user);
+  trackEvent('Sign In Complete');
   const remote = await authFetch('/api/collection');
   const remoteData = remote.data || {};
   // Merge local browser data into the account so signing in never loses a collection.
@@ -2576,11 +2583,12 @@ window.initDashboard = initDashboard;
 
 document.addEventListener('DOMContentLoaded', () => {
   const authDialog = document.getElementById('auth-dialog');
-  document.getElementById('auth-open')?.addEventListener('click', () => authDialog?.showModal());
+  document.getElementById('auth-open')?.addEventListener('click', () => { trackEvent('Sign In Open'); authDialog?.showModal(); });
   document.getElementById('auth-close')?.addEventListener('click', () => authDialog?.close());
   document.getElementById('auth-logout')?.addEventListener('click', async () => {
     try {
       await authFetch('/api/auth', { method: 'POST', body: JSON.stringify({ action: 'logout' }) });
+      trackEvent('Sign Out');
       authUser = null; setAuthUser(null); setAuthStatus('Signed out. Your local collection remains on this device.');
     } catch (error) { setAuthStatus(error.message, true); }
   });
@@ -2591,6 +2599,7 @@ document.addEventListener('DOMContentLoaded', () => {
     status.textContent = 'Sending…';
     try {
       const data = await authFetch('/api/auth', { method: 'POST', body: JSON.stringify({ action: 'magic_request', email }) });
+      trackEvent('Sign In Magic Requested');
       status.textContent = data.message || 'Check your email for the sign-in link.';
     } catch (error) { status.textContent = error.message; }
   });
