@@ -47,3 +47,12 @@ The app accepts untrusted request parameters and untrusted upstream market data,
 ### Elevation of Privilege
 
 In this architecture, any successful client-side script injection gains the app's full browser privilege set and can issue same-origin requests to the API endpoints. The required guarantee is that attacker-controlled data must never reach executable DOM sinks such as `innerHTML`, and third-party scripts included in the page must be kept to the minimum necessary because they execute with full origin privileges.
+
+## Authentication sessions (PR #55, live 2026-10-15)
+
+Signed-in collectors sync coin-id-only collections via `api/auth.py` and `api/collection.py` (stdlib HMAC design in `api/_auth.py`; the site stays fully usable signed out).
+
+- **Session cookie:** `__Secure-bluey.session-token`, HMAC-SHA256 signed with `SESSION_SECRET`, `HttpOnly; Secure; SameSite=Lax; Path=/`, 30-day expiry. No email, name or photo is persisted; the account key is a one-way hash of the verified address.
+- **Logout is cookie-clear only.** Sessions are stateless, so a copied cookie stays valid until it expires. Rotating `SESSION_SECRET` is the only global revoke. Accepted for collection data; projects holding sensitive data need a shorter TTL or server-side session state.
+- **Magic links:** single-use tokens stored hashed with a 10-minute TTL and consumed via `GETDEL`; the emailed link uses a URL fragment exchanged by page POST so mail scanners cannot burn it. Rate limit: 3 per email and 10 per IP per hour.
+- **Google sign-in:** ID tokens checked through `oauth2.googleapis.com/tokeninfo` with audience, issuer, expiry and `email_verified` checks. Interactive Google sign-in by a person was still unverified as of 2026-10-15.
