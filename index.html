@@ -2000,9 +2000,11 @@ function scheduleAuthSync() {
   authSyncTimer = setTimeout(() => syncAuthCollection().catch(() => setAuthStatus('Sync paused — try again shortly.', true)), 500);
 }
 
-async function finishAuth(data) {
+async function finishAuth(data, options = {}) {
   setAuthUser(data.user);
-  trackEvent('Sign In Complete');
+  // A returning-session hydrate is not a fresh sign-in: skip the sign-in
+  // event and leave the dialog alone, but still merge remote state first.
+  if (options.hydrateOnly !== true) trackEvent('Sign In Complete');
   const remote = await authFetch('/api/collection');
   const remoteData = remote.data || {};
   // Merge local browser data into the account so signing in never loses a collection.
@@ -2016,7 +2018,7 @@ async function finishAuth(data) {
   localStorage.setItem('blueycoin_swap_offer', JSON.stringify(swapOffer));
   renderDashboard();
   await syncAuthCollection();
-  document.getElementById('auth-dialog')?.close();
+  if (options.hydrateOnly !== true) document.getElementById('auth-dialog')?.close();
   setAuthStatus('Synced just now.');
 }
 
@@ -2030,6 +2032,8 @@ async function loadAuth() {
       history.replaceState(null, '', location.pathname + location.search);
       const data = await authFetch('/api/auth', { method: 'POST', body: JSON.stringify({ action: 'magic_verify', token }) });
       await finishAuth(data);
+    } else if (authConfig.user) {
+      await finishAuth(authConfig, { hydrateOnly: true });
     }
   } catch (error) { setAuthStatus(error.message, true); }
 }
