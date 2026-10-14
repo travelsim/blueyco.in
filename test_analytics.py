@@ -26,10 +26,24 @@ class TestVercelAnalyticsInstrumentation(unittest.TestCase):
                 "Where to Buy",
                 "Add to Cart",
                 "Custom Frame Submit Attempt",
+                "Sign In Open",
+                "Sign In Magic Requested",
+                "Sign In Complete",
+                "Sign Out",
+                "Collection Remote Synced",
             },
         )
         self.assertIn("window.va('event', { name });", INDEX)
         self.assertNotIn("trackEvent('Purchase')", INDEX)
+
+    def test_analytics_events_set_matches_all_call_sites_and_contains_no_pii(self):
+        match = re.search(r"const ANALYTICS_EVENTS = new Set\(\[\s*([\s\S]*?)\s*\]\);", INDEX)
+        self.assertIsNotNone(match)
+        set_events = set(re.findall(r"'([^']+)'", match.group(1)))
+        call_events = set(re.findall(r"trackEvent\('([^']+)'\)", INDEX))
+        self.assertEqual(set_events, call_events)
+        for name in set_events:
+            self.assertFalse(re.search(r"@|token|user_id|email|cookie", name, re.IGNORECASE))
 
 
 class TestVercelDeploymentConfiguration(unittest.TestCase):
