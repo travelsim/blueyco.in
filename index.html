@@ -1173,6 +1173,16 @@
     .faq-item { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
     .faq-item h3 { font-size: 1rem; margin-bottom: 6px; }
     .faq-item p { color: var(--text); font-size: 0.92rem; margin: 0; }
+    .auth-panel { margin: 16px 0 20px; padding: 14px 16px; border: 1px solid var(--border); border-radius: 14px; background: #fffaf2; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+    .auth-panel p { margin: 0; font-size: .9rem; color: var(--text); }
+    .auth-panel strong { display: block; color: var(--navy); }
+    .auth-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .auth-status { min-height: 1.2em; color: var(--text); }
+    .auth-dialog { width: min(420px, calc(100vw - 28px)); border: 0; border-radius: 18px; padding: 24px; box-shadow: 0 20px 70px #0f172a55; }
+    .auth-dialog::backdrop { background: #0f172a99; }
+    .auth-dialog form { display: grid; gap: 10px; }
+    .auth-dialog input { min-height: 44px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 16px; }
+    .auth-dialog .close-auth { float: right; border: 0; background: transparent; font-size: 1.4rem; cursor: pointer; }
 
 </style>
 </head>
@@ -1225,7 +1235,7 @@
     <div class="dashboard-header">
       <div>
         <h2 class="dashboard-title">My Collection</h2>
-        <div class="dashboard-kicker">Tick off what you own, wishlist what you want. Saved in this browser only.</div>
+        <div class="dashboard-kicker">Tick off what you own, wishlist what you want. Sign in to sync it across devices.</div>
       </div>
 
       <div class="dashboard-stats">
@@ -1242,6 +1252,10 @@
           <div class="stat-label">Complete</div>
         </div>
       </div>
+    </div>
+    <div class="auth-panel" id="auth-panel" aria-live="polite">
+      <p><strong id="auth-title">Save your collection across devices</strong><span id="auth-copy">Your collection is currently saved in this browser.</span></p>
+      <div class="auth-actions"><span class="auth-status" id="auth-status"></span><button class="subtle-button subtle-button-accent" id="auth-open" type="button">Sign in</button><button class="subtle-button" id="auth-logout" type="button" hidden>Sign out</button></div>
     </div>
     <div class="dash-progress" id="dash-progress" role="progressbar" aria-label="Collection complete" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="dash-progress-bar"></span></div>
 
@@ -1293,6 +1307,21 @@
     </div>
   </div>
 </section>
+
+<dialog class="auth-dialog" id="auth-dialog" aria-labelledby="auth-dialog-title">
+  <button class="close-auth" id="auth-close" type="button" aria-label="Close sign-in">×</button>
+  <h2 id="auth-dialog-title">Sign in to Blueycoin</h2>
+  <p>Use a Google account or email link. We store only a private account key and your collection.</p>
+  <div id="google-signin" hidden></div>
+  <p id="google-unavailable" class="auth-status" hidden>Google sign-in is not configured yet.</p>
+  <hr>
+  <form id="magic-form">
+    <label for="magic-email">Email address</label>
+    <input id="magic-email" type="email" autocomplete="email" required placeholder="you@example.com">
+    <button class="btn-primary" type="submit">Email me a sign-in link</button>
+    <p class="auth-status" id="magic-status" role="status"></p>
+  </form>
+</dialog>
 
 <!-- ============================================
      BLUEYCOIN FRAMES SHOP (Revenue Feature)
@@ -1897,22 +1926,121 @@ let collection = JSON.parse(localStorage.getItem('blueycoin_collection') || '{}'
 let wishlist   = JSON.parse(localStorage.getItem('blueycoin_wishlist') || '{}');
 let swapOffer  = JSON.parse(localStorage.getItem('blueycoin_swap_offer') || '{}');
 let swapProfile = null;
+let authUser = null;
+let authSyncTimer = null;
+let authConfig = null;
 
 function saveCollection() {
   localStorage.setItem('blueycoin_collection', JSON.stringify(collection));
   renderSwapMatches();
   if (typeof refreshCollectRows === 'function') refreshCollectRows();
+  scheduleAuthSync();
 }
 
 function saveSwapOffer() {
   localStorage.setItem('blueycoin_swap_offer', JSON.stringify(swapOffer));
   renderSwapMatches();
+  scheduleAuthSync();
 }
 
 function saveWishlist() {
   localStorage.setItem('blueycoin_wishlist', JSON.stringify(wishlist));
   renderSwapMatches();
   if (typeof refreshCollectRows === 'function') refreshCollectRows();
+  scheduleAuthSync();
+}
+
+function authData() {
+  return { collection, wishlist, swapOffer };
+}
+
+function setAuthStatus(message, error = false) {
+  const node = document.getElementById('auth-status');
+  if (node) { node.textContent = message || ''; node.style.color = error ? '#b42318' : ''; }
+}
+
+function setAuthUser(user) {
+  authUser = user || null;
+  const title = document.getElementById('auth-title');
+  const copy = document.getElementById('auth-copy');
+  const open = document.getElementById('auth-open');
+  const logout = document.getElementById('auth-logout');
+  if (authUser) {
+    title.textContent = 'Collection synced';
+    copy.textContent = `Signed in as ${authUser.email}. Changes sync across devices.`;
+    open.hidden = true; logout.hidden = false;
+  } else {
+    title.textContent = 'Save your collection across devices';
+    copy.textContent = 'Your collection is currently saved in this browser.';
+    open.hidden = false; logout.hidden = true;
+  }
+}
+
+async function authFetch(path, options = {}) {
+  const response = await fetch(path, { credentials: 'same-origin', ...options, headers: { 'Content-Type': 'application/json', ...(options.headers || {}) } });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || 'Sign-in is temporarily unavailable.');
+  return data;
+}
+
+async function syncAuthCollection() {
+  if (!authUser) return;
+  await authFetch('/api/collection', { method: 'PUT', body: JSON.stringify({ data: authData() }) });
+}
+
+function scheduleAuthSync() {
+  if (!authUser) return;
+  clearTimeout(authSyncTimer);
+  authSyncTimer = setTimeout(() => syncAuthCollection().catch(() => setAuthStatus('Sync paused — try again shortly.', true)), 500);
+}
+
+async function finishAuth(data) {
+  setAuthUser(data.user);
+  const remote = await authFetch('/api/collection');
+  const remoteData = remote.data || {};
+  // Merge local browser data into the account so signing in never loses a collection.
+  ['collection', 'wishlist', 'swapOffer'].forEach(key => {
+    collection = key === 'collection' ? { ...(remoteData[key] || {}), ...collection } : collection;
+    if (key === 'wishlist') wishlist = { ...(remoteData[key] || {}), ...wishlist };
+    if (key === 'swapOffer') swapOffer = { ...(remoteData[key] || {}), ...swapOffer };
+  });
+  localStorage.setItem('blueycoin_collection', JSON.stringify(collection));
+  localStorage.setItem('blueycoin_wishlist', JSON.stringify(wishlist));
+  localStorage.setItem('blueycoin_swap_offer', JSON.stringify(swapOffer));
+  renderDashboard();
+  await syncAuthCollection();
+  document.getElementById('auth-dialog')?.close();
+  setAuthStatus('Synced just now.');
+}
+
+async function loadAuth() {
+  try {
+    authConfig = await authFetch('/api/auth');
+    setAuthUser(authConfig.user);
+    if (authConfig.google && authConfig.googleClientId) loadGoogleButton(authConfig.googleClientId);
+    const token = new URLSearchParams(location.hash.slice(1)).get('login');
+    if (token) {
+      history.replaceState(null, '', location.pathname + location.search);
+      const data = await authFetch('/api/auth', { method: 'POST', body: JSON.stringify({ action: 'magic_verify', token }) });
+      await finishAuth(data);
+    }
+  } catch (error) { setAuthStatus(error.message, true); }
+}
+
+function loadGoogleButton(clientId) {
+  const target = document.getElementById('google-signin');
+  if (!target) return;
+  target.hidden = false;
+  const render = () => {
+    if (!window.google?.accounts?.id) return;
+    window.google.accounts.id.initialize({ client_id: clientId, callback: async response => {
+      try { await finishAuth(await authFetch('/api/auth', { method: 'POST', body: JSON.stringify({ action: 'google', credential: response.credential }) })); }
+      catch (error) { setAuthStatus(error.message, true); }
+    }});
+    window.google.accounts.id.renderButton(target, { theme: 'outline', size: 'large', text: 'signin_with', width: 280 });
+  };
+  if (window.google?.accounts?.id) render();
+  else { const script = document.createElement('script'); script.src = 'https://accounts.google.com/gsi/client'; script.async = true; script.onload = render; document.head.append(script); }
 }
 
 // ── Social sharing ──
@@ -2447,6 +2575,25 @@ function initDashboard() {
 window.initDashboard = initDashboard;
 
 document.addEventListener('DOMContentLoaded', () => {
+  const authDialog = document.getElementById('auth-dialog');
+  document.getElementById('auth-open')?.addEventListener('click', () => authDialog?.showModal());
+  document.getElementById('auth-close')?.addEventListener('click', () => authDialog?.close());
+  document.getElementById('auth-logout')?.addEventListener('click', async () => {
+    try {
+      await authFetch('/api/auth', { method: 'POST', body: JSON.stringify({ action: 'logout' }) });
+      authUser = null; setAuthUser(null); setAuthStatus('Signed out. Your local collection remains on this device.');
+    } catch (error) { setAuthStatus(error.message, true); }
+  });
+  document.getElementById('magic-form')?.addEventListener('submit', async event => {
+    event.preventDefault();
+    const email = document.getElementById('magic-email').value.trim();
+    const status = document.getElementById('magic-status');
+    status.textContent = 'Sending…';
+    try {
+      const data = await authFetch('/api/auth', { method: 'POST', body: JSON.stringify({ action: 'magic_request', email }) });
+      status.textContent = data.message || 'Check your email for the sign-in link.';
+    } catch (error) { status.textContent = error.message; }
+  });
   document.querySelectorAll('.dash-filter').forEach(btn => btn.addEventListener('click', () => setDashFilter(btn.dataset.filter)));
   const search = document.getElementById('dash-search');
   if (search) {
@@ -2460,6 +2607,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Auto-init if the dashboard section exists
 document.addEventListener('DOMContentLoaded', () => {
+  loadAuth();
   if (document.getElementById('dashboard')) {
     initDashboard();
     const share = new URLSearchParams(location.hash.slice(1)).get('swap');
