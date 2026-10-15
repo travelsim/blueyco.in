@@ -32,6 +32,7 @@ EMAIL_RE = re.compile(r'^[^@\s]{1,64}@[^@\s]{1,255}\.[^@\s]{2,}$')
 COIN_ID_RE = re.compile(r'^[a-z0-9_]{1,64}$')
 DATA_KEYS = ('collection', 'wishlist', 'swapOffer')
 MAX_ENTRIES = 300
+MAX_QTY = 99
 GOOGLE_ISSUERS = {'accounts.google.com', 'https://accounts.google.com'}
 
 
@@ -304,7 +305,11 @@ def send_magic_email(email, token, smtp_factory=None):
 
 # ── Collection data ──────────────────────────────────────────────────────────
 def clean_collection_data(payload):
-    """Validate client data. Returns (clean, error); only truthy coin ids are kept."""
+    """Validate client data. Returns (clean, error).
+
+    Collection values are owned quantities (1..MAX_QTY); legacy `True`
+    reads as 1. Wishlist and swap offers stay boolean flags.
+    """
     if not isinstance(payload, dict):
         return None, 'Invalid data.'
     clean = {}
@@ -312,6 +317,23 @@ def clean_collection_data(payload):
         section = payload.get(key, {})
         if not isinstance(section, dict) or len(section) > MAX_ENTRIES * 2:
             return None, 'Invalid data.'
+        if key == 'collection':
+            quantities = {}
+            for entry_id, value in section.items():
+                if value is True:
+                    qty = 1
+                elif type(value) is int:
+                    qty = value
+                else:
+                    continue
+                if qty < 1 or not COIN_ID_RE.match(str(entry_id)):
+                    continue
+                quantities[str(entry_id)] = min(qty, MAX_QTY)
+            ids = sorted(quantities)
+            if len(ids) > MAX_ENTRIES:
+                return None, 'Too many entries.'
+            clean[key] = {i: quantities[i] for i in ids}
+            continue
         ids = sorted(k for k, v in section.items() if v is True and COIN_ID_RE.match(str(k)))
         if len(ids) > MAX_ENTRIES:
             return None, 'Too many entries.'
