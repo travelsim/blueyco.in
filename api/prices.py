@@ -215,6 +215,7 @@ COINS = [
     {'id': 's1_10_coin_folder_set', 'ebay_kw': '2024 $1 Bluey folder tube set sealed unopened', 'search': '2024 $1 Bluey folder tube set sealed unopened'},
     {'id': 's1_10_coin_folder_opened', 'ebay_kw': '2024 $1 Bluey folder tube set opened', 'search': '2024 $1 Bluey folder tube set opened'},
     {'id': 's1_coloured_insert_variant', 'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set special coloured coin', 'search': '2024 $1 Bluey ten coin collection folder tube set special coloured coin'},
+    {'id': 's0_2020_stamp_pack', 'ebay_kw': '2020 Bluey MyStamps stamp pack Australia Post 1515510', 'search': '2020 Bluey MyStamps stamp pack Australia Post 1515510'},
     {'id': 's1_auspost_stamp_pack', 'ebay_kw': '2024 Bluey MyStamps pack 12 house shaped stamps', 'search': '2024 Bluey MyStamps pack 12 house shaped stamps'},
     {'id': 's1_impressions_pnc_colour', 'ebay_kw': '2024 Bluey limited edition coloured coin PNC', 'search': '2024 Bluey limited edition coloured coin PNC'},
     {'id': 's1_impressions_pnc_2coin', 'ebay_kw': '2024 Bluey limited edition 2 coin PNC', 'search': '2024 Bluey limited edition 2 coin PNC'},
@@ -250,6 +251,7 @@ COINS = [
     # records from the 11428/11430 envelope PNCs, not dedupes).
     {'id': 's2_xmas_unc', 'ebay_kw': '2025 $1 Bluey Christmas coloured uncirculated coin', 'search': '2025 $1 Bluey Christmas coloured uncirculated coin'},
     {'id': 's2_xmas_silv', 'ebay_kw': '2025 $1 Bluey Christmas silver proof coin', 'search': '2025 $1 Bluey Christmas silver proof coin'},
+    {'id': 's2_xmas_stamp_pack', 'ebay_kw': '2024 Bluey Christmas stamp pack 76602869 Australia Post', 'search': '2024 Bluey Christmas stamp pack 76602869 Australia Post'},
     {'id': 's3_rain', 'ebay_kw': '2026 $2 Bluey Rain privy mark uncirculated coin', 'search': '2026 $2 Bluey Rain privy mark uncirculated coin'},
     {'id': 's3_sleepytime', 'ebay_kw': '2026 $2 Bluey Sleepytime privy mark uncirculated', 'search': '2026 $2 Bluey Sleepytime privy mark uncirculated'},
     {'id': 's3_camping', 'ebay_kw': '2026 $2 Bluey Camping privy mark uncirculated coin', 'search': '2026 $2 Bluey Camping privy mark uncirculated coin'},
@@ -263,6 +265,7 @@ COINS = [
     {'id': 's3_proof_ab', 'ebay_kw': '2026 $2 Bluey coloured proof aluminium bronze coin', 'search': '2026 $2 Bluey coloured proof aluminium bronze coin'},
     {'id': 's3_proof_silv', 'ebay_kw': '2026 $2 Bluey coloured silver proof coin', 'search': '2026 $2 Bluey coloured silver proof coin'},
     {'id': 's3_maxicard_pack', 'ebay_kw': '2026 Bluey prepaid concertina maxicard pack five designs', 'search': '2026 Bluey prepaid concertina maxicard pack five designs'},
+    {'id': 's3_stamp_pack', 'ebay_kw': '2026 Bluey MyStamps star shaped stamp pack 2336509 Australia Post', 'search': '2026 Bluey MyStamps star shaped stamp pack 2336509 Australia Post'},
     {'id': 's3_sleepytime_insert', 'ebay_kw': '2026 $2 Bluey Sleepytime Coloured Insert coin', 'search': '2026 $2 Bluey Sleepytime Coloured Insert coin'},
     {'id': 's3_till_bluey', 'ebay_kw': '2026 $2 Bluey coloured till coin circulation', 'search': '2026 $2 Bluey coloured till coin circulation'},
     {'id': 's3_till_bingo', 'ebay_kw': '2026 $2 Bingo coloured till coin circulation', 'search': '2026 $2 Bingo coloured till coin circulation'},
