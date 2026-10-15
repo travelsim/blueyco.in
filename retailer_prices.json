@@ -197,6 +197,9 @@
     "nova_coins": { "price": 25.00, "available": true, "checkedAt": 1791197100, "url": "https://www.novacoins.com.au/products/2027-1-bluey-cricket-coloured-uncirculated-coin" },
     "aussie_coins_direct": { "price": 25.00, "available": true, "checkedAt": 1791197100, "url": "https://aussiecoinsdirect.com.au/collections/bluey/products/2027-1-bluey-cricket-coloured-uncirculated-coin" }
   },
+  "s1_10_coin_folder_set": {
+    "ebay": { "price": null, "available": true, "useAsLinkOnly": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+%241+Bluey+folder+tube+set+sealed+unopened&LH_BIN=1&_sop=15&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1" }
+  },
   "s1_10_coin_folder_opened": {
     "ebay": { "price": null, "available": true, "useAsLinkOnly": true, "url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+%241+Bluey+folder+tube+set+opened&LH_BIN=1&_sop=15&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1" }
   },
