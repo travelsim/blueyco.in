@@ -1273,6 +1273,10 @@
     .dash-empty { padding: 36px 28px; text-align: center; color: var(--slate); }
     .dash-empty button { margin-top: 12px; }
     .dash-checkbox { width: 24px; height: 24px; }
+    .qty-stepper { display: flex; align-items: center; gap: 6px; }
+    .qty-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: transparent; font-size: 1.1rem; line-height: 1; cursor: pointer; }
+    .qty-btn:disabled { opacity: .35; cursor: default; }
+    .qty-count { min-width: 2ch; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
     .dashboard-footer {
       padding: 14px 28px;
       background: #fbfaf7;
@@ -2446,7 +2450,20 @@ window.showDesignModal = showDesignModal;
 // INTERACTIVE COLLECTION DASHBOARD
 // =============================================
 
-let collection = JSON.parse(localStorage.getItem('blueycoin_collection') || '{}');
+const MAX_QTY = 99;
+function normalizeQtyMap(raw) {
+  const clean = {};
+  if (raw && typeof raw === 'object') {
+    for (const [id, value] of Object.entries(raw)) {
+      if (!/^[a-z0-9_]{1,64}$/.test(id)) continue;
+      const qty = value === true ? 1 : (Number.isInteger(value) ? value : 0);
+      if (qty < 1) continue;
+      clean[id] = Math.min(MAX_QTY, qty);
+    }
+  }
+  return clean;
+}
+let collection = normalizeQtyMap(JSON.parse(localStorage.getItem('blueycoin_collection') || '{}'));
 let wishlist   = JSON.parse(localStorage.getItem('blueycoin_wishlist') || '{}');
 let swapOffer  = JSON.parse(localStorage.getItem('blueycoin_swap_offer') || '{}');
 let swapProfile = null;
@@ -2828,12 +2845,15 @@ function updateDashboardStats() {
   let totalValue = 0;
   let pricedOwned = 0;
 
+  let pieces = 0;
   coins.forEach(coin => {
-    if (collection[coin.id]) {
+    const qty = collection[coin.id] || 0;
+    if (qty > 0) {
       owned++;
+      pieces += qty;
       const live = _referencePrice(coin);
       if (live) {
-        totalValue += live;
+        totalValue += live * qty;
         pricedOwned++;
       }
     }
@@ -2841,7 +2861,7 @@ function updateDashboardStats() {
 
   const pct = coins.length ? Math.round((owned / coins.length) * 100) : 0;
   const set = (id, text) => { const node = document.getElementById(id); if (node) node.textContent = text; };
-  set('owned-count', `${owned} / ${coins.length}`);
+  set('owned-count', `${owned} of ${coins.length} types \u00b7 ${pieces} coins`);
   set('completion', pct + '%');
   if (!owned) {
     set('total-value', '$0');
@@ -2925,12 +2945,43 @@ function _dashRow(coin) {
   const valueWrap = el('div', 'dash-valuewrap');
   valueWrap.append(value, wish);
 
-  checkbox.addEventListener('change', () => {
-    if (checkbox.checked) collection[coin.id] = true; else delete collection[coin.id];
-    row.classList.toggle('is-owned', checkbox.checked);
+  const stepper = el('div', 'qty-stepper');
+  const minus = el('button', 'qty-btn', '\u2212');
+  minus.type = 'button';
+  const qtyLabel = el('span', 'qty-count', String(collection[coin.id] || 0));
+  const plus = el('button', 'qty-btn', '+');
+  plus.type = 'button';
+  stepper.append(minus, qtyLabel, plus);
+  function refreshQty() {
+    const qty = collection[coin.id] || 0;
+    const on = qty > 0;
+    qtyLabel.textContent = String(qty);
+    checkbox.checked = on;
+    row.classList.toggle('is-owned', on);
+    minus.disabled = !on;
+    minus.setAttribute('aria-label', `Own one fewer ${coin.name} (have ${qty})`);
+    plus.setAttribute('aria-label', `Own one more ${coin.name} (have ${qty})`);
+  }
+  minus.addEventListener('click', () => {
+    const qty = collection[coin.id] || 0;
+    if (qty <= 1) delete collection[coin.id]; else collection[coin.id] = qty - 1;
+    refreshQty();
     saveCollection();
     updateDashboardStats();
   });
+  plus.addEventListener('click', () => {
+    collection[coin.id] = Math.min(MAX_QTY, (collection[coin.id] || 0) + 1);
+    refreshQty();
+    saveCollection();
+    updateDashboardStats();
+  });
+  checkbox.addEventListener('change', () => {
+    if (checkbox.checked) collection[coin.id] = collection[coin.id] || 1; else delete collection[coin.id];
+    refreshQty();
+    saveCollection();
+    updateDashboardStats();
+  });
+  refreshQty();
   wish.addEventListener('click', () => {
     if (wishlist[coin.id]) delete wishlist[coin.id]; else wishlist[coin.id] = true;
     const on = !!wishlist[coin.id];
@@ -2942,7 +2993,7 @@ function _dashRow(coin) {
     updateDashboardStats();
   });
 
-  row.append(checkbox, thumb, info, badge, valueWrap);
+  row.append(checkbox, stepper, thumb, info, badge, valueWrap);
   return row;
 }
 
@@ -2992,7 +3043,7 @@ function renderDashboard() {
     all.type = 'button';
     all.addEventListener('click', () => {
       const everyOwned = group.coins.every(c => collection[c.id]);
-      group.coins.forEach(c => { if (everyOwned) delete collection[c.id]; else collection[c.id] = true; });
+      group.coins.forEach(c => { if (everyOwned) delete collection[c.id]; else collection[c.id] = 1; });
       saveCollection();
       renderDashboard();
       toast(everyOwned ? `Cleared ${group.label}.` : `Marked all of ${group.label} as owned.`, 'success');
@@ -4253,7 +4304,7 @@ function buildCollectRow(coin) {
   own.dataset.act = 'own';
   own.setAttribute('aria-pressed', String(owned));
   own.addEventListener('click', () => {
-    if (collection[coin.id]) delete collection[coin.id]; else collection[coin.id] = true;
+    if (collection[coin.id]) delete collection[coin.id]; else collection[coin.id] = 1;
     saveCollection();
     renderDashboard();
     refreshCollectRows(coin.id, 'own');

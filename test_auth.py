@@ -174,7 +174,18 @@ class CollectionDataTests(unittest.TestCase):
             'wishlist': {'s4_cricket_unc': True},
         })
         self.assertIsNone(error)
-        self.assertEqual(clean, {'collection': {'s1_bluey': True}, 'wishlist': {'s4_cricket_unc': True}, 'swapOffer': {}})
+        self.assertEqual(clean, {'collection': {'s1_bluey': 1}, 'wishlist': {'s4_cricket_unc': True}, 'swapOffer': {}})
+
+    def test_collection_quantities_accepted_clamped_and_rejected(self):
+        clean, error = A.clean_collection_data({
+            'collection': {'one': 1, 'many': 3, 'huge': 150, 'zero': 0,
+                           'neg': -2, 'half': 2.5, 'text': '3', 'off': False,
+                           'nothing': None, 'BAD ID': 2},
+            'wishlist': {'want': 2, 'really': True},
+        })
+        self.assertIsNone(error)
+        self.assertEqual(clean['collection'], {'huge': 99, 'many': 3, 'one': 1})
+        self.assertEqual(clean['wishlist'], {'really': True})
 
     def test_rejects_wrong_shapes_and_oversize(self):
         for bad in (None, [], 'x', {'collection': []}, {'collection': {f'c{i}': True for i in range(700)}}):
