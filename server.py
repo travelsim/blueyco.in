@@ -809,7 +809,7 @@ MAX_ACTIVE_QUERIES = 3   # primary + 2 variants for live buy-panel lookups (time
 QUERY_VARIANTS = {
     's1_auspost_stamp_pack': ['2024 Bluey MyStamps Pack of 12', '2024 Bluey MyStamps'],
     's1_proof_silver': ['2024 $1 Bluey Fine Silver Coloured Proof Coin',
-                        'Royal Australian Mint 2024 Bluey $1 Coloured Proof Coin'],
+                        'Royal Australian Mint 2024 Bluey $1 Fine Silver Proof Coin'],
     's1_10_coin_folder_set': ['2024 Bluey $1 10x Coin Tube Folder Sealed UNC',
                               '2024 Bluey $1 ten coin set unopened'],
     's1_10_coin_folder_opened': ['2024 Bluey folder and opened coin tube',
@@ -883,6 +883,20 @@ _REQUIRED_VARIANTS = (
     ('proof',), ('silver',), ('privy', 'privymark'), ('pnc', 'postal'), ('maxicard',),
     ('sealed', 'unopened'), ('special',),
 )
+
+
+def _required_format_groups(keywords):
+    """Format groups the catalogue query demands, whatever a variant drops.
+
+    Seller-wording variants widen the search net, but each result is gated
+    only against its own variant. A variant that omits e.g. 'silver' must
+    not widen the gate back to the cheaper product (Oct 2026: a plain
+    $899 coloured proof matched the silver proof coin through a
+    silver-less variant). Callers enforce these catalogue-level groups
+    on every candidate regardless of variant.
+    """
+    tokens = set(re.findall(r'[a-z0-9]+', str(keywords or '').lower()))
+    return [group for group in _REQUIRED_VARIANTS if set(group) & tokens]
 # Listings that are never the collectable itself.
 _JUNK_TITLE_TOKENS = {
     'replica', 'reproduction', 'fake', 'empty', 'sticker', 'stickers', 'poster',
@@ -981,6 +995,7 @@ def _coinxchange_buy_options(retailer, keywords, coin_id=None):
     queries = [keywords] + _query_variants(coin_id, MAX_ACTIVE_QUERIES - 1)
     page_url = None
     matched = []
+    required = _required_format_groups(keywords)
     for query in queries:
         orig_tokens = set(re.findall(r'[a-z0-9]+', str(query or '').lower()))
         # The 2026 till coins are the coloured ones; for other years 'coloured' is a different product.
@@ -989,7 +1004,13 @@ def _coinxchange_buy_options(retailer, keywords, coin_id=None):
         if page_url is None:
             page_url = retailer['search_url'].replace('{q}', urllib.parse.quote(kw))
         listings = _scrape_coinxchange(kw, sold_only=False) or []
-        matched += [l for l in listings if _coinxchange_title_matches(l.get('title'), kw, allow_coloured)]
+        for listing in listings:
+            if not _coinxchange_title_matches(listing.get('title'), kw, allow_coloured):
+                continue
+            listing_tokens = set(re.findall(r'[a-z0-9]+', str(listing.get('title') or '').lower()))
+            if not all(set(group) & listing_tokens for group in required):
+                continue
+            matched.append(listing)
         matched = _query_dedupe(matched, ('title', 'price', 'url'))
         if len(matched) >= 3:
             break
@@ -1209,10 +1230,17 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
     # Seller-wording variants widen the net; each result is gated against the
     # query that found it.
     items = []
+    required = _required_format_groups(keywords)
     for query in [keywords] + _query_variants(coin_id, MAX_ACTIVE_QUERIES - 1):
         browse_kw = _browse_keywords(query)
-        items += [it for it in _ebay_browse_search(browse_kw, limit=100)
-                  if _coinxchange_title_matches(re.sub(r'(?i)(?<![a-z])dollarbuck(?![a-z])', 'Dollarbucks', it.get('title') or ''), browse_kw)]
+        for it in _ebay_browse_search(browse_kw, limit=100):
+            title = re.sub(r'(?i)(?<![a-z])dollarbuck(?![a-z])', 'Dollarbucks', it.get('title') or '')
+            if not _coinxchange_title_matches(title, browse_kw):
+                continue
+            title_tokens = set(re.findall(r'[a-z0-9]+', str(title).lower()))
+            if not all(set(group) & title_tokens for group in required):
+                continue
+            items.append(it)
         items = _query_dedupe(items, ('title', 'price', 'url'))
         if len(items) >= 3:
             break
