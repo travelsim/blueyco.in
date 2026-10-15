@@ -1,5 +1,6 @@
 import importlib.util
 import os
+import re
 import time
 import unittest
 from unittest import mock
@@ -350,3 +351,50 @@ class TestCoinXchangeParser(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class TestCatalogueFormatGate(unittest.TestCase):
+    # Oct 2026: this plain coloured proof at $899 showed under the silver
+    # proof coin's Where to Buy via a silver-less seller-wording variant.
+    CX_TITLE = 'Royal Australian Mint 2024 Bluey $1 Coloured Proof Coin'
+
+    def _cx_options(self, coin_id, keywords):
+        raw = [{'price': 899.0, 'title': self.CX_TITLE,
+                'url': 'https://www.coinxchange.com.au/buy/x',
+                'currency': 'AUD', 'seller': 's'}]
+        retailer = {r['id']: r for r in legacy.RETAILERS}['coinxchange_buy']
+        with mock.patch.object(legacy, '_scrape_coinxchange',
+                               return_value=[dict(r) for r in raw]):
+            return buy_options._scrape(retailer, keywords, coin_id)
+
+    def test_silver_proof_rejects_plain_coloured_ask(self):
+        options = self._cx_options('s1_proof_silver',
+                                   '2024 $1 Bluey Dollarbucks fine silver coloured proof')
+        self.assertEqual(len(options), 1)
+        self.assertTrue(options[0]['link_only'])
+        self.assertIsNone(options[0]['price'])
+
+    def test_coloured_proof_keeps_the_same_ask(self):
+        options = self._cx_options('s1_proof_coloured',
+                                   '2024 $1 Bluey Dollarbucks coloured proof coin')
+        self.assertEqual(len(options), 1)
+        self.assertEqual(options[0]['price'], 899.0)
+        self.assertEqual(options[0]['price_type'], 'asking')
+
+    def test_required_format_groups(self):
+        self.assertEqual(legacy._required_format_groups(
+            '2024 $1 Bluey Dollarbucks fine silver coloured proof'),
+            [('proof',), ('silver',)])
+        self.assertEqual(legacy._required_format_groups(
+            '2024 $1 Bluey Dollarbucks coloured proof coin'), [('proof',)])
+
+    def test_variants_preserve_catalogue_format_tokens(self):
+        coins = {c['id']: c for c in legacy.COINS}
+        for coin_id, variants in legacy.QUERY_VARIANTS.items():
+            if coin_id not in coins:
+                continue
+            for group in legacy._required_format_groups(coins[coin_id]['ebay_kw']):
+                for variant in variants:
+                    tokens = set(re.findall(r'[a-z0-9]+', variant.lower()))
+                    self.assertTrue(set(group) & tokens,
+                                    f'{coin_id} variant drops {group}: {variant}')
