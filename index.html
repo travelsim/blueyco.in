@@ -3534,7 +3534,7 @@ function handleSell(coinId, referenceValue) {
   }
 
   const ebayLink = el('a', 'sp-link ebay', 'List on eBay AU →');
-  ebayLink.href   = affiliateUrl('https://www.ebay.com.au/sl/sell', coin.id, 'sell');
+  ebayLink.href   = affiliateUrl('https://www.ebay.com.au/sl/sell', coinId, 'sell');
   ebayLink.target = '_blank';
   ebayLink.rel    = 'noopener noreferrer';
   panel.append(ebayLink);
