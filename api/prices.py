@@ -213,7 +213,7 @@ COINS = [
     {'id': 's1_proof_silver', 'ebay_kw': '2024 $1 Bluey Dollarbucks fine silver coloured proof', 'search': '2024 $1 Bluey Dollarbucks fine silver coloured proof'},
     {'id': 's1_proof_coloured', 'ebay_kw': '2024 $1 Bluey Dollarbucks coloured proof coin', 'search': '2024 $1 Bluey Dollarbucks coloured proof coin'},
     {'id': 's1_10_coin_folder_set', 'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set sealed unopened', 'search': '2024 $1 Bluey ten coin collection folder tube set sealed unopened'},
-    {'id': 's1_10_coin_folder_opened', 'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set opened', 'search': '2024 $1 Bluey ten coin collection folder tube set opened'},
+    {'id': 's1_10_coin_folder_opened', 'ebay_kw': '2024 $1 Bluey folder tube set opened', 'search': '2024 $1 Bluey folder tube set opened'},
     {'id': 's1_coloured_insert_variant', 'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set special coloured coin', 'search': '2024 $1 Bluey ten coin collection folder tube set special coloured coin'},
     {'id': 's1_auspost_stamp_pack', 'ebay_kw': '2024 Bluey MyStamps pack 12 house shaped stamps', 'search': '2024 Bluey MyStamps pack 12 house shaped stamps'},
     {'id': 's1_impressions_pnc_colour', 'ebay_kw': '2024 Bluey limited edition coloured coin PNC', 'search': '2024 Bluey limited edition coloured coin PNC'},
