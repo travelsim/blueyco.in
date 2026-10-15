@@ -448,8 +448,13 @@ _NUMBER_WORDS = {
 _NAMED_VARIANT_TOKENS = {
     'bingo', 'muffin', 'muffinsocks', 'socks', 'stripe', 'stripes', 'trixie',
     'nana', 'rad', 'frisky', 'friend', 'friends', 'mum', 'dad', 'family',
-    'granny', 'grannies', 'rain', 'camping', 'cricket', 'sleepytime', 'heelers',
+    'granny', 'grannies', 'rain', 'camping', 'cricket', 'sleepytime', 'sleeptime', 'heelers',
     'sleepy', 'baby', 'race',
+}
+_BUNDLE_TOKENS = {
+    'set', 'sets', 'folder', 'folders', 'tube', 'tubes', 'bundle', 'bundles',
+    'collection', 'collections', 'bag', 'bags', 'roll', 'rolls', 'lot', 'lots',
+    'bulk', 'case', 'album', 'albums', 'pack', 'packs',
 }
 
 
@@ -511,6 +516,10 @@ def _product_matches_coin(product, coin, now=None, max_age_days=90):
     if years and not years.issubset(title_tokens):
         return False
 
+    # Bundles and sets are distinct products unless the query itself asks for one.
+    if (title_tokens & _BUNDLE_TOKENS) - query_tokens:
+        return False
+
     for variant in {'proof', 'silver', 'coloured', 'colored', 'privy', 'postal', 'pnc', 'card', 'sealed', 'unopened', 'opened', 'special'}:
         if variant in title_tokens and variant not in query_tokens:
             return False
@@ -535,6 +544,83 @@ def _product_matches_coin(product, coin, now=None, max_age_days=90):
     if _product_quantity(title) != expected:
         return False
     return True
+
+
+def _price_domain_bounds(coin):
+    """Permissible market price envelope (min_aud, max_aud) for coin type."""
+    if not isinstance(coin, dict):
+        return (1.0, 500.0)
+    cid = coin.get('id', '')
+    kw = (coin.get('ebay_kw') or coin.get('search') or '').lower()
+    if 'till' in kw or cid in ('s1_bluey', 's1_bingo', 's3_till_bluey', 's3_till_bingo'):
+        return (1.0, 60.0)
+    if 'silver' in kw or 'prestige' in kw or cid in (
+        's1_proof_silver', 's1_impressions_pnc_silver', 's2_xmas_silv', 's3_proof_silv', 's4_cricket_proof'
+    ):
+        return (50.0, 3000.0)
+    if 'proof' in kw or 'insert' in kw or cid in (
+        's1_proof_coloured', 's3_proof_ab', 's1_coloured_insert_variant', 's3_sleepytime_insert'
+    ):
+        return (20.0, 800.0)
+    if any(t in kw for t in ('folder', 'tube', 'set', 'collection', 'pack')):
+        return (15.0, 600.0)
+    if 'pnc' in kw or 'postal' in kw or 'pin' in kw:
+        return (8.0, 450.0)
+    return (5.0, 300.0)
+
+
+def _filter_price_outliers(products, coin=None):
+    """Filter out statistical and domain outliers from a list of normalized products."""
+    if not products:
+        return [], []
+    min_bound, max_bound = _price_domain_bounds(coin or {})
+    domain_valid = []
+    outliers = []
+    for p in products:
+        price = p.get('sale_price')
+        if price is None:
+            price = p.get('price')
+        try:
+            val = float(price)
+        except (TypeError, ValueError):
+            outliers.append(p)
+            continue
+        if min_bound <= val <= max_bound:
+            domain_valid.append(p)
+        else:
+            outliers.append(p)
+
+    if len(domain_valid) < 3:
+        return domain_valid, outliers
+
+    sorted_products = sorted(domain_valid, key=lambda x: float(x.get('sale_price') or x.get('price') or 0))
+    prices = [float(p.get('sale_price') or p.get('price')) for p in sorted_products]
+    n = len(prices)
+    q1 = prices[n // 4]
+    q3 = prices[(3 * n) // 4]
+    iqr = q3 - q1
+    mid = n // 2
+    med = prices[mid] if n % 2 else (prices[mid - 1] + prices[mid]) / 2.0
+
+    if iqr > 0.05 * med:
+        stat_lower = max(0.0, q1 - 2.0 * iqr)
+        stat_upper = q3 + 2.0 * iqr
+    else:
+        stat_lower = med * 0.3
+        stat_upper = med * 3.0
+
+    stat_lower = max(stat_lower, med * 0.3)
+    stat_upper = min(stat_upper, med * 3.5)
+
+    final_valid = []
+    for p in domain_valid:
+        val = float(p.get('sale_price') or p.get('price'))
+        if stat_lower <= val <= stat_upper:
+            final_valid.append(p)
+        else:
+            outliers.append(p)
+
+    return final_valid, outliers
 
 
 def _quality_filter_ebay(data, coin, now=None):
@@ -586,14 +672,18 @@ def _quality_filter_ebay(data, coin, now=None):
         (current_products if age <= 90 * 24 * 3600 else historical_products).append(normalized)
     current_products.sort(key=lambda p: _sold_timestamp(p.get('date_sold')) or 0, reverse=True)
     historical_products.sort(key=lambda p: _sold_timestamp(p.get('date_sold')) or 0, reverse=True)
-    prices = [p['sale_price'] for p in current_products]
+    valid_current, current_outliers = _filter_price_outliers(current_products, coin)
+    valid_historical, historical_outliers = _filter_price_outliers(historical_products, coin)
+    prices = [p['sale_price'] for p in valid_current]
     result = dict(data)
-    result['products'] = current_products
-    result['historical_products'] = historical_products
-    result['historical_count'] = len(historical_products)
+    result['products'] = valid_current
+    result['outliers'] = current_outliers
+    result['historical_products'] = valid_historical
+    result['historical_outliers'] = historical_outliers
+    result['historical_count'] = len(valid_historical)
     result['raw_results'] = data.get('total_results', data.get('results'))
-    result['results'] = result['total_results'] = len(current_products)
-    result['matched_results'] = len(current_products)
+    result['results'] = result['total_results'] = len(valid_current)
+    result['matched_results'] = len(valid_current)
     if prices:
         ordered = sorted(prices)
         mid = len(ordered) // 2

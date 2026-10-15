@@ -3059,9 +3059,9 @@ const COIN_PRODUCT_IMAGES = {
 function buildCard(coin) {
   const coinEntry = coinData[coin.id] || {};
   const ebay      = coinEntry.ebay      || null;
-  const currentSales = _currentSoldRecords(coinEntry);
+  const currentSales = _currentSoldRecords(coinEntry, coin);
   const hasEbay = currentSales.length > 0;
-  const median = hasEbay ? _referenceFromEntry(coinEntry) : null;
+  const median = hasEbay ? _referenceFromEntry(coinEntry, coin) : null;
   const hasMedian = Number.isFinite(median) && median > 0;
   const refPrice = hasMedian ? median : null;
   const premium = hasMedian ? calcPremium(median, coin.mintPrice) : null;
@@ -3622,17 +3622,106 @@ function _sourceIsFresh(data) {
   return Number.isFinite(fetchedAt) && now - fetchedAt <= 90 * 24 * 60 * 60 * 1000 && fetchedAt - now <= 24 * 60 * 60 * 1000;
 }
 
+const _CLIENT_BUNDLE_TOKENS = new Set([
+  'set', 'sets', 'folder', 'folders', 'tube', 'tubes', 'bundle', 'bundles',
+  'collection', 'collections', 'bag', 'bags', 'roll', 'rolls', 'lot', 'lots',
+  'bulk', 'case', 'album', 'albums', 'pack', 'packs'
+]);
+
+function _isSetCatalogItem(coin) {
+  if (!coin) return false;
+  const cid = coin.id || '';
+  if (['s1_10_coin_folder_set', 's1_10_coin_folder_opened', 's1_coloured_insert_variant',
+       's1_auspost_stamp_pack', 's1_three_coin_set', 's1_pnc_set_ten', 's3_maxicard_pack', 's3_folder'].includes(cid)) {
+    return true;
+  }
+  const kw = ((coin.keywords || '') + ' ' + (coin.name || '')).toLowerCase();
+  return /folder|tube|set\b|pack\b|collection/.test(kw);
+}
+
+function _isClientTitleMismatched(title, coin) {
+  if (!title || !coin) return false;
+  const t = String(title).toLowerCase();
+  const titleTokens = t.match(/[a-z0-9]+/g) || [];
+  
+  if (!_isSetCatalogItem(coin)) {
+    for (const tok of titleTokens) {
+      if (_CLIENT_BUNDLE_TOKENS.has(tok)) return true;
+    }
+  }
+
+  const coinKw = ((coin.keywords || '') + ' ' + (coin.name || '') + ' ' + (coin.id || '')).toLowerCase();
+  if (!coinKw.includes('sleepy') && !coinKw.includes('sleeptime') && (t.includes('sleepytime') || t.includes('sleeptime'))) {
+    return true;
+  }
+  return false;
+}
+
+function _clientPriceBounds(coin) {
+  if (!coin) return [1.0, 500.0];
+  const cid = coin.id || '';
+  const kw = ((coin.keywords || '') + ' ' + (coin.name || '')).toLowerCase();
+  if (kw.includes('till') || ['s1_bluey', 's1_bingo', 's3_till_bluey', 's3_till_bingo'].includes(cid)) {
+    return [1.0, 60.0];
+  }
+  if (kw.includes('silver') || ['s1_proof_silver', 's1_impressions_pnc_silver', 's2_xmas_silv', 's3_proof_silv', 's4_cricket_proof'].includes(cid)) {
+    return [50.0, 3000.0];
+  }
+  if (kw.includes('proof') || ['s1_proof_coloured', 's3_proof_ab', 's1_coloured_insert_variant', 's3_sleepytime_insert'].includes(cid)) {
+    return [20.0, 800.0];
+  }
+  if (_isSetCatalogItem(coin)) {
+    return [15.0, 600.0];
+  }
+  if (kw.includes('pnc') || kw.includes('postal') || kw.includes('pin')) {
+    return [8.0, 450.0];
+  }
+  return [5.0, 300.0];
+}
+
+function _filterClientSoldOutliers(records, coin) {
+  if (!records || !records.length) return [];
+  const [minBound, maxBound] = _clientPriceBounds(coin);
+  
+  const domainValid = records.filter(r => {
+    if (r.price < minBound || r.price > maxBound) return false;
+    if (_isClientTitleMismatched(r.title, coin)) return false;
+    return true;
+  });
+
+  if (domainValid.length < 3) return domainValid;
+
+  const sorted = [...domainValid].sort((a, b) => a.price - b.price);
+  const prices = sorted.map(r => r.price);
+  const n = prices.length;
+  const q1 = prices[Math.floor(n / 4)];
+  const q3 = prices[Math.floor((3 * n) / 4)];
+  const iqr = q3 - q1;
+  const mid = Math.floor(n / 2);
+  const med = n % 2 ? prices[mid] : (prices[mid - 1] + prices[mid]) / 2;
+
+  let lowerFence = iqr > 0.05 * med ? Math.max(0, q1 - 2.0 * iqr) : med * 0.3;
+  let upperFence = iqr > 0.05 * med ? q3 + 2.0 * iqr : med * 3.0;
+  lowerFence = Math.max(lowerFence, med * 0.3);
+  upperFence = Math.min(upperFence, med * 3.5);
+
+  return domainValid.filter(r => r.price >= lowerFence && r.price <= upperFence);
+}
+
 function _allSoldRecords(entry) {
+  const coin = arguments[1] || (entry && (entry.coin || (typeof COINS !== 'undefined' && COINS.find(c => (coinData[c.id] === entry)))));
   const ebay = (entry && entry.ebay) || {};
   const cx = (entry && entry.coinxchange) || {};
   const out = [];
   [ebay.products, ebay.historical_products].forEach(list => (list || []).forEach(p => out.push(_normSold(p, 'eBay AU'))));
   [cx.products, cx.historical_products].forEach(list => (list || []).forEach(p => out.push(_normSold(p, 'CoinXchange'))));
-  return out.filter(_validSold).sort((a, b) => b.soldAt - a.soldAt);
+  const valid = out.filter(_validSold).sort((a, b) => b.soldAt - a.soldAt);
+  return _filterClientSoldOutliers(valid, coin);
 }
 
 // Sales from the last 90 days, from sources whose snapshot is itself fresh.
 function _currentSoldRecords(entry) {
+  const coin = arguments[1] || (entry && (entry.coin || (typeof COINS !== 'undefined' && COINS.find(c => (coinData[c.id] === entry)))));
   const ebay = (entry && entry.ebay) || {};
   const cx = (entry && entry.coinxchange) || {};
   const now = Date.now();
@@ -3641,25 +3730,30 @@ function _currentSoldRecords(entry) {
   const out = [];
   if (_sourceIsFresh(ebay)) (ebay.products || []).forEach(p => out.push(_normSold(p, 'eBay AU')));
   if (_sourceIsFresh(cx)) (cx.products || []).forEach(p => out.push(_normSold(p, 'CoinXchange')));
-  return out.filter(inWindow).sort((a, b) => b.soldAt - a.soldAt);
+  const current = out.filter(inWindow).sort((a, b) => b.soldAt - a.soldAt);
+  return _filterClientSoldOutliers(current, coin);
 }
 
 // Estimated value: median of recent sold prices across eBay AU and CoinXchange.
 // With eBay data alone the server-computed median is kept.
 function _referenceFromEntry(entry) {
-  const current = _currentSoldRecords(entry);
+  const coin = arguments[1] || (entry && (entry.coin || (typeof COINS !== 'undefined' && COINS.find(c => (coinData[c.id] === entry)))));
+  const current = _currentSoldRecords(entry, coin);
   if (!current.length) return null;
   const ebay = (entry && entry.ebay) || {};
   if (!current.some(r => r.source === 'CoinXchange')) {
     const feedMedian = parseFloat(ebay.median_price);
-    if (Number.isFinite(feedMedian) && feedMedian > 0) return feedMedian;
+    const [minBound, maxBound] = _clientPriceBounds(coin);
+    if (Number.isFinite(feedMedian) && feedMedian >= minBound && feedMedian <= maxBound) {
+      return feedMedian;
+    }
   }
   return _medianOfPrices(current.map(r => r.price));
 }
 
 // Price cards, collection sorting, and portfolio values all use the matched-sale median.
 function _referencePrice(coin) {
-  return _referenceFromEntry(coinData[coin.id] || {});
+  return _referenceFromEntry(coinData[coin.id] || {}, coin);
 }
 
 // ── Value trend chart (inline SVG, no external library) ──
@@ -3690,7 +3784,7 @@ function _monthlyMedians(records) {
 }
 
 function buildTrendSection(coin, entry) {
-  const records = _allSoldRecords(entry);
+  const records = _allSoldRecords(entry, coin);
   if (records.length < 2) return null;
 
   const details = el('details', 'value-trend');

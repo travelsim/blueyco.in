@@ -4,6 +4,8 @@ These tests cover production-risk issues that are cheap to verify locally:
 - api/prices.py must include _summarise() because handler() calls it.
 - server.py rate limiting must key on the visitor IP from forwarded headers,
   not always self.client_address[0] (Render/Cloudflare proxy IP).
+- api/prices.py must reject bundle/folder/set cross-contamination and filter
+  price outliers so single-coin estimates remain accurate.
 """
 import importlib.util
 from pathlib import Path
@@ -53,6 +55,68 @@ class TestRateLimitVisitorIpRegressions(unittest.TestCase):
 
     def test_client_ip_falls_back_to_socket_address(self):
         self.assertEqual(server._client_ip({}, ("10.0.0.5", 12345)), "10.0.0.5")
+
+
+class TestPriceOutlierAndBundleRegressions(unittest.TestCase):
+    def test_product_matches_coin_rejects_folder_set_for_single_till_coin(self):
+        prices = load_api_prices_module()
+        coin = next(c for c in prices.COINS if c["id"] == "s3_till_bluey")
+
+        # Multi-coin folder tube set listing title observed on CoinXchange
+        mismatched_cx_title = "2026 Bluey $2 Folder Tube Set: Coloured Sleeptime + Coloured Till Coins"
+        product = {
+            "title": mismatched_cx_title,
+            "sale_price": 175.0,
+            "date_sold": "25 Jul 2026",
+            "currency": "AUD",
+        }
+        self.assertFalse(prices._product_matches_coin(product, coin, now=1792000000))
+
+        # Genuine single till coin listing title observed on eBay AU
+        genuine_title = "2026 $2 BLUEY COLOURED TILL COIN ( Bluey ) UNCIRCULATED"
+        product_ok = {
+            "title": genuine_title,
+            "sale_price": 7.99,
+            "date_sold": "24 Aug 2026",
+            "currency": "AUD",
+        }
+        self.assertTrue(prices._product_matches_coin(product_ok, coin, now=1792000000))
+
+    def test_filter_price_outliers_prunes_domain_and_statistical_outliers(self):
+        prices = load_api_prices_module()
+        till_coin = next(c for c in prices.COINS if c["id"] == "s3_till_bluey")
+
+        # Mix of genuine till sales and high set outliers
+        products = [
+            {"sale_price": 4.99, "title": "coin 1"},
+            {"sale_price": 7.99, "title": "coin 2"},
+            {"sale_price": 170.0, "title": "outlier set 1"},
+            {"sale_price": 175.0, "title": "outlier set 2"},
+        ]
+        valid, outliers = prices._filter_price_outliers(products, till_coin)
+        self.assertEqual([p["sale_price"] for p in valid], [4.99, 7.99])
+        self.assertEqual(len(outliers), 2)
+
+        # Abnormally low anomaly on carded coin
+        rain_coin = next(c for c in prices.COINS if c["id"] == "s3_rain_privy")
+        low_product = [{"sale_price": 2.0, "title": "empty card"}]
+        valid_low, outliers_low = prices._filter_price_outliers(low_product, rain_coin)
+        self.assertEqual(valid_low, [])
+        self.assertEqual(len(outliers_low), 1)
+
+    def test_payload_for_s3_till_bluey_excludes_folder_set_outliers(self):
+        prices = load_api_prices_module()
+        coin = next(c for c in prices.COINS if c["id"] == "s3_till_bluey")
+
+        payload, _ = prices._build_payload(
+            [coin],
+            fetch_coin=lambda c: {"ebay": None, "coinxchange": None},
+            deadline=1,
+        )
+        bluey = payload["s3_till_bluey"]
+        self.assertEqual(bluey["ebay"]["median_price"], 6.49)
+        self.assertEqual(bluey["coinxchange"]["matched_results"], 0)
+        self.assertEqual(bluey["coinxchange"]["products"], [])
 
 
 if __name__ == "__main__":
