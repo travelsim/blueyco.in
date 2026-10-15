@@ -48,8 +48,7 @@ class TestAffiliateDoubleTag(unittest.TestCase):
 
 class TestPricesAffiliateWrapper(unittest.TestCase):
     def test_disabled_leaves_valid_ordinary_urls(self):
-        with mock.patch.dict(os.environ, {}, clear=False):
-            os.environ.pop('EPN_CAMPAIGN_ID', None)
+        with mock.patch.dict(os.environ, {'EPN_CAMPAIGN_ID': ''}):
             search = ('https://www.ebay.com.au/sch/i.html?'
                       '_nkw=2024+Bluey+Dollarbuck+Bluey&LH_Sold=1&_sop=15')
             product = 'https://www.ebay.com.au/itm/198341345495?_skw=2024+%241+Bluey'
@@ -63,7 +62,7 @@ class TestPricesAffiliateWrapper(unittest.TestCase):
             tagged = prices._affiliate_url(search, coin_id='s1_bluey',
                                            source='ebay_search')
             self.assertIn('&campid=testcamp', tagged)
-            self.assertIn('customid=blueycoin-ebay_search-s1_bluey', tagged)
+            self.assertIn('customid=5339153744', tagged)
             # Original query parameters and percent-encoding survive intact.
             self.assertIn('_nkw=2024+Bluey+Dollarbuck+Bluey', tagged)
             self.assertIn('LH_Sold=1', tagged)
@@ -128,8 +127,7 @@ class TestPricesSnapshotTagging(unittest.TestCase):
 
     def test_snapshot_leaves_ordinary_urls_when_no_campaign(self):
         coins = [{'id': 's1_bluey', 'search': 'x', 'ebay_kw': 'x'}]
-        with mock.patch.dict(os.environ, {}, clear=False):
-            os.environ.pop('EPN_CAMPAIGN_ID', None)
+        with mock.patch.dict(os.environ, {'EPN_CAMPAIGN_ID': ''}):
             snapshot, _ = self._snapshot(coins)
         entry = snapshot['s1_bluey']
         self.assertNotIn('campid=', entry['ebay']['response_url'])
@@ -245,7 +243,7 @@ class TestBuyOptionsFallbackTagging(unittest.TestCase):
         # the coin's own query and still affiliate-tagged.
         self.assertIn('campid=testcamp', option['url'])
         self.assertNotIn('LH_Sold=1', option['url'])
-        self.assertIn('customid=blueycoin-ebay_search-s1_bluey', option['url'])
+        self.assertIn('customid=5339153744', option['url'])
         self.assertTrue(option['link_only'])
 
     def test_manual_ebay_url_untagged_without_campaign(self):

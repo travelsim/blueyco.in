@@ -61,14 +61,14 @@ class TestAffiliateUrl(unittest.TestCase):
         server.EPN_CAMPAIGN_ID = '1234567'
         url = 'https://www.ebay.com.au/itm/12345'
         result = server.affiliate_url(url, coin_id='s1_bluey', source='ebay_buy')
-        self.assertIn('customid=blueycoin-ebay_buy-s1_bluey', result)
+        self.assertIn('customid=5339153744', result)
 
     def test_custom_id_defaults(self):
         """customid should default to 'blueycoin' when no coin_id given."""
         server.EPN_CAMPAIGN_ID = '1234567'
         url = 'https://www.ebay.com.au/itm/12345'
         result = server.affiliate_url(url)
-        self.assertIn('customid=blueycoin', result)
+        self.assertIn('customid=5339153744', result)
 
     def test_url_with_existing_query_params(self):
         """Should append with & when URL already has query params."""
@@ -138,7 +138,7 @@ class TestAffiliateApiEndpoint(unittest.TestCase):
         )
         self.assertTrue(result['is_affiliate'])
         self.assertIn('campid=test789', result['url'])
-        self.assertIn('customid=blueycoin-ebay_buy-s1_bingo', result['url'])
+        self.assertIn('customid=5339153744', result['url'])
 
     def test_redirect_endpoint_non_ebay(self):
         result = self._call_affiliate_redirect(

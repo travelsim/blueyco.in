@@ -19,29 +19,39 @@ EBAY_LIVE_HOST = 'real-time-ebay.p.rapidapi.com'
 EBAY_LIVE_URL  = f'https://{EBAY_LIVE_HOST}/search'
 
 # eBay Partner Network (EPN) affiliate config
-# Set EPN_CAMPAIGN_ID env var after signing up at https://partnernetwork.ebay.com/
-EPN_CAMPAIGN_ID = os.environ.get('EPN_CAMPAIGN_ID', '')
-EPN_TRACKING_ID = 'blueycoin'
+# Default verified EPN Campaign ID and Custom ID
+DEFAULT_EPN_CAMPAIGN_ID = '5339153744'
+DEFAULT_EPN_CUSTOM_ID   = '5339153744'
+EPN_CAMPAIGN_ID = os.environ.get('EPN_CAMPAIGN_ID', DEFAULT_EPN_CAMPAIGN_ID)
+EPN_CUSTOM_ID   = os.environ.get('EPN_CUSTOM_ID', DEFAULT_EPN_CUSTOM_ID)
+EPN_TRACKING_ID = EPN_CUSTOM_ID
 
 def affiliate_url(raw_url: str, coin_id: str = '', source: str = 'ebay') -> str:
     """Wrap an eBay AU URL with EPN affiliate tracking parameters.
 
     Returns the original URL unchanged if no campaign is configured or the
     URL is not an eBay AU link. Never double-tags: a URL that already
-    carries EPN parameters is returned unchanged.
+    carries EPN parameters has its customid normalized and is returned.
     """
     if not raw_url or not raw_url.startswith('https://www.ebay.com.au'):
         return raw_url
-    if not EPN_CAMPAIGN_ID:
+    campaign_id = EPN_CAMPAIGN_ID if EPN_CAMPAIGN_ID is not None else os.environ.get('EPN_CAMPAIGN_ID', DEFAULT_EPN_CAMPAIGN_ID)
+    if not campaign_id:
         return raw_url
+    custom_id = EPN_CUSTOM_ID if EPN_CUSTOM_ID is not None else os.environ.get('EPN_CUSTOM_ID', DEFAULT_EPN_CUSTOM_ID)
+    if not custom_id:
+        custom_id = DEFAULT_EPN_CUSTOM_ID
+
     if 'campid=' in raw_url or 'mkevt=' in raw_url:
+        if 'customid=blueycoin' in raw_url:
+            return re.sub(r'customid=blueycoin[a-zA-Z0-9_-]*', f'customid={custom_id}', raw_url)
         return raw_url
-    custom_id = f'blueycoin-{source}-{coin_id}' if coin_id else 'blueycoin'
+
     separator = '&' if '?' in raw_url else '?'
     return (
         f"{raw_url}{separator}"
         f"mkrid=705-53470-19255-0&siteid=15"
-        f"&campid={EPN_CAMPAIGN_ID}"
+        f"&campid={campaign_id}"
         f"&customid={custom_id}"
         f"&toolid=10001&mkevt=1"
     )

@@ -2865,6 +2865,27 @@ function safeUrl(val) {
   } catch { return null; }
 }
 
+const EPN_CAMPAIGN_ID = '5339153744';
+const EPN_CUSTOM_ID   = '5339153744';
+
+function affiliateUrl(rawUrl, coinId, source) {
+  if (!rawUrl || typeof rawUrl !== 'string') return rawUrl;
+  if (!rawUrl.startsWith('https://www.ebay.com.au')) return rawUrl;
+  try {
+    const u = new URL(rawUrl);
+    u.searchParams.set('mkrid', '705-53470-19255-0');
+    u.searchParams.set('siteid', '15');
+    u.searchParams.set('campid', EPN_CAMPAIGN_ID);
+    u.searchParams.set('customid', EPN_CUSTOM_ID);
+    u.searchParams.set('toolid', '10001');
+    u.searchParams.set('mkevt', '1');
+    return u.toString();
+  } catch {
+    const sep = rawUrl.includes('?') ? '&' : '?';
+    return `${rawUrl}${sep}mkrid=705-53470-19255-0&siteid=15&campid=${EPN_CAMPAIGN_ID}&customid=${EPN_CUSTOM_ID}&toolid=10001&mkevt=1`;
+  }
+}
+
 function el(tag, cls, text) {
   const e = document.createElement(tag);
   if (cls)  e.className   = cls;
@@ -3217,7 +3238,7 @@ function buildCard(coin) {
         el('span', 'sale-source', p.source === 'CoinXchange' ? 'CX' : 'eBay'),
         el('span', 'sale-date',  safeText(p.date))
       );
-      const href = safeUrl(p.link);
+      const href = safeUrl(affiliateUrl(p.link, coin.id, 'ebay_sold'));
       if (href) {
         const a = el('a', 'view-ebay', '↗');
         a.href = href; a.target = '_blank';
@@ -3465,7 +3486,7 @@ function renderBuyOptions(panel, options) {
     }
 
     // Link button
-    const href = safeUrl(opt.url);
+    const href = safeUrl(affiliateUrl(opt.url, panel.dataset.coinId || '', 'ebay_buy'));
     const link = el('a', `ret-link ${opt.link_only ? 'search' : 'buy'}`,
                     opt.link_only ? 'Search →' : 'Buy →');
     if (href) {
@@ -3513,7 +3534,7 @@ function handleSell(coinId, referenceValue) {
   }
 
   const ebayLink = el('a', 'sp-link ebay', 'List on eBay AU →');
-  ebayLink.href   = 'https://www.ebay.com.au/sl/sell';
+  ebayLink.href   = affiliateUrl('https://www.ebay.com.au/sl/sell', coin.id, 'sell');
   ebayLink.target = '_blank';
   ebayLink.rel    = 'noopener noreferrer';
   panel.append(ebayLink);
@@ -3904,6 +3925,15 @@ if (_sortSelect) {
 renderGrid();                              // show skeleton immediately
 loadPrices();                              // populate from backend cache
 setInterval(loadPrices, 5 * 60 * 1000);   // re-poll every 5 min
+// Global eBay outbound affiliate link enforcement
+document.addEventListener('click', (e) => {
+  const a = e.target && e.target.closest ? e.target.closest('a') : null;
+  if (!a || !a.href) return;
+  if (a.href.startsWith('https://www.ebay.com.au')) {
+    a.href = affiliateUrl(a.href);
+  }
+}, true);
+
 </script>
 </body>
 </html>

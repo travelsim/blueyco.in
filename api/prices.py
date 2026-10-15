@@ -369,23 +369,30 @@ def _usable_coinxchange(data):
     return isinstance(data, dict) and isinstance(data.get('products'), list) and bool(data.get('fetchedAt'))
 
 
+DEFAULT_EPN_CAMPAIGN_ID = '5339153744'
+DEFAULT_EPN_CUSTOM_ID   = '5339153744'
+
 def _affiliate_url(raw_url, coin_id='', source='ebay'):
     """Serverless mirror of server.affiliate_url (same params, same guards).
 
     Reads EPN_CAMPAIGN_ID live from the environment so Vercel config and
-    tests take effect without a module reload. Never hardcodes a campaign
-    ID: without one, eBay URLs stay valid ordinary URLs. Never
-    double-tags, and preserves query parameters/URL encoding by appending
-    rather than rebuilding the URL.
+    tests take effect without a module reload. Defaults to verified campaign
+    ID 5339153744 and Custom ID 5339153744 so outbound affiliate tracking is active.
     """
-    campaign = os.environ.get('EPN_CAMPAIGN_ID', '')
+    campaign = os.environ.get('EPN_CAMPAIGN_ID')
+    if campaign is None:
+        campaign = DEFAULT_EPN_CAMPAIGN_ID
     if not raw_url or not raw_url.startswith('https://www.ebay.com.au'):
         return raw_url
     if not campaign:
         return raw_url
+    custom_id = os.environ.get('EPN_CUSTOM_ID')
+    if custom_id is None:
+        custom_id = DEFAULT_EPN_CUSTOM_ID
     if 'campid=' in raw_url or 'mkevt=' in raw_url:
+        if 'customid=blueycoin' in raw_url:
+            return re.sub(r'customid=blueycoin[a-zA-Z0-9_-]*', f'customid={custom_id}', raw_url)
         return raw_url
-    custom_id = f'blueycoin-{source}-{coin_id}' if coin_id else 'blueycoin'
     separator = '&' if '?' in raw_url else '?'
     return (
         f"{raw_url}{separator}"
