@@ -344,6 +344,105 @@
   /* ── MINI CHART ── */
   .chart-wrap { height: 80px; position: relative; margin-bottom: 12px; }
 
+  /* Kid-friendly Badges, Folder States & Scarcity */
+  .coin-kid-hint {
+    margin-top: 5px;
+    font-size: .75rem;
+    color: #475569;
+    background: #f1f5f9;
+    border-left: 3px solid #1e90d4;
+    padding: 3px 8px;
+    border-radius: 4px;
+    line-height: 1.35;
+  }
+  .card-category-badge {
+    display: inline-block;
+    font-size: .68rem;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 999px;
+    margin-top: 3px;
+    background: #e0f2fe;
+    color: #0369a1;
+  }
+  .card-category-badge.lucky {
+    background: #fef08a;
+    color: #854d0e;
+    border: 1px solid #facc15;
+  }
+  .card-category-badge.silver {
+    background: #f1f5f9;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+  }
+  .card-category-badge.till {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+  }
+  .card-category-badge.folder {
+    background: #ffedd5;
+    color: #9a3412;
+    border: 1px solid #fed7aa;
+  }
+  .card-category-badge.pnc {
+    background: #ede9fe;
+    color: #6b21a8;
+    border: 1px solid #ddd6fe;
+  }
+  .card-category-badge.privy {
+    background: #e0e7ff;
+    color: #3730a3;
+    border: 1px solid #c7d2fe;
+  }
+  .card-category-badge.pin {
+    background: #fce7f3;
+    color: #9d174d;
+    border: 1px solid #fbcfe8;
+  }
+  .card-category-badge.stamps {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+  }
+  .metric-kicker-derived { color: #b45309 !important; font-weight: 800; }
+  .metric-derived { color: #b45309 !important; font-family: 'Fredoka', sans-serif; font-weight: 900; }
+  .note-lucky-coin {
+    background: #fffbeb !important;
+    border-color: #fde68a !important;
+    border-left: 4px solid #f59e0b !important;
+  }
+  .note-lucky-coin strong { color: #b45309 !important; }
+  .collector-guide-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 16px 0 20px;
+    padding: 16px;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 2px dashed #93c5fd;
+    border-radius: 14px;
+  }
+  .guide-pill {
+    background: #ffffff;
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    padding: 10px 12px;
+    box-shadow: 0 2px 4px rgba(30,144,212,0.06);
+  }
+  .guide-pill strong {
+    display: block;
+    font-size: .84rem;
+    color: #1e3152;
+    margin-bottom: 2px;
+  }
+  .guide-pill p {
+    font-size: .74rem;
+    color: #475569;
+    margin: 0;
+    line-height: 1.35;
+  }
+
   /* ── BUY NOW BUTTON ── */
   .buy-btn {
     width: 100%;
@@ -1474,6 +1573,25 @@
   <div class="all-coins-intro">
     <h2 class="section-title">Bluey coin price guide</h2>
     <p class="page-sub">Recent sold records inform current prices. Older matched eBay sales remain visible as history, not current value. Compare them with active dealer asking listings in Where to Buy.</p>
+  </div>
+
+  <div class="collector-guide-strip" aria-label="Kid-friendly guide to collecting Bluey coins">
+    <div class="guide-pill">
+      <strong>🪙 Pocket Change Hunt</strong>
+      <p>Legal tender $1 and $2 coins found in Australian cash registers and till change at face value!</p>
+    </div>
+    <div class="guide-pill">
+      <strong>🌟 Lucky 1-in-10 Coins</strong>
+      <p>Secret coloured coins randomly hidden in 1 of every 10 tubes (derived ~15,750 mintage for 2024)!</p>
+    </div>
+    <div class="guide-pill">
+      <strong>📦 3 Folder States</strong>
+      <p>1. Sealed (mystery chance), 2. Opened base set (10 coins), 3. Opened complete set with lucky coin.</p>
+    </div>
+    <div class="guide-pill">
+      <strong>✉️ PNCs &amp; Cards</strong>
+      <p>Australia Post envelopes and cards pairing uncirculated coins with special postmarks &amp; stamps.</p>
+    </div>
   </div>
 
   <div class="series-tabs">
@@ -2731,45 +2849,45 @@ window.COINS = [
   // Series 1 — 2024 Dollarbucks ($1)
   { id: 's1_bluey', series: 'series1_september', name: 'Bluey $1 Dollarbuck (till coin)', keywords: 'bluey 2024 dollarbucks till', denomination: 1, year: 2024, mintage: 1250000, mintPrice: null, color: false, marketLow: 5, marketHigh: 20, sourceUrl: 'https://www.ramint.gov.au/collect/national-coin-collection/corporate-partnerships/australia-post-programs/bluey-dollarbucks' },
   { id: 's1_bingo', series: 'series1_september', name: 'Bingo $1 Dollarbuck (till coin)', keywords: 'bingo 2024 dollarbucks till', denomination: 1, year: 2024, mintage: 1250000, mintPrice: null, color: false, marketLow: 5, marketHigh: 20, sourceUrl: 'https://www.ramint.gov.au/collect/national-coin-collection/corporate-partnerships/australia-post-programs/bluey-dollarbucks' },
-  { id: 's1_proof_silver', series: 'series1_september', name: 'Bluey Dollarbucks $1 Fine Silver Coloured Proof', keywords: '2024 bluey dollarbucks silver proof', denomination: 1, year: 2024, mintage: 2650, mintPrice: 99, color: true, marketLow: null, marketHigh: null, productCode: '11367', issueQuantity: 2500, ramProductName: '$1 Ag Coloured Proof Coin - Australia Post Bluey', sourceUrl: 'https://ramint.runfair.com/en-GB/au/2024-1-dollar-fine-silver-coloured-proof-coin-bluey-dollarbucks' },
-  { id: 's1_proof_coloured', series: 'series1_september', name: 'Bluey Dollarbucks $1 Coloured Proof', keywords: '2024 bluey dollarbucks coloured proof', denomination: 1, year: 2024, mintage: 5000, productCode: '11624', issueQuantity: 5000, mintPrice: 50, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://ramint.runfair.com/en-US/au/2024-1-dollar-coloured-proof-coin-bluey-dollarbucks' },
-  { id: 's1_10_coin_folder_set', series: 'series1_september', name: '10-Coin Tube and Folder Set · Sealed', keywords: 'folder tube 2024 set sealed unopened', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 29, color: true, marketLow: null, marketHigh: null, productCode: '11448', issueQuantity: 157500, ramProductName: '$1 Ten-Coin Uncirculated Set - Bluey', sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-391/stamp-bulletin-391.pdf' },
-  { id: 's1_10_coin_folder_opened', series: 'series1_september', name: '10-Coin Tube and Folder Set · Opened', keywords: 'folder tube 2024 set opened', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: null, color: true, marketLow: null, marketHigh: null, productCode: '11448', ramProductName: '$1 Ten-Coin Uncirculated Set - Bluey', collectionNote: 'The same RAM product 11448 with the tube opened and the coins loose from the folder.', sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-391/stamp-bulletin-391.pdf' },
-  { id: 's1_coloured_insert_variant', series: 'series1_september', name: '10-Coin Tube and Folder Set · with Special Coloured Coin', keywords: 'bluey 2024 coloured special variant tube folder set', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage; 1-in-10 set chance', mintPrice: null, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://ramint.runfair.com/en-US/au/2024-1-dollar-uncirculated-ten-coin-collection-folder-and-tube-bluey-dollarbucks' },
-  { id: 's1_auspost_stamp_pack', series: 'series1_september', name: 'Bluey 2024 MyStamps Pack', keywords: '2024 Bluey MyStamps house shaped stamp pack Australia Post', denomination: null, year: 2024, mintage: null, mintageLabel: 'Stamp print quantity unpublished', mintPrice: 21, color: '#5279a8', marketLow: null, marketHigh: null, sourceUrl: 'https://www.bluey.tv/blog/the-bluey-dollarbuck-coin-collection-and-stamp-pack-have-arrived-at-australia-post/', sourceLabel: 'Australia Post stamp issue details ↗' },
-  { id: 's1_impressions_pnc_colour', series: 'series1_november', name: 'Bluey Limited-Edition Coloured Coin PNC', keywords: '2024 Bluey limited edition coloured coin PNC', denomination: 1, year: 2024, mintage: 3000, mintageLabel: '3,000 covers produced', mintPrice: 80, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/impressions/impressions-catalogue-2024.pdf' },
-  { id: 's1_impressions_pnc_2coin', series: 'series1_november', name: 'Bluey Limited-Edition 2-Coin PNC', keywords: '2024 Bluey limited edition 2 coin PNC', denomination: 1, year: 2024, mintage: 1300, mintageLabel: '1,300 covers produced', mintPrice: 100, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/impressions/impressions-catalogue-2024.pdf' },
-  { id: 's1_impressions_pnc_3coin', series: 'series1_november', name: 'Bluey Limited-Edition 3-Coin PNC', keywords: '2024 Bluey limited edition 3 coin PNC envelope privy', denomination: 1, year: 2024, mintage: 700, mintageLabel: '700 covers produced', mintPrice: 120, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/impressions/impressions-catalogue-2024.pdf' },
-  { id: 's1_impressions_pnc_silver', series: 'series1_november', name: 'Bluey Limited-Edition Silver Proof Prestige PNC', keywords: '2024 Bluey limited edition silver proof prestige PNC', denomination: 1, year: 2024, mintage: 150, mintageLabel: '150 covers produced', mintPrice: 190, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/impressions/impressions-catalogue-2024.pdf' },
-  { id: 's1_coloured_bluey', series: 'series1_june', name: 'Bluey $1 Coloured Uncirculated Coin', keywords: '2024 bluey coloured uncirculated', denomination: 1, year: 2024, mintage: 30000, mintPrice: 20, color: true, marketLow: null, marketHigh: null, productCode: '11369', sourceUrl: 'https://ramint.runfair.com/en-US/au/bluey-dollarbucks-1-dollar-uncirculated-coin-2024' },
-  { id: 's1_coloured_heelers', series: 'series1_june', name: 'The Heelers $1 Coloured Uncirculated Coin', keywords: '2024 heelers coloured uncirculated', denomination: 1, year: 2024, mintage: 30000, mintPrice: 20, color: true, marketLow: null, marketHigh: null, productCode: '11370', sourceUrl: 'https://ramint.runfair.com/en-US/au/heelers-bluey-dollarbucks-1-dollar-uncirculated-coin-2024' },
-  { id: 's1_coloured_grannies', series: 'series1_june', name: 'The Grannies $1 Coloured Uncirculated Coin', keywords: '2024 grannies coloured uncirculated', denomination: 1, year: 2024, mintage: 30000, mintPrice: 20, color: true, marketLow: null, marketHigh: null, productCode: '11371', sourceUrl: 'https://ramint.runfair.com/en-US/au/grannies-bluey-dollarbucks-1-dollar-uncirculated-coin-2024' },
-  { id: 's1_three_coin_set', series: 'series1_june', name: 'Bluey Dollarbucks Three-Coin Set', keywords: '2024 bluey dollarbucks three coin set coloured', denomination: 1, year: 2024, mintage: 30000, mintPrice: 55, color: true, marketLow: null, marketHigh: null, productCode: '11368', issueQuantity: 22500, ramProductName: '$1 Three-Coin Uncirculated Set - Bluey - Dollarbucks', sourceUrl: 'https://ramint.runfair.com/en-GB/au/bluey-dollarbucks-three-coin-set' },
-  { id: 's1_card_bluey', series: 'series1_september', name: 'Bluey $1 Privy Mark Coin in Card', keywords: '2024 bluey privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
-  { id: 's1_card_heelers', series: 'series1_september', name: 'The Heelers $1 Privy Mark Coin in Card', keywords: '2024 heelers privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
-  { id: 's1_card_bingo', series: 'series1_september', name: 'Bingo $1 Privy Mark Coin in Card', keywords: '2024 bingo privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
-  { id: 's1_card_muffinsocks', series: 'series1_september', name: 'Muffin & Socks $1 Privy Mark Coin in Card', keywords: '2024 muffin socks privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
-  { id: 's1_card_stripes', series: 'series1_september', name: 'Stripe, Trixie & Nana $1 Privy Mark Coin in Card', keywords: '2024 stripe trixie nana privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
-  { id: 's1_card_radfrisky', series: 'series1_september', name: 'Rad & Frisky $1 Privy Mark Coin in Card', keywords: '2024 rad frisky privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
-  { id: 's1_card_blueyfriends', series: 'series1_september', name: 'Bluey & Friends $1 Privy Mark Coin in Card', keywords: '2024 bluey friends privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
-  { id: 's1_card_blueybingofriends', series: 'series1_september', name: 'Bluey, Bingo & Friends $1 Privy Mark Coin in Card', keywords: '2024 bluey bingo friends privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
-  { id: 's1_card_mumdad', series: 'series1_september', name: 'Mum & Dad $1 Privy Mark Coin in Card', keywords: '2024 mum dad privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
-  { id: 's1_card_grannies', series: 'series1_september', name: 'The Grannies $1 Privy Mark Coin in Card', keywords: '2024 grannies privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_proof_silver', series: 'series1_september', name: 'Bluey Dollarbucks $1 Fine Silver Coloured Proof', keywords: '2024 bluey dollarbucks silver proof', denomination: 1, year: 2024, mintage: 2650, mintPrice: 99, color: true, marketLow: 350, marketHigh: 650, productCode: '11367', issueQuantity: 2500, ramProductName: '$1 Ag Coloured Proof Coin - Australia Post Bluey', sourceUrl: 'https://ramint.runfair.com/en-GB/au/2024-1-dollar-fine-silver-coloured-proof-coin-bluey-dollarbucks' },
+  { id: 's1_proof_coloured', series: 'series1_september', name: 'Bluey Dollarbucks $1 Coloured Proof', keywords: '2024 bluey dollarbucks coloured proof', denomination: 1, year: 2024, mintage: 5000, productCode: '11624', issueQuantity: 5000, mintPrice: 50, color: true, marketLow: 150, marketHigh: 300, sourceUrl: 'https://ramint.runfair.com/en-US/au/2024-1-dollar-coloured-proof-coin-bluey-dollarbucks' },
+  { id: 's1_10_coin_folder_set', series: 'series1_september', name: '10-Coin Tube and Folder Set · Sealed', keywords: 'folder tube 2024 set sealed unopened', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 29, color: true, marketLow: 45, marketHigh: 95, productCode: '11448', issueQuantity: 157500, ramProductName: '$1 Ten-Coin Uncirculated Set - Bluey', collectionNote: 'State 1 of 3 (Sealed Mystery): Unopened tube and folder. Contains 10 uncirculated coins in a sealed tube, with an unopened 1-in-10 mystery chance of discovering the rare coloured variant.', sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-391/stamp-bulletin-391.pdf' },
+  { id: 's1_10_coin_folder_opened', series: 'series1_september', name: '10-Coin Tube and Folder Set · Opened', keywords: 'folder tube 2024 set opened', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: null, color: true, marketLow: 30, marketHigh: 55, productCode: '11448', ramProductName: '$1 Ten-Coin Uncirculated Set - Bluey', collectionNote: 'State 2 of 3 (Opened Base Set): The same RAM product 11448 with the tube opened and 10 standard uncirculated coins loose from the folder (without the 1-in-10 lucky coin). Greatest volume produced; most accessible entry.', sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-391/stamp-bulletin-391.pdf' },
+  { id: 's1_coloured_insert_variant', series: 'series1_september', name: '10-Coin Tube and Folder Set · with Special Coloured Coin', keywords: 'bluey 2024 coloured special variant tube folder set', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Derived scarcity: ~15,750 coins (1-in-10 hit from 157,500 tube sets)', derivedScarcity: 15750, derivedScarcityLabel: '~15,750 coins (1-in-10 hit from 157,500 tube sets)', mintPrice: null, color: true, marketLow: 120, marketHigh: 250, collectionNote: 'State 3 of 3 (Complete with Lucky Coin): Complete folder set including the rare 1-in-10 coloured coin (~15,750 derived scarcity, almost twice as rare as the 30,000 carded coloured coins!). Highly sought after.', sourceUrl: 'https://ramint.runfair.com/en-US/au/2024-1-dollar-uncirculated-ten-coin-collection-folder-and-tube-bluey-dollarbucks' },
+  { id: 's1_auspost_stamp_pack', series: 'series1_september', name: 'Bluey 2024 MyStamps Pack', keywords: '2024 Bluey MyStamps house shaped stamp pack Australia Post', denomination: null, year: 2024, mintage: null, mintageLabel: 'Stamp print quantity unpublished', mintPrice: 21, color: '#5279a8', marketLow: 25, marketHigh: 45, sourceUrl: 'https://www.bluey.tv/blog/the-bluey-dollarbuck-coin-collection-and-stamp-pack-have-arrived-at-australia-post/', sourceLabel: 'Australia Post stamp issue details ↗' },
+  { id: 's1_impressions_pnc_colour', series: 'series1_november', name: 'Bluey Limited-Edition Coloured Coin PNC', keywords: '2024 Bluey limited edition coloured coin PNC', denomination: 1, year: 2024, mintage: 3000, mintageLabel: '3,000 covers produced', mintPrice: 80, color: true, marketLow: 120, marketHigh: 220, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/impressions/impressions-catalogue-2024.pdf' },
+  { id: 's1_impressions_pnc_2coin', series: 'series1_november', name: 'Bluey Limited-Edition 2-Coin PNC', keywords: '2024 Bluey limited edition 2 coin PNC', denomination: 1, year: 2024, mintage: 1300, mintageLabel: '1,300 covers produced', mintPrice: 100, color: true, marketLow: 150, marketHigh: 280, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/impressions/impressions-catalogue-2024.pdf' },
+  { id: 's1_impressions_pnc_3coin', series: 'series1_november', name: 'Bluey Limited-Edition 3-Coin PNC', keywords: '2024 Bluey limited edition 3 coin PNC envelope privy', denomination: 1, year: 2024, mintage: 700, mintageLabel: '700 covers produced', mintPrice: 120, color: true, marketLow: 200, marketHigh: 400, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/impressions/impressions-catalogue-2024.pdf' },
+  { id: 's1_impressions_pnc_silver', series: 'series1_november', name: 'Bluey Limited-Edition Silver Proof Prestige PNC', keywords: '2024 Bluey limited edition silver proof prestige PNC', denomination: 1, year: 2024, mintage: 150, mintageLabel: '150 covers produced', mintPrice: 190, color: true, marketLow: 600, marketHigh: 1200, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/impressions/impressions-catalogue-2024.pdf' },
+  { id: 's1_coloured_bluey', series: 'series1_june', name: 'Bluey $1 Coloured Uncirculated Coin', keywords: '2024 bluey coloured uncirculated', denomination: 1, year: 2024, mintage: 30000, mintPrice: 20, color: true, marketLow: 40, marketHigh: 80, productCode: '11369', sourceUrl: 'https://ramint.runfair.com/en-US/au/bluey-dollarbucks-1-dollar-uncirculated-coin-2024' },
+  { id: 's1_coloured_heelers', series: 'series1_june', name: 'The Heelers $1 Coloured Uncirculated Coin', keywords: '2024 heelers coloured uncirculated', denomination: 1, year: 2024, mintage: 30000, mintPrice: 20, color: true, marketLow: 35, marketHigh: 75, productCode: '11370', sourceUrl: 'https://ramint.runfair.com/en-US/au/heelers-bluey-dollarbucks-1-dollar-uncirculated-coin-2024' },
+  { id: 's1_coloured_grannies', series: 'series1_june', name: 'The Grannies $1 Coloured Uncirculated Coin', keywords: '2024 grannies coloured uncirculated', denomination: 1, year: 2024, mintage: 30000, mintPrice: 20, color: true, marketLow: 40, marketHigh: 85, productCode: '11371', sourceUrl: 'https://ramint.runfair.com/en-US/au/grannies-bluey-dollarbucks-1-dollar-uncirculated-coin-2024' },
+  { id: 's1_three_coin_set', series: 'series1_june', name: 'Bluey Dollarbucks Three-Coin Set', keywords: '2024 bluey dollarbucks three coin set coloured', denomination: 1, year: 2024, mintage: 30000, mintPrice: 55, color: true, marketLow: 120, marketHigh: 220, productCode: '11368', issueQuantity: 22500, ramProductName: '$1 Three-Coin Uncirculated Set - Bluey - Dollarbucks', sourceUrl: 'https://ramint.runfair.com/en-GB/au/bluey-dollarbucks-three-coin-set' },
+  { id: 's1_card_bluey', series: 'series1_september', name: 'Bluey $1 Privy Mark Coin in Card', keywords: '2024 bluey privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: 15, marketHigh: 30, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_card_heelers', series: 'series1_september', name: 'The Heelers $1 Privy Mark Coin in Card', keywords: '2024 heelers privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: 15, marketHigh: 30, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_card_bingo', series: 'series1_september', name: 'Bingo $1 Privy Mark Coin in Card', keywords: '2024 bingo privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: 15, marketHigh: 30, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_card_muffinsocks', series: 'series1_september', name: 'Muffin & Socks $1 Privy Mark Coin in Card', keywords: '2024 muffin socks privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: 15, marketHigh: 30, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_card_stripes', series: 'series1_september', name: 'Stripe, Trixie & Nana $1 Privy Mark Coin in Card', keywords: '2024 stripe trixie nana privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: 15, marketHigh: 30, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_card_radfrisky', series: 'series1_september', name: 'Rad & Frisky $1 Privy Mark Coin in Card', keywords: '2024 rad frisky privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: 15, marketHigh: 30, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_card_blueyfriends', series: 'series1_september', name: 'Bluey & Friends $1 Privy Mark Coin in Card', keywords: '2024 bluey friends privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: 15, marketHigh: 30, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_card_blueybingofriends', series: 'series1_september', name: 'Bluey, Bingo & Friends $1 Privy Mark Coin in Card', keywords: '2024 bluey bingo friends privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: 15, marketHigh: 30, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_card_mumdad', series: 'series1_september', name: 'Mum & Dad $1 Privy Mark Coin in Card', keywords: '2024 mum dad privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: 15, marketHigh: 30, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_card_grannies', series: 'series1_september', name: 'The Grannies $1 Privy Mark Coin in Card', keywords: '2024 grannies privy mark coin in card', denomination: 1, year: 2024, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 10, color: false, marketLow: 15, marketHigh: 30, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
   // Series 1 September PNCs — Royal Australian Mint 2024–25 Annual Report,
   // Appendix E Table 13 (printed pp. 82–83). Names, codes, quantities and
   // mintages are the RAM record verbatim (curly quotes/hyphens normalised).
   // Codes 11428/11635 and 11430/11637 are distinct products: keep separate.
-  { id: 's1_pnc_bluey', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - PNC', keywords: '2024 bluey pnc postal numismatic cover envelope privymark 11428', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11428', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
-  { id: 's1_pnc_family', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Heeler Family - PNC', keywords: '2024 bluey family heeler pnc envelope privymark 11429', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11429', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
-  { id: 's1_pnc_bingo', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Bingo - PNC', keywords: '2024 bingo pnc postal numismatic cover envelope privymark 11430', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11430', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
-  { id: 's1_pnc_muffinsocks', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Socks & Muffin - PNC', keywords: '2024 muffin socks pnc envelope privymark 11431', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11431', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
-  { id: 's1_pnc_radfrisky', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Rad & Frisky - PNC', keywords: '2024 rad frisky pnc envelope privymark 11432', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11432', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
-  { id: 's1_pnc_stripes', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Nana, Uncle Striped & Trixie - PNC', keywords: '2024 bluey nana striped trixie pnc envelope privymark 11433', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11433', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
-  { id: 's1_pnc_blueybingofriends', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Bluey, Bingo & Friends - PNC', keywords: '2024 bluey bingo friends pnc envelope privymark 11434', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11434', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
-  { id: 's1_pnc_blueyfriends', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Bluey & Friends - PNC', keywords: '2024 bluey friends pnc envelope privymark 11435', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11435', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
-  { id: 's1_pnc_mumdad', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Chillo & Bandit - PNC', keywords: '2024 bluey chillo bandit pnc envelope privymark 11436', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11436', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
-  { id: 's1_pnc_grannies', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Grannies - PNC', keywords: '2024 grannies pnc postal numismatic cover envelope privymark 11437', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11437', mintPrice: 25.95, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
-  { id: 's1_pnc_set_ten', series: 'series1_september', name: 'Bluey PNC Set - All 10 Designs', keywords: '2024 bluey pnc set all 10 postal numismatic covers 1000 sets', denomination: 1, year: 2024, mintage: 1000, mintageLabel: '1,000 sets', mintPrice: 260, color: false, marketLow: null, marketHigh: null, collectionNote: 'Exclusive collection of all ten Bluey PNCs, limited to 1,000 sets, as listed in Australia Post Stamp Bulletin 391.', sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-391/stamp-bulletin-391.pdf', sourceLabel: 'Australia Post Stamp Bulletin 391 ↗' },
+  { id: 's1_pnc_bluey', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - PNC', keywords: '2024 bluey pnc postal numismatic cover envelope privymark 11428', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11428', mintPrice: 25.95, color: false, marketLow: 35, marketHigh: 65, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_family', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Heeler Family - PNC', keywords: '2024 bluey family heeler pnc envelope privymark 11429', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11429', mintPrice: 25.95, color: false, marketLow: 35, marketHigh: 65, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_bingo', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Bingo - PNC', keywords: '2024 bingo pnc postal numismatic cover envelope privymark 11430', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11430', mintPrice: 25.95, color: false, marketLow: 35, marketHigh: 65, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_muffinsocks', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Socks & Muffin - PNC', keywords: '2024 muffin socks pnc envelope privymark 11431', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11431', mintPrice: 25.95, color: false, marketLow: 35, marketHigh: 65, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_radfrisky', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Rad & Frisky - PNC', keywords: '2024 rad frisky pnc envelope privymark 11432', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11432', mintPrice: 25.95, color: false, marketLow: 35, marketHigh: 65, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_stripes', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Nana, Uncle Striped & Trixie - PNC', keywords: '2024 bluey nana striped trixie pnc envelope privymark 11433', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11433', mintPrice: 25.95, color: false, marketLow: 35, marketHigh: 65, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_blueybingofriends', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Bluey, Bingo & Friends - PNC', keywords: '2024 bluey bingo friends pnc envelope privymark 11434', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11434', mintPrice: 25.95, color: false, marketLow: 35, marketHigh: 65, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_blueyfriends', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Bluey & Friends - PNC', keywords: '2024 bluey friends pnc envelope privymark 11435', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11435', mintPrice: 25.95, color: false, marketLow: 35, marketHigh: 65, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_mumdad', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Chillo & Bandit - PNC', keywords: '2024 bluey chillo bandit pnc envelope privymark 11436', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11436', mintPrice: 25.95, color: false, marketLow: 35, marketHigh: 65, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_grannies', series: 'series1_september', name: '$1 Envelope Privymark Uncirculated Coin - Bluey - Grannies - PNC', keywords: '2024 grannies pnc postal numismatic cover envelope privymark 11437', denomination: 1, year: 2024, mintage: null, mintageLabel: 'RAM coin mintage unlimited', issueQuantity: 6500, productCode: '11437', mintPrice: 25.95, color: false, marketLow: 35, marketHigh: 65, sourceUrl: 'https://www.ramint.gov.au/sites/default/files/2025-11/2024-25%20Annual%20Report.pdf' },
+  { id: 's1_pnc_set_ten', series: 'series1_september', name: 'Bluey PNC Set - All 10 Designs', keywords: '2024 bluey pnc set all 10 postal numismatic covers 1000 sets', denomination: 1, year: 2024, mintage: 1000, mintageLabel: '1,000 sets', mintPrice: 260, color: false, marketLow: 350, marketHigh: 600, collectionNote: 'Exclusive collection of all ten Bluey PNCs, limited to 1,000 sets, as listed in Australia Post Stamp Bulletin 391.', sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-391/stamp-bulletin-391.pdf', sourceLabel: 'Australia Post Stamp Bulletin 391 ↗' },
   // Further 2024 $1 PNCs from the same RAM table (printed pp. 83–85).
   // Standard (non-envelope) PNC program; distinct records from 11428/11430 above.
 
@@ -2778,7 +2896,7 @@ window.COINS = [
   { id: 's2_xmas_silv', series: 'series2', name: '$1 Coloured Silver Proof Christmas Coin', keywords: 'christmas 2025 silver proof', denomination: 1, year: 2025, mintage: 10000, mintPrice: 100, color: true, marketLow: 250, marketHigh: 700, productCode: '11981' },
 
   // Series 3 — 2026 Bluey $2
-  { id: 's3_folder', series: 'series3', name: 'Collection Folder & Five-Coin Set', keywords: 'folder set 2026 rain sleepytime camping baby race granny mobile', denomination: 2, year: 2026, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 34, color: true, marketLow: 40, marketHigh: 90, productCode: '11956', sourceUrl: 'https://www.ramint.gov.au/about-us/whats-new/cheese-crackers-bluey-returns-new-coin-collection', collectionVariants: [{ label: 'Unopened tube', detail: 'The five coins are concealed. Each tube has a 1-in-10 chance of containing the special-coloured Sleepytime coin.' }, { label: 'Opened tube', detail: 'Check the contents. Record the coloured Sleepytime coin separately if present; otherwise the standard Sleepytime design is included.' }], collectionNote: 'The folder has two extra spaces for the coloured Bluey and Bingo $2 till coins. Those designs are found separately in change at participating Australia Post stores; they are not included in the five-coin tube.' },
+  { id: 's3_folder', series: 'series3', name: 'Collection Folder & Five-Coin Set', keywords: 'folder set 2026 rain sleepytime camping baby race granny mobile', denomination: 2, year: 2026, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 34, color: true, marketLow: 40, marketHigh: 90, productCode: '11956', sourceUrl: 'https://www.ramint.gov.au/about-us/whats-new/cheese-crackers-bluey-returns-new-coin-collection', collectionVariants: [{ label: 'State 1: Sealed tube (mystery)', detail: 'Unopened five-coin tube with a 1-in-10 chance of containing the special-coloured Sleepytime coin.' }, { label: 'State 2: Opened tube (base set)', detail: 'Opened tube containing the standard five uncirculated coins without the coloured variant.' }, { label: 'State 3: Complete set with hit', detail: 'Complete set with the rare 1-in-10 coloured Sleepytime coin included.' }], collectionNote: 'A 5-coin collector album & tube set. The folder has two extra spaces for the coloured Bluey and Bingo $2 till coins. Those designs are found separately in change at participating Australia Post stores; they are not included in the five-coin tube.' },
   { id: 's3_rain_privy', series: 'series3', name: 'Rain Privy Mark $2', keywords: 'privy mark rain 2026', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, marketLow: 80, marketHigh: 200, productCode: '12001' },
   { id: 's3_sleepytime_privy', series: 'series3', name: 'Sleepytime Privy Mark $2', keywords: 'privy mark sleepytime 2026', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, marketLow: 80, marketHigh: 200, productCode: '12003' },
   { id: 's3_camping_privy', series: 'series3', name: 'Camping Privy Mark $2', keywords: 'privy mark camping 2026', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, marketLow: 80, marketHigh: 200, productCode: '12005' },
@@ -2786,29 +2904,29 @@ window.COINS = [
   { id: 's3_granny_privy', series: 'series3', name: 'Granny Mobile Privy Mark $2', keywords: 'privy mark granny mobile 2026', denomination: 2, year: 2026, mintage: 20500, mintPrice: 20, color: true, marketLow: 80, marketHigh: 200, productCode: '12009' },
   { id: 's3_proof_ab', series: 'series3', name: 'Coloured Aluminium-Bronze Proof $2', keywords: 'proof aluminium bronze 2026', denomination: 2, year: 2026, mintage: 10500, mintPrice: 60, color: true, marketLow: 120, marketHigh: 300, productCode: '11997' },
   { id: 's3_proof_silv', series: 'series3', name: 'Coloured Silver Proof $2', keywords: 'proof silver 2026', denomination: 2, year: 2026, mintage: 12000, mintPrice: 115, color: true, marketLow: 250, marketHigh: 700, productCode: '11996' },
-  { id: 's3_maxicard_pack', series: 'series3', name: 'Bluey Pre-Paid Concertina Maxicard Pack', keywords: '2026 Bluey five maxicard designs prepaid postage', denomination: null, year: 2026, mintage: null, mintageLabel: 'Mintage unpublished', mintPrice: 60, color: '#5279a8', marketLow: null, marketHigh: null, collectionNote: 'Five Bluey maxicard designs with worldwide postage and foiled postmarks, as listed in Australia Post Stamp Bulletin 401.', sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2026/stamp-bulletin-401/stamp-bulletin-401.pdf', sourceLabel: 'Australia Post Stamp Bulletin 401 ↗' },
-  { id: 's3_sleepytime_insert', series: 'series3', name: 'Sleepytime Coloured Insert Variant', keywords: 'sleepytime 2026 insert', denomination: 2, year: 2026, mintage: null, mintageLabel: '1-in-10 chance per tube; not sold separately by the Mint', mintPrice: null, color: true, marketLow: 120, marketHigh: 400, collectionNote: 'A special-coloured Sleepytime coin is randomly packed in approximately one in ten 2026 five-coin tubes. It is a set-discovery variant, not a separate Mint retail issue.' },
+  { id: 's3_maxicard_pack', series: 'series3', name: 'Bluey Pre-Paid Concertina Maxicard Pack', keywords: '2026 Bluey five maxicard designs prepaid postage', denomination: null, year: 2026, mintage: null, mintageLabel: 'Mintage unpublished', mintPrice: 60, color: '#5279a8', marketLow: 70, marketHigh: 120, collectionNote: 'Five Bluey maxicard designs with worldwide postage and foiled postmarks, as listed in Australia Post Stamp Bulletin 401.', sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2026/stamp-bulletin-401/stamp-bulletin-401.pdf', sourceLabel: 'Australia Post Stamp Bulletin 401 ↗' },
+  { id: 's3_sleepytime_insert', series: 'series3', name: 'Sleepytime Coloured Insert Variant', keywords: 'sleepytime 2026 insert', denomination: 2, year: 2026, mintage: null, mintageLabel: '1-in-10 chance per tube (Derived scarcity = total tubes ÷ 10)', mintPrice: null, color: true, marketLow: 120, marketHigh: 400, collectionNote: 'A special-coloured Sleepytime coin is randomly packed in approximately 1 in 10 tubes (10% hit rate). Derived mintage will be established once the RAM 2025–26 Annual Report publishes total tube set production.', sourceUrl: 'https://www.ramint.gov.au/about-us/whats-new/cheese-crackers-bluey-returns-new-coin-collection' },
   { id: 's3_till_bluey', series: 'series3', name: 'Coloured $2 Till Coin', keywords: 'till coin 2026 coloured', denomination: 2, year: 2026, mintage: null, mintageLabel: 'Circulating till coin (Face value $2)', mintPrice: null, color: true, marketLow: 30, marketHigh: 70, collectionNote: 'One of two additional coloured $2 designs that fit the 2026 folder. Bluey and Bingo till coins are obtained separately in change at participating Australia Post stores.' },
   { id: 's3_till_bingo', series: 'series3', name: 'Bingo Coloured Till Coin', keywords: 'till coin 2026 bingo', denomination: 2, year: 2026, mintage: null, mintageLabel: 'Circulating till coin (Face value $2)', mintPrice: null, color: true, marketLow: 30, marketHigh: 70, collectionNote: 'One of two additional coloured $2 designs that fit the 2026 folder. Bluey and Bingo till coins are obtained separately in change at participating Australia Post stores.' },
-  { id: 's3_pnc_bluey', series: 'series3', name: 'Bluey For Real Life PNC', keywords: 'pnc 2026 bluey for real life', denomination: 2, year: 2026, mintage: 10000, mintageLabel: '10,000 PNCs produced', mintPrice: 27, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2026/stamp-bulletin-401/stamp-bulletin-401.pdf', sourceLabel: 'AusPost Stamp Bulletin 401 ↗' },
-  { id: 's3_pnc_bingo', series: 'series3', name: 'Bingo Hooray PNC', keywords: 'pnc 2026 bingo hooray', denomination: 2, year: 2026, mintage: 10000, mintageLabel: '10,000 PNCs produced', mintPrice: 27, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2026/stamp-bulletin-401/stamp-bulletin-401.pdf', sourceLabel: 'AusPost Stamp Bulletin 401 ↗' },
-  { id: 's3_pin_babyrace', series: 'series3', name: 'Baby Race Stamp and Pin Cover', keywords: 'pin cover 2026 baby race', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-baby-race-2336511int' },
-  { id: 's3_pin_camping', series: 'series3', name: 'Camping Stamp and Pin Cover', keywords: 'pin cover 2026 camping', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-camping-2336512int' },
-  { id: 's3_pin_granny', series: 'series3', name: 'Granny Mobile Stamp and Pin Cover', keywords: 'pin cover 2026 granny mobile', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-granny-mobile-2336513int' },
-  { id: 's3_pin_rain', series: 'series3', name: 'Rain Stamp and Pin Cover', keywords: 'pin cover 2026 rain', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-rain-2336514int' },
-  { id: 's3_pin_sleepytime', series: 'series3', name: 'Sleepy Time Stamp and Pin Cover', keywords: 'pin cover 2026 sleepy time', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: null, marketHigh: null, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-sleepy-time-2336515int' },
+  { id: 's3_pnc_bluey', series: 'series3', name: 'Bluey For Real Life PNC', keywords: 'pnc 2026 bluey for real life', denomination: 2, year: 2026, mintage: 10000, mintageLabel: '10,000 PNCs produced', mintPrice: 27, color: true, marketLow: 40, marketHigh: 80, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2026/stamp-bulletin-401/stamp-bulletin-401.pdf', sourceLabel: 'AusPost Stamp Bulletin 401 ↗' },
+  { id: 's3_pnc_bingo', series: 'series3', name: 'Bingo Hooray PNC', keywords: 'pnc 2026 bingo hooray', denomination: 2, year: 2026, mintage: 10000, mintageLabel: '10,000 PNCs produced', mintPrice: 27, color: true, marketLow: 40, marketHigh: 80, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2026/stamp-bulletin-401/stamp-bulletin-401.pdf', sourceLabel: 'AusPost Stamp Bulletin 401 ↗' },
+  { id: 's3_pin_babyrace', series: 'series3', name: 'Baby Race Stamp and Pin Cover', keywords: 'pin cover 2026 baby race', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: 25, marketHigh: 50, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-baby-race-2336511int' },
+  { id: 's3_pin_camping', series: 'series3', name: 'Camping Stamp and Pin Cover', keywords: 'pin cover 2026 camping', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: 25, marketHigh: 50, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-camping-2336512int' },
+  { id: 's3_pin_granny', series: 'series3', name: 'Granny Mobile Stamp and Pin Cover', keywords: 'pin cover 2026 granny mobile', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: 25, marketHigh: 50, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-granny-mobile-2336513int' },
+  { id: 's3_pin_rain', series: 'series3', name: 'Rain Stamp and Pin Cover', keywords: 'pin cover 2026 rain', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: 25, marketHigh: 50, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-rain-2336514int' },
+  { id: 's3_pin_sleepytime', series: 'series3', name: 'Sleepy Time Stamp and Pin Cover', keywords: 'pin cover 2026 sleepy time', denomination: null, year: 2026, mintage: 3000, mintPrice: 20, color: false, marketLow: 25, marketHigh: 50, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-sleepy-time-2336515int' },
 
   // Series 4 — 2027 Cricket episode ($1; official RAM specifications).
-  { id: 's4_cricket_unc', series: 'series4', name: 'Cricket $1 Coloured Uncirculated', keywords: 'cricket rusty bluey 2027 carded 200000 mintage', denomination: 1, year: 2027, mintage: 200000, productCode: '12077', officialName: '2027 $1 Coloured Uncirculated Coin - Bluey Cricket', mintPrice: 25, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://ramint.runfair.com/en-US/au/2027-1-dollar-coloured-uncirculated-coin-bluey-cricket' },
-  { id: 's4_cricket_proof', series: 'series4', name: 'Cricket $1 Coloured Silver Proof', keywords: 'cricket rusty bluey 2027 silver proof cricket ball tin 20000 mintage', denomination: 1, year: 2027, mintage: 20000, productCode: '12078', officialName: '2027 $1 Coloured Silver Proof Coin - Bluey Cricket', mintPrice: 112.5, color: true, marketLow: null, marketHigh: null, sourceUrl: 'https://ramint.runfair.com/en-US/au/2027-1-dollar-coloured-silver-proof-coin-bluey-cricket' },
-
+  { id: 's4_cricket_unc', series: 'series4', name: 'Cricket $1 Coloured Uncirculated', keywords: 'cricket rusty bluey 2027 carded 200000 mintage', denomination: 1, year: 2027, mintage: 200000, productCode: '12077', officialName: '2027 $1 Coloured Uncirculated Coin - Bluey Cricket', mintPrice: 25, color: true, marketLow: 30, marketHigh: 60, sourceUrl: 'https://ramint.runfair.com/en-US/au/2027-1-dollar-coloured-uncirculated-coin-bluey-cricket' },
+  { id: 's4_cricket_proof', series: 'series4', name: 'Cricket $1 Coloured Silver Proof', keywords: 'cricket rusty bluey 2027 silver proof cricket ball tin 20000 mintage', denomination: 1, year: 2027, mintage: 20000, productCode: '12078', officialName: '2027 $1 Coloured Silver Proof Coin - Bluey Cricket', mintPrice: 112.5, color: true, marketLow: 150, marketHigh: 280, sourceUrl: 'https://ramint.runfair.com/en-US/au/2027-1-dollar-coloured-silver-proof-coin-bluey-cricket' },
 ];
 
 // Mintage rarity is a relative catalog score: 1 is the largest known mintage,
 // 10 is the smallest. Equal mintages share a score; unpublished mintages are unrated.
+// Includes derived scarcity for special insert variants (e.g. 1-in-10 lucky coins).
 function mintageRarity(coin, catalog = window.COINS || []) {
-  const values = [...new Set(catalog.map(item => Number(item.mintage)).filter(value => Number.isFinite(value) && value > 0))].sort((a, b) => a - b);
-  const mintage = Number(coin && coin.mintage);
+  const values = [...new Set(catalog.map(item => Number(item.mintage || item.derivedScarcity)).filter(value => Number.isFinite(value) && value > 0))].sort((a, b) => a - b);
+  const mintage = Number(coin && (coin.mintage || coin.derivedScarcity));
   if (!Number.isFinite(mintage) || mintage <= 0 || values.length === 0) return null;
   if (values.length === 1) return 10;
   const rank = values.indexOf(mintage);
@@ -3041,6 +3159,77 @@ const COIN_PRODUCT_IMAGES = {
   s4_cricket_proof: { src: 'coin-images/2027-cricket-proof.png', alt: '2027 Bluey Cricket $1 coloured silver proof coin in its cricket-ball tin', source: 'https://www.ramint.gov.au/about-us/whats-new/bluey-cricket-collectible-coins-celebrating-aussie-tradition' },
 };
 
+function getCoinCategory(coin) {
+  if (coin.id === 's1_coloured_insert_variant' || coin.id === 's3_sleepytime_insert') {
+    return {
+      type: 'lucky',
+      badge: '🌟 Lucky 1-in-10 Find',
+      hint: 'Rare coloured coin hidden inside 1 out of every 10 tubes!'
+    };
+  }
+  if (coin.id === 's1_10_coin_folder_set' || coin.id === 's1_10_coin_folder_opened' || coin.id === 's3_folder') {
+    return {
+      type: 'folder',
+      badge: '📦 Tube & Folder Set',
+      hint: 'Official collector album & tube set with 3 distinct collecting states.'
+    };
+  }
+  if (coin.id.includes('proof_silver') || coin.id.includes('_silv') || coin.id === 's1_impressions_pnc_silver') {
+    return {
+      type: 'silver',
+      badge: '💎 Precious Silver Proof',
+      hint: 'Top-tier 99.9% pure silver coin struck with polished mirror finish.'
+    };
+  }
+  if (coin.id.startsWith('s1_pnc_') || coin.id.startsWith('s1_impressions_pnc_') || coin.id.startsWith('s3_pnc_')) {
+    return {
+      type: 'pnc',
+      badge: '✉️ Stamp & Coin Cover (PNC)',
+      hint: 'Official postal cover pairing a commemorative coin and stamp with special postmark.'
+    };
+  }
+  if (coin.id.startsWith('s3_pin_')) {
+    return {
+      type: 'pin',
+      badge: '📌 Stamp & Enamel Pin',
+      hint: 'Australia Post commemorative cover featuring an official episode enamel pin.'
+    };
+  }
+  if (coin.id === 's1_auspost_stamp_pack' || coin.id === 's3_maxicard_pack') {
+    return {
+      type: 'stamps',
+      badge: '📮 Australia Post Stamps',
+      hint: 'Official Australia Post commemorative stamp sheets and postcards.'
+    };
+  }
+  if (coin.name.toLowerCase().includes('till coin') || coin.id.startsWith('s3_till_')) {
+    return {
+      type: 'till',
+      badge: '🪙 Pocket Change Hunt',
+      hint: 'Circulated legal tender you can discover in everyday till change at face value!'
+    };
+  }
+  if (coin.id.includes('privy') || coin.id.startsWith('s1_card_')) {
+    return {
+      type: 'privy',
+      badge: '🔍 Special Privy Mark',
+      hint: 'Uncirculated coin stamped with a special collector mint/envelope mark.'
+    };
+  }
+  if (coin.color) {
+    return {
+      type: 'colour',
+      badge: '🎨 Coloured Collector Coin',
+      hint: 'Uncirculated coin featuring vibrant printed colour artwork.'
+    };
+  }
+  return {
+    type: 'unc',
+    badge: '🪙 Uncirculated Strike',
+    hint: 'Mint-condition coin struck specifically for collectors.'
+  };
+}
+
 function buildCard(coin) {
   const coinEntry = coinData[coin.id] || {};
   const ebay      = coinEntry.ebay      || null;
@@ -3048,9 +3237,12 @@ function buildCard(coin) {
   const hasEbay = currentSales.length > 0;
   const median = hasEbay ? _referenceFromEntry(coinEntry) : null;
   const hasMedian = Number.isFinite(median) && median > 0;
-  const refPrice = hasMedian ? median : null;
+  const guide = _guidePrice(coin);
+  const refPrice = hasMedian ? median : guide;
   const premium = hasMedian ? calcPremium(median, coin.mintPrice) : null;
-  const premiumValue = premium == null ? null : Number(premium);
+  const guidePremium = (!hasMedian && guide && coin.mintPrice) ? calcPremium(guide, coin.mintPrice) : null;
+  const displayPremium = premium != null ? premium : guidePremium;
+  const premiumValue = displayPremium == null ? null : Number(displayPremium);
 
   const card = el('div', 'coin-card');
   card.id = `card-${coin.id}`;
@@ -3066,7 +3258,10 @@ function buildCard(coin) {
   const titleEl = el('div', 'card-title', briefTitle);
   titleEl.title = coin.name;
   tw.style.minWidth = '0';
-  tw.append(titleEl);
+  const cat = getCoinCategory(coin);
+  const catBadge = el('span', 'card-category-badge ' + cat.type, cat.badge);
+  catBadge.title = cat.hint;
+  tw.append(titleEl, catBadge);
   hdr.append(tw, el('span', 'card-format', labels.format));
 
   // ── Body ──
@@ -3074,7 +3269,7 @@ function buildCard(coin) {
 
   // Collection notes
   if (coin.collectionVariants || coin.collectionNote) {
-    const notes = el('div', 'coin-collector-notes');
+    const notes = el('div', 'coin-collector-notes' + (coin.id === 's1_coloured_insert_variant' || coin.id === 's3_sleepytime_insert' ? ' note-lucky-coin' : ''));
     if (coin.collectionVariants) {
       notes.append(el('strong', '', 'Folder condition'));
       coin.collectionVariants.forEach(variant => {
@@ -3090,19 +3285,19 @@ function buildCard(coin) {
   const rarity = mintageRarity(coin);
   const metrics = el('div', 'coin-metrics');
   const priceCard = el('section', 'metric-card metric-price');
-  priceCard.setAttribute('aria-label', hasMedian && coin.mintPrice != null
+  priceCard.setAttribute('aria-label', (hasMedian || guide != null) && coin.mintPrice != null
     ? 'Estimated value and gain from issue price'
-    : hasMedian ? 'Estimated value' : 'Issue price');
-  const priceHeading = hasMedian ? 'Estimated value' : (coin.mintPrice != null ? 'Original issue price' : 'Price');
-  const priceValue = hasMedian ? median : coin.mintPrice;
+    : (hasMedian || guide != null) ? 'Estimated value' : (coin.mintPrice != null ? 'Original issue price' : 'Price'));
+  const priceHeading = hasMedian ? 'Estimated value' : (guide != null ? 'Est. guide value' : (coin.mintPrice != null ? 'Original issue price' : 'Price'));
+  const priceValue = hasMedian ? median : (guide != null ? guide : coin.mintPrice);
   priceCard.append(el('div', 'metric-kicker', priceHeading));
   priceCard.append(el('div', 'metric-amount', priceValue == null ? '—' : formatAUD(priceValue)));
-  if (hasMedian && coin.mintPrice != null) {
+  if ((hasMedian || guide != null) && coin.mintPrice != null) {
     const issueRow = el('div', 'metric-issue-row');
     issueRow.append(el('span', 'metric-issue-label', `Issue ${formatAUD(coin.mintPrice)}`));
     if (premiumValue != null) {
-      const gain = el('span', `gain-pill${premiumValue < 0 ? ' down' : ''}`, `${premiumValue > 0 ? '▲ +' : premiumValue < 0 ? '▼ ' : ''}${premium}%`);
-      gain.setAttribute('aria-label', `${premiumValue > 0 ? 'Gain' : premiumValue < 0 ? 'Loss' : 'Change'} of ${premium}% from issue price`);
+      const gain = el('span', `gain-pill${premiumValue < 0 ? ' down' : ''}`, `${premiumValue > 0 ? '▲ +' : premiumValue < 0 ? '▼ ' : ''}${displayPremium}%`);
+      gain.setAttribute('aria-label', `${premiumValue > 0 ? 'Gain' : premiumValue < 0 ? 'Loss' : 'Change'} of ${displayPremium}% from issue price`);
       issueRow.append(gain);
     }
     priceCard.append(issueRow);
@@ -3118,6 +3313,11 @@ function buildCard(coin) {
       priceCard.append(el('div', 'metric-footnote',
         `${saleCount} matched sold ${saleCount === 1 ? 'result' : 'results'} · checked ${checked}`));
     }
+  } else if (coin.marketLow != null && coin.marketHigh != null) {
+    priceCard.append(el('div', 'metric-footnote',
+      `Guide range ${formatAUD(coin.marketLow)} – ${formatAUD(coin.marketHigh)} · Collector estimate`));
+  } else if (coin.year === 2027) {
+    priceCard.append(el('div', 'metric-footnote', 'Pre-release collector guide estimate'));
   }
 
   const supplyCard = el('section', 'metric-card metric-supply');
@@ -3146,11 +3346,18 @@ function buildCard(coin) {
     }
   }
   supplyCard.append(el('div', 'supply-caption', supplyCaption));
-  supplyCard.append(el('div', 'metric-kicker metric-kicker-production', 'Produced'));
-  if (coin.issueQuantity != null) {
+
+  if (coin.derivedScarcity || coin.id === 's1_coloured_insert_variant') {
+    const derivedScarcityNum = coin.derivedScarcity || 15750;
+    supplyCard.append(el('div', 'metric-kicker metric-kicker-derived', 'Derived Scarcity'));
+    supplyCard.append(el('div', 'metric-amount metric-derived', `~${derivedScarcityNum.toLocaleString('en-AU')}`));
+    supplyCard.append(el('div', 'supply-caption', '1-in-10 hit from 157,500 tube sets'));
+  } else if (coin.issueQuantity != null) {
+    supplyCard.append(el('div', 'metric-kicker metric-kicker-production', 'Produced'));
     supplyCard.append(el('div', 'metric-amount', Number(coin.issueQuantity).toLocaleString('en-AU')));
     supplyCard.append(el('div', 'supply-caption', 'units produced'));
   } else {
+    supplyCard.append(el('div', 'metric-kicker metric-kicker-production', 'Produced'));
     supplyCard.append(el('div', 'metric-amount metric-unknown', 'Not published'));
     supplyCard.append(el('div', 'supply-caption', 'no production figure yet'));
   }
@@ -3267,8 +3474,8 @@ function buildCard(coin) {
 const CARD_LABELS = {
   s1_bluey: ['Bluey', 'Till coin'], s1_bingo: ['Bingo', 'Till coin'],
   s1_proof_silver: ['Bluey', 'Silver proof'], s1_proof_coloured: ['Bluey', 'Coloured proof'],
-  s1_10_coin_folder_set: ['Ten-coin folder', 'Set · sealed'], s1_10_coin_folder_opened: ['Ten-coin folder', 'Set · opened'],
-  s1_coloured_insert_variant: ['Ten-coin folder', 'Set + coloured coin'], s1_auspost_stamp_pack: ['MyStamps pack', 'Stamp pack'],
+  s1_10_coin_folder_set: ['Ten-coin folder (Sealed)', '🔒 Sealed tube'], s1_10_coin_folder_opened: ['Ten-coin folder (Opened)', '📂 Opened base set'],
+  s1_coloured_insert_variant: ['Ten-coin folder (Lucky hit)', '🌟 Complete with lucky coin'], s1_auspost_stamp_pack: ['MyStamps pack', 'Stamp pack'],
   s1_impressions_pnc_colour: ['Bluey', 'Coloured PNC'], s1_impressions_pnc_2coin: ['Bluey 2-coin', 'PNC'],
   s1_impressions_pnc_3coin: ['Bluey 3-coin', 'PNC'], s1_impressions_pnc_silver: ['Bluey', 'Silver proof PNC'],
   s1_coloured_bluey: ['Bluey', 'Coloured UNC'], s1_coloured_heelers: ['The Heelers', 'Coloured UNC'],
@@ -3284,11 +3491,11 @@ const CARD_LABELS = {
   s1_pnc_blueyfriends: ['Bluey & Friends', 'PNC'], s1_pnc_mumdad: ['Chilli & Bandit', 'PNC'],
   s1_pnc_grannies: ['The Grannies', 'PNC'], s1_pnc_set_ten: ['All 10 designs', 'PNC set'],
   s2_xmas_unc: ['Christmas', 'Coloured UNC'], s2_xmas_silv: ['Christmas', 'Silver proof'],
-  s3_folder: ['Five-coin folder', 'Folder set'],
+  s3_folder: ['Five-coin folder & album', '📦 5-coin set'],
   s3_rain_privy: ['Rain', 'Privy UNC'], s3_sleepytime_privy: ['Sleepytime', 'Privy UNC'], s3_camping_privy: ['Camping', 'Privy UNC'],
   s3_babyrace_privy: ['Baby Race', 'Privy UNC'], s3_granny_privy: ['Granny Mobile', 'Privy UNC'],
   s3_proof_ab: ['Heeler family', 'Proof'], s3_proof_silv: ['Heeler family', 'Silver proof'],
-  s3_maxicard_pack: ['Maxicard pack', 'Maxicards'], s3_sleepytime_insert: ['Sleepytime', 'Insert variant'],
+  s3_maxicard_pack: ['Maxicard pack', 'Maxicards'], s3_sleepytime_insert: ['Sleepytime (Lucky hit)', '🌟 1-in-10 lucky coin'],
   s3_till_bluey: ['Bluey', 'Till coin'], s3_till_bingo: ['Bingo', 'Till coin'],
   s3_pnc_bluey: ['Bluey', 'PNC'], s3_pnc_bingo: ['Bingo', 'PNC'],
   s3_pin_babyrace: ['Baby Race', 'Stamp & pin'], s3_pin_camping: ['Camping', 'Stamp & pin'], s3_pin_granny: ['Granny Mobile', 'Stamp & pin'],
@@ -3309,6 +3516,11 @@ function buildDetail(coin, labels) {
   if (coin.denomination != null) bits.push('$' + coin.denomination + ' face value');
   bits.push(labels.format);
   box.append(document.createTextNode(bits.join(' · ')));
+  const cat = getCoinCategory(coin);
+  if (cat && cat.hint) {
+    const hintEl = el('div', 'coin-kid-hint', cat.hint);
+    box.append(hintEl);
+  }
   return box;
 }
 
@@ -3642,9 +3854,22 @@ function _referenceFromEntry(entry) {
   return _medianOfPrices(current.map(r => r.price));
 }
 
+function _guidePrice(coin) {
+  if (!coin) return null;
+  if (Number.isFinite(coin.marketLow) && Number.isFinite(coin.marketHigh) && coin.marketLow > 0 && coin.marketHigh > 0) {
+    return Math.round((coin.marketLow + coin.marketHigh) / 2);
+  }
+  if (Number.isFinite(coin.marketLow) && coin.marketLow > 0) return coin.marketLow;
+  if (Number.isFinite(coin.marketHigh) && coin.marketHigh > 0) return coin.marketHigh;
+  if (Number.isFinite(coin.mintPrice) && coin.mintPrice > 0) return coin.mintPrice;
+  return null;
+}
+
 // Price cards, collection sorting, and portfolio values all use the matched-sale median.
 function _referencePrice(coin) {
-  return _referenceFromEntry(coinData[coin.id] || {});
+  const live = _referenceFromEntry(coinData[coin.id] || {});
+  if (Number.isFinite(live) && live > 0) return live;
+  return _guidePrice(coin);
 }
 
 // ── Value trend chart (inline SVG, no external library) ──
