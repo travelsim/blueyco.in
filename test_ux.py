@@ -256,3 +256,25 @@ class TestAuthUiPolish(unittest.TestCase):
     def test_google_button_is_centered_and_constrained(self):
         self.assertIn('#google-signin { display: flex; justify-content: center; }', INDEX)
         self.assertIn('#google-signin iframe { max-width: 100%; }', INDEX)
+
+
+class TestCollectionQuantities(unittest.TestCase):
+    def test_collection_normalizes_to_quantities_on_load(self):
+        self.assertIn('function normalizeQtyMap(', INDEX)
+        self.assertIn("let collection = normalizeQtyMap(JSON.parse(localStorage.getItem('blueycoin_collection')", INDEX)
+        self.assertIn('const MAX_QTY = 99;', INDEX)
+
+    def test_dashboard_row_has_quantity_stepper(self):
+        self.assertIn("'qty-stepper'", INDEX)
+        self.assertIn('function refreshQty()', INDEX)
+        self.assertIn('Own one more', INDEX)
+        self.assertIn('Own one fewer', INDEX)
+
+    def test_bulk_actions_keep_quantity_shape(self):
+        self.assertIn('else collection[c.id] = 1;', INDEX)
+        self.assertIn('else collection[coin.id] = 1;', INDEX)
+
+    def test_stats_count_pieces_and_scale_value(self):
+        self.assertIn('pieces += qty', INDEX)
+        self.assertIn('totalValue += live * qty', INDEX)
+        self.assertIn('of ${coins.length} types', INDEX)
