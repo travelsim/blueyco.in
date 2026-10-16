@@ -151,16 +151,24 @@ class FrontendEscapingTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr[:300])
         self.assertEqual(result.stdout.decode(), '&lt;img src=x onerror=&quot;alert(1)&quot;&gt;&#39;&amp;')
 
-    def test_frame_and_cart_interpolations_go_through_the_helper(self):
-        raw = ['${frame.name}', '${frame.image}', '${frame.imageAlt}', '${frame.type}',
-               '${frame.series.toUpperCase()}', '${item.name}', '${item.series.toUpperCase()}']
-        for expr in raw:
-            # msg keeps the failure short; printing the whole page would bury it.
-            self.assertFalse(expr in HTML, f'unescaped interpolation still present: {expr}')
-        escaped = ['${escapeHtml(frame.name)}', '${escapeHtml(frame.image)}', '${escapeHtml(frame.imageAlt)}',
-                   '${escapeHtml(frame.type)}', '${escapeHtml(frame.series.toUpperCase())}',
-                   '${escapeHtml(item.name)}', '${escapeHtml(item.series.toUpperCase())}']
-        for expr in escaped:
+    def test_frame_and_cart_innerhtml_templates_escape_their_fields(self):
+        # Scan only innerHTML template literals. The toast() call also reads
+        # frame.name, but it writes through textContent, so it is not a sink.
+        exempt = {'frame.price', 'item.price', 'frame.id'}  # numbers, and catalogue ids in onclick
+        templates = re.findall(r'\.innerHTML = `([\s\S]*?)`;', HTML)
+        self.assertGreaterEqual(len(templates), 4)
+        for template in templates:
+            for expr in re.findall(r'\$\{([^}]*)\}', template):
+                expr = expr.strip()
+                if not re.search(r'\b(frame|item)\.', expr) or expr in exempt:
+                    continue
+                # msg keeps the failure short; printing the whole page would bury it.
+                self.assertTrue(expr.startswith('escapeHtml('),
+                                f'unescaped field in innerHTML template: ${{{expr}}}')
+        for expr in ('${escapeHtml(frame.name)}', '${escapeHtml(frame.image)}',
+                     '${escapeHtml(frame.imageAlt)}', '${escapeHtml(frame.type)}',
+                     '${escapeHtml(frame.series.toUpperCase())}', '${escapeHtml(item.name)}',
+                     '${escapeHtml(item.series.toUpperCase())}'):
             self.assertTrue(expr in HTML, f'missing escaped interpolation: {expr}')
 
     @unittest.skipUnless(shutil.which('node'), 'node not installed')

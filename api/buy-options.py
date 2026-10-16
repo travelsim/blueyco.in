@@ -166,6 +166,10 @@ class handler(BaseHTTPRequestHandler):
             length = int(self.headers.get('Content-Length') or 0)
         except ValueError:
             length = 0
+        # A negative length would make rfile.read() wait for EOF, so refuse it first.
+        if length < 0:
+            self._json(400, {'error': 'Invalid request body.'})
+            return
         if length > MAX_BODY_BYTES:
             self._json(413, {'error': 'Request body too large.'})
             return
@@ -173,6 +177,9 @@ class handler(BaseHTTPRequestHandler):
             body = json.loads(self.rfile.read(length) or b'{}')
         except (json.JSONDecodeError, ValueError):
             self._json(400, {'error': 'Invalid JSON.'})
+            return
+        if not isinstance(body, dict):
+            self._json(400, {'error': 'Expected a JSON object with a coinId.'})
             return
 
         coin_id = str(body.get('coinId', ''))

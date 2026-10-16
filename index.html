@@ -1984,7 +1984,7 @@ function applyFrameFilters() {
     const card = document.createElement('div');
     card.className = 'frame-card' + (isOwned ? ' frame-owned' : '');
     const media = frame.image
-      ? `<img class="frame-photo" src="${frame.image}" alt="${frame.imageAlt}"
+      ? `<img class="frame-photo" src="${escapeHtml(frame.image)}" alt="${escapeHtml(frame.imageAlt)}"
                 loading="lazy" decoding="async" width="640" height="400">`
       : `<div class="frame-nophoto">
            <div style="font-size:1.6rem; margin-bottom:4px;">🖼️</div>
@@ -1994,8 +1994,8 @@ function applyFrameFilters() {
     card.innerHTML = `
       <div class="frame-media">${media}</div>
       <div style="padding:16px; flex:1; display:flex; flex-direction:column;">
-        <div style="font-weight:600; font-size:0.95rem; line-height:1.3;">${frame.name}</div>
-        <div style="margin-top:4px; font-size:0.8rem; color:#64748b;">${frame.series.toUpperCase()} • ${frame.type}</div>
+        <div style="font-weight:600; font-size:0.95rem; line-height:1.3;">${escapeHtml(frame.name)}</div>
+        <div style="margin-top:4px; font-size:0.8rem; color:#64748b;">${escapeHtml(frame.series.toUpperCase())} • ${escapeHtml(frame.type)}</div>
         
         <div class="frame-buy">
           <div>
@@ -2055,8 +2055,8 @@ function updateCartUI() {
       div.style.cssText = 'display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--border);';
       div.innerHTML = `
         <div style="flex:1;">
-          <div style="font-weight:600; font-size:0.95rem;">${item.name}</div>
-          <div style="font-size:0.8rem; color:var(--slate);">${item.series.toUpperCase()}</div>
+          <div style="font-weight:600; font-size:0.95rem;">${escapeHtml(item.name)}</div>
+          <div style="font-size:0.8rem; color:var(--slate);">${escapeHtml(item.series.toUpperCase())}</div>
         </div>
         <div style="text-align:right; white-space:nowrap;">
           <div style="font-weight:700;">$${item.price}</div>
@@ -3308,6 +3308,16 @@ function parseMintage(raw) {
 
 function safeText(val) {
   return (val == null) ? '' : String(val);
+}
+
+// Escape a value before it is interpolated into an innerHTML template.
+function escapeHtml(val) {
+  return String(val == null ? '' : val)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 function safeUrl(val) {
