@@ -43,9 +43,13 @@ class TestCatalogIntegrity(unittest.TestCase):
         # Cards: 7,250 produced (7,252 for 11435)
         self.assertRegex(raw, r"id:\s*'s1_card_bluey'[\s\S]*?issueQuantity:\s*7250")
         self.assertRegex(raw, r"id:\s*'s1_card_blueybingofriends'[\s\S]*?issueQuantity:\s*7252")
-        # PNCs: 7,500 for Bluey; 6,500 for others
-        self.assertRegex(raw, r"id:\s*'s1_pnc_bluey'[\s\S]*?issueQuantity:\s*7500")
-        self.assertRegex(raw, r"id:\s*'s1_pnc_bingo'[\s\S]*?issueQuantity:\s*6500")
+        # Proofs & PNCs from Page 5:
+        # 11624: Coloured proof (5,000 produced, 5,000 mintage)
+        self.assertRegex(raw, r"id:\s*'s1_proof_coloured'[\s\S]*?productCode:\s*'11624'[\s\S]*?issueQuantity:\s*5000")
+        # 11645: Silver proof PNC (150 produced, 2,650 mintage)
+        self.assertRegex(raw, r"id:\s*'s1_impressions_pnc_silver'[\s\S]*?productCode:\s*'11645'[\s\S]*?issueQuantity:\s*150")
+        # 11450: Coloured uncirculated coin PNC (5,000 produced)
+        self.assertRegex(raw, r"id:\s*'s1_impressions_pnc_colour'[\s\S]*?productCode:\s*'11450'[\s\S]*?issueQuantity:\s*5000")
 
     def test_estimated_value_kicker_is_universal(self):
         # Verify buildCard unconditionally sets priceHeading to 'Estimated value'
