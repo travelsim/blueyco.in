@@ -55,6 +55,7 @@ class TestAffiliateUrl(unittest.TestCase):
         self.assertIn('siteid=15', result)
         self.assertIn('toolid=10001', result)
         self.assertIn('mkevt=1', result)
+        self.assertIn('mkcid=1', result)
 
     def test_custom_id_includes_coin_id(self):
         """customid should include coin_id and source when provided."""
@@ -91,6 +92,14 @@ class TestAffiliateUrl(unittest.TestCase):
         server.EPN_CAMPAIGN_ID = '1234567'
         self.assertEqual(server.affiliate_url(''), '')
         self.assertEqual(server.affiliate_url(None, coin_id='test'), None)
+
+    def test_legacy_url_gets_mkcid_appended(self):
+        """URLs that have legacy EPN params but miss mkcid=1 should gain mkcid=1."""
+        server.EPN_CAMPAIGN_ID = '1234567'
+        legacy_url = 'https://www.ebay.com.au/itm/12345?mkrid=705-53470-19255-0&siteid=15&campid=1234567&toolid=10001&mkevt=1'
+        result = server.affiliate_url(legacy_url)
+        self.assertIn('mkcid=1', result)
+        self.assertEqual(server.affiliate_url(result), result)
 
     def test_https_and_eBay_com_au_required(self):
         """Only https://www.ebay.com.au URLs should be transformed."""
