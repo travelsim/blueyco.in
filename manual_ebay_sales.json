@@ -5575,9 +5575,9 @@
       "fetchedAt": 1791278444.941,
       "query": "6 results for 2026 blue camping stamp pin cover",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Camping+stamp+pin+cover&LH_Sold=1&LH_Complete=1&_sop=15&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-      "results": 2,
-      "total_results": 2,
-      "matched_results": 2,
+      "results": 3,
+      "total_results": 3,
+      "matched_results": 3,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -5634,6 +5634,25 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 12 Jul 2026\n2026 Bluey \"Camping\" Pin Cover\nOpens in a new window or tab\nAU $34.95\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\nmocoa-collectables 100% positive (2.1K)\nderosnopS"
+        },
+        {
+          "coin_id": "s3_pin_camping",
+          "coin_name": "Camping Stamp and Pin Cover",
+          "title": "Australia 2026 Bluey Bingo Stamp & Pin Cover - Camping",
+          "sale_price": 137.95,
+          "currency": "AU",
+          "date_sold": "15 Aug 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0.0,
+          "seller": "coinsandcovers",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single pin cover; strict episode match; displayed fixed sold price",
+          "raw_listing_text": "Sold 15 Aug 2026\nAustralia 2026 Bluey Bingo Stamp & Pin Cover - CampingOpens in a new window or tab\nAU $137.95\nBuy It Now\nFree delivery\nLast one\nView similar active items\nSell one like this\ncoinsandcovers 100% positive (2K)",
+          "captured_at": "2026-10-16T07:01:46.618350+00:00",
+          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=Sleepytime+Stamp+Pin+Cover+Stamp+pin&LH_Sold=1",
+          "search_heading": "2 results for Sleepytime Stamp & Pin Cover Stamp & pin"
         }
       ]
     },
@@ -5643,9 +5662,9 @@
       "fetchedAt": 1791278448.698,
       "query": "2 results for 2026 blue granny mobile stamp pin cover",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Granny+Mobile+stamp+pin+cover&LH_Sold=1&LH_Complete=1&_sop=15&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-      "results": 2,
-      "total_results": 2,
-      "matched_results": 2,
+      "results": 4,
+      "total_results": 4,
+      "matched_results": 4,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -5702,6 +5721,44 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 8 Sep 2026\n2026 Bluey - Granny Mobile- Pin cover, Mintage 3000\nOpens in a new window or tab\nAU $28.50\nBuy It Now\n+AU $10.95 delivery\nView similar active items\nSell one like this\nholdenzrule1990 100% positive (3K)\nderosnopS"
+        },
+        {
+          "coin_id": "s3_pin_granny",
+          "coin_name": "Granny Mobile Stamp and Pin Cover",
+          "title": "Australia 2026 Bluey Bingo Stamp & Pin Cover - Granny Mobile",
+          "sale_price": 38.95,
+          "currency": "AU",
+          "date_sold": "7 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0.0,
+          "seller": "coinsandcovers",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single pin cover; strict episode match; displayed fixed sold price",
+          "raw_listing_text": "Sold 7 Sep 2026\nAustralia 2026 Bluey Bingo Stamp & Pin Cover - Granny MobileOpens in a new window or tab\nAU $38.95\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\ncoinsandcovers 100% positive (2K)",
+          "captured_at": "2026-10-16T07:01:46.618350+00:00",
+          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=Sleepytime+Stamp+Pin+Cover+Stamp+pin&LH_Sold=1",
+          "search_heading": "2 results for Sleepytime Stamp & Pin Cover Stamp & pin"
+        },
+        {
+          "coin_id": "s3_pin_granny",
+          "coin_name": "Granny Mobile Stamp and Pin Cover",
+          "title": "2026 Bluey Stamp and Pin Cover \u2013 Granny Mobile Only 3000 Limited Edition Covers",
+          "sale_price": 32.5,
+          "currency": "AU",
+          "date_sold": "2 Oct 2026",
+          "buying_format": "Auction (1 bid)",
+          "shipping_price": 5.1,
+          "seller": "postofficepete1",
+          "source_type": "user_pasted_search",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Single pin cover; strict episode match; displayed fixed sold price (auction hammer)",
+          "raw_listing_text": "Sold 2 Oct 2026\n2026 Bluey Stamp and Pin Cover \u2013 Granny Mobile Only 3000 Limited Edition CoversOpens in a new window or tab\nAU $32.50\n1 bid\n+AU $5.10 delivery\nView similar active items\nSell one like this\npostofficepete1 100% positive (928)",
+          "captured_at": "2026-10-16T07:01:46.618350+00:00",
+          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=Sleepytime+Stamp+Pin+Cover+Stamp+pin&LH_Sold=1",
+          "search_heading": "2 results for Sleepytime Stamp & Pin Cover Stamp & pin"
         }
       ]
     },
@@ -8208,6 +8265,30 @@
       "limitations": [
         "User-pasted manual capture, not verified through an eBay API.",
         "All rows are older than 90 days, so they feed the value-trend history, not the current median."
+      ]
+    },
+    {
+      "import_id": "pin-solds-paste-2026-10-16",
+      "source_type": "user_pasted_search",
+      "captured_on": "2026-10-16",
+      "record_count": 165,
+      "retained_count": 3,
+      "coin_count": 2,
+      "added": {
+        "s3_pin_granny": [
+          38.95,
+          32.5
+        ],
+        "s3_pin_camping": [
+          137.95
+        ]
+      },
+      "selection": "User-pasted eBay AU sold-results page (query \"Sleepytime Stamp & Pin Cover\", sold filter, price+postage ascending, 165 sold rows). Only single pin covers matched to one catalogue coin by strict episode-title gate with a fixed displayed price and visible sold date were retained; item price excludes postage. 8 candidate singles were already stored from the 2026-10-06 CSV import and were skipped as duplicates.",
+      "excluded": "The 2 live asking listings ($20.00 or Best Offer); price-range pick-your-own rows; rows showing \"or Best Offer\" (actual paid price unclear); multi-cover sets, pairs and bundles with no single-cover catalogue product; off-query rows (folder/tube sets, till coins, PNCs, privy-mark singles, UNC singles, non-Bluey items).",
+      "limitations": [
+        "User-pasted manual capture, not verified through an eBay API.",
+        "No listing URLs or item IDs in the paste, so records carry no verified listing links.",
+        "The s3_pin_camping $137.95 record is far above the $30 single-cover level; retained as displayed and left to the runtime outlier filter."
       ]
     }
   ]

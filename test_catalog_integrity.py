@@ -75,5 +75,26 @@ class TestCatalogIntegrity(unittest.TestCase):
         self.assertIn('r/AustralianCoins', INDEX)
 
 
+class TestAttributePills(unittest.TestCase):
+    def test_canonical_attributes_literal(self):
+        match = re.search(r"const ATTRIBUTES = (\[[^\]]*\]);", INDEX)
+        self.assertTrue(match, 'ATTRIBUTES literal not found')
+        attrs = re.findall(r"'([^']+)'", match.group(1))
+        self.assertEqual(attrs, ['UNC', 'PROOF', 'COLOURED', 'PNC', 'STAMP', 'SET', 'PRIVY', 'PIN', 'TILL COIN', 'AUSPOST', 'RAM'])
+
+    def test_attribute_filter_pipeline_present(self):
+        self.assertIn('function coinAttributes(coin)', INDEX)
+        self.assertIn('id="attr-filters"', INDEX)
+        self.assertIn('function buildAttrFilters()', INDEX)
+        self.assertIn('function toggleAttr(attr)', INDEX)
+        self.assertIn('activeAttrs.size > 0', INDEX)
+        self.assertIn('buildAttrFilters();', INDEX)
+
+    def test_cards_show_attr_pills_not_legacy_tags(self):
+        self.assertIn('card-attr-pills', INDEX)
+        self.assertNotIn("el('span', 'card-format'", INDEX)
+        self.assertNotIn('catBadge', INDEX)
+
+
 if __name__ == '__main__':
     unittest.main()

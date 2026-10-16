@@ -1185,6 +1185,15 @@
     .dash-filter { min-height: 44px; padding: 8px 14px; border: 1px solid var(--border); border-radius: 999px; background: #fff; color: var(--navy); font: inherit; font-size: .85rem; font-weight: 700; cursor: pointer; }
     .dash-filter:hover { border-color: var(--orange); }
     .dash-filter.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .attr-filters { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin: 0 0 10px; }
+    .attr-pill { min-height: 34px; padding: 5px 12px; border: 1.5px solid var(--border); border-radius: 999px; background: #fff; color: var(--navy); font: inherit; font-size: .72rem; font-weight: 800; letter-spacing: .04em; cursor: pointer; }
+    .attr-pill:hover { border-color: var(--orange); }
+    .attr-pill.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .attr-pill .attr-count { opacity: .65; font-weight: 700; }
+    .card-attr-pills { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+    .card-attr { border: 1px solid var(--border); border-radius: 999px; background: #f4f6fa; color: var(--navy); font-size: .62rem; font-weight: 800; letter-spacing: .05em; padding: 2px 8px; cursor: pointer; }
+    .card-attr:hover { border-color: var(--orange); }
+    .card-attr.on { background: var(--navy); border-color: var(--navy); color: #fff; }
     .dash-count { opacity: .7; font-weight: 600; margin-left: 2px; }
     .dash-group { border-bottom: 1px solid var(--border); }
     .dash-group:last-child { border-bottom: none; }
@@ -1746,6 +1755,7 @@
     <button class="tab-btn" data-series="series4">Series 4 · 2027 Cricket</button>
   </div>
 
+  <div class="attr-filters" id="attr-filters" role="group" aria-label="Filter coins by attribute"></div>
   <div class="filter-bar" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:14px 0 18px; padding:10px 12px; background:var(--bg); border:1px solid var(--border); border-radius:10px;">
     <input
       type="search"
@@ -2654,7 +2664,7 @@ function _dashRow(coin) {
   const info = el('div', 'dash-info');
   info.append(el('div', 'coin-name', coin.name), el('div', 'coin-meta', [coin.year, mintage].filter(Boolean).join(' · ')));
 
-  const badge = el('span', 'rarity-badge dash-badge', rarity == null ? 'Unrated' : `Mintage ${rarity}/10`);
+  const badge = el('span', 'rarity-badge dash-badge', rarity == null ? 'Unrated' : `Rarity ${rarity}/10`);
   badge.title = 'Relative mintage score: 1 is the largest catalog mintage; 10 is the smallest.';
 
   const value = el('div', 'coin-value', estValue ? formatAUD(estValue) : '—');
@@ -3269,7 +3279,71 @@ let coinData     = {};   // { coinId: { ebay: {...} } }
 let activeSeries = 'all';
 let searchQuery  = '';   // raw user input, lowercased in the filter fn
 let sortMode     = 'default';
+const activeAttrs = new Set();   // selected attribute pills (OR within the group)
 const charts     = {};
+
+// Canonical product attributes: the only pill vocabulary used on cards and
+// in the filter row. Derived from catalogue fields so cards stay consistent.
+const ATTRIBUTES = ['UNC','PROOF','COLOURED','PNC','STAMP','SET','PRIVY','PIN','TILL COIN','AUSPOST','RAM'];
+
+function coinAttributes(coin) {
+  const attrs = [];
+  const id = coin.id || '';
+  const hay = (id + ' ' + (coin.name || '')).toLowerCase();
+  const isCoin = coin.denomination != null;
+  const isProof = /proof/i.test(hay);
+  const isTill = /till/i.test(hay);
+  const isSet = /set|folder|2coin|3coin/i.test(id);
+  const isPnc = /pnc/i.test(id);
+  const isStamp = /stamp|maxicard/i.test(id);
+  const isPin = /^s3_pin_/i.test(id);
+  const isPrivy = /privy/i.test(id) || /^s1_card_/i.test(id);
+  if (isCoin && !isProof && !isTill) attrs.push('UNC');
+  if (isProof) attrs.push('PROOF');
+  if (isCoin && coin.color) attrs.push('COLOURED');
+  if (isPnc) attrs.push('PNC');
+  if (isStamp) attrs.push('STAMP');
+  if (isSet) attrs.push('SET');
+  if (isPrivy) attrs.push('PRIVY');
+  if (isPin) attrs.push('PIN');
+  if (isTill) attrs.push('TILL COIN');
+  // Sold or distributed through the Australia Post network: covers, stamp
+  // products, and till coins found in participating-store change.
+  if (isPnc || isPin || isStamp || /^s3_till_/i.test(id)) attrs.push('AUSPOST');
+  if (isCoin) attrs.push('RAM');
+  return attrs;
+}
+
+function toggleAttr(attr) {
+  if (activeAttrs.has(attr)) activeAttrs.delete(attr); else activeAttrs.add(attr);
+  syncAttrPills();
+  renderGrid();
+}
+
+function syncAttrPills() {
+  document.querySelectorAll('[data-attr]').forEach(btn => {
+    const on = activeAttrs.has(btn.dataset.attr);
+    btn.classList.toggle('active', on);
+    btn.classList.toggle('on', on);
+    btn.setAttribute('aria-pressed', String(on));
+  });
+}
+
+function buildAttrFilters() {
+  const wrap = document.getElementById('attr-filters');
+  if (!wrap || wrap.childNodes.length > 0) return;
+  ATTRIBUTES.forEach(attr => {
+    const n = COINS.filter(c => coinAttributes(c).includes(attr)).length;
+    const btn = el('button', 'attr-pill', attr + ' ');
+    btn.type = 'button';
+    btn.dataset.attr = attr;
+    btn.setAttribute('aria-pressed', 'false');
+    btn.title = n === 1 ? `Show the 1 ${attr} product` : `Show the ${n} ${attr} products`;
+    btn.append(el('span', 'attr-count', `(${n})`));
+    btn.addEventListener('click', () => toggleAttr(btn.dataset.attr));
+    wrap.append(btn);
+  });
+}
 
 // ────────────────────────────────────────────────
 // LOAD PRICES FROM BACKEND
@@ -3611,10 +3685,19 @@ function buildCard(coin) {
   titleEl.title = coin.name;
   tw.style.minWidth = '0';
   const cat = getCoinCategory(coin);
-  const catBadge = el('span', 'card-category-badge ' + cat.type, cat.badge);
-  catBadge.title = cat.hint;
-  tw.append(titleEl, catBadge);
-  hdr.append(tw, el('span', 'card-format', labels.format));
+  const pills = el('div', 'card-attr-pills');
+  coinAttributes(coin).forEach(attr => {
+    const pill = el('button', 'card-attr' + (activeAttrs.has(attr) ? ' on' : ''), attr);
+    pill.type = 'button';
+    pill.dataset.attr = attr;
+    pill.setAttribute('aria-pressed', String(activeAttrs.has(attr)));
+    pill.title = `Filter by ${attr}`;
+    pill.addEventListener('click', () => toggleAttr(pill.dataset.attr));
+    pills.append(pill);
+  });
+  void cat; // category hint still renders in the detail block below; header shows attribute pills
+  tw.append(titleEl, pills);
+  hdr.append(tw);
 
   // ── Body ──
   const body = el('div', 'card-body');
@@ -3715,14 +3798,14 @@ function buildCard(coin) {
   }
   if (supplyDetail) supplyCard.append(el('div', 'supply-detail', supplyDetail));
   const rarityRow = el('div', 'rarity-score-row');
-  rarityRow.append(el('span', 'rarity-score-label', 'Mintage rarity'));
+  rarityRow.append(el('span', 'rarity-score-label', 'Rarity'));
   rarityRow.append(el('strong', 'rarity-score', rarity == null ? 'Unrated' : `${rarity}/10`));
   rarityRow.title = 'Relative mintage score: 1 is the largest published mintage and 10 is the smallest. Unpublished mintage is unrated.';
   supplyCard.append(rarityRow);
   if (rarity != null) {
     const track = el('div', 'rarity-track');
     track.setAttribute('role', 'img');
-    track.setAttribute('aria-label', `Mintage rarity ${rarity} out of 10`);
+    track.setAttribute('aria-label', `Rarity ${rarity} out of 10`);
     for (let i = 1; i <= 10; i++) {
       const pip = el('span', i <= rarity ? 'active' : '');
       pip.setAttribute('aria-hidden', 'true');
@@ -3866,7 +3949,7 @@ function buildDetail(coin, labels) {
   const bits = [];
   if (coin.productCode) bits.push('Mint product ' + coin.productCode);
   if (coin.denomination != null) bits.push('$' + coin.denomination + ' face value');
-  bits.push(labels.format);
+  // card format tag removed: attributes now render as pills in the card header
   box.append(document.createTextNode(bits.join(' · ')));
   const cat = getCoinCategory(coin);
   if (cat && cat.hint) {
@@ -4468,6 +4551,7 @@ function renderGrid() {
   // 2. search filter
   const totalInSeries = list.length;
   if (q) list = list.filter(c => _coinMatchesSearch(c, q));
+  if (activeAttrs.size > 0) list = list.filter(c => coinAttributes(c).some(a => activeAttrs.has(a)));
 
   // 3. sort
   list = _sortCoins(list);
@@ -4475,7 +4559,7 @@ function renderGrid() {
   // 4. paint
   while (grid.firstChild) grid.removeChild(grid.firstChild);
   if (list.length === 0) {
-    const empty = el('div', 'empty-state', 'No coins match your search.');
+    const empty = el('div', 'empty-state', 'No coins match your filters.');
     empty.style.cssText = 'grid-column:1/-1; padding:40px; text-align:center; color:var(--slate); font-style:italic;';
     grid.append(empty);
   } else {
@@ -4490,7 +4574,7 @@ function renderGrid() {
 
   // 5. count badge
   if (countEl) {
-    if (q || activeSeries !== 'all') {
+    if (q || activeSeries !== 'all' || activeAttrs.size > 0) {
       countEl.textContent = `Showing ${list.length} of ${totalInSeries}`;
     } else {
       countEl.textContent = `${list.length} coins`;
@@ -4578,6 +4662,7 @@ if (_sortSelect) {
 // ────────────────────────────────────────────────
 // INIT
 // ────────────────────────────────────────────────
+buildAttrFilters();                        // attribute pills before first paint
 renderGrid();                              // show skeleton immediately
 loadPrices();                              // populate from backend cache
 setInterval(loadPrices, 5 * 60 * 1000);   // re-poll every 5 min
