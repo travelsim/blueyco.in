@@ -62,6 +62,7 @@ class TestPricesAffiliateWrapper(unittest.TestCase):
             tagged = prices._affiliate_url(search, coin_id='s1_bluey',
                                            source='ebay_search')
             self.assertIn('&campid=testcamp', tagged)
+            self.assertIn('&mkcid=1', tagged)
             self.assertIn('customid=5339153744', tagged)
             # Original query parameters and percent-encoding survive intact.
             self.assertIn('_nkw=2024+Bluey+Dollarbuck+Bluey', tagged)
@@ -70,6 +71,13 @@ class TestPricesAffiliateWrapper(unittest.TestCase):
             tagged_product = prices._affiliate_url(encoded, coin_id='s3_rain')
             self.assertIn('%242', tagged_product)
             self.assertIn('%2F', tagged_product)
+
+    def test_legacy_url_gains_mkcid(self):
+        with mock.patch.dict(os.environ, {'EPN_CAMPAIGN_ID': 'testcamp'}):
+            legacy_url = 'https://www.ebay.com.au/itm/12345?campid=testcamp&mkevt=1'
+            tagged = prices._affiliate_url(legacy_url, coin_id='s1_bluey')
+            self.assertIn('mkcid=1', tagged)
+            self.assertEqual(prices._affiliate_url(tagged, coin_id='s1_bluey'), tagged)
 
     def test_non_ebay_and_empty_untouched(self):
         with mock.patch.dict(os.environ, {'EPN_CAMPAIGN_ID': 'testcamp'}):

@@ -31,6 +31,7 @@ class TestVercelAnalyticsInstrumentation(unittest.TestCase):
                 "Sign In Complete",
                 "Sign Out",
                 "Collection Remote Synced",
+                "Affiliate Click",
             },
         )
         self.assertIn("window.va('event', { name });", INDEX)

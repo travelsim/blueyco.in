@@ -44,13 +44,17 @@ def affiliate_url(raw_url: str, coin_id: str = '', source: str = 'ebay') -> str:
 
     if 'campid=' in raw_url or 'mkevt=' in raw_url:
         if 'customid=blueycoin' in raw_url:
-            return re.sub(r'customid=blueycoin[a-zA-Z0-9_-]*', f'customid={custom_id}', raw_url)
+            raw_url = re.sub(r'customid=blueycoin[a-zA-Z0-9_-]*', f'customid={custom_id}', raw_url)
+        if 'mkcid=1' not in raw_url:
+            sep = '&' if '?' in raw_url else '?'
+            return f"{raw_url}{sep}mkcid=1"
         return raw_url
 
     separator = '&' if '?' in raw_url else '?'
     return (
         f"{raw_url}{separator}"
         f"mkrid=705-53470-19255-0&siteid=15"
+        f"&mkcid=1"
         f"&campid={campaign_id}"
         f"&customid={custom_id}"
         f"&toolid=10001&mkevt=1"

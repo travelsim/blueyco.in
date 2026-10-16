@@ -1803,7 +1803,8 @@ const ANALYTICS_EVENTS = new Set([
   'Sign In Magic Requested',
   'Sign In Complete',
   'Sign Out',
-  'Collection Remote Synced'
+  'Collection Remote Synced',
+  'Affiliate Click'
 ]);
 
 // Provider-agnostic hook: repoint this one function at GA4 or Plausible later.
@@ -3401,6 +3402,7 @@ function affiliateUrl(rawUrl, coinId, source) {
     const u = new URL(rawUrl);
     u.searchParams.set('mkrid', '705-53470-19255-0');
     u.searchParams.set('siteid', '15');
+    u.searchParams.set('mkcid', '1');
     u.searchParams.set('campid', EPN_CAMPAIGN_ID);
     u.searchParams.set('customid', EPN_CUSTOM_ID);
     u.searchParams.set('toolid', '10001');
@@ -3408,7 +3410,7 @@ function affiliateUrl(rawUrl, coinId, source) {
     return u.toString();
   } catch {
     const sep = rawUrl.includes('?') ? '&' : '?';
-    return `${rawUrl}${sep}mkrid=705-53470-19255-0&siteid=15&campid=${EPN_CAMPAIGN_ID}&customid=${EPN_CUSTOM_ID}&toolid=10001&mkevt=1`;
+    return `${rawUrl}${sep}mkrid=705-53470-19255-0&siteid=15&mkcid=1&campid=${EPN_CAMPAIGN_ID}&customid=${EPN_CUSTOM_ID}&toolid=10001&mkevt=1`;
   }
 }
 
@@ -4672,6 +4674,7 @@ document.addEventListener('click', (e) => {
   if (!a || !a.href) return;
   if (a.href.startsWith('https://www.ebay.com.au')) {
     a.href = affiliateUrl(a.href);
+    trackEvent('Affiliate Click');
   }
 }, true);
 
