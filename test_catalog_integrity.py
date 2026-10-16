@@ -33,7 +33,8 @@ class TestCatalogIntegrity(unittest.TestCase):
         self.assertRegex(raw, r"id:\s*'s1_three_coin_set'[\s\S]*?mintage:\s*30000[\s\S]*?issueQuantity:\s*25000")
         # s1_coloured_bluey / heelers / grannies: produced 5,000 carded, mintage 30,000 ceiling
         for cid in ('s1_coloured_bluey', 's1_coloured_heelers', 's1_coloured_grannies'):
-            self.assertRegex(raw, rf"id:\s*'{cid}'[\s\S]*?mintage:\s*30000[\s\S]*?issueQuantity:\s*5000")
+            pattern = r"id:\s*'" + cid + r"'[\s\S]*?mintage:\s*30000[\s\S]*?issueQuantity:\s*5000"
+            self.assertRegex(raw, pattern)
         # Folder & lucky hit: 11448 produced 157,500; 31961 produced 15,750
         self.assertRegex(raw, r"id:\s*'s1_10_coin_folder_set'[\s\S]*?issueQuantity:\s*157500")
         self.assertRegex(raw, r"id:\s*'s1_coloured_insert_variant'[\s\S]*?productCode:\s*'31961'[\s\S]*?issueQuantity:\s*15750")
@@ -62,6 +63,16 @@ class TestCatalogIntegrity(unittest.TestCase):
         self.assertIn('Pocket Change Hunt', INDEX)
         self.assertIn('Lucky 1-in-10 Coins', INDEX)
         self.assertIn('3 Folder States', INDEX)
+
+    def test_community_and_events_section_present(self):
+        self.assertIn('href="#events"', INDEX)
+        self.assertIn('id="events"', INDEX)
+        self.assertIn('Melbourne Money Expo', INDEX)
+        self.assertIn('Sydney Money Expo', INDEX)
+        self.assertIn('Brisbane Money Expo', INDEX)
+        self.assertIn('Petersham Coin & Stamp Fair', INDEX)
+        self.assertIn('Moonee Ponds Coin Fair', INDEX)
+        self.assertIn('r/AustralianCoins', INDEX)
 
 
 if __name__ == '__main__':

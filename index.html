@@ -230,6 +230,148 @@
   .coin-collector-notes { margin: 0 0 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; background: #f8fafc; color: var(--text); font-size: .8rem; }
   .coin-collector-notes > strong { display: block; margin-bottom: 5px; color: var(--navy); }
   .coin-variant-note { margin: 5px 0 0; }
+    /* ── COMMUNITY & EVENTS ── */
+  .community-events { background: #fff; }
+  .events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+  .event-card {
+    padding: 22px;
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.18s, box-shadow 0.18s;
+  }
+  .event-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(38,58,91,0.09);
+    border-color: #263a5b;
+  }
+  .event-badge-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .event-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+  .pill-anda { background: #e0f2fe; color: #0369a1; border: 1.5px solid #7dd3fc; }
+  .pill-local { background: #fef3c7; color: #92400e; border: 1.5px solid #fde68a; }
+  .pill-special { background: #dcfce7; color: #166534; border: 1.5px solid #86efac; }
+  .event-city { font-size: 0.78rem; font-weight: 800; color: var(--muted); }
+  .event-title {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.22rem;
+    font-weight: 700;
+    margin: 0 0 6px;
+    color: #1e3152;
+  }
+  .event-when {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #0f766e;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .event-venue {
+    font-size: 0.82rem;
+    color: #64748b;
+    margin-bottom: 12px;
+  }
+  .event-desc {
+    font-size: 0.84rem;
+    color: var(--slate);
+    line-height: 1.45;
+    margin: 0 0 14px;
+    flex: 1;
+  }
+  .event-perks {
+    background: #fff;
+    border: 1px dashed #cbd5e1;
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 14px;
+    font-size: 0.78rem;
+    color: #334155;
+    line-height: 1.4;
+  }
+  .event-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+  }
+  .event-entry { font-weight: 700; color: #475569; }
+  .event-link { font-weight: 800; color: var(--blue); text-decoration: underline; }
+  .event-link:hover { color: var(--navy); }
+
+  .community-columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 20px;
+    margin-top: 30px;
+  }
+  .community-panel {
+    background: #f8fafc;
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+  }
+  .community-panel h3 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.15rem;
+    color: var(--navy);
+    margin: 0 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .community-panel p {
+    font-size: 0.84rem;
+    color: var(--slate);
+    line-height: 1.45;
+    margin: 0 0 12px;
+  }
+  .community-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .community-list li {
+    padding: 10px 12px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 0.82rem;
+    color: var(--text);
+  }
+  .community-list li strong { display: block; color: #1e3152; margin-bottom: 2px; }
+  .community-list a { color: var(--blue); font-weight: 700; text-decoration: underline; }
+
   .collector-stories { background: #fff; }
   .story-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; }
   .story-card { padding: 20px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg); }
@@ -1307,6 +1449,7 @@
       <a href="#all-coins">Price Guide</a>
       <a href="#shop">Frames</a>
       <a href="#stories">Collector stories</a>
+      <a href="#events">Community & Events</a>
       <a href="#faq">FAQ</a>
       <a href="/ballot/">Ballot guide</a>
       <a href="/distributors/">Distributors</a>
@@ -2803,6 +2946,193 @@ document.addEventListener('DOMContentLoaded', () => {
     <article class="story-card"><p class="story-kicker">2025 - Christmas</p><h3>The 2025 Bluey Christmas coins</h3><p>The Royal Australian Mint released a coloured uncirculated Christmas $1 coin with a published mintage of 125,000, and a coloured silver proof in bauble packaging limited to 10,000.</p></article>
     <article class="story-card"><p class="story-kicker">2027 - Cricket</p><h3>The Bluey Cricket coins</h3><p>The Cricket $1 coins are announced as a coloured uncirculated coin (200,000) and a coloured silver proof in a cricket-ball tin (20,000). Early asking prices for the proof are already well above issue.</p></article>
     <article class="story-card"><p class="story-kicker">2026 - $2 collection</p><h3>Privy mark cards, proofs and covers</h3><p>Beyond the folder and tube, the 2026 range includes five privy mark $2 coins in cards (20,500 each), coloured aluminium-bronze (10,500) and silver (12,000) proofs, two Australia Post PNCs, and five stamp and pin covers.</p></article>
+  </div>
+</section>
+
+<section id="events" class="section community-events" aria-labelledby="events-heading">
+  <h2 id="events-heading" class="section-title">Community & Coin Shows</h2>
+  <p class="page-sub">Discover upcoming Australian coin and stamp fairs, official Mint mobile press locations, and where collectors meet to swap Bluey Dollarbucks.</p>
+
+  <div class="events-grid">
+    <!-- Melbourne Money Expo -->
+    <article class="event-card">
+      <div class="event-badge-row">
+        <span class="event-pill pill-anda">🏛️ ANDA National Tour</span>
+        <span class="event-city">Melbourne, VIC</span>
+      </div>
+      <h3 class="event-title">Melbourne Money Expo</h3>
+      <div class="event-when">📅 7–8 February 2026</div>
+      <div class="event-venue">📍 Malvern Town Hall / Banquet Hall, High St, Malvern VIC</div>
+      <p class="event-desc">Australia's flagship early-year coin and stamp show. Over 30 leading numismatic dealers offering buying, selling, and appraisals.</p>
+      <div class="event-perks">
+        ✨ <strong>Expo Highlights:</strong> Royal Australian Mint mobile press attendance, Perth Mint specials, and exclusive Melbourne Privy Mark coins.
+      </div>
+      <div class="event-footer">
+        <span class="event-entry">Gold coin donation</span>
+        <a href="https://anda.com.au" target="_blank" rel="noopener noreferrer" class="event-link">Official ANDA details ↗</a>
+      </div>
+    </article>
+
+    <!-- Hobart Money Expo -->
+    <article class="event-card">
+      <div class="event-badge-row">
+        <span class="event-pill pill-anda">🏛️ ANDA National Tour</span>
+        <span class="event-city">Hobart, TAS</span>
+      </div>
+      <h3 class="event-title">Hobart Money Expo</h3>
+      <div class="event-when">📅 11–12 April 2026</div>
+      <div class="event-venue">📍 Wrest Point Hotel Casino, Sandy Bay TAS</div>
+      <p class="event-desc">Tasmania's premier coin, banknote, and stamp event. Interstate dealers attend with rare decimal coins, bullion, and postal covers.</p>
+      <div class="event-perks">
+        ✨ <strong>Expo Highlights:</strong> Free on-site collection appraisals and rare postal numismatic covers.
+      </div>
+      <div class="event-footer">
+        <span class="event-entry">Gold coin donation</span>
+        <a href="https://anda.com.au" target="_blank" rel="noopener noreferrer" class="event-link">Official ANDA details ↗</a>
+      </div>
+    </article>
+
+    <!-- Brisbane Money Expo -->
+    <article class="event-card">
+      <div class="event-badge-row">
+        <span class="event-pill pill-anda">🏛️ ANDA National Tour</span>
+        <span class="event-city">Brisbane, QLD</span>
+      </div>
+      <h3 class="event-title">Brisbane Money Expo</h3>
+      <div class="event-when">📅 11–12 July 2026</div>
+      <div class="event-venue">📍 Queensland Sport & Athletics Centre (QSAC), Nathan QLD (Gate B)</div>
+      <p class="event-desc">Queensland's biggest annual numismatic fair. Fantastic family turnout with active trading of Bluey Dollarbucks and decimal sets.</p>
+      <div class="event-perks">
+        ✨ <strong>Expo Highlights:</strong> Exclusive Brisbane privy-marked releases, dealer swap tables, and bullion stands.
+      </div>
+      <div class="event-footer">
+        <span class="event-entry">Gold coin entry</span>
+        <a href="https://anda.com.au" target="_blank" rel="noopener noreferrer" class="event-link">Official ANDA details ↗</a>
+      </div>
+    </article>
+
+    <!-- Boronia Money Expo -->
+    <article class="event-card">
+      <div class="event-badge-row">
+        <span class="event-pill pill-special">⭐ Special 1-Day Fair</span>
+        <span class="event-city">Boronia, VIC</span>
+      </div>
+      <h3 class="event-title">Boronia Money Expo</h3>
+      <div class="event-when">📅 23 August 2026 (Sunday 10am–4pm)</div>
+      <div class="event-venue">📍 Boronia Mall, Dorset Square, Boronia VIC</div>
+      <p class="event-desc">A bustling single-day suburban coin and stamp fair. Well known for accessible entry-level buying, folder-filling, and friendly club tables.</p>
+      <div class="event-perks">
+        ✨ <strong>Expo Highlights:</strong> Free valuations, club trading tables, and wide selection of Australian decimal coin cards.
+      </div>
+      <div class="event-footer">
+        <span class="event-entry">Gold coin donation</span>
+        <a href="https://anda.com.au" target="_blank" rel="noopener noreferrer" class="event-link">Official ANDA details ↗</a>
+      </div>
+    </article>
+
+    <!-- Perth Money Expo -->
+    <article class="event-card">
+      <div class="event-badge-row">
+        <span class="event-pill pill-anda">🏛️ ANDA National Tour</span>
+        <span class="event-city">Perth, WA</span>
+      </div>
+      <h3 class="event-title">Perth Money Expo</h3>
+      <div class="event-when">📅 5–6 September 2026</div>
+      <div class="event-venue">📍 South Perth Community Hall, South Perth WA</div>
+      <p class="event-desc">Western Australia's headline numismatic gathering featuring local and national dealers, Perth Mint collectors, and stamp specialists.</p>
+      <div class="event-perks">
+        ✨ <strong>Expo Highlights:</strong> Australia Post & Perth Mint official attendance with limited show-special product issues.
+      </div>
+      <div class="event-footer">
+        <span class="event-entry">Gold coin entry</span>
+        <a href="https://anda.com.au" target="_blank" rel="noopener noreferrer" class="event-link">Official ANDA details ↗</a>
+      </div>
+    </article>
+
+    <!-- Sydney Money Expo -->
+    <article class="event-card">
+      <div class="event-badge-row">
+        <span class="event-pill pill-anda">🏛️ ANDA National Tour</span>
+        <span class="event-city">Sydney, NSW</span>
+      </div>
+      <h3 class="event-title">Sydney Money Expo</h3>
+      <div class="event-when">📅 14–15 November 2026</div>
+      <div class="event-venue">📍 Wentworth Park Sporting Complex, Glebe NSW</div>
+      <p class="event-desc">The premier end-of-year national show. Huge attendance from all Australian mints, dealers, postal numismatic cover specialists, and auctioneers.</p>
+      <div class="event-perks">
+        ✨ <strong>Expo Highlights:</strong> Australia Post daily limited-edition PNC releases, live RAM coin-striking press, and official expo show specials.
+      </div>
+      <div class="event-footer">
+        <span class="event-entry">Gold coin donation</span>
+        <a href="https://anda.com.au" target="_blank" rel="noopener noreferrer" class="event-link">Official ANDA details ↗</a>
+      </div>
+    </article>
+  </div>
+
+  <!-- Regular Regional Fairs, Online Clubs & Show Tips -->
+  <div class="community-columns">
+    <div class="community-panel">
+      <h3>🏛️ Regular Local & Regional Fairs</h3>
+      <p>Between national ANDA expos, local clubs host regular monthly and quarterly coin and stamp fairs:</p>
+      <ul class="community-list">
+        <li>
+          <strong>Petersham Coin & Stamp Fair (Sydney, NSW)</strong>
+          Held quarterly at Petersham Town Hall. One of Sydney's longest-running community collector fairs with over 20 dealers.
+        </li>
+        <li>
+          <strong>Moonee Ponds Coin Fair (Melbourne, VIC)</strong>
+          Held monthly on Sundays at the Moonee Valley Bowling Club. Ideal for family collectors swapping decimal change and folders.
+        </li>
+        <li>
+          <strong>Queensland Numismatic Society (Brisbane, QLD)</strong>
+          Regular monthly meetings, bourses, and swap tables at local community halls across Brisbane.
+        </li>
+        <li>
+          <strong>RAM Visitor Press (Canberra, ACT)</strong>
+          Visit the Royal Australian Mint in Deakin, ACT to strike your own commemorative coin on the gallery press.
+        </li>
+      </ul>
+    </div>
+
+    <div class="community-panel">
+      <h3>💬 Online Communities & Safe Swapping</h3>
+      <p>Connect with Australian collectors online to find missing coins from your 10-coin Bluey folder:</p>
+      <ul class="community-list">
+        <li>
+          <strong>Reddit: r/AustralianCoins</strong>
+          <a href="https://www.reddit.com/r/AustralianCoins/" target="_blank" rel="noopener noreferrer">r/AustralianCoins ↗</a><br>
+          Friendly forum for verifying wild pocket-change finds, checking errors, and discussing recent Mint releases.
+        </li>
+        <li>
+          <strong>Facebook: Bluey Coin & Dollarbucks Collectors</strong>
+          Search for dedicated Australian Bluey coin collector groups for local face-to-face swaps and folder completion.
+        </li>
+        <li>
+          <strong>Australasian Numismatic Dealers Association</strong>
+          <a href="https://anda.com.au" target="_blank" rel="noopener noreferrer">anda.com.au ↗</a><br>
+          Official directory of accredited, code-of-conduct coin dealers across every Australian state and territory.
+        </li>
+      </ul>
+    </div>
+
+    <div class="community-panel">
+      <h3>💡 Show Day Collector Tips</h3>
+      <p>How to make the most of your day at an Australian coin & stamp show:</p>
+      <ul class="community-list">
+        <li>
+          <strong>Bring Cash & EFTPOS:</strong> While established expo dealers have card terminals, smaller club tables and swap boxes often prefer cash.
+        </li>
+        <li>
+          <strong>Protect Packaging & Cards:</strong> Bring rigid card sleeves or a folder. Blister card corners and PNC envelopes drop in value if bent in your bag!
+        </li>
+        <li>
+          <strong>Arrive Early for Postmark PNCs:</strong> Australia Post expo PNCs and show specials have strictly limited daily allocations that sell out fast.
+        </li>
+        <li>
+          <strong>Bring Your Doubles:</strong> Take your spare till coins or duplicate folder coins. Dealers and fellow collectors love fair swaps on the bourse floor.
+        </li>
+      </ul>
+    </div>
   </div>
 </section>
 
