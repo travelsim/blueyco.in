@@ -16,14 +16,12 @@ class TestPricesDeadline(unittest.TestCase):
 
         def fetch(coin):
             if coin['id'] in ('c3', 'c7'):
-                time.sleep(3)
+                time.sleep(2)
             return {'ebay': None, 'coinxchange': {'average_price': 10.0}}
 
         start = time.time()
         snapshot, complete = prices._build_payload(coins, fetch, deadline=0.5)
-        # Stragglers sleep 3s; returning at the 0.5s deadline stays well under 2.5s
-        # even on a loaded runner. Waiting for them would fail this bound.
-        self.assertLess(time.time() - start, 2.5)
+        self.assertLess(time.time() - start, 1.5)
         self.assertFalse(complete)
         self.assertEqual(len(snapshot), 40)
         self.assertIsNone(snapshot['c3']['coinxchange'])
