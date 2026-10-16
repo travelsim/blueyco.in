@@ -1,0 +1,64 @@
+import re
+import unittest
+from pathlib import Path
+
+ROOT = Path(__file__).parent
+INDEX = (ROOT / 'index.html').read_text(encoding='utf-8')
+
+
+def get_coins_raw():
+    match = re.search(r'window\.COINS\s*=\s*\[([\s\S]*?)\n\];', INDEX)
+    assert match, 'window.COINS not found in index.html'
+    return match.group(1)
+
+
+class TestCatalogIntegrity(unittest.TestCase):
+    def test_all_coins_have_market_ranges(self):
+        # Ensure no coins have null or missing marketLow/marketHigh
+        raw = get_coins_raw()
+        lines = [line.strip() for line in raw.split('\n') if line.strip().startswith('{ id:')]
+        self.assertGreater(len(lines), 35, 'Catalog has fewer coins than expected')
+        for line in lines:
+            m_id = re.search(r"id:\s*'([^']+)'", line)
+            self.assertTrue(m_id, f'No id found in line: {line}')
+            cid = m_id.group(1)
+            self.assertIn('marketLow:', line, f'{cid} missing marketLow')
+            self.assertIn('marketHigh:', line, f'{cid} missing marketHigh')
+            self.assertNotIn('marketLow: null', line, f'{cid} has marketLow: null')
+            self.assertNotIn('marketHigh: null', line, f'{cid} has marketHigh: null')
+
+    def test_ram_2023_24_annual_report_figures(self):
+        raw = get_coins_raw()
+        # s1_three_coin_set: produced 25,000, mintage ceiling 30,000
+        self.assertRegex(raw, r"id:\s*'s1_three_coin_set'[\s\S]*?mintage:\s*30000[\s\S]*?issueQuantity:\s*25000")
+        # s1_coloured_bluey / heelers / grannies: produced 5,000 carded, mintage 30,000 ceiling
+        for cid in ('s1_coloured_bluey', 's1_coloured_heelers', 's1_coloured_grannies'):
+            self.assertRegex(raw, rf"id:\s*'{cid}'[\s\S]*?mintage:\s*30000[\s\S]*?issueQuantity:\s*5000")
+        # Folder & lucky hit: 11448 produced 157,500; 31961 produced 15,750
+        self.assertRegex(raw, r"id:\s*'s1_10_coin_folder_set'[\s\S]*?issueQuantity:\s*157500")
+        self.assertRegex(raw, r"id:\s*'s1_coloured_insert_variant'[\s\S]*?productCode:\s*'31961'[\s\S]*?issueQuantity:\s*15750")
+        # Till coins: 1,250,000 produced
+        self.assertRegex(raw, r"id:\s*'s1_bluey'[\s\S]*?issueQuantity:\s*1250000")
+        self.assertRegex(raw, r"id:\s*'s1_bingo'[\s\S]*?issueQuantity:\s*1250000")
+        # Cards: 7,250 produced (7,252 for 11435)
+        self.assertRegex(raw, r"id:\s*'s1_card_bluey'[\s\S]*?issueQuantity:\s*7250")
+        self.assertRegex(raw, r"id:\s*'s1_card_blueybingofriends'[\s\S]*?issueQuantity:\s*7252")
+        # PNCs: 7,500 for Bluey; 6,500 for others
+        self.assertRegex(raw, r"id:\s*'s1_pnc_bluey'[\s\S]*?issueQuantity:\s*7500")
+        self.assertRegex(raw, r"id:\s*'s1_pnc_bingo'[\s\S]*?issueQuantity:\s*6500")
+
+    def test_estimated_value_kicker_is_universal(self):
+        # Verify buildCard unconditionally sets priceHeading to 'Estimated value'
+        self.assertIn("const priceHeading = 'Estimated value';", INDEX)
+        self.assertIn("function _guidePrice(coin)", INDEX)
+        self.assertIn("return _guidePrice(coin);", INDEX)
+
+    def test_collector_guide_strip_present(self):
+        self.assertIn('collector-guide-strip', INDEX)
+        self.assertIn('Pocket Change Hunt', INDEX)
+        self.assertIn('Lucky 1-in-10 Coins', INDEX)
+        self.assertIn('3 Folder States', INDEX)
+
+
+if __name__ == '__main__':
+    unittest.main()
