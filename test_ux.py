@@ -238,6 +238,26 @@ class TestSeoAeo(unittest.TestCase):
     def test_chart_js_is_deferred(self):
         self.assertIn('defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js', INDEX)
 
+    def test_aeo_llms_manifests_exist(self):
+        llms_txt = (ROOT / 'llms.txt').read_text(encoding='utf-8')
+        llms_full = (ROOT / 'llms-full.txt').read_text(encoding='utf-8')
+        self.assertIn('https://blueyco.in', llms_txt)
+        self.assertIn('Royal Australian Mint', llms_txt)
+        self.assertIn('s1_bluey', llms_full)
+        self.assertIn('s1_proof_silver', llms_full)
+
+    def test_robots_welcomes_ai_answer_crawlers(self):
+        robots = (ROOT / 'robots.txt').read_text(encoding='utf-8')
+        self.assertIn('GPTBot', robots)
+        self.assertIn('PerplexityBot', robots)
+        self.assertIn('ClaudeBot', robots)
+        self.assertIn('https://blueyco.in/sitemap.xml', robots)
+
+    def test_mobile_action_dock_present_and_accessible(self):
+        self.assertIn('class="mobile-action-dock"', INDEX)
+        self.assertIn('aria-label="Mobile quick actions"', INDEX)
+        self.assertIn('.mobile-action-dock', INDEX)
+
 
 if __name__ == '__main__':
     unittest.main()

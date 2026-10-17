@@ -1,0 +1,69 @@
+# Blueycoin Complete Official Numismatic Catalogue (68 Items)
+> Exhaustive technical specification and collector market guide for all official Royal Australian Mint and Australia Post Bluey coins, covers, and stamp issues.
+> Canonical URL: https://blueyco.in
+
+| ID | Name | Denom | Year | Issue Qty | Mintage Limit | Est. Market Band (AUD) | Product Code |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `s1_bluey` | **Bluey $1 Dollarbuck (Till Coin)** | $1 | 2024 | 1,250,000 | Unlimited/Open | $5 – $20 | 11451 |
+| `s1_bingo` | **Bingo $1 Dollarbuck (Till Coin)** | $1 | 2024 | 1,250,000 | Unlimited/Open | $5 – $20 | 11453 |
+| `s1_proof_silver` | **Bluey Dollarbucks $1 Fine Silver Coloured Proof Coin** | $1 | 2024 | 2,500 | 2,650 | $350 – $650 | 11367 |
+| `s1_proof_coloured` | **Bluey Dollarbucks $1 Coloured Proof Coin** | $1 | 2024 | 5,000 | 5,000 | $150 – $300 | 11624 |
+| `s1_10_coin_folder_set` | **10-Coin Tube & Folder Set · Sealed** | $1 | 2024 | 157,500 | Unlimited/Open | $45 – $95 | 11448 |
+| `s1_10_coin_folder_opened` | **10-Coin Tube & Folder Set · Opened** | $1 | 2024 | 157,500 | Unlimited/Open | $30 – $55 | 11448 |
+| `s1_coloured_insert_variant` | **10-Coin Tube & Folder Set · with Special Coloured Coin** | $1 | 2024 | 15,750 | Unlimited/Open | $120 – $250 | 31961 |
+| `s0_2020_stamp_pack` | **Bluey 2020 MyStamps Pack** | - | 2020 | TBD | Unlimited/Open | $35 – $75 | 1515510 |
+| `s1_auspost_stamp_pack` | **Bluey 2024 MyStamps Pack** | - | 2024 | TBD | Unlimited/Open | $25 – $45 | - |
+| `s1_impressions_pnc_colour` | **Bluey $1 Limited-Edition Coloured Coin PNC** | $1 | 2024 | 5,000 | 3,000 | $120 – $220 | 11450 |
+| `s1_impressions_pnc_2coin` | **Bluey $1 Limited-Edition 2-Coin PNC** | $1 | 2024 | 1,300 | 1,300 | $150 – $280 | - |
+| `s1_impressions_pnc_3coin` | **Bluey $1 Limited-Edition 3-Coin PNC** | $1 | 2024 | 700 | 700 | $200 – $400 | - |
+| `s1_impressions_pnc_silver` | **Bluey $1 Limited-Edition Silver Proof Prestige PNC** | $1 | 2024 | 150 | 2,650 | $600 – $1200 | 11645 |
+| `s1_coloured_bluey` | **Bluey $1 Coloured Uncirculated Coin** | $1 | 2024 | 5,000 | 30,000 | $40 – $80 | 11369 |
+| `s1_coloured_heelers` | **The Heelers $1 Coloured Uncirculated Coin** | $1 | 2024 | 5,000 | 30,000 | $35 – $75 | 11370 |
+| `s1_coloured_grannies` | **The Grannies $1 Coloured Uncirculated Coin** | $1 | 2024 | 5,000 | 30,000 | $40 – $85 | 11371 |
+| `s1_three_coin_set` | **Bluey Dollarbucks Three-Coin Set** | $1 | 2024 | 25,000 | 30,000 | $120 – $220 | 11368 |
+| `s1_card_bluey` | **Bluey $1 Privy Mark Coin in Card** | $1 | 2024 | 7,250 | Unlimited/Open | $15 – $30 | 11428 |
+| `s1_card_heelers` | **The Heelers $1 Privy Mark Coin in Card** | $1 | 2024 | 7,250 | Unlimited/Open | $15 – $30 | 11429 |
+| `s1_card_bingo` | **Bingo $1 Privy Mark Coin in Card** | $1 | 2024 | 7,250 | Unlimited/Open | $15 – $30 | 11430 |
+| `s1_card_muffinsocks` | **Muffin & Socks $1 Privy Mark Coin in Card** | $1 | 2024 | 7,250 | Unlimited/Open | $15 – $30 | 11431 |
+| `s1_card_stripes` | **Stripe, Trixie & Nana $1 Privy Mark Coin in Card** | $1 | 2024 | 7,250 | Unlimited/Open | $15 – $30 | 11432 |
+| `s1_card_radfrisky` | **Uncle Rad & Frisky $1 Privy Mark Coin in Card** | $1 | 2024 | 7,250 | Unlimited/Open | $15 – $30 | 11433 |
+| `s1_card_blueyfriends` | **Bluey & Friends $1 Privy Mark Coin in Card** | $1 | 2024 | 7,250 | Unlimited/Open | $15 – $30 | 11434 |
+| `s1_card_blueybingofriends` | **Bluey, Bingo & Friends $1 Privy Mark Coin in Card** | $1 | 2024 | 7,252 | Unlimited/Open | $15 – $30 | 11435 |
+| `s1_card_mumdad` | **Chilli & Bandit $1 Privy Mark Coin in Card** | $1 | 2024 | 7,250 | Unlimited/Open | $15 – $30 | 11436 |
+| `s1_card_grannies` | **The Grannies $1 Privy Mark Coin in Card** | $1 | 2024 | 7,250 | Unlimited/Open | $15 – $30 | 11437 |
+| `s1_pnc_bluey` | **Bluey $1 Postal Numismatic Cover** | $1 | 2024 | 7,500 | Unlimited/Open | $35 – $65 | 11635 |
+| `s1_pnc_family` | **The Heeler Family $1 Postal Numismatic Cover** | $1 | 2024 | 6,500 | Unlimited/Open | $35 – $65 | 11636 |
+| `s1_pnc_bingo` | **Bingo $1 Postal Numismatic Cover** | $1 | 2024 | 6,500 | Unlimited/Open | $35 – $65 | 11637 |
+| `s1_pnc_muffinsocks` | **Muffin & Socks $1 Postal Numismatic Cover** | $1 | 2024 | 6,500 | Unlimited/Open | $35 – $65 | 11638 |
+| `s1_pnc_radfrisky` | **Uncle Rad & Frisky $1 Postal Numismatic Cover** | $1 | 2024 | 6,500 | Unlimited/Open | $35 – $65 | 11639 |
+| `s1_pnc_stripes` | **Nana, Uncle Stripe & Aunt Trixie $1 Postal Numismatic Cover** | $1 | 2024 | 6,500 | Unlimited/Open | $35 – $65 | 11640 |
+| `s1_pnc_blueybingofriends` | **Bluey, Bingo & Friends $1 Postal Numismatic Cover** | $1 | 2024 | 6,500 | Unlimited/Open | $35 – $65 | 11641 |
+| `s1_pnc_blueyfriends` | **Bluey & Friends $1 Postal Numismatic Cover** | $1 | 2024 | 6,500 | Unlimited/Open | $35 – $65 | 11642 |
+| `s1_pnc_mumdad` | **Chilli & Bandit $1 Postal Numismatic Cover** | $1 | 2024 | 6,500 | Unlimited/Open | $35 – $65 | 11643 |
+| `s1_pnc_grannies` | **The Grannies $1 Postal Numismatic Cover** | $1 | 2024 | 6,500 | Unlimited/Open | $35 – $65 | 11644 |
+| `s1_pnc_set_ten` | **Bluey $1 Postal Numismatic Cover 10-Cover Set** | $1 | 2024 | 1,000 | Unlimited/Open | $350 – $600 | - |
+| `s2_xmas_unc` | **2025 Bluey Christmas $1 Coloured Uncirculated Coin** | $1 | 2025 | TBD | 125,000 | $35 – $80 | 11982 |
+| `s2_xmas_silv` | **2025 Bluey Christmas $1 Coloured Silver Proof Coin** | $1 | 2025 | TBD | 10,000 | $250 – $700 | 11981 |
+| `s2_xmas_stamp_pack` | **Bluey 2024 Christmas Stamp Pack** | - | 2024 | TBD | Unlimited/Open | $20 – $40 | 76602869 |
+| `s3_folder` | **Bluey 2026 $2 Collection Folder & Five-Coin Set** | $2 | 2026 | TBD | Unlimited/Open | $40 – $90 | 11956 |
+| `s3_rain_privy` | **Rain $2 Privy Mark Coin in Card** | $2 | 2026 | TBD | 20,500 | $80 – $200 | 12001 |
+| `s3_sleepytime_privy` | **Sleepytime $2 Privy Mark Coin in Card** | $2 | 2026 | TBD | 20,500 | $80 – $200 | 12003 |
+| `s3_camping_privy` | **Camping $2 Privy Mark Coin in Card** | $2 | 2026 | TBD | 20,500 | $80 – $200 | 12005 |
+| `s3_babyrace_privy` | **Baby Race $2 Privy Mark Coin in Card** | $2 | 2026 | TBD | 20,500 | $80 – $200 | 12007 |
+| `s3_granny_privy` | **Granny Mobile $2 Privy Mark Coin in Card** | $2 | 2026 | TBD | 20,500 | $80 – $200 | 12009 |
+| `s3_proof_ab` | **Heeler Family $2 Coloured Aluminium-Bronze Proof Coin** | $2 | 2026 | TBD | 10,500 | $120 – $300 | 11997 |
+| `s3_proof_silv` | **Heeler Family $2 Coloured Silver Proof Coin** | $2 | 2026 | TBD | 12,000 | $250 – $700 | 11996 |
+| `s3_maxicard_pack` | **Bluey 2026 Pre-Paid Concertina Maxicard Pack** | - | 2026 | TBD | Unlimited/Open | $25 – $50 | 2336510 |
+| `s3_stamp_pack` | **Bluey 2026 MyStamps Pack** | - | 2026 | TBD | Unlimited/Open | $25 – $50 | 2336509 |
+| `s3_sleepytime_insert` | **Sleepytime $2 Special Coloured Coin (Tube Insert)** | $2 | 2026 | TBD | Unlimited/Open | $120 – $400 | - |
+| `s3_till_bluey` | **Bluey $2 Coloured Till Coin** | $2 | 2026 | TBD | Unlimited/Open | $30 – $70 | - |
+| `s3_till_bingo` | **Bingo $2 Coloured Till Coin** | $2 | 2026 | TBD | Unlimited/Open | $30 – $70 | - |
+| `s3_pnc_bluey` | **Bluey For Real Life $2 Postal Numismatic Cover** | $2 | 2026 | TBD | 10,000 | $40 – $80 | - |
+| `s3_pnc_bingo` | **Bingo Hooray $2 Postal Numismatic Cover** | $2 | 2026 | TBD | 10,000 | $40 – $80 | - |
+| `s3_pin_babyrace` | **Baby Race Stamp & Pin Cover** | - | 2026 | TBD | 3,000 | $25 – $50 | - |
+| `s3_pin_camping` | **Camping Stamp & Pin Cover** | - | 2026 | TBD | 3,000 | $25 – $50 | - |
+| `s3_pin_granny` | **Granny Mobile Stamp & Pin Cover** | - | 2026 | TBD | 3,000 | $25 – $50 | - |
+| `s3_pin_rain` | **Rain Stamp & Pin Cover** | - | 2026 | TBD | 3,000 | $25 – $50 | - |
+| `s3_pin_sleepytime` | **Sleepytime Stamp & Pin Cover** | - | 2026 | TBD | 3,000 | $25 – $50 | - |
+| `s4_cricket_unc` | **Bluey Cricket $1 Coloured Uncirculated Coin** | $1 | 2027 | TBD | 200,000 | $30 – $60 | 12077 |
+| `s4_cricket_proof` | **Bluey Cricket $1 Coloured Silver Proof Coin** | $1 | 2027 | TBD | 20,000 | $150 – $280 | 12078 |

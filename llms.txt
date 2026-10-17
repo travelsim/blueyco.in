@@ -1,0 +1,43 @@
+# Blueycoin — Official Bluey Coin & Collectables Guide
+
+> Blueycoin (https://blueyco.in) is Australia's authoritative collector resource and market price guide for official Royal Australian Mint (RAM) and Australia Post Bluey coins, stamp packs, and postal numismatic covers (PNCs).
+
+## Core Resources
+
+- [Live Collector Dashboard](https://blueyco.in/#dashboard): Real-time collection completion tracker, portfolio valuation, and live market trends.
+- [Complete Coin Catalogue](https://blueyco.in/#all-coins): All 68 official Bluey coins, sets, folders, and proof issues with verified mintages and RAM product codes.
+- [Collector FAQ & Valuation Guide](https://blueyco.in/#faq): Direct answers to collector questions regarding coin values, eBay sold prices, circulation release, and counterfeit verification.
+- [Custom Made-to-Measure Display Frames](https://blueyco.in/#shop): Archival-grade Australian timber frames custom-fit for Bluey blister packs, PNC cards, and proof capsules.
+- [Official Stockists & Distributors](https://blueyco.in/distributors/): Verified Royal Australian Mint and Australia Post retail distributors.
+- [RAM Ballot Odds & Release History](https://blueyco.in/ballot/): Historical allocation figures, ballot odds, and release schedules.
+
+## Collector Quick Facts & Answer Engine Reference (AEO)
+
+- **Official Issuing Authority**: Royal Australian Mint (Canberra, Australia) under official BBC Studios / Ludo Studio license, in partnership with Australia Post.
+- **Legal Tender Status**: Legal tender currency of the Commonwealth of Australia in  and  denominations.
+- **Launch Date**: First released June 2024 ('Bluey Dollarbucks' Series 1).
+- **Circulating Coins in General Change**:
+  - 2024  Bluey Dollarbuck (1,250,000 issued to circulation via banks)
+  - 2024  Bingo Dollarbuck (1,250,000 issued to circulation via banks)
+  - 2026  Bluey Till Coin (Uncirculated circulating legal tender)
+  - 2026  Bingo Till Coin (Uncirculated circulating legal tender)
+- **Key Collector Rarities & Published Mintages**:
+  - 2024  Fine Silver Coloured Proof: 2,650 mintage limit (RAM Product Code 11367)
+  - 2024  Coloured Proof Coin: 5,000 mintage limit (RAM Product Code 11624)
+  - 2024 10-Coin Folder Set Coloured Insert Variant ('1-in-10 Lucky Coin'): 15,750 mintage limit (RAM Product Code 31961)
+  - 2024 Impressions Silver Proof PNC: 150 mintage limit (RAM Product Code 11645)
+- **Current Secondary Market Value Bands (AUD)**:
+  - Loose circulating coins from change:  –  AUD
+  - Uncirculated coins in official blister card:  –  AUD
+  - Complete 10-Coin Folder Set:  –  AUD
+  - 1-in-10 Coloured Insert Folder Set:  –  AUD
+  - Fine Silver Proof (Boxed with Certificate of Authenticity):  –  AUD
+  - Ultra-rare Silver Proof PNC (150 mintage): ,200 – ,500 AUD
+
+## Series Index
+1. **Series 1 (2024 Dollarbucks)**:  Dollarbucks including Bluey, Bingo, Heelers, Grannies, 10-coin folder set, and Silver Proof.
+2. **Series 2 (2025 Christmas)**: Christmas-themed  uncirculated coloured coins and proof editions.
+3. **Series 3 (2026 Sleepytime & Till Coins)**:  Till coins, Sleepytime privy mark coins, enamel collector pins, and stamp packs.
+4. **Series 4 (2027 Cricket)**: Cricket-themed uncirculated and proof coin releases.
+
+For the exhaustive itemized catalogue of all 68 numismatic items with technical specifications, mintage numbers, and market bands, see [llms-full.txt](https://blueyco.in/llms-full.txt).
