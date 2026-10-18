@@ -141,13 +141,13 @@
   })();
 </script>
 
-<!-- GA4 pageview only (no custom events). -->
+<!-- GA4 pageview only (no custom events). page_location drops the hash: #login= carries a magic-link token and #swap= a collection share. -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-8ZCMMS9NTH"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-8ZCMMS9NTH');
+  gtag('config', 'G-8ZCMMS9NTH', { page_location: location.origin + location.pathname + location.search });
 </script>
 
 <!-- Vercel Web Analytics and Speed Insights use same-origin /_vercel routes. -->
