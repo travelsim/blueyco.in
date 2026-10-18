@@ -3538,6 +3538,13 @@ const charts     = {};
 
 // Canonical product attributes: the only pill vocabulary used on cards and
 // in the filter row. Derived from catalogue fields so cards stay consistent.
+// Mapping: UNC = coin, not proof, not till (uncirculated finish, incl. sets
+// and PNCs whose coins are UNC); PROOF = proof in id/name; COLOURED = coin
+// with truthy color; PNC/STAMP/PIN/PRIVY/TILL COIN = id patterns (privy also
+// matches s1_card_ ids); SET = multi-coin id patterns or whole-word Set in
+// name; AUSPOST = PNC, PIN, STAMP, or s3 till coins documented as found in
+// participating Australia Post store change; RAM = every struck coin.
+// Selected pills combine with AND: a coin must carry every chosen attribute.
 const ATTRIBUTES = ['UNC','PROOF','COLOURED','PNC','STAMP','SET','PRIVY','PIN','TILL COIN','AUSPOST','RAM'];
 
 function coinAttributes(coin) {
@@ -3547,7 +3554,7 @@ function coinAttributes(coin) {
   const isCoin = coin.denomination != null;
   const isProof = /proof/i.test(hay);
   const isTill = /till/i.test(hay);
-  const isSet = /set|folder|2coin|3coin/i.test(id);
+  const isSet = /set|folder|2coin|3coin/i.test(id) || /\bset\b/i.test(coin.name || '');
   const isPnc = /pnc/i.test(id);
   const isStamp = /stamp|maxicard/i.test(id);
   const isPin = /^s3_pin_/i.test(id);
@@ -4806,7 +4813,7 @@ function renderGrid() {
   // 2. search filter
   const totalInSeries = list.length;
   if (q) list = list.filter(c => _coinMatchesSearch(c, q));
-  if (activeAttrs.size > 0) list = list.filter(c => coinAttributes(c).some(a => activeAttrs.has(a)));
+  if (activeAttrs.size > 0) list = list.filter(c => [...activeAttrs].every(a => coinAttributes(c).includes(a)));
 
   // 3. sort
   list = _sortCoins(list);

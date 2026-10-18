@@ -88,6 +88,8 @@ class TestAttributePills(unittest.TestCase):
         self.assertIn('function buildAttrFilters()', INDEX)
         self.assertIn('function toggleAttr(attr)', INDEX)
         self.assertIn('activeAttrs.size > 0', INDEX)
+        self.assertIn('[...activeAttrs].every(a => coinAttributes(c).includes(a))', INDEX)
+        self.assertIn("/\\bset\\b/i.test(coin.name || '')", INDEX)
         self.assertIn('buildAttrFilters();', INDEX)
 
     def test_cards_show_attr_pills_not_legacy_tags(self):
