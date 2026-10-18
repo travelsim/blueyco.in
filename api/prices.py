@@ -284,6 +284,21 @@ COINS = [
     # server.py; they were missing here so they never received live prices.
 ]
 
+# Seller usernames stay out of public responses: CoinXchange `seller` keys and
+# eBay seller-box lines ("<username> 100% positive (2K)") inside raw_listing_text.
+_SELLER_BOX = re.compile(r'(?m)^(?!\[seller\])\S+(?= \d+(?:\.\d+)?% positive \()')
+
+
+def _strip_seller_names(value):
+    if isinstance(value, dict):
+        return {k: _strip_seller_names(v) for k, v in value.items() if k != 'seller'}
+    if isinstance(value, list):
+        return [_strip_seller_names(v) for v in value]
+    if isinstance(value, str):
+        return _SELLER_BOX.sub('[seller]', value)
+    return value
+
+
 # ── MAIN HANDLER (Vercel Python runtime, current format) ────────────────────
 # Vercel's current Python serverless runtime requires a class-based handler
 # that inherits from BaseHTTPRequestHandler, NOT a v1-style `def handler(request)`.
@@ -315,7 +330,7 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Cache-Control', f's-maxage={max_age}, stale-while-revalidate')
         self.send_header('X-Prices-Complete', 'true' if complete else 'false')
         self.end_headers()
-        self.wfile.write(json.dumps(payload).encode())
+        self.wfile.write(json.dumps(_strip_seller_names(payload)).encode())
 
 
 def _load_base_cache():

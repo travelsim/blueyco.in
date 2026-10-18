@@ -1403,6 +1403,21 @@ def get_buy_options(coin_id, keywords):
             _inflight.discard(coin_id)
 
 
+# Seller usernames stay out of public responses: CoinXchange `seller` keys and
+# eBay seller-box lines ("<username> 100% positive (2K)") inside raw_listing_text.
+_SELLER_BOX = re.compile(r'(?m)^(?!\[seller\])\S+(?= \d+(?:\.\d+)?% positive \()')
+
+
+def _strip_seller_names(value):
+    if isinstance(value, dict):
+        return {k: _strip_seller_names(v) for k, v in value.items() if k != 'seller'}
+    if isinstance(value, list):
+        return [_strip_seller_names(v) for v in value]
+    if isinstance(value, str):
+        return _SELLER_BOX.sub('[seller]', value)
+    return value
+
+
 # ── REQUEST HANDLER ──────────────────────────────────────────────────────────
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):
@@ -1422,7 +1437,7 @@ class Handler(BaseHTTPRequestHandler):
         if self.path == '/api/prices':
             with _lock:
                 snapshot = dict(_cache)
-            self._json(200, snapshot)
+            self._json(200, _strip_seller_names(snapshot))
             return
 
         if self.path.startswith('/api/price-history'):
@@ -1444,11 +1459,11 @@ class Handler(BaseHTTPRequestHandler):
                     {'date': h['date'], **(h.get('coins', {}).get(coin_id) or {})}
                     for h in hist if coin_id in (h.get('coins') or {})
                 ]
-            self._json(200, {
+            self._json(200, _strip_seller_names({
                 'snapshots': hist,
                 'count':     len(hist),
                 'coinId':    coin_id or None,
-            })
+            }))
             return
 
         if self.path in ('/health', '/healthz'):
