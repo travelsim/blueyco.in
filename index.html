@@ -4033,25 +4033,33 @@ function buildCard(coin) {
     ? Number(coin.mintage).toLocaleString('en-AU')
     : (/unlimited/i.test(coin.mintageLabel || '') ? 'Unlimited' : /circulating/i.test(coin.mintageLabel || '') ? 'Circulating' : 'Unpublished');
   supplyCard.append(el('div', 'metric-amount', mintageValue));
-  let supplyCaption = coin.mintage != null ? 'published coins' : 'mintage';
+  // The Produced card shows the production figure and its unit, so the Mintage
+  // caption and detail only add text when no production figure exists.
+  const producedUnit = (/[\d,]+\s+([A-Za-z]+)\s+produced/i.exec(coin.mintageLabel || '') || [])[1] || 'units';
+  let supplyCaption = coin.mintage != null ? 'published coins' : '';
   let supplyDetail = '';
   if (coin.mintageLabel) {
     const label = String(coin.mintageLabel);
     if (coin.mintage != null) {
       const remainder = label.replace(/^\s*[\d,]+\s*/, '').trim();
-      if (remainder && remainder !== 'produced') supplyCaption = remainder;
+      // With a production figure, a "N covers produced" phrase repeats the Produced card,
+      // and its unit is not coins, so the Mintage caption is dropped instead.
+      const repeatsProduced = coin.issueQuantity != null && /[\d,]+\s+[A-Za-z]+\s+produced/i.test(label);
+      if (repeatsProduced) supplyCaption = '';
+      else if (remainder) supplyCaption = remainder.replace(/\s*produced$/i, '').trim() || supplyCaption;
     } else if (/unlimited/i.test(label)) {
-      supplyDetail = label.split(';').slice(1).join(';').trim();
+      if (coin.issueQuantity == null) supplyDetail = label.split(';').slice(1).join(';').trim();
     } else if (/circulating/i.test(label)) {
       supplyCaption = label.replace(/^circulating\s*/i, '').split('(')[0].trim() || 'issue';
       supplyDetail = label.includes('(') ? label.slice(label.indexOf('(')).trim() : '';
     } else if (/unpublished/i.test(label)) {
-      supplyCaption = label.replace(/unpublished/i, '').replace(/^[\s:;,-]+|[\s:;,-]+$/g, '').trim() || 'mintage';
+      supplyCaption = label.replace(/unpublished/i, '').replace(/^[\s:;,-]+|[\s:;,-]+$/g, '').trim();
+      if (/^mintage$/i.test(supplyCaption)) supplyCaption = '';
     } else {
       supplyCaption = label;
     }
   }
-  supplyCard.append(el('div', 'supply-caption', supplyCaption));
+  if (supplyCaption) supplyCard.append(el('div', 'supply-caption', supplyCaption));
 
   if (coin.derivedScarcity || coin.id === 's1_coloured_insert_variant') {
     const derivedScarcityNum = coin.derivedScarcity || 15750;
@@ -4061,11 +4069,10 @@ function buildCard(coin) {
   } else if (coin.issueQuantity != null) {
     supplyCard.append(el('div', 'metric-kicker metric-kicker-production', 'Produced'));
     supplyCard.append(el('div', 'metric-amount', Number(coin.issueQuantity).toLocaleString('en-AU')));
-    supplyCard.append(el('div', 'supply-caption', 'units produced'));
+    supplyCard.append(el('div', 'supply-caption', producedUnit));
   } else {
     supplyCard.append(el('div', 'metric-kicker metric-kicker-production', 'Produced'));
     supplyCard.append(el('div', 'metric-amount metric-unknown', 'Not published'));
-    supplyCard.append(el('div', 'supply-caption', 'no production figure yet'));
   }
   if (supplyDetail) supplyCard.append(el('div', 'supply-detail', supplyDetail));
   const rarityRow = el('div', 'rarity-score-row');
