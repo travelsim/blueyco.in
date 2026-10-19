@@ -126,6 +126,6 @@ class TestSellerPrivacy(unittest.TestCase):
         # #login= carries a magic-link token and #swap= a collection share.
         html = (ROOT / 'index.html').read_text(encoding='utf-8')
         self.assertIn(
-            "gtag('config', 'G-8ZCMMS9NTH', { page_location: location.origin + location.pathname + location.search });",
+            "gtag('config', 'G-0KYR0YPVN9', { page_location: location.origin + location.pathname + location.search });",
             html,
         )
