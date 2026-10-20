@@ -24,5 +24,6 @@
       "type": "a2a-agent-card+json",
       "url": "https://blueyco.in/.well-known/agent-card.json"
     }
-  ]
+  ],
+  "specVersion": "1.0"
 }

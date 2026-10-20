@@ -97,7 +97,7 @@ class TestAgentReadiness(unittest.TestCase):
         self.assertIn("capabilities", doc)
         self.assertIn("skills", doc)
         self.assertIn("extensions", doc)
-        ap2_ext = next((e for e in doc["extensions"] if "AP2" in e.get("uri", "")), None)
+        ap2_ext = next((e for e in doc["extensions"] if "ap2" in e.get("uri", "").lower()), None)
         self.assertIsNotNone(ap2_ext, "AP2 extension must be present in agent card")
         self.assertIn("merchant", ap2_ext.get("params", {}).get("roles", []))
 
@@ -153,7 +153,7 @@ class TestAgentReadiness(unittest.TestCase):
             vjson = json.load(f)
         
         # Verify Link header on /
-        root_headers = next((h for h in vjson.get("headers", []) if h.get("source") == "/"), None)
+        root_headers = next((h for h in vjson.get("headers", []) if h.get("source") == "/" and "has" not in h), None)
         self.assertIsNotNone(root_headers)
         link_h = next((kv for kv in root_headers["headers"] if kv.get("key") == "Link"), None)
         self.assertIsNotNone(link_h)

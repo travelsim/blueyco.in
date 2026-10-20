@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 Content-Signal: search=yes, ai-input=yes, ai-train=no
-Agentmap: /.well-known/ai-catalog.json
+Agentmap: https://blueyco.in/.well-known/ai-catalog.json
 
 # AI Answer Engines & LLM Crawlers (AEO)
 User-agent: GPTBot

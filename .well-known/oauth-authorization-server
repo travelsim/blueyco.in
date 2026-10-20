@@ -17,7 +17,7 @@
     "S256"
   ],
   "agent_auth": {
-    "skill": "https://blueyco.in/.well-known/agent-skills/auth/SKILL.md",
+    "skill": "https://blueyco.in/auth.md",
     "register_uri": "https://blueyco.in/api/auth",
     "identity_types_supported": [
       "anonymous",
@@ -39,5 +39,9 @@
       ],
       "claim_uri": "https://blueyco.in/api/auth"
     }
-  }
+  },
+  "revocation_endpoint": "https://blueyco.in/api/auth",
+  "poppy_domains": [
+    "blueyco.in"
+  ]
 }

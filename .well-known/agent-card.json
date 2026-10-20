@@ -16,7 +16,19 @@
   "capabilities": {
     "streaming": false,
     "pushNotifications": false,
-    "extendedAgentCard": false
+    "extendedAgentCard": false,
+    "extensions": [
+      {
+        "uri": "https://github.com/google-agentic-commerce/ap2/v1",
+        "description": "Supports the Agent Payments Protocol (AP2) for verifiable mandate-based commerce.",
+        "required": true,
+        "params": {
+          "roles": [
+            "merchant"
+          ]
+        }
+      }
+    ]
   },
   "skills": [
     {
@@ -37,7 +49,8 @@
   ],
   "extensions": [
     {
-      "uri": "https://github.com/google-agentic-commerce/AP2/tree/v0.1.0",
+      "uri": "https://github.com/google-agentic-commerce/ap2/v1",
+      "description": "Supports the Agent Payments Protocol (AP2) for verifiable mandate-based commerce.",
       "required": true,
       "params": {
         "roles": [

@@ -1,4 +1,46 @@
 {
+  "ucp": {
+    "version": "2026-08-25",
+    "services": {
+      "dev.ucp.shopping": {
+        "version": "2026-08-25",
+        "spec": "https://ucp.dev/specs/shopping",
+        "rest": {
+          "schema": "https://ucp.dev/services/shopping/openapi.json",
+          "endpoint": "https://blueyco.in/api"
+        },
+        "capabilities": [
+          {
+            "id": "dev.ucp.shopping.cart",
+            "version": "2026-08-25"
+          },
+          {
+            "id": "dev.ucp.shopping.checkout",
+            "version": "2026-08-25"
+          }
+        ]
+      }
+    },
+    "capabilities": {
+      "dev.ucp.shopping.catalog": [
+        {
+          "version": "2026-08-25"
+        }
+      ]
+    },
+    "endpoints": {
+      "catalog": "https://blueyco.in/api/prices",
+      "history": "https://blueyco.in/api/price-history"
+    },
+    "payment": {
+      "handlers": [
+        {
+          "id": "stripe",
+          "spec": "https://ucp.dev/specs/payments/stripe"
+        }
+      ]
+    }
+  },
   "protocol_version": "2026-08-25",
   "services": {
     "dev.ucp.shopping": [
