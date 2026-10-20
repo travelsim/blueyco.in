@@ -159,9 +159,14 @@ class TestAgentReadiness(unittest.TestCase):
         self.assertIsNotNone(link_h)
         self.assertIn("api-catalog", link_h["value"])
 
-        # Verify markdown content negotiation rewrite
-        md_rewrite = next((r for r in vjson.get("rewrites", []) if any("text/markdown" in h.get("value", "") for h in r.get("has", []))), None)
-        self.assertIsNotNone(md_rewrite)
+        # Markdown negotiation for "/" lives in middleware.js: a rewrite cannot
+        # beat the static index.html at "/", so the rule is not in vercel.json.
+        self.assertFalse(any("text/markdown" in h.get("value", "") for r in vjson.get("rewrites", []) for h in r.get("has", [])))
+        with open(os.path.join(REPO_ROOT, "middleware.js"), "r", encoding="utf-8") as f:
+            mw = f.read()
+        self.assertIn("matcher: '/'", mw)
+        self.assertIn("text/markdown", mw)
+        self.assertIn("/llms.txt", mw)
 
 if __name__ == "__main__":
     unittest.main()
