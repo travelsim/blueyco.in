@@ -151,14 +151,15 @@ class TestPricesSnapshotTagging(unittest.TestCase):
         self.assertEqual(retagged['response_url'].count('campid='), 1)
         self.assertEqual(retagged['products'][0]['link'].count('campid='), 1)
 
-    def test_every_catalogue_coin_gets_a_live_affiliate_sold_search(self):
+    def test_every_catalogue_coin_gets_a_live_affiliate_bin_search(self):
         with mock.patch.dict(os.environ, {'EPN_CAMPAIGN_ID': 'testcamp'}):
             snapshot = prices._cached_snapshot(prices.COINS, {}, {})
         self.assertEqual(len(snapshot), len(prices.COINS))
         for coin_id, entry in snapshot.items():
             url = entry['manual']['ebay']['url']
-            self.assertIn('LH_Sold=1', url, coin_id)
-            self.assertIn('LH_Complete=1', url, coin_id)
+            self.assertIn('LH_BIN=1', url, coin_id)
+            self.assertNotIn('LH_Sold=1', url, coin_id)
+            self.assertNotIn('LH_Complete=1', url, coin_id)
             self.assertIn('campid=testcamp', url, coin_id)
 
 

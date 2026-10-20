@@ -853,15 +853,14 @@ def _cached_snapshot(coins, base_cache, manual, manual_ebay_sales=None):
         if not isinstance(manual_entry, dict):
             manual_entry = {}
         if not isinstance((manual_entry.get('ebay') or {}).get('url'), str):
-            sold_search = 'https://www.ebay.com.au/sch/i.html?' + urllib.parse.urlencode({
+            live_search = 'https://www.ebay.com.au/sch/i.html?' + urllib.parse.urlencode({
                 '_nkw': coin.get('ebay_kw', coin.get('search', 'Bluey coin')),
-                'LH_Sold': '1',
-                'LH_Complete': '1',
+                'LH_BIN': '1',
                 '_sop': '15',
             })
             manual_entry = {
                 **manual_entry,
-                'ebay': {'price': None, 'available': True, 'url': sold_search},
+                'ebay': {'price': None, 'available': True, 'url': live_search},
             }
         snapshot[cid] = {
             'ebay': _tag_ebay_urls(ebay, cid),
