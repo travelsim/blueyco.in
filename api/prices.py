@@ -316,12 +316,12 @@ class handler(BaseHTTPRequestHandler):
         try:
             payload, complete = _build_payload()
         except Exception as e:
-            # Surface the error so it's visible in Vercel logs
-            print(f"handler error: {e}")
+            # Log only the exception type: its message can carry server paths.
+            print(f"handler error: {type(e).__name__}")
             self.send_response(500)
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
-            self.wfile.write(json.dumps({'error': str(e)}).encode())
+            self.wfile.write(json.dumps({'error': 'Could not load price data. Try again later.'}).encode())
             return
 
         max_age = CACHE_TTL if complete else PARTIAL_CACHE_TTL

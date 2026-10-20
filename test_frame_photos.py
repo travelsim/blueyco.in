@@ -52,7 +52,7 @@ class TestFrameCardRendering(unittest.TestCase):
         self.assertIn('width="640" height="400"', INDEX)
 
     def test_images_carry_descriptive_alt_text(self):
-        self.assertIn('alt="${frame.imageAlt}"', INDEX)
+        self.assertIn('alt="${escapeHtml(frame.imageAlt)}"', INDEX)
         block = INDEX.split('const FRAME_PHOTOS = {')[1].split('};')[0]
         alts = re.findall(r"alt:\s*'([^']+)'", block)
         self.assertEqual(len(alts), len(photo_map()))

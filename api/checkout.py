@@ -1,4 +1,5 @@
 import json
+import math
 import os
 from http.server import BaseHTTPRequestHandler
 
@@ -43,7 +44,7 @@ def validate(payload):
             price = float(entry.get('price'))
         except (TypeError, ValueError):
             continue
-        if price <= 0 or price > 100000:
+        if not math.isfinite(price) or price <= 0 or price > 100000:
             continue
         items.append({'name': name, 'price': round(price, 2)})
         total += price
