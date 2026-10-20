@@ -548,6 +548,26 @@
           "best_offer": false,
           "record_status": "Retained",
           "record_reason": "Single silver proof; displayed fixed price; dated sold result."
+        },
+        {
+          "coin_id": "s4_cricket_proof",
+          "coin_name": "2027 $1 Bluey Cricket Silver Proof",
+          "item_id": "",
+          "title": "2027 $1 Bluey Cricket Coloured Silver Proof Coin in hand posted Aus Post.",
+          "sale_price": 191.5,
+          "currency": "AU",
+          "date_sold": "25 Sep 2026",
+          "link": "",
+          "source_type": "user_pasted_search",
+          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=Bluey+2026+Stamps+Pack&_sacat=0&_from=R40&LH_BIN=1&_sop=13&LH_Sold=1&_blrs=spell_auto_correct",
+          "search_heading": "eBay AU completed sales paste batch 2",
+          "source_page": 1,
+          "captured_at": "2026-10-21T02:56:00+00:00",
+          "displayed_price": "AU $191.50",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Strict single-product title match from user paste batch 2",
+          "raw_listing_text": "Sold 25 Sep 2026\n2027 $1 Bluey Cricket Coloured Silver Proof Coin in hand posted Aus Post.\nAU $191.50\nBuy It Now\n+AU $11.21 delivery\n[seller] 100% positive (354)"
         }
       ]
     },
@@ -699,7 +719,7 @@
           "coin_name": "Bluey 2024 MyStamps Pack",
           "item_id": "116312430350",
           "title": "Australia 2024 MUH MNH Bluey Stamp Pack with 12 MyStamps & 1 Large Look a Like",
-          "sale_price": 134.4,
+          "sale_price": 34.4,
           "currency": "AU",
           "date_sold": "23 Jul 2026",
           "link": "https://www.ebay.com.au/itm/116312430350",
@@ -708,11 +728,51 @@
           "search_heading": "0 results for 2024 Bluey MyStamps pack 12 house shaped stamps",
           "source_page": 1,
           "captured_at": "2026-10-06T09:11:20.722000+00:00",
-          "displayed_price": "AU $134.40",
+          "displayed_price": "AU $34.40",
           "best_offer": false,
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
-          "raw_listing_text": "Sold 23 Jul 2026\nAustralia 2024 MUH MNH Bluey Stamp Pack with 12 MyStamps & 1 Large Look a Like\nOpens in a new window or tab\nAU $134.40\nBuy It Now\nFree delivery\nLast one\nView similar active items\nSell one like this\n[seller] 100% positive (1.5K)\nderosnopS"
+          "raw_listing_text": "Sold 23 Jul 2026\nAustralia 2024 MUH MNH Bluey Stamp Pack with 12 MyStamps & 1 Large Look a Like\nOpens in a new window or tab\nAU $34.40\nBuy It Now\nFree delivery\nLast one\nView similar active items\nSell one like this\n[seller] 100% positive (1.5K)\nderosnopS"
+        },
+        {
+          "coin_id": "s1_auspost_stamp_pack",
+          "coin_name": "Bluey 2024 MyStamps Pack",
+          "item_id": "",
+          "title": "NEW Bluey 2024 Stamp Pack EXCLUSIVE DESIGN $1.50 Stamp",
+          "sale_price": 32.45,
+          "currency": "AU",
+          "date_sold": "30 Sep 2026",
+          "link": "",
+          "source_type": "user_pasted_search",
+          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=Bluey+2026+Stamps+Pack&_sacat=0&_from=R40&LH_BIN=1&_sop=13&LH_Sold=1&_blrs=spell_auto_correct",
+          "search_heading": "eBay AU completed sales paste batch 2",
+          "source_page": 1,
+          "captured_at": "2026-10-21T02:56:00+00:00",
+          "displayed_price": "AU $32.45",
+          "best_offer": true,
+          "record_status": "Retained",
+          "record_reason": "Strict single-product title match from user paste batch 2",
+          "raw_listing_text": "Sold 30 Sep 2026\nNEW Bluey 2024 Stamp Pack EXCLUSIVE DESIGN $1.50 Stamp\nAU $32.45\nor Best Offer\n+AU $8.26 delivery\n[seller] 100% positive (156)"
+        },
+        {
+          "coin_id": "s1_auspost_stamp_pack",
+          "coin_name": "Bluey 2024 MyStamps Pack",
+          "item_id": "",
+          "title": "Australia 2024 Bluey Stamps $1.50 x 12 Postage Collector Pack+Large $1.50 Stamp",
+          "sale_price": 34.89,
+          "currency": "AU",
+          "date_sold": "9 Sep 2026",
+          "link": "",
+          "source_type": "user_pasted_search",
+          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=Bluey+2026+Stamps+Pack&_sacat=0&_from=R40&LH_BIN=1&_sop=13&LH_Sold=1&_blrs=spell_auto_correct",
+          "search_heading": "eBay AU completed sales paste batch 2",
+          "source_page": 1,
+          "captured_at": "2026-10-21T02:56:00+00:00",
+          "displayed_price": "AU $34.89",
+          "best_offer": true,
+          "record_status": "Retained",
+          "record_reason": "Strict single-product title match from user paste batch 2",
+          "raw_listing_text": "Sold 9 Sep 2026\nAustralia 2024 Bluey Stamps $1.50 x 12 Postage Collector Pack+Large $1.50 Stamp\nAU $34.89\nor Best Offer\nFree delivery\n[seller] 99.9% positive (16.4K)"
         }
       ]
     },
@@ -2315,6 +2375,26 @@
           "shipping_price": 10.0,
           "source_type": "user_pasted_search",
           "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "coin_id": "s1_impressions_pnc_colour",
+          "coin_name": "Bluey 2024 Impressions Coloured PNC",
+          "item_id": "",
+          "title": "ROYAL AUSTRALIAN MINT 2024 BLUEY BUCKS LIMITED EDITION COLOURED COIN $1 PNC",
+          "sale_price": 199.0,
+          "currency": "AU",
+          "date_sold": "23 Jul 2026",
+          "link": "",
+          "source_type": "user_pasted_search",
+          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=Bluey+2026+Stamps+Pack&_sacat=0&_from=R40&LH_BIN=1&_sop=13&LH_Sold=1&_blrs=spell_auto_correct",
+          "search_heading": "eBay AU completed sales paste batch 2",
+          "source_page": 1,
+          "captured_at": "2026-10-21T02:56:00+00:00",
+          "displayed_price": "AU $199.00",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Strict single-product title match from user paste batch 2",
+          "raw_listing_text": "Sold 23 Jul 2026\nROYAL AUSTRALIAN MINT 2024 BLUEY BUCKS LIMITED EDITION COLOURED COIN $1 PNC\nAU $199.00\nBuy It Now\n+AU $10.00 delivery\n[seller] 100% positive (116)"
         }
       ]
     },
@@ -6421,6 +6501,26 @@
           "shipping_price": 12.0,
           "source_type": "user_pasted_search",
           "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "coin_id": "s3_proof_ab",
+          "coin_name": "2026 $2 Bluey Coloured Proof Coin (AlBr)",
+          "item_id": "",
+          "title": "$2 BLUEY COLOURED PROOF COIN - ROYAL AUSTRALIAN MINT / AUS POST - IN HAND",
+          "sale_price": 160.0,
+          "currency": "AU",
+          "date_sold": "16 Oct 2026",
+          "link": "",
+          "source_type": "user_pasted_search",
+          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=Bluey+2026+Stamps+Pack&_sacat=0&_from=R40&LH_BIN=1&_sop=13&LH_Sold=1&_blrs=spell_auto_correct",
+          "search_heading": "eBay AU completed sales paste batch 2",
+          "source_page": 1,
+          "captured_at": "2026-10-21T02:56:00+00:00",
+          "displayed_price": "AU $160.00",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Strict single-product title match from user paste batch 2",
+          "raw_listing_text": "Sold 16 Oct 2026\n$2 BLUEY COLOURED PROOF COIN - ROYAL AUSTRALIAN MINT / AUS POST - IN HAND\nAU $160.00\nBuy It Now\nFree delivery\n[seller] 100% positive (343)"
         }
       ]
     },
@@ -8568,6 +8668,46 @@
           "record_status": "Retained",
           "record_reason": "Strict single-product title match from user paste",
           "raw_listing_text": "Sold 4 Aug 2026\nBluey Stamp Pack 2026Opens in a new window or tab\nAU $16.50\nBuy It Now\n+AU $8.80 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (11)\n2026 $2 Two Dollar Bluey Coloured UNC Coin - Sleepy Time Bingo Blue Original .\n"
+        },
+        {
+          "coin_id": "s3_stamp_pack",
+          "coin_name": "2026 Bluey MyStamps Star-Shaped Stamp Pack",
+          "item_id": "",
+          "title": "2026 Bluey - Post Office Pack With 12 star shaped MyStamps",
+          "sale_price": 33.5,
+          "currency": "AU",
+          "date_sold": "5 Oct 2026",
+          "link": "",
+          "source_type": "user_pasted_search",
+          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=Bluey+2026+Stamps+Pack&_sacat=0&_from=R40&LH_BIN=1&_sop=13&LH_Sold=1&_blrs=spell_auto_correct",
+          "search_heading": "eBay AU completed sales paste batch 2",
+          "source_page": 1,
+          "captured_at": "2026-10-21T02:56:00+00:00",
+          "displayed_price": "AU $33.50",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Strict single-product title match from user paste batch 2",
+          "raw_listing_text": "Sold 5 Oct 2026\n2026 Bluey - Post Office Pack With 12 star shaped MyStamps\nAU $33.50\nBuy It Now\n+AU $3.50 delivery\n[seller] 100% positive (66.6K)"
+        },
+        {
+          "coin_id": "s3_stamp_pack",
+          "coin_name": "2026 Bluey MyStamps Star-Shaped Stamp Pack",
+          "item_id": "",
+          "title": "2026 Australian Stamps - Bluey Stamp Pack of 12 Stamps",
+          "sale_price": 29.99,
+          "currency": "AU",
+          "date_sold": "14 Oct 2026",
+          "link": "",
+          "source_type": "user_pasted_search",
+          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=Bluey+2026+Stamps+Pack&_sacat=0&_from=R40&LH_BIN=1&_sop=13&LH_Sold=1&_blrs=spell_auto_correct",
+          "search_heading": "eBay AU completed sales paste batch 2",
+          "source_page": 1,
+          "captured_at": "2026-10-21T02:56:00+00:00",
+          "displayed_price": "AU $29.99",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Strict single-product title match from user paste batch 2",
+          "raw_listing_text": "Sold 14 Oct 2026\n2026 Australian Stamps - Bluey Stamp Pack of 12 Stamps\nAU $29.99\nBuy It Now\n+AU $10.95 delivery\n[seller] 99.8% positive (60.5K)"
         }
       ]
     },
@@ -8612,6 +8752,30 @@
           "record_status": "Retained",
           "record_reason": "Strict single-product title match from user paste",
           "raw_listing_text": "Sold 1 Aug 2026\n2026 Bluey Folder & Tube $2 coin set - Including Bluey & Bingo Till coinsOpens in a new window or tab\nAU $39.97\nor Best Offer\n+AU $11.70 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (169)\n\nUNC 2026 $2 BLUEY COLOURED TILL COIN (BINGO & BLUEY)  Free Tracked Postage. Image 1 of 2\nUNC 2026 $2 BLUEY COLOURED TILL COIN (BINGO & BLUEY)  Free Tracked Postage. Image 2 of 2\n\n"
+        }
+      ]
+    },
+    "s1_pnc_family": {
+      "products": [
+        {
+          "coin_id": "s1_pnc_family",
+          "coin_name": "Bluey & Her Family Postal Numismatic Cover",
+          "item_id": "",
+          "title": "PNC AU 2024 Bluey BLUEY & HER FAMILY RAM $1 Dollar Buck Envelope Privy Mark Coin",
+          "sale_price": 35.0,
+          "currency": "AU",
+          "date_sold": "14 Sep 2026",
+          "link": "",
+          "source_type": "user_pasted_search",
+          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=Bluey+2026+Stamps+Pack&_sacat=0&_from=R40&LH_BIN=1&_sop=13&LH_Sold=1&_blrs=spell_auto_correct",
+          "search_heading": "eBay AU completed sales paste batch 2",
+          "source_page": 1,
+          "captured_at": "2026-10-21T02:56:00+00:00",
+          "displayed_price": "AU $35.00",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Strict single-product title match from user paste batch 2",
+          "raw_listing_text": "Sold 14 Sep 2026\nPNC AU 2024 Bluey BLUEY & HER FAMILY RAM $1 Dollar Buck Envelope Privy Mark Coin\nAU $35.00\nBuy It Now\nFree delivery\n[seller]"
         }
       ]
     }
@@ -8729,6 +8893,38 @@
         "User-pasted manual capture, not verified through an eBay API.",
         "No direct listing item IDs or URLs in raw search paste."
       ]
+    },
+    {
+      "import_id": "stamps-pack-paste-batch2-2026-10-21",
+      "source_type": "user_pasted_search",
+      "captured_on": "2026-10-21",
+      "record_count": 8,
+      "retained_count": 8,
+      "coin_count": 6,
+      "added": {
+        "s3_stamp_pack": [
+          33.5,
+          29.99
+        ],
+        "s1_auspost_stamp_pack": [
+          32.45,
+          34.89
+        ],
+        "s1_pnc_family": [
+          35.0
+        ],
+        "s3_proof_ab": [
+          160.0
+        ],
+        "s4_cricket_proof": [
+          191.5
+        ],
+        "s1_impressions_pnc_colour": [
+          199.0
+        ]
+      },
+      "selection": "User-pasted secondary search results page ('Results matching fewer words'). Retained single-product sales matching catalogue items (2026 stamp pack, 2024 stamp pack, 2024 Family PNC, 2026 AlBr proof, 2027 Cricket silver proof, 2024 Impressions Coloured PNC). Corrected prior $134.40 transcription error on item 116312430350 to $34.40.",
+      "excluded": "Multi-coin sets, bundles, 5-pin sets, 10-cover collections, pairs, and duplicates of previously ingested records."
     }
   ]
 }
