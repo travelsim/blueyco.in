@@ -38,6 +38,14 @@
         {
           "key": "Link",
           "value": "</.well-known/api-catalog>; rel=\"api-catalog\", </openapi.json>; rel=\"service-desc\", </llms.txt>; rel=\"service-doc\", </sitemap.xml>; rel=\"sitemap\", </auth.md>; rel=\"describedby\", </.well-known/ai-catalog.json>; rel=\"ai-catalog\""
+        },
+        {
+          "key": "Vary",
+          "value": "Accept"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
         }
       ]
     },
@@ -143,12 +151,12 @@
   ],
   "rewrites": [
     {
-      "source": "/",
+      "source": "/(.*)",
       "has": [
         {
           "type": "header",
           "key": "Accept",
-          "value": "(.*text/markdown.*)"
+          "value": "(.*)text/markdown(.*)"
         }
       ],
       "destination": "/api/markdown"
