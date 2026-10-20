@@ -82,9 +82,29 @@ RATE_LIMIT_RPM     = 10
 RATE_WINDOW_SECS   = 60
 
 STATIC_FILES = {
-    '/':            ('index.html',  'text/html; charset=utf-8'),
-    '/index.html':  ('index.html',  'text/html; charset=utf-8'),
-    '/favicon.svg': ('favicon.svg', 'image/svg+xml'),
+    '/':                                                ('index.html',  'text/html; charset=utf-8'),
+    '/index.html':                                      ('index.html',  'text/html; charset=utf-8'),
+    '/favicon.svg':                                     ('favicon.svg', 'image/svg+xml'),
+    '/robots.txt':                                      ('robots.txt', 'text/plain; charset=utf-8'),
+    '/sitemap.xml':                                     ('sitemap.xml', 'application/xml; charset=utf-8'),
+    '/llms.txt':                                        ('llms.txt', 'text/markdown; charset=utf-8'),
+    '/auth.md':                                         ('auth.md', 'text/markdown; charset=utf-8'),
+    '/openapi.json':                                    ('openapi.json', 'application/openapi+json; charset=utf-8'),
+    '/.well-known/api-catalog':                         ('.well-known/api-catalog', 'application/linkset+json'),
+    '/.well-known/openid-configuration':                ('.well-known/openid-configuration', 'application/json'),
+    '/.well-known/oauth-authorization-server':         ('.well-known/oauth-authorization-server', 'application/json'),
+    '/.well-known/oauth-protected-resource':            ('.well-known/oauth-protected-resource', 'application/json'),
+    '/.well-known/jwks.json':                           ('.well-known/jwks.json', 'application/json'),
+    '/.well-known/http-message-signatures-directory':   ('.well-known/http-message-signatures-directory', 'application/json'),
+    '/.well-known/agent-card.json':                     ('.well-known/agent-card.json', 'application/json'),
+    '/.well-known/mcp/server-card.json':                ('.well-known/mcp/server-card.json', 'application/json'),
+    '/.well-known/agent-skills/index.json':             ('.well-known/agent-skills/index.json', 'application/json'),
+    '/.well-known/agent-skills/bluey-pricing/SKILL.md': ('.well-known/agent-skills/bluey-pricing/SKILL.md', 'text/markdown; charset=utf-8'),
+    '/.well-known/agent-skills/auth/SKILL.md':          ('.well-known/agent-skills/auth/SKILL.md', 'text/markdown; charset=utf-8'),
+    '/.well-known/acp.json':                            ('.well-known/acp.json', 'application/json'),
+    '/.well-known/ucp':                                 ('.well-known/ucp', 'application/json'),
+    '/.well-known/ai-catalog.json':                     ('.well-known/ai-catalog.json', 'application/json'),
+    '/.well-known/poppy.json':                          ('.well-known/poppy.json', 'application/json'),
 }
 
 # ── PRICING CATALOGUE (73 IDs: 68 current items + 5 historical IDs) ────────────────────────────────────
@@ -1474,12 +1494,22 @@ class Handler(BaseHTTPRequestHandler):
             })
             return
 
-        entry = STATIC_FILES.get(self.path)
+        if self.path in ('/', '/index.html'):
+            accept = self.headers.get('Accept', '')
+            if 'text/markdown' in accept:
+                entry = ('llms.txt', 'text/markdown; charset=utf-8')
+            else:
+                entry = STATIC_FILES.get(self.path)
+        else:
+            entry = STATIC_FILES.get(self.path)
+
         if entry is None:
             self.send_response(404)
             self.end_headers()
             return
         fname, ctype = entry
+        if not os.path.isabs(fname):
+            fname = os.path.join(os.path.dirname(__file__), fname)
         try:
             with open(fname, 'rb') as f:
                 data = f.read()
@@ -1493,6 +1523,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header('Cache-Control', 'no-store')
         if ctype.startswith('text/html'):
             self.send_header('X-Robots-Tag', 'index, follow')
+            self.send_header('Link', '</.well-known/api-catalog>; rel="api-catalog", </openapi.json>; rel="service-desc", </llms.txt>; rel="service-doc", </sitemap.xml>; rel="sitemap", </auth.md>; rel="describedby", </.well-known/ai-catalog.json>; rel="ai-catalog"')
         self.end_headers()
         if self.command != 'HEAD':
             self.wfile.write(data)

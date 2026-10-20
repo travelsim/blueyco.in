@@ -1,0 +1,89 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Bluey Coin Tracker API",
+    "version": "1.0.0",
+    "description": "API for Australian Bluey commemorative coin market pricing, catalogue data, and historical price trends."
+  },
+  "servers": [
+    {
+      "url": "https://blueyco.in"
+    }
+  ],
+  "x-service-info": {
+    "categories": [
+      "ecommerce",
+      "pricing",
+      "collectibles"
+    ]
+  },
+  "paths": {
+    "/api/prices": {
+      "get": {
+        "summary": "Get current pricing snapshot",
+        "description": "Returns current market pricing for all tracked Bluey coins and sets.",
+        "responses": {
+          "200": {
+            "description": "Current pricing snapshot",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/price-history": {
+      "get": {
+        "summary": "Get historical price trends",
+        "description": "Returns historical price data snapshots.",
+        "parameters": [
+          {
+            "name": "coinId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Price history snapshots",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/premium-report": {
+      "get": {
+        "summary": "Access premium coin valuation report",
+        "description": "Detailed institutional rarity and valuation breakdown for collectors.",
+        "x-payment-info": {
+          "intent": "charge",
+          "method": "stripe",
+          "amount": 500,
+          "currency": "AUD",
+          "description": "Single-issue Bluey Coin Collector Valuation Report"
+        },
+        "responses": {
+          "200": {
+            "description": "Valuation report",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    }
+  }
+}

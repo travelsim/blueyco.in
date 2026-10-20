@@ -54,14 +54,17 @@ class TestVercelDeploymentConfiguration(unittest.TestCase):
 
     def test_spa_fallback_excludes_api_and_vercel_platform_routes(self):
         self.assertNotIn("routes", VERCEL_CONFIG)
+        spa_fallback = next(
+            (r for r in VERCEL_CONFIG["rewrites"] if r.get("destination") == "/index.html"),
+            None,
+        )
+        self.assertIsNotNone(spa_fallback)
         self.assertEqual(
-            VERCEL_CONFIG["rewrites"],
-            [
-                {
-                    "source": "/((?!api(?:/|$)|_vercel(?:/|$)).*)",
-                    "destination": "/index.html",
-                },
-            ],
+            spa_fallback,
+            {
+                "source": "/((?!api(?:/|$)|_vercel(?:/|$)).*)",
+                "destination": "/index.html",
+            },
         )
 
     def test_prototype_app_route_redirects_to_the_real_dashboard(self):
