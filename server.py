@@ -74,6 +74,11 @@ EBAY_MARKETPLACE   = 'EBAY_AU'
 
 CACHE_FILE         = 'ebay_cache.json'
 MANUAL_PRICES_FILE = 'retailer_prices.json'
+MANUAL_EBAY_SALES_FILE = 'manual_ebay_sales.json'
+# Bargain tag: landed ask at least this far below the coin's sold-item median,
+# and only when the sold sample is big enough to trust.
+BARGAIN_DISCOUNT_PCT = 15
+BARGAIN_MIN_SALES    = 3
 REFRESH_SECS       = 14 * 24 * 3600   # 2 weeks
 CHECK_SECS         = 24 * 3600         # check daily whether refresh needed
 BUY_CACHE_TTL      = 24 * 3600         # retailer panel cache: 24 h
@@ -1123,6 +1128,62 @@ def _ebay_oauth_http_error_summary(error):
     return f'HTTP {status}' + (f'; {"; ".join(details)}' if details else '')
 
 
+def _ebay_postage(item):
+    """Cheapest known postage from a Browse item's shippingOptions.
+
+    0.0 when any option is free; None when eBay gives no fixed cost (calculated
+    or missing), so the caller must not assume free postage.
+    """
+    costs = []
+    for option in item.get('shippingOptions') or []:
+        if not isinstance(option, dict):
+            continue
+        if option.get('shippingCostType') == 'FREE':
+            return 0.0
+        cost = (option.get('shippingCost') or {}).get('value')
+        if cost not in (None, ''):
+            try:
+                costs.append(round(float(cost), 2))
+            except (TypeError, ValueError):
+                continue
+    return min(costs) if costs else None
+
+
+def _market_median(coin_id):
+    """Sold-item median for a coin from manual_ebay_sales.json (excludes postage).
+
+    None unless the sample has at least BARGAIN_MIN_SALES matched sales.
+    """
+    try:
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), MANUAL_EBAY_SALES_FILE)
+        with open(path, 'r', encoding='utf-8') as f:
+            entry = (json.load(f).get('coins') or {}).get(coin_id) or {}
+    except (OSError, json.JSONDecodeError, AttributeError):
+        return None
+    median = entry.get('median_price')
+    if (entry.get('matched_results') or 0) < BARGAIN_MIN_SALES or not isinstance(median, (int, float)) or median <= 0:
+        return None
+    return float(median)
+
+
+def _deal_fields(item_price, postage, market_median):
+    """Landed cost and discount against the market median.
+
+    The median excludes postage, so a bargain needs known postage and a
+    landed price at least BARGAIN_DISCOUNT_PCT below it. Unknown postage gives
+    no bargain rather than a guess.
+    """
+    landed = round(item_price + postage, 2) if postage is not None else None
+    fields = {'postage': postage, 'landed_price': landed, 'market_median': market_median,
+              'discount_pct': None, 'is_bargain': False}
+    if landed is None or market_median is None:
+        return fields
+    discount = (market_median - landed) / market_median * 100
+    fields['discount_pct'] = round(discount, 1)
+    fields['is_bargain'] = discount >= BARGAIN_DISCOUNT_PCT
+    return fields
+
+
 def _ebay_browse_search(keywords, limit=5):
     """
     Query eBay's own Browse API for active Buy It Now listings.
@@ -1174,6 +1235,7 @@ def _ebay_browse_search(keywords, limit=5):
         condition = it.get('condition') or ''
         items.append({
             'price':    price,
+            'postage':  _ebay_postage(it),
             'title':    it.get('title') or '',
             'url':      it.get('itemWebUrl'),
             'subtitle': condition[:40] if condition else None,
@@ -1287,6 +1349,7 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
         return _link_only_option(retailer, keywords, coin_id=coin_id)
 
     q = urllib.parse.quote(keywords)
+    market_median = _market_median(coin_id)
     out = []
     for it in items:
         url = it.get('url')
@@ -1301,6 +1364,7 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
             'link_only':   False,
             'title':       it.get('title') or '',
             'subtitle':    it.get('subtitle'),
+            **_deal_fields(it['price'], it.get('postage'), market_median),
         })
 
     return sorted(out, key=lambda x: x['price'])[:3]

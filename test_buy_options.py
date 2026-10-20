@@ -1,6 +1,8 @@
 import importlib.util
+import json
 import os
 import re
+import tempfile
 import time
 import unittest
 from unittest import mock
@@ -398,3 +400,71 @@ class TestCatalogueFormatGate(unittest.TestCase):
                     tokens = set(re.findall(r'[a-z0-9]+', variant.lower()))
                     self.assertTrue(set(group) & tokens,
                                     f'{coin_id} variant drops {group}: {variant}')
+
+
+class TestBargainLandedPrice(unittest.TestCase):
+    def test_postage_reads_free_fixed_and_unknown_costs(self):
+        self.assertEqual(legacy._ebay_postage({'shippingOptions': [{'shippingCostType': 'FREE'}]}), 0.0)
+        self.assertEqual(legacy._ebay_postage({'shippingOptions': [
+            {'shippingCostType': 'FIXED', 'shippingCost': {'value': '6.50', 'currency': 'AUD'}}]}), 6.5)
+        # Cheapest known option wins; a calculated option with no value is ignored.
+        self.assertEqual(legacy._ebay_postage({'shippingOptions': [
+            {'shippingCostType': 'CALCULATED'},
+            {'shippingCost': {'value': '9.00'}},
+            {'shippingCost': {'value': '4.00'}}]}), 4.0)
+        # No shipping data means unknown postage, never assumed free.
+        self.assertIsNone(legacy._ebay_postage({}))
+        self.assertIsNone(legacy._ebay_postage({'shippingOptions': [{'shippingCostType': 'CALCULATED'}]}))
+
+    def test_bargain_needs_known_postage_and_fifteen_percent_below_median(self):
+        below = legacy._deal_fields(18.0, 4.0, 27.99)    # landed 22.00, 21.4% below
+        self.assertTrue(below['is_bargain'])
+        self.assertEqual(below['landed_price'], 22.0)
+        self.assertEqual(below['discount_pct'], 21.4)
+
+        near = legacy._deal_fields(20.0, 4.0, 27.99)     # landed 24.00, 14.2% below
+        self.assertFalse(near['is_bargain'])
+
+        unknown_post = legacy._deal_fields(10.0, None, 27.99)
+        self.assertFalse(unknown_post['is_bargain'])
+        self.assertIsNone(unknown_post['landed_price'])
+        self.assertIsNone(unknown_post['discount_pct'])
+
+        no_median = legacy._deal_fields(10.0, 0.0, None)
+        self.assertFalse(no_median['is_bargain'])
+        self.assertIsNone(no_median['discount_pct'])
+
+    def test_market_median_requires_a_real_sample(self):
+        sales = {'coins': {
+            'thick': {'median_price': 30.0, 'matched_results': 5},
+            'thin':  {'median_price': 30.0, 'matched_results': 2},
+            'none':  {'median_price': None, 'matched_results': 9},
+        }}
+        with tempfile.TemporaryDirectory() as d:
+            path = os.path.join(d, 'sales.json')
+            with open(path, 'w', encoding='utf-8') as f:
+                json.dump(sales, f)
+            with mock.patch.object(legacy, 'MANUAL_EBAY_SALES_FILE', path):
+                self.assertEqual(legacy._market_median('thick'), 30.0)
+                self.assertIsNone(legacy._market_median('thin'))
+                self.assertIsNone(legacy._market_median('none'))
+                self.assertIsNone(legacy._market_median('missing'))
+
+    def test_live_offer_carries_landed_price_and_bargain_flag(self):
+        retailer = {r['id']: r for r in legacy.RETAILERS}['ebay']
+        listings = [
+            {'price': 18.0, 'postage': 4.0, 'title': '2027 Bluey Cricket $1 Coloured Uncirculated Coin',
+             'url': 'https://www.ebay.com.au/itm/1'},
+            {'price': 30.0, 'postage': 4.0, 'title': '2027 Bluey Cricket $1 Coloured Uncirculated Coin',
+             'url': 'https://www.ebay.com.au/itm/2'},
+        ]
+        keywords = legacy.COIN_BY_ID['s4_cricket_unc']['search']
+        with mock.patch.object(legacy, '_market_median', return_value=27.99):
+            with mock.patch.object(legacy, '_ebay_browse_search', return_value=listings):
+                options = legacy._ebay_live_options(retailer, keywords, 's4_cricket_unc')
+        by_price = {o['price']: o for o in options}
+        self.assertTrue(by_price[18.0]['is_bargain'])
+        self.assertEqual(by_price[18.0]['landed_price'], 22.0)
+        self.assertFalse(by_price[30.0]['is_bargain'])
+        self.assertEqual(by_price[30.0]['landed_price'], 34.0)
+        self.assertEqual(by_price[18.0]['price_type'], 'asking')
