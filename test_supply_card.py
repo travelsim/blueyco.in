@@ -17,8 +17,9 @@ const end = html.indexOf('\n];', start) + 3;
 const COINS = new Function(html.slice(start, end).replace('window.COINS = ', 'return '))();
 const lines = html.split('\n');
 const first = lines.findIndex(l => l.includes("const supplyCard = el('section'"));
-const last = lines.findIndex(l => l.includes('if (supplyDetail) supplyCard.append'));
-const runCard = new Function('el', 'coin', lines.slice(first, last + 1).join('\n') + '\nreturn supplyCard;');
+const last = lines.findIndex(l => l.includes('if (supplyDetail) more.append'));
+// The real card passes its More details block as \`more\`; the captured text includes it.
+const runCard = new Function('el', 'coin', "const more = el('details', 'card-more');\n" + lines.slice(first, last + 1).join('\n') + '\nreturn [supplyCard, more];');
 function el(tag, cls, text) {
   const node = { text: text === undefined ? null : String(text), children: [] };
   node.append = (...kids) => node.children.push(...kids);
@@ -31,7 +32,10 @@ function texts(node, out) {
   return out;
 }
 const cards = {};
-for (const coin of COINS) cards[coin.id] = texts(runCard(el, coin), []);
+for (const coin of COINS) {
+  const [supply, more] = runCard(el, coin);
+  cards[coin.id] = texts(more, texts(supply, []));
+}
 process.stdout.write(JSON.stringify(cards));
 """
 
