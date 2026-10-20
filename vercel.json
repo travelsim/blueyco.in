@@ -151,17 +151,6 @@
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "header",
-          "key": "Accept",
-          "value": "(.*)text/markdown(.*)"
-        }
-      ],
-      "destination": "/api/markdown"
-    },
-    {
       "source": "/((?!api(?:/|$)|_vercel(?:/|$)).*)",
       "destination": "/index.html"
     }
