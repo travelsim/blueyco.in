@@ -19,13 +19,18 @@
   "agent_auth": {
     "skill": "https://blueyco.in/auth.md",
     "register_uri": "https://blueyco.in/api/auth",
+    "identity_endpoint": "https://blueyco.in/api/auth",
+    "claim_uri": "https://blueyco.in/api/auth",
+    "claim_endpoint": "https://blueyco.in/api/auth",
+    "revocation_uri": "https://blueyco.in/api/auth",
     "identity_types_supported": [
       "anonymous",
       "identity_assertion"
     ],
     "anonymous": {
       "credential_types_supported": [
-        "api_key"
+        "api_key",
+        "bearer"
       ],
       "claim_uri": "https://blueyco.in/api/auth"
     },
@@ -35,7 +40,16 @@
         "urn:ietf:params:oauth:token-type:id-jag"
       ],
       "credential_types_supported": [
-        "bearer"
+        "bearer",
+        "api_key"
+      ],
+      "claim_uri": "https://blueyco.in/api/auth",
+      "revocation_uri": "https://blueyco.in/api/auth"
+    },
+    "verified_email": {
+      "credential_types_supported": [
+        "bearer",
+        "api_key"
       ],
       "claim_uri": "https://blueyco.in/api/auth"
     }
@@ -43,5 +57,7 @@
   "revocation_endpoint": "https://blueyco.in/api/auth",
   "poppy_domains": [
     "blueyco.in"
-  ]
+  ],
+  "claim_uri": "https://blueyco.in/api/auth",
+  "claim_endpoint": "https://blueyco.in/api/auth"
 }

@@ -151,7 +151,7 @@
           "value": "(.*text/markdown.*)"
         }
       ],
-      "destination": "/llms.txt"
+      "destination": "/api/markdown"
     },
     {
       "source": "/((?!api(?:/|$)|_vercel(?:/|$)).*)",
