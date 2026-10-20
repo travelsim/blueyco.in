@@ -1,0 +1,29 @@
+{
+  "serverInfo": {
+    "name": "blueycoin",
+    "version": "1.0.0"
+  },
+  "name": "blueycoin",
+  "version": "1.0.0",
+  "description": "MCP server for Bluey Coin Tracker live pricing and catalogue data.",
+  "endpoint": "https://blueyco.in/mcp",
+  "capabilities": {
+    "tools": [
+      {
+        "name": "get_coin_prices",
+        "description": "Get current market prices for Australian Bluey commemorative coins."
+      },
+      {
+        "name": "get_price_history",
+        "description": "Get historical pricing trends for a specific Bluey coin."
+      }
+    ],
+    "resources": [
+      {
+        "uri": "bluey://coins/catalog",
+        "name": "Bluey Coin Catalogue"
+      }
+    ],
+    "prompts": []
+  }
+}

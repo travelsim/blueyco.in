@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "bluey-pricing",
+      "type": "skill-md",
+      "description": "Query live market prices, catalogue details, and historical value trends for Australian Bluey commemorative coins.",
+      "url": "https://blueyco.in/.well-known/agent-skills/bluey-pricing/SKILL.md",
+      "digest": "sha256:2885f64df8081fde3b89853090157dcf2d4676b9b22a34a3a6c711b464ccc89e"
+    }
+  ]
+}
