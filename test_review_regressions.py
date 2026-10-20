@@ -114,7 +114,7 @@ class TestPriceOutlierAndBundleRegressions(unittest.TestCase):
             deadline=1,
         )
         bluey = payload["s3_till_bluey"]
-        self.assertEqual(bluey["ebay"]["median_price"], 6.79)
+        self.assertEqual(bluey["ebay"]["median_price"], 5.9)
         self.assertEqual(bluey["coinxchange"]["matched_results"], 0)
         self.assertEqual(bluey["coinxchange"]["products"], [])
 

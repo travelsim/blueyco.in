@@ -665,7 +665,7 @@ def _quality_filter_ebay(data, coin, now=None):
         # product-name variant; the checks below still enforce date, currency,
         # positive price, duplicate and 90-day rules.
         reviewed_csv_match = (
-            product.get('source_type') == 'user_imported_csv'
+            product.get('source_type') in {'user_imported_csv', 'user_pasted_search'}
             and product.get('record_status') == 'Retained'
             and product.get('coin_id') == coin.get('id')
         )
