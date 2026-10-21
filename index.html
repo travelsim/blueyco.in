@@ -283,6 +283,10 @@
   .coin-card:hover { transform: translateY(-3px) rotate(-.15deg); box-shadow: 0 9px 0 rgba(38,58,91,.13), 0 18px 34px rgba(30,144,212,.18); }
   .coin-collector-notes { margin: 0 0 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; background: #f8fafc; color: var(--text); font-size: .8rem; }
   .coin-collector-notes > strong { display: block; margin-bottom: 5px; color: var(--navy); }
+  .card-more { margin: 0 0 12px; }
+  .card-more > summary { min-height: 40px; display: flex; align-items: center; cursor: pointer; font-size: .85rem; font-weight: 600; color: var(--navy); }
+  .card-more .coin-variant-note { margin: 0 0 6px; font-size: .8rem; }
+  .card-more .coin-collector-notes { margin-bottom: 8px; }
   .coin-variant-note { margin: 5px 0 0; }
     /* ── COMMUNITY & EVENTS ── */
   .community-events { background: #fff; }
@@ -1273,6 +1277,21 @@
     .dash-empty { padding: 36px 28px; text-align: center; color: var(--slate); }
     .dash-empty button { margin-top: 12px; }
     .dash-checkbox { width: 24px; height: 24px; }
+    .qty-stepper { display: flex; align-items: center; gap: 6px; }
+    .qty-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: transparent; font-size: 1.1rem; line-height: 1; cursor: pointer; }
+    .qty-btn:disabled { opacity: .35; cursor: default; }
+    .qty-count { min-width: 2ch; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    /* View tabs: mobile first, a full-width pair of pills; centred and compact from 900px */
+    .view-tabs { display: flex; gap: 8px; padding: 10px 16px; background: #fff; border-bottom: 1px solid var(--border); }
+    .view-tab { flex: 1; min-height: 44px; padding: 0 12px; border: 1px solid var(--border); border-radius: 999px; background: #fff; color: var(--navy); font: inherit; font-weight: 700; cursor: pointer; }
+    .view-tab.on { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .view-tab:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
+    .view-panel[hidden] { display: none; }
+    @media (min-width: 900px) {
+      .view-tabs { justify-content: center; }
+      .view-tab { flex: 0 1 240px; }
+    }
     .dashboard-footer {
       padding: 14px 28px;
       background: #fbfaf7;
@@ -1688,45 +1707,13 @@
   </div>
 </section>
 
-<!-- Answer Engine Optimization (AEO) Collector Summary Capsule -->
-<section class="section" style="padding-top: 0; padding-bottom: 0;" aria-label="Bluey Coin Collector Quick Summary">
-  <div class="aeo-summary-capsule">
-    <div class="aeo-summary-header">
-      <h2 class="aeo-summary-title">
-        <span aria-hidden="true">🪙</span> Official Bluey Numismatics &amp; Value Guide
-      </h2>
-      <span class="aeo-verified-badge" title="Reconciled with Royal Australian Mint reports">
-        <span aria-hidden="true">✓</span> Royal Australian Mint Verified
-      </span>
-    </div>
-    <p style="margin: 0 0 10px; font-size: 0.95rem; color: var(--text); line-height: 1.5;">
-      Official guide to Australian Bluey $1 and $2 coins produced by the Royal Australian Mint in Canberra. Features verified mintages, legal tender specifications, circulation guides, and live secondary market price tracking.
-    </p>
-    <div class="aeo-grid">
-      <div class="aeo-stat-item">
-        <span class="aeo-stat-label">Legal Tender</span>
-        <span class="aeo-stat-value">$1 &amp; $2 AUD</span>
-        <span class="aeo-stat-sub">Currency Act 1965</span>
-      </div>
-      <div class="aeo-stat-item">
-        <span class="aeo-stat-label">Circulating in Change</span>
-        <span class="aeo-stat-value">2.5M Coins</span>
-        <span class="aeo-stat-sub">2024 $1 Bluey &amp; Bingo</span>
-      </div>
-      <div class="aeo-stat-item">
-        <span class="aeo-stat-label">Rarest Public Issue</span>
-        <span class="aeo-stat-value">2,650 Mintage</span>
-        <span class="aeo-stat-sub">2024 Fine Silver Proof</span>
-      </div>
-      <div class="aeo-stat-item">
-        <span class="aeo-stat-label">Market Value Range</span>
-        <span class="aeo-stat-value">$5 – $650+ AUD</span>
-        <span class="aeo-stat-sub">From till coins to proofs</span>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- View tabs: the page is split into a collection view and a price view -->
+<nav class="view-tabs" role="tablist" aria-label="Choose a view">
+  <button class="view-tab on" type="button" role="tab" id="tab-collection" data-view="collection" aria-controls="view-collection" aria-selected="true">My collection</button>
+  <button class="view-tab" type="button" role="tab" id="tab-prices" data-view="prices" aria-controls="view-prices" aria-selected="false" tabindex="-1">Coin prices</button>
+</nav>
 
+<div class="view-panel" id="view-collection" role="tabpanel" aria-labelledby="tab-collection">
 <!-- Interactive Dashboard (Hero Feature) -->
 <section id="dashboard" class="dashboard-section">
   <div class="dashboard-card">
@@ -1805,21 +1792,6 @@
     </div>
   </div>
 </section>
-
-<dialog class="auth-dialog" id="auth-dialog" aria-labelledby="auth-dialog-title">
-  <button class="close-auth" id="auth-close" type="button" aria-label="Close sign-in">×</button>
-  <h2 id="auth-dialog-title">Sign in to Blueycoin</h2>
-  <p>Use a Google account or email link. We store only a private account key and your collection.</p>
-  <div id="google-signin" hidden></div>
-  <p id="google-unavailable" class="auth-status" hidden>Google sign-in is not configured yet.</p>
-  <hr>
-  <form id="magic-form">
-    <label for="magic-email">Email address</label>
-    <input id="magic-email" type="email" autocomplete="email" required placeholder="you@example.com">
-    <button class="btn-primary" type="submit">Email me a sign-in link</button>
-    <p class="auth-status" id="magic-status" role="status"></p>
-  </form>
-</dialog>
 
 <!-- ============================================
      BLUEYCOIN FRAMES SHOP (Revenue Feature)
@@ -1902,6 +1874,126 @@
   </div>
 </section>
 
+</div>
+
+<div class="view-panel" id="view-prices" role="tabpanel" aria-labelledby="tab-prices" hidden>
+<!-- Answer Engine Optimization (AEO) Collector Summary Capsule -->
+<section class="section" style="padding-top: 0; padding-bottom: 0;" aria-label="Bluey Coin Collector Quick Summary">
+  <div class="aeo-summary-capsule">
+    <div class="aeo-summary-header">
+      <h2 class="aeo-summary-title">
+        <span aria-hidden="true">🪙</span> Official Bluey Numismatics &amp; Value Guide
+      </h2>
+      <span class="aeo-verified-badge" title="Reconciled with Royal Australian Mint reports">
+        <span aria-hidden="true">✓</span> Royal Australian Mint Verified
+      </span>
+    </div>
+    <p style="margin: 0 0 10px; font-size: 0.95rem; color: var(--text); line-height: 1.5;">
+      Official guide to Australian Bluey $1 and $2 coins produced by the Royal Australian Mint in Canberra. Features verified mintages, legal tender specifications, circulation guides, and live secondary market price tracking.
+    </p>
+    <div class="aeo-grid">
+      <div class="aeo-stat-item">
+        <span class="aeo-stat-label">Legal Tender</span>
+        <span class="aeo-stat-value">$1 &amp; $2 AUD</span>
+        <span class="aeo-stat-sub">Currency Act 1965</span>
+      </div>
+      <div class="aeo-stat-item">
+        <span class="aeo-stat-label">Circulating in Change</span>
+        <span class="aeo-stat-value">2.5M Coins</span>
+        <span class="aeo-stat-sub">2024 $1 Bluey &amp; Bingo</span>
+      </div>
+      <div class="aeo-stat-item">
+        <span class="aeo-stat-label">Rarest Public Issue</span>
+        <span class="aeo-stat-value">2,650 Mintage</span>
+        <span class="aeo-stat-sub">2024 Fine Silver Proof</span>
+      </div>
+      <div class="aeo-stat-item">
+        <span class="aeo-stat-label">Market Value Range</span>
+        <span class="aeo-stat-value">$5 – $650+ AUD</span>
+        <span class="aeo-stat-sub">From till coins to proofs</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="all-coins" class="section">
+  <div class="all-coins-intro">
+    <h2 class="section-title">Bluey coin price guide</h2>
+    <p class="page-sub">Recent sold records inform current prices. Older matched eBay sales remain visible as history, not current value. Compare them with active dealer asking listings in Where to Buy.</p>
+  </div>
+
+  <div class="collector-guide-strip" aria-label="Kid-friendly guide to collecting Bluey coins">
+    <div class="guide-pill">
+      <strong>🪙 Pocket Change Hunt</strong>
+      <p>Legal tender $1 and $2 coins found in Australian cash registers and till change at face value!</p>
+    </div>
+    <div class="guide-pill">
+      <strong>🌟 Lucky 1-in-10 Coins</strong>
+      <p>Secret coloured coins randomly hidden in 1 of every 10 tubes (official RAM 31961, 15,750 produced)!</p>
+    </div>
+    <div class="guide-pill">
+      <strong>📦 3 Folder States</strong>
+      <p>1. Sealed (mystery chance), 2. Opened base set (10 coins), 3. Opened complete set with lucky coin.</p>
+    </div>
+    <div class="guide-pill">
+      <strong>✉️ PNCs &amp; Cards</strong>
+      <p>Australia Post envelopes and cards pairing uncirculated coins with special postmarks &amp; stamps.</p>
+    </div>
+  </div>
+
+  <div class="series-tabs">
+    <button class="tab-btn active" data-series="all">All Series</button>
+    <button class="tab-btn" data-series="series1_june">Dollarbucks · June 2024 - Three coloured coins</button>
+    <button class="tab-btn" data-series="series1_september">Dollarbucks · September 2024 - Ten-coin release</button>
+    <button class="tab-btn" data-series="series1_november">Dollarbucks · November 2024 - Impressions PNCs</button>
+    <button class="tab-btn" data-series="series2">Series 2 · 2025 Christmas</button>
+    <button class="tab-btn" data-series="series3">Series 3 · 2026 Bluey 2</button>
+    <button class="tab-btn" data-series="series4">Series 4 · 2027 Cricket</button>
+  </div>
+
+  <div class="attr-filters" id="attr-filters" role="group" aria-label="Filter coins by attribute"></div>
+  <div class="filter-bar" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:14px 0 18px; padding:10px 12px; background:var(--bg); border:1px solid var(--border); border-radius:10px;">
+    <input
+      type="search"
+      id="search-input"
+      aria-label="Search coins by name, year, mintage, or keyword"
+      placeholder="🔍 Search by name, year, mintage, or keywords…"
+      autocomplete="off"
+      style="flex:1 1 240px; min-width:200px; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:0.92rem; background:#fff;">
+    <select
+      id="sort-select"
+      aria-label="Sort coins"
+      style="padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:0.9rem; background:#fff; cursor:pointer;">
+      <option value="default">Sort: Default order</option>
+      <option value="premium_desc">Highest Premium %</option>
+      <option value="price_desc">Highest market price</option>
+      <option value="price_asc">Lowest market price</option>
+      <option value="mintage_asc">Rarest (lowest mintage)</option>
+      <option value="newest">Newest first</option>
+    </select>
+    <span id="filter-count" style="font-size:0.82rem; color:var(--slate); white-space:nowrap;"></span>
+  </div>
+
+  <div class="coins-grid" id="coins-grid"></div>
+</section>
+
+</div>
+
+<dialog class="auth-dialog" id="auth-dialog" aria-labelledby="auth-dialog-title">
+  <button class="close-auth" id="auth-close" type="button" aria-label="Close sign-in">×</button>
+  <h2 id="auth-dialog-title">Sign in to Blueycoin</h2>
+  <p>Use a Google account or email link. We store only a private account key and your collection.</p>
+  <div id="google-signin" hidden></div>
+  <p id="google-unavailable" class="auth-status" hidden>Google sign-in is not configured yet.</p>
+  <hr>
+  <form id="magic-form">
+    <label for="magic-email">Email address</label>
+    <input id="magic-email" type="email" autocomplete="email" required placeholder="you@example.com">
+    <button class="btn-primary" type="submit">Email me a sign-in link</button>
+    <p class="auth-status" id="magic-status" role="status"></p>
+  </form>
+</dialog>
+
 <!-- Cart Drawer -->
 <div id="cart-drawer" role="dialog" aria-modal="false" aria-label="Shopping cart" style="position: fixed; top: 0; right: -400px; width: 380px; height: 100vh; background: white; box-shadow: -10px 0 30px rgba(0,0,0,0.15); z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; border-left: 1px solid var(--border);">
   <div style="padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--navy); color: white;">
@@ -1965,67 +2057,6 @@
     </form>
   </div>
 </div>
-
-<section id="all-coins" class="section">
-  <div class="all-coins-intro">
-    <h2 class="section-title">Bluey coin price guide</h2>
-    <p class="page-sub">Recent sold records inform current prices. Older matched eBay sales remain visible as history, not current value. Compare them with active dealer asking listings in Where to Buy.</p>
-  </div>
-
-  <div class="collector-guide-strip" aria-label="Kid-friendly guide to collecting Bluey coins">
-    <div class="guide-pill">
-      <strong>🪙 Pocket Change Hunt</strong>
-      <p>Legal tender $1 and $2 coins found in Australian cash registers and till change at face value!</p>
-    </div>
-    <div class="guide-pill">
-      <strong>🌟 Lucky 1-in-10 Coins</strong>
-      <p>Secret coloured coins randomly hidden in 1 of every 10 tubes (official RAM 31961, 15,750 produced)!</p>
-    </div>
-    <div class="guide-pill">
-      <strong>📦 3 Folder States</strong>
-      <p>1. Sealed (mystery chance), 2. Opened base set (10 coins), 3. Opened complete set with lucky coin.</p>
-    </div>
-    <div class="guide-pill">
-      <strong>✉️ PNCs &amp; Cards</strong>
-      <p>Australia Post envelopes and cards pairing uncirculated coins with special postmarks &amp; stamps.</p>
-    </div>
-  </div>
-
-  <div class="series-tabs">
-    <button class="tab-btn active" data-series="all">All Series</button>
-    <button class="tab-btn" data-series="series1_june">Dollarbucks · June 2024 - Three coloured coins</button>
-    <button class="tab-btn" data-series="series1_september">Dollarbucks · September 2024 - Ten-coin release</button>
-    <button class="tab-btn" data-series="series1_november">Dollarbucks · November 2024 - Impressions PNCs</button>
-    <button class="tab-btn" data-series="series2">Series 2 · 2025 Christmas</button>
-    <button class="tab-btn" data-series="series3">Series 3 · 2026 Bluey 2</button>
-    <button class="tab-btn" data-series="series4">Series 4 · 2027 Cricket</button>
-  </div>
-
-  <div class="attr-filters" id="attr-filters" role="group" aria-label="Filter coins by attribute"></div>
-  <div class="filter-bar" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:14px 0 18px; padding:10px 12px; background:var(--bg); border:1px solid var(--border); border-radius:10px;">
-    <input
-      type="search"
-      id="search-input"
-      aria-label="Search coins by name, year, mintage, or keyword"
-      placeholder="🔍 Search by name, year, mintage, or keywords…"
-      autocomplete="off"
-      style="flex:1 1 240px; min-width:200px; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:0.92rem; background:#fff;">
-    <select
-      id="sort-select"
-      aria-label="Sort coins"
-      style="padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:0.9rem; background:#fff; cursor:pointer;">
-      <option value="default">Sort: Default order</option>
-      <option value="premium_desc">Highest Premium %</option>
-      <option value="price_desc">Highest market price</option>
-      <option value="price_asc">Lowest market price</option>
-      <option value="mintage_asc">Rarest (lowest mintage)</option>
-      <option value="newest">Newest first</option>
-    </select>
-    <span id="filter-count" style="font-size:0.82rem; color:var(--slate); white-space:nowrap;"></span>
-  </div>
-
-  <div class="coins-grid" id="coins-grid"></div>
-</section>
 
 <!-- ============================================
      FRAMES SHOP JAVASCRIPT
@@ -2446,7 +2477,20 @@ window.showDesignModal = showDesignModal;
 // INTERACTIVE COLLECTION DASHBOARD
 // =============================================
 
-let collection = JSON.parse(localStorage.getItem('blueycoin_collection') || '{}');
+const MAX_QTY = 99;
+function normalizeQtyMap(raw) {
+  const clean = {};
+  if (raw && typeof raw === 'object') {
+    for (const [id, value] of Object.entries(raw)) {
+      if (!/^[a-z0-9_]{1,64}$/.test(id)) continue;
+      const qty = value === true ? 1 : (Number.isInteger(value) ? value : 0);
+      if (qty < 1) continue;
+      clean[id] = Math.min(MAX_QTY, qty);
+    }
+  }
+  return clean;
+}
+let collection = normalizeQtyMap(JSON.parse(localStorage.getItem('blueycoin_collection') || '{}'));
 let wishlist   = JSON.parse(localStorage.getItem('blueycoin_wishlist') || '{}');
 let swapOffer  = JSON.parse(localStorage.getItem('blueycoin_swap_offer') || '{}');
 let swapProfile = null;
@@ -2828,12 +2872,15 @@ function updateDashboardStats() {
   let totalValue = 0;
   let pricedOwned = 0;
 
+  let pieces = 0;
   coins.forEach(coin => {
-    if (collection[coin.id]) {
+    const qty = collection[coin.id] || 0;
+    if (qty > 0) {
       owned++;
+      pieces += qty;
       const live = _referencePrice(coin);
       if (live) {
-        totalValue += live;
+        totalValue += live * qty;
         pricedOwned++;
       }
     }
@@ -2841,7 +2888,7 @@ function updateDashboardStats() {
 
   const pct = coins.length ? Math.round((owned / coins.length) * 100) : 0;
   const set = (id, text) => { const node = document.getElementById(id); if (node) node.textContent = text; };
-  set('owned-count', `${owned} / ${coins.length}`);
+  set('owned-count', `${owned} of ${coins.length} types \u00b7 ${pieces} coins`);
   set('completion', pct + '%');
   if (!owned) {
     set('total-value', '$0');
@@ -2925,12 +2972,43 @@ function _dashRow(coin) {
   const valueWrap = el('div', 'dash-valuewrap');
   valueWrap.append(value, wish);
 
-  checkbox.addEventListener('change', () => {
-    if (checkbox.checked) collection[coin.id] = true; else delete collection[coin.id];
-    row.classList.toggle('is-owned', checkbox.checked);
+  const stepper = el('div', 'qty-stepper');
+  const minus = el('button', 'qty-btn', '\u2212');
+  minus.type = 'button';
+  const qtyLabel = el('span', 'qty-count', String(collection[coin.id] || 0));
+  const plus = el('button', 'qty-btn', '+');
+  plus.type = 'button';
+  stepper.append(minus, qtyLabel, plus);
+  function refreshQty() {
+    const qty = collection[coin.id] || 0;
+    const on = qty > 0;
+    qtyLabel.textContent = String(qty);
+    checkbox.checked = on;
+    row.classList.toggle('is-owned', on);
+    minus.disabled = !on;
+    minus.setAttribute('aria-label', `Own one fewer ${coin.name} (have ${qty})`);
+    plus.setAttribute('aria-label', `Own one more ${coin.name} (have ${qty})`);
+  }
+  minus.addEventListener('click', () => {
+    const qty = collection[coin.id] || 0;
+    if (qty <= 1) delete collection[coin.id]; else collection[coin.id] = qty - 1;
+    refreshQty();
     saveCollection();
     updateDashboardStats();
   });
+  plus.addEventListener('click', () => {
+    collection[coin.id] = Math.min(MAX_QTY, (collection[coin.id] || 0) + 1);
+    refreshQty();
+    saveCollection();
+    updateDashboardStats();
+  });
+  checkbox.addEventListener('change', () => {
+    if (checkbox.checked) collection[coin.id] = collection[coin.id] || 1; else delete collection[coin.id];
+    refreshQty();
+    saveCollection();
+    updateDashboardStats();
+  });
+  refreshQty();
   wish.addEventListener('click', () => {
     if (wishlist[coin.id]) delete wishlist[coin.id]; else wishlist[coin.id] = true;
     const on = !!wishlist[coin.id];
@@ -2942,7 +3020,7 @@ function _dashRow(coin) {
     updateDashboardStats();
   });
 
-  row.append(checkbox, thumb, info, badge, valueWrap);
+  row.append(checkbox, stepper, thumb, info, badge, valueWrap);
   return row;
 }
 
@@ -2992,7 +3070,7 @@ function renderDashboard() {
     all.type = 'button';
     all.addEventListener('click', () => {
       const everyOwned = group.coins.every(c => collection[c.id]);
-      group.coins.forEach(c => { if (everyOwned) delete collection[c.id]; else collection[c.id] = true; });
+      group.coins.forEach(c => { if (everyOwned) delete collection[c.id]; else collection[c.id] = 1; });
       saveCollection();
       renderDashboard();
       toast(everyOwned ? `Cleared ${group.label}.` : `Marked all of ${group.label} as owned.`, 'success');
@@ -3954,14 +4032,16 @@ function buildCard(coin) {
   const hdr = el('div', 'card-header');
   const tw = el('div');
   tw.style.flex = '1';
-  const labels = cardLabels(coin);
-  const briefTitle = (coin.year ? coin.year + ' ' : '') + labels.title;
-  const titleEl = el('div', 'card-title', briefTitle);
+  // The title is the official product name, so it matches the product.
+  const titleEl = el('div', 'card-title', coin.name);
   titleEl.title = coin.name;
   tw.style.minWidth = '0';
   const cat = getCoinCategory(coin);
   const pills = el('div', 'card-attr-pills');
-  coinAttributes(coin).forEach(attr => {
+  // One pill per attribute, and none that repeats words already in the title.
+  const titleText = coin.name.toLowerCase();
+  const attrs = [...new Set(coinAttributes(coin))].filter(attr => !titleText.includes(String(attr).toLowerCase()));
+  attrs.forEach(attr => {
     const pill = el('button', 'card-attr' + (activeAttrs.has(attr) ? ' on' : ''), attr);
     pill.type = 'button';
     pill.dataset.attr = attr;
@@ -3970,14 +4050,15 @@ function buildCard(coin) {
     pill.addEventListener('click', () => toggleAttr(pill.dataset.attr));
     pills.append(pill);
   });
-  void cat; // category hint still renders in the detail block below; header shows attribute pills
   tw.append(titleEl, pills);
   hdr.append(tw);
 
   // ── Body ──
   const body = el('div', 'card-body');
 
-  // Collection notes
+  // Extra text (folder notes, mintage detail, kid hint) sits in a closed block so the card face stays short.
+  const more = el('details', 'card-more');
+  more.append(el('summary', '', 'More details'));
   if (coin.collectionVariants || coin.collectionNote) {
     const notes = el('div', 'coin-collector-notes' + (coin.id === 's1_coloured_insert_variant' || coin.id === 's3_sleepytime_insert' ? ' note-lucky-coin' : ''));
     if (coin.collectionVariants) {
@@ -3989,7 +4070,7 @@ function buildCard(coin) {
       });
     }
     if (coin.collectionNote) notes.append(el('p', 'coin-variant-note', coin.collectionNote));
-    body.append(notes);
+    more.append(notes);
   }
 
   const rarity = mintageRarity(coin);
@@ -4063,13 +4144,16 @@ function buildCard(coin) {
       supplyCaption = label;
     }
   }
-  if (supplyCaption) supplyCard.append(el('div', 'supply-caption', supplyCaption));
+  // Under the mintage figure only the plain "published coins" caption shows; any other wording moves into More details.
+  if (supplyCaption === 'published coins') supplyCard.append(el('div', 'supply-caption', supplyCaption));
+  else if (supplyCaption) more.append(el('p', 'coin-variant-note', supplyCaption));
 
   if (coin.derivedScarcity || coin.id === 's1_coloured_insert_variant') {
     const derivedScarcityNum = coin.derivedScarcity || 15750;
     supplyCard.append(el('div', 'metric-kicker metric-kicker-derived', 'Derived Scarcity'));
     supplyCard.append(el('div', 'metric-amount metric-derived', `~${derivedScarcityNum.toLocaleString('en-AU')}`));
-    supplyCard.append(el('div', 'supply-caption', '1-in-10 hit from 157,500 tube sets'));
+    supplyCard.append(el('div', 'supply-caption', '1-in-10 hit'));
+    more.append(el('p', 'coin-variant-note', 'From 157,500 tube sets'));
   } else if (coin.issueQuantity != null) {
     supplyCard.append(el('div', 'metric-kicker metric-kicker-production', 'Produced'));
     supplyCard.append(el('div', 'metric-amount', Number(coin.issueQuantity).toLocaleString('en-AU')));
@@ -4078,7 +4162,7 @@ function buildCard(coin) {
     supplyCard.append(el('div', 'metric-kicker metric-kicker-production', 'Produced'));
     supplyCard.append(el('div', 'metric-amount metric-unknown', 'Not published'));
   }
-  if (supplyDetail) supplyCard.append(el('div', 'supply-detail', supplyDetail));
+  if (supplyDetail) more.append(el('p', 'coin-variant-note', supplyDetail));
   const rarityRow = el('div', 'rarity-score-row');
   rarityRow.append(el('span', 'rarity-score-label', 'Rarity'));
   rarityRow.append(el('strong', 'rarity-score', rarity == null ? 'Unrated' : `${rarity}/10`));
@@ -4097,6 +4181,14 @@ function buildCard(coin) {
   }
   metrics.append(priceCard, supplyCard);
   body.append(metrics);
+
+  // Product code, face value and the kid hint go in More details, not under the image.
+  const facts = [];
+  if (coin.productCode) facts.push('Mint product ' + coin.productCode);
+  if (coin.denomination != null) facts.push('$' + coin.denomination + ' face value');
+  if (facts.length) more.append(el('p', 'coin-variant-note', facts.join(' · ')));
+  if (cat && cat.hint) more.append(el('div', 'coin-kid-hint', cat.hint));
+  if (more.childElementCount > 1) body.append(more);
 
   // Where to Buy button
   const buyBtn = el('button', 'buy-btn');
@@ -4179,66 +4271,11 @@ function buildCard(coin) {
     image.loading = 'lazy';
     image.decoding = 'async';
     figure.append(image);
-    card.append(hdr, figure, buildDetail(coin, labels), body);
+    card.append(hdr, figure, body);
   } else {
-    card.append(hdr, buildDetail(coin, labels), body);
+    card.append(hdr, body);
   }
   return card;
-}
-
-// Short card title plus a format tag; the long official product name goes in
-// the detail block under the image.
-const CARD_LABELS = {
-  s1_bluey: ['Bluey', 'Till coin'], s1_bingo: ['Bingo', 'Till coin'],
-  s1_proof_silver: ['Bluey', 'Silver proof'], s1_proof_coloured: ['Bluey', 'Coloured proof'],
-  s1_10_coin_folder_set: ['Ten-coin folder (Sealed)', '🔒 Sealed tube'], s1_10_coin_folder_opened: ['Ten-coin folder (Opened)', '📂 Opened base set'],
-  s1_coloured_insert_variant: ['Ten-coin folder (Lucky hit)', '🌟 Complete with lucky coin'], s0_2020_stamp_pack: ['2020 MyStamps', 'Stamp pack'], s1_auspost_stamp_pack: ['MyStamps pack', 'Stamp pack'],
-  s1_impressions_pnc_colour: ['Bluey', 'Coloured PNC'], s1_impressions_pnc_2coin: ['Bluey 2-coin', 'PNC'],
-  s1_impressions_pnc_3coin: ['Bluey 3-coin', 'PNC'], s1_impressions_pnc_silver: ['Bluey', 'Silver proof PNC'],
-  s1_coloured_bluey: ['Bluey', 'Coloured UNC'], s1_coloured_heelers: ['The Heelers', 'Coloured UNC'],
-  s1_coloured_grannies: ['The Grannies', 'Coloured UNC'], s1_three_coin_set: ['Three-coin set', 'Set'],
-  s1_card_bluey: ['Bluey', 'Privy UNC'], s1_card_heelers: ['The Heelers', 'Privy UNC'], s1_card_bingo: ['Bingo', 'Privy UNC'],
-  s1_card_muffinsocks: ['Muffin & Socks', 'Privy UNC'], s1_card_stripes: ['Stripe, Trixie & Nana', 'Privy UNC'],
-  s1_card_radfrisky: ['Uncle Rad & Frisky', 'Privy UNC'], s1_card_blueyfriends: ['Bluey & Friends', 'Privy UNC'],
-  s1_card_blueybingofriends: ['Bluey, Bingo & Friends', 'Privy UNC'], s1_card_mumdad: ['Chilli & Bandit', 'Privy UNC'],
-  s1_card_grannies: ['The Grannies', 'Privy UNC'],
-  s1_pnc_bluey: ['Bluey', 'PNC'], s1_pnc_family: ['The Heeler Family', 'PNC'], s1_pnc_bingo: ['Bingo', 'PNC'],
-  s1_pnc_muffinsocks: ['Muffin & Socks', 'PNC'], s1_pnc_radfrisky: ['Uncle Rad & Frisky', 'PNC'],
-  s1_pnc_stripes: ['Nana, Stripe & Trixie', 'PNC'], s1_pnc_blueybingofriends: ['Bluey, Bingo & Friends', 'PNC'],
-  s1_pnc_blueyfriends: ['Bluey & Friends', 'PNC'], s1_pnc_mumdad: ['Chilli & Bandit', 'PNC'],
-  s1_pnc_grannies: ['The Grannies', 'PNC'], s1_pnc_set_ten: ['All 10 designs', 'PNC set'],
-  s2_xmas_unc: ['Christmas', 'Coloured UNC'], s2_xmas_silv: ['Christmas', 'Silver proof'], s2_xmas_stamp_pack: ['Christmas Stamps', 'Stamp pack'],
-  s3_folder: ['Five-coin folder & album', '📦 5-coin set'],
-  s3_rain_privy: ['Rain', 'Privy UNC'], s3_sleepytime_privy: ['Sleepytime', 'Privy UNC'], s3_camping_privy: ['Camping', 'Privy UNC'],
-  s3_babyrace_privy: ['Baby Race', 'Privy UNC'], s3_granny_privy: ['Granny Mobile', 'Privy UNC'],
-  s3_proof_ab: ['Heeler family', 'Proof'], s3_proof_silv: ['Heeler family', 'Silver proof'],
-  s3_maxicard_pack: ['Maxicard pack', 'Maxicards'], s3_stamp_pack: ['2026 MyStamps', 'Stamp pack'], s3_sleepytime_insert: ['Sleepytime (Lucky hit)', '🌟 1-in-10 lucky coin'],
-  s3_till_bluey: ['Bluey', 'Till coin'], s3_till_bingo: ['Bingo', 'Till coin'],
-  s3_pnc_bluey: ['Bluey', 'PNC'], s3_pnc_bingo: ['Bingo', 'PNC'],
-  s3_pin_babyrace: ['Baby Race', 'Stamp & pin'], s3_pin_camping: ['Camping', 'Stamp & pin'], s3_pin_granny: ['Granny Mobile', 'Stamp & pin'],
-  s3_pin_rain: ['Rain', 'Stamp & pin'], s3_pin_sleepytime: ['Sleepy Time', 'Stamp & pin'],
-  s4_cricket_unc: ['Cricket', 'Coloured UNC'], s4_cricket_proof: ['Cricket', 'Silver proof'],
-};
-
-function cardLabels(coin) {
-  const known = CARD_LABELS[coin.id];
-  return known ? { title: known[0], format: known[1] } : { title: coin.name, format: 'Collectible' };
-}
-
-function buildDetail(coin, labels) {
-  const box = el('div', 'coin-detail');
-  box.append(el('strong', '', coin.name));
-  const bits = [];
-  if (coin.productCode) bits.push('Mint product ' + coin.productCode);
-  if (coin.denomination != null) bits.push('$' + coin.denomination + ' face value');
-  // card format tag removed: attributes now render as pills in the card header
-  box.append(document.createTextNode(bits.join(' · ')));
-  const cat = getCoinCategory(coin);
-  if (cat && cat.hint) {
-    const hintEl = el('div', 'coin-kid-hint', cat.hint);
-    box.append(hintEl);
-  }
-  return box;
 }
 
 // ── Collection / swap / frame actions on each card ──
@@ -4253,7 +4290,7 @@ function buildCollectRow(coin) {
   own.dataset.act = 'own';
   own.setAttribute('aria-pressed', String(owned));
   own.addEventListener('click', () => {
-    if (collection[coin.id]) delete collection[coin.id]; else collection[coin.id] = true;
+    if (collection[coin.id]) delete collection[coin.id]; else collection[coin.id] = 1;
     saveCollection();
     renderDashboard();
     refreshCollectRows(coin.id, 'own');
@@ -4282,8 +4319,34 @@ function buildCollectRow(coin) {
     if (!owned) handleBuyNow(coin.id, coin.keywords);
   });
 
-  row.append(own, swap, frame);
+  row.append(own, ...(owned ? [buildQtyStepper(coin)] : []), swap, frame);
   return row;
+}
+
+// Quantity stepper for a coin already owned; - at 1 removes it from the collection.
+function buildQtyStepper(coin) {
+  const wrap = el('div', 'qty-stepper');
+  wrap.setAttribute('role', 'group');
+  wrap.setAttribute('aria-label', `Quantity owned of ${coin.name}`);
+  const minus = el('button', 'qty-btn', '−');
+  minus.type = 'button';
+  minus.dataset.act = 'qty-minus';
+  minus.setAttribute('aria-label', `Own one fewer ${coin.name}`);
+  const count = el('span', 'qty-count', String(collection[coin.id] || 0));
+  const plus = el('button', 'qty-btn', '+');
+  plus.type = 'button';
+  plus.dataset.act = 'qty-plus';
+  plus.setAttribute('aria-label', `Own one more ${coin.name}`);
+  function setQty(next, act) {
+    if (next <= 0) delete collection[coin.id]; else collection[coin.id] = Math.min(MAX_QTY, next);
+    saveCollection();
+    renderDashboard();
+    refreshCollectRows(coin.id, next <= 0 ? 'own' : act);
+  }
+  minus.addEventListener('click', () => setQty((collection[coin.id] || 0) - 1, 'qty-minus'));
+  plus.addEventListener('click', () => setQty((collection[coin.id] || 0) + 1, 'qty-plus'));
+  wrap.append(minus, count, plus);
+  return wrap;
 }
 
 function refreshCollectRows(focusCoinId, focusAct) {
@@ -4982,5 +5045,54 @@ document.addEventListener('click', (e) => {
     <span>Cart</span>
   </button>
 </nav>
+<script>
+// Two views: the collection and the coin prices. Each has its own tab; links to a section in
+// the other view switch to it, so the section still scrolls into view.
+(function () {
+  const tabs = Array.from(document.querySelectorAll('.view-tab'));
+  const panels = {
+    collection: document.getElementById('view-collection'),
+    prices: document.getElementById('view-prices')
+  };
+  const defaultHash = { collection: '#dashboard', prices: '#all-coins' };
+
+  function showView(name) {
+    tabs.forEach(tab => {
+      const on = tab.dataset.view === name;
+      tab.classList.toggle('on', on);
+      tab.setAttribute('aria-selected', String(on));
+      tab.tabIndex = on ? 0 : -1;
+    });
+    Object.keys(panels).forEach(key => { panels[key].hidden = key !== name; });
+  }
+
+  function viewForId(id) {
+    const target = id ? document.getElementById(id) : null;
+    if (!target) return null;
+    if (panels.prices.contains(target)) return 'prices';
+    if (panels.collection.contains(target)) return 'collection';
+    return null;
+  }
+
+  function routeFromHash() {
+    const id = decodeURIComponent(location.hash.slice(1));
+    const view = viewForId(id);
+    if (!view) return;
+    showView(view);
+    document.getElementById(id).scrollIntoView({ block: 'start' });
+  }
+
+  tabs.forEach(tab => tab.addEventListener('click', () => {
+    const name = tab.dataset.view;
+    showView(name);
+    history.replaceState(null, '', defaultHash[name]);
+    document.querySelector('.view-tabs').scrollIntoView({ block: 'start' });
+  }));
+
+  window.addEventListener('hashchange', routeFromHash);
+  showView(viewForId(decodeURIComponent(location.hash.slice(1))) || 'collection');
+  routeFromHash();
+})();
+</script>
 </body>
 </html>
