@@ -918,7 +918,12 @@ def _coinxchange_quantity(text):
             'twenty': 20, 'fifty': 50,
         }[match.group(1)]
     match = re.search(r'\b(?:bag|roll|pack|set)\s+of\s+(\d+)\b', s)
-    return int(match.group(1)) if match else 1
+    if match:
+        return int(match.group(1))
+    match = re.search(r'\b(\d+)\s*[x\u00d7]\s*(?:\$?\d|one|two|three)\b', s)
+    if match:
+        return int(match.group(1))
+    return 1
 
 
 # Product-format words the query asks for must appear in the listing title too:
@@ -946,7 +951,7 @@ _JUNK_TITLE_TOKENS = {
     'replica', 'reproduction', 'fake', 'empty', 'sticker', 'stickers', 'poster',
     'plush', 'toy', 'lego', 'magnet', 'keyring', 'damaged',
 }
-_BUNDLE_TOKENS = {'set', 'sets', 'folder', 'tube', 'bundle', 'collection', 'bag', 'bags', 'roll', 'lot', 'case'}
+_BUNDLE_TOKENS = {'set', 'sets', 'folder', 'folders', 'tube', 'tubes', 'bundle', 'bundles', 'collection', 'collections', 'bag', 'bags', 'roll', 'rolls', 'lot', 'lots', 'bulk', 'case', 'album', 'albums', 'pack', 'packs'}
 _NAMED_VARIANTS = (
     'bingo', 'muffin', 'muffinsocks', 'socks', 'stripe', 'stripes', 'trixie',
     'nana', 'rad', 'frisky', 'friend', 'friends', 'mum', 'dad', 'family',
@@ -1150,20 +1155,93 @@ def _ebay_postage(item):
 
 
 def _market_median(coin_id):
-    """Sold-item median for a coin from manual_ebay_sales.json (excludes postage).
+    """Sold-item median for a coin from manual_ebay_sales.json or cache (excludes postage).
 
+    Excludes multi-coin bundles, sets, lots, and price outliers so the median reflects
+    genuine individual coin sales, eliminating the set/bundle skew (e.g. median ~$12.95
+    vs mean $44.67 skew in the raw s1_bluey sample).
     None unless the sample has at least BARGAIN_MIN_SALES matched sales.
     """
+    entry = {}
     try:
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)), MANUAL_EBAY_SALES_FILE)
         with open(path, 'r', encoding='utf-8') as f:
             entry = (json.load(f).get('coins') or {}).get(coin_id) or {}
     except (OSError, json.JSONDecodeError, AttributeError):
-        return None
+        entry = {}
+
     median = entry.get('median_price')
-    if (entry.get('matched_results') or 0) < BARGAIN_MIN_SALES or not isinstance(median, (int, float)) or median <= 0:
+    if isinstance(median, (int, float)) and median > 0 and (entry.get('matched_results') or 0) >= BARGAIN_MIN_SALES:
+        return float(median)
+
+    coin = COIN_BY_ID.get(coin_id)
+    if not coin:
         return None
-    return float(median)
+
+    # Gather candidate completed sales from manual imports and cache
+    candidates = list(entry.get('products') or [])
+    cached_entry = {}
+    with _lock:
+        cached_entry = _cache.get(coin_id, {}).get('ebay') or {}
+    if not cached_entry:
+        try:
+            cache_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), CACHE_FILE)
+            with open(cache_path, 'r', encoding='utf-8') as cf:
+                cached_entry = (json.load(cf).get(coin_id) or {}).get('ebay') or {}
+        except (OSError, json.JSONDecodeError):
+            cached_entry = {}
+
+    candidates += list(cached_entry.get('products') or [])
+    candidates += list(cached_entry.get('historical_products') or [])
+
+    kw = coin.get('ebay_kw') or coin.get('search') or ''
+    kw_tokens = set(re.findall(r'[a-z0-9]+', str(kw).lower()))
+    allow_coloured = 'till' in kw_tokens and '2026' in kw_tokens
+
+    valid_prices = []
+    seen = set()
+    for p in candidates:
+        if not isinstance(p, dict):
+            continue
+        price = _parse_price(p.get('sale_price') or p.get('price'))
+        if not price or price <= 0:
+            continue
+        title = p.get('title') or ''
+        key = (title.strip().lower(), price)
+        if key in seen:
+            continue
+        seen.add(key)
+
+        if not _coinxchange_title_matches(title, kw, allow_coloured=allow_coloured):
+            continue
+
+        cid = coin_id
+        kw_lower = kw.lower()
+        if 'till' in kw_lower or cid in ('s1_bluey', 's1_bingo', 's3_till_bluey', 's3_till_bingo'):
+            min_b, max_b = 1.0, 60.0
+        elif 'silver' in kw_lower or cid in ('s1_proof_silver', 's1_impressions_pnc_silver', 's2_xmas_silv', 's3_proof_silv', 's4_cricket_proof'):
+            min_b, max_b = 50.0, 3000.0
+        elif 'proof' in kw_lower or cid in ('s1_proof_coloured', 's3_proof_ab', 's1_coloured_insert_variant', 's3_sleepytime_insert'):
+            min_b, max_b = 20.0, 800.0
+        elif 'folder' in kw_lower or 'tube' in kw_lower or 'set' in kw_lower:
+            min_b, max_b = 15.0, 600.0
+        elif 'pnc' in kw_lower or 'postal' in kw_lower or 'pin' in kw_lower:
+            min_b, max_b = 8.0, 450.0
+        else:
+            min_b, max_b = 5.0, 300.0
+
+        if not (min_b <= price <= max_b):
+            continue
+
+        valid_prices.append(price)
+
+    if len(valid_prices) < BARGAIN_MIN_SALES:
+        return None
+
+    valid_prices.sort()
+    mid = len(valid_prices) // 2
+    med = valid_prices[mid] if len(valid_prices) % 2 else (valid_prices[mid - 1] + valid_prices[mid]) / 2.0
+    return round(float(med), 2)
 
 
 def _deal_fields(item_price, postage, market_median):

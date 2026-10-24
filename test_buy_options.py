@@ -468,3 +468,48 @@ class TestBargainLandedPrice(unittest.TestCase):
         self.assertFalse(by_price[30.0]['is_bargain'])
         self.assertEqual(by_price[30.0]['landed_price'], 34.0)
         self.assertEqual(by_price[18.0]['price_type'], 'asking')
+    def test_market_median_excludes_bundles_and_lots_for_s1_bluey(self):
+        # Raw s1_bluey sample in ebay_cache.json has 24 products with mean ~$44.67
+        # and median ~$12.95 because it contains 10-coin sets ($64-$130), rolls ($110),
+        # and bags of 20. Excluding those bundles leaves genuine single-coin sales
+        # ($8.90, $9.50, $9.99, $12.00) with a median of $9.75.
+        med = legacy._market_median('s1_bluey')
+        self.assertIsNotNone(med)
+        self.assertEqual(med, 9.75)
+        self.assertLess(med, 12.95)
+
+    def test_bargain_detection_rejects_false_bargain_from_bundle_skew(self):
+        # With the unpruned median ($12.95), an ask of $10.00 (landed $10.00)
+        # would be falsely flagged as a bargain (10.00 <= 12.95 * 0.85 = 11.0075).
+        # Against the clean median ($9.75), $10.00 is correctly rejected,
+        # while a genuine bargain at $7.50 is recognized.
+        clean_median = legacy._market_median('s1_bluey')
+        self.assertEqual(clean_median, 9.75)
+
+        false_bargain = legacy._deal_fields(10.0, 0.0, clean_median)
+        self.assertFalse(false_bargain['is_bargain'])
+        self.assertEqual(false_bargain['landed_price'], 10.0)
+
+        real_bargain = legacy._deal_fields(7.50, 0.0, clean_median)
+        self.assertTrue(real_bargain['is_bargain'])
+        self.assertEqual(real_bargain['landed_price'], 7.50)
+        self.assertGreaterEqual(real_bargain['discount_pct'], 15.0)
+
+    def test_live_options_filters_out_active_bundle_and_lot_listings(self):
+        retailer = {r['id']: r for r in legacy.RETAILERS}['ebay']
+        listings = [
+            {'price': 50.0, 'postage': 0.0, 'title': '2024 $1 Bluey Dollarbuck 10-Coin Set With Folder',
+             'url': 'https://www.ebay.com.au/itm/bundle1'},
+            {'price': 12.0, 'postage': 0.0, 'title': '2024 $1 Bluey Dollarbuck 2x One Dollar Coins Pair',
+             'url': 'https://www.ebay.com.au/itm/bundle2'},
+            {'price': 25.0, 'postage': 0.0, 'title': '2024 $1 Bluey Dollarbuck Bulk Lot of 5 Coins',
+             'url': 'https://www.ebay.com.au/itm/bundle3'},
+            {'price': 9.0, 'postage': 0.0, 'title': '2024 Australia Bluey Uncirculated $1 One Dollar Coin Dollarbuck',
+             'url': 'https://www.ebay.com.au/itm/single1'},
+        ]
+        keywords = legacy.COIN_BY_ID['s1_bluey']['search']
+        with mock.patch.object(legacy, '_ebay_browse_search', return_value=listings):
+            options = legacy._ebay_live_options(retailer, keywords, 's1_bluey')
+        self.assertEqual(len(options), 1)
+        self.assertEqual(options[0]['price'], 9.0)
+        self.assertTrue(options[0]['url'].startswith('https://www.ebay.com.au/itm/single1'))
