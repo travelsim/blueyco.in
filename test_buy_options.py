@@ -1,6 +1,8 @@
 import importlib.util
+import json
 import os
 import re
+import tempfile
 import time
 import unittest
 from unittest import mock
@@ -398,3 +400,116 @@ class TestCatalogueFormatGate(unittest.TestCase):
                     tokens = set(re.findall(r'[a-z0-9]+', variant.lower()))
                     self.assertTrue(set(group) & tokens,
                                     f'{coin_id} variant drops {group}: {variant}')
+
+
+class TestBargainLandedPrice(unittest.TestCase):
+    def test_postage_reads_free_fixed_and_unknown_costs(self):
+        self.assertEqual(legacy._ebay_postage({'shippingOptions': [{'shippingCostType': 'FREE'}]}), 0.0)
+        self.assertEqual(legacy._ebay_postage({'shippingOptions': [
+            {'shippingCostType': 'FIXED', 'shippingCost': {'value': '6.50', 'currency': 'AUD'}}]}), 6.5)
+        # Cheapest known option wins; a calculated option with no value is ignored.
+        self.assertEqual(legacy._ebay_postage({'shippingOptions': [
+            {'shippingCostType': 'CALCULATED'},
+            {'shippingCost': {'value': '9.00'}},
+            {'shippingCost': {'value': '4.00'}}]}), 4.0)
+        # No shipping data means unknown postage, never assumed free.
+        self.assertIsNone(legacy._ebay_postage({}))
+        self.assertIsNone(legacy._ebay_postage({'shippingOptions': [{'shippingCostType': 'CALCULATED'}]}))
+
+    def test_bargain_needs_known_postage_and_fifteen_percent_below_median(self):
+        below = legacy._deal_fields(18.0, 4.0, 27.99)    # landed 22.00, 21.4% below
+        self.assertTrue(below['is_bargain'])
+        self.assertEqual(below['landed_price'], 22.0)
+        self.assertEqual(below['discount_pct'], 21.4)
+
+        near = legacy._deal_fields(20.0, 4.0, 27.99)     # landed 24.00, 14.2% below
+        self.assertFalse(near['is_bargain'])
+
+        unknown_post = legacy._deal_fields(10.0, None, 27.99)
+        self.assertFalse(unknown_post['is_bargain'])
+        self.assertIsNone(unknown_post['landed_price'])
+        self.assertIsNone(unknown_post['discount_pct'])
+
+        no_median = legacy._deal_fields(10.0, 0.0, None)
+        self.assertFalse(no_median['is_bargain'])
+        self.assertIsNone(no_median['discount_pct'])
+
+    def test_market_median_requires_a_real_sample(self):
+        sales = {'coins': {
+            'thick': {'median_price': 30.0, 'matched_results': 5},
+            'thin':  {'median_price': 30.0, 'matched_results': 2},
+            'none':  {'median_price': None, 'matched_results': 9},
+        }}
+        with tempfile.TemporaryDirectory() as d:
+            path = os.path.join(d, 'sales.json')
+            with open(path, 'w', encoding='utf-8') as f:
+                json.dump(sales, f)
+            with mock.patch.object(legacy, 'MANUAL_EBAY_SALES_FILE', path):
+                self.assertEqual(legacy._market_median('thick'), 30.0)
+                self.assertIsNone(legacy._market_median('thin'))
+                self.assertIsNone(legacy._market_median('none'))
+                self.assertIsNone(legacy._market_median('missing'))
+
+    def test_live_offer_carries_landed_price_and_bargain_flag(self):
+        retailer = {r['id']: r for r in legacy.RETAILERS}['ebay']
+        listings = [
+            {'price': 18.0, 'postage': 4.0, 'title': '2027 Bluey Cricket $1 Coloured Uncirculated Coin',
+             'url': 'https://www.ebay.com.au/itm/1'},
+            {'price': 30.0, 'postage': 4.0, 'title': '2027 Bluey Cricket $1 Coloured Uncirculated Coin',
+             'url': 'https://www.ebay.com.au/itm/2'},
+        ]
+        keywords = legacy.COIN_BY_ID['s4_cricket_unc']['search']
+        with mock.patch.object(legacy, '_market_median', return_value=27.99):
+            with mock.patch.object(legacy, '_ebay_browse_search', return_value=listings):
+                options = legacy._ebay_live_options(retailer, keywords, 's4_cricket_unc')
+        by_price = {o['price']: o for o in options}
+        self.assertTrue(by_price[18.0]['is_bargain'])
+        self.assertEqual(by_price[18.0]['landed_price'], 22.0)
+        self.assertFalse(by_price[30.0]['is_bargain'])
+        self.assertEqual(by_price[30.0]['landed_price'], 34.0)
+        self.assertEqual(by_price[18.0]['price_type'], 'asking')
+    def test_market_median_excludes_bundles_and_lots_for_s1_bluey(self):
+        # Raw s1_bluey sample in ebay_cache.json has 24 products with mean ~$44.67
+        # and median ~$12.95 because it contains 10-coin sets ($64-$130), rolls ($110),
+        # and bags of 20. Excluding those bundles leaves genuine single-coin sales
+        # ($8.90, $9.50, $9.99, $12.00) with a median of $9.75.
+        med = legacy._market_median('s1_bluey')
+        self.assertIsNotNone(med)
+        self.assertEqual(med, 9.75)
+        self.assertLess(med, 12.95)
+
+    def test_bargain_detection_rejects_false_bargain_from_bundle_skew(self):
+        # With the unpruned median ($12.95), an ask of $10.00 (landed $10.00)
+        # would be falsely flagged as a bargain (10.00 <= 12.95 * 0.85 = 11.0075).
+        # Against the clean median ($9.75), $10.00 is correctly rejected,
+        # while a genuine bargain at $7.50 is recognized.
+        clean_median = legacy._market_median('s1_bluey')
+        self.assertEqual(clean_median, 9.75)
+
+        false_bargain = legacy._deal_fields(10.0, 0.0, clean_median)
+        self.assertFalse(false_bargain['is_bargain'])
+        self.assertEqual(false_bargain['landed_price'], 10.0)
+
+        real_bargain = legacy._deal_fields(7.50, 0.0, clean_median)
+        self.assertTrue(real_bargain['is_bargain'])
+        self.assertEqual(real_bargain['landed_price'], 7.50)
+        self.assertGreaterEqual(real_bargain['discount_pct'], 15.0)
+
+    def test_live_options_filters_out_active_bundle_and_lot_listings(self):
+        retailer = {r['id']: r for r in legacy.RETAILERS}['ebay']
+        listings = [
+            {'price': 50.0, 'postage': 0.0, 'title': '2024 $1 Bluey Dollarbuck 10-Coin Set With Folder',
+             'url': 'https://www.ebay.com.au/itm/bundle1'},
+            {'price': 12.0, 'postage': 0.0, 'title': '2024 $1 Bluey Dollarbuck 2x One Dollar Coins Pair',
+             'url': 'https://www.ebay.com.au/itm/bundle2'},
+            {'price': 25.0, 'postage': 0.0, 'title': '2024 $1 Bluey Dollarbuck Bulk Lot of 5 Coins',
+             'url': 'https://www.ebay.com.au/itm/bundle3'},
+            {'price': 9.0, 'postage': 0.0, 'title': '2024 Australia Bluey Uncirculated $1 One Dollar Coin Dollarbuck',
+             'url': 'https://www.ebay.com.au/itm/single1'},
+        ]
+        keywords = legacy.COIN_BY_ID['s1_bluey']['search']
+        with mock.patch.object(legacy, '_ebay_browse_search', return_value=listings):
+            options = legacy._ebay_live_options(retailer, keywords, 's1_bluey')
+        self.assertEqual(len(options), 1)
+        self.assertEqual(options[0]['price'], 9.0)
+        self.assertTrue(options[0]['url'].startswith('https://www.ebay.com.au/itm/single1'))

@@ -74,6 +74,11 @@ EBAY_MARKETPLACE   = 'EBAY_AU'
 
 CACHE_FILE         = 'ebay_cache.json'
 MANUAL_PRICES_FILE = 'retailer_prices.json'
+MANUAL_EBAY_SALES_FILE = 'manual_ebay_sales.json'
+# Bargain tag: landed ask at least this far below the coin's sold-item median,
+# and only when the sold sample is big enough to trust.
+BARGAIN_DISCOUNT_PCT = 15
+BARGAIN_MIN_SALES    = 3
 REFRESH_SECS       = 14 * 24 * 3600   # 2 weeks
 CHECK_SECS         = 24 * 3600         # check daily whether refresh needed
 BUY_CACHE_TTL      = 24 * 3600         # retailer panel cache: 24 h
@@ -913,7 +918,12 @@ def _coinxchange_quantity(text):
             'twenty': 20, 'fifty': 50,
         }[match.group(1)]
     match = re.search(r'\b(?:bag|roll|pack|set)\s+of\s+(\d+)\b', s)
-    return int(match.group(1)) if match else 1
+    if match:
+        return int(match.group(1))
+    match = re.search(r'\b(\d+)\s*[x\u00d7]\s*(?:\$?\d|one|two|three)\b', s)
+    if match:
+        return int(match.group(1))
+    return 1
 
 
 # Product-format words the query asks for must appear in the listing title too:
@@ -941,7 +951,7 @@ _JUNK_TITLE_TOKENS = {
     'replica', 'reproduction', 'fake', 'empty', 'sticker', 'stickers', 'poster',
     'plush', 'toy', 'lego', 'magnet', 'keyring', 'damaged',
 }
-_BUNDLE_TOKENS = {'set', 'sets', 'folder', 'tube', 'bundle', 'collection', 'bag', 'bags', 'roll', 'lot', 'case'}
+_BUNDLE_TOKENS = {'set', 'sets', 'folder', 'folders', 'tube', 'tubes', 'bundle', 'bundles', 'collection', 'collections', 'bag', 'bags', 'roll', 'rolls', 'lot', 'lots', 'bulk', 'case', 'album', 'albums', 'pack', 'packs'}
 _NAMED_VARIANTS = (
     'bingo', 'muffin', 'muffinsocks', 'socks', 'stripe', 'stripes', 'trixie',
     'nana', 'rad', 'frisky', 'friend', 'friends', 'mum', 'dad', 'family',
@@ -1123,6 +1133,135 @@ def _ebay_oauth_http_error_summary(error):
     return f'HTTP {status}' + (f'; {"; ".join(details)}' if details else '')
 
 
+def _ebay_postage(item):
+    """Cheapest known postage from a Browse item's shippingOptions.
+
+    0.0 when any option is free; None when eBay gives no fixed cost (calculated
+    or missing), so the caller must not assume free postage.
+    """
+    costs = []
+    for option in item.get('shippingOptions') or []:
+        if not isinstance(option, dict):
+            continue
+        if option.get('shippingCostType') == 'FREE':
+            return 0.0
+        cost = (option.get('shippingCost') or {}).get('value')
+        if cost not in (None, ''):
+            try:
+                costs.append(round(float(cost), 2))
+            except (TypeError, ValueError):
+                continue
+    return min(costs) if costs else None
+
+
+def _market_median(coin_id):
+    """Sold-item median for a coin from manual_ebay_sales.json or cache (excludes postage).
+
+    Excludes multi-coin bundles, sets, lots, and price outliers so the median reflects
+    genuine individual coin sales, eliminating the set/bundle skew (e.g. median ~$12.95
+    vs mean $44.67 skew in the raw s1_bluey sample).
+    None unless the sample has at least BARGAIN_MIN_SALES matched sales.
+    """
+    entry = {}
+    try:
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), MANUAL_EBAY_SALES_FILE)
+        with open(path, 'r', encoding='utf-8') as f:
+            entry = (json.load(f).get('coins') or {}).get(coin_id) or {}
+    except (OSError, json.JSONDecodeError, AttributeError):
+        entry = {}
+
+    median = entry.get('median_price')
+    if isinstance(median, (int, float)) and median > 0 and (entry.get('matched_results') or 0) >= BARGAIN_MIN_SALES:
+        return float(median)
+
+    coin = COIN_BY_ID.get(coin_id)
+    if not coin:
+        return None
+
+    # Gather candidate completed sales from manual imports and cache
+    candidates = list(entry.get('products') or [])
+    cached_entry = {}
+    with _lock:
+        cached_entry = _cache.get(coin_id, {}).get('ebay') or {}
+    if not cached_entry:
+        try:
+            cache_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), CACHE_FILE)
+            with open(cache_path, 'r', encoding='utf-8') as cf:
+                cached_entry = (json.load(cf).get(coin_id) or {}).get('ebay') or {}
+        except (OSError, json.JSONDecodeError):
+            cached_entry = {}
+
+    candidates += list(cached_entry.get('products') or [])
+    candidates += list(cached_entry.get('historical_products') or [])
+
+    kw = coin.get('ebay_kw') or coin.get('search') or ''
+    kw_tokens = set(re.findall(r'[a-z0-9]+', str(kw).lower()))
+    allow_coloured = 'till' in kw_tokens and '2026' in kw_tokens
+
+    valid_prices = []
+    seen = set()
+    for p in candidates:
+        if not isinstance(p, dict):
+            continue
+        price = _parse_price(p.get('sale_price') or p.get('price'))
+        if not price or price <= 0:
+            continue
+        title = p.get('title') or ''
+        key = (title.strip().lower(), price)
+        if key in seen:
+            continue
+        seen.add(key)
+
+        if not _coinxchange_title_matches(title, kw, allow_coloured=allow_coloured):
+            continue
+
+        cid = coin_id
+        kw_lower = kw.lower()
+        if 'till' in kw_lower or cid in ('s1_bluey', 's1_bingo', 's3_till_bluey', 's3_till_bingo'):
+            min_b, max_b = 1.0, 60.0
+        elif 'silver' in kw_lower or cid in ('s1_proof_silver', 's1_impressions_pnc_silver', 's2_xmas_silv', 's3_proof_silv', 's4_cricket_proof'):
+            min_b, max_b = 50.0, 3000.0
+        elif 'proof' in kw_lower or cid in ('s1_proof_coloured', 's3_proof_ab', 's1_coloured_insert_variant', 's3_sleepytime_insert'):
+            min_b, max_b = 20.0, 800.0
+        elif 'folder' in kw_lower or 'tube' in kw_lower or 'set' in kw_lower:
+            min_b, max_b = 15.0, 600.0
+        elif 'pnc' in kw_lower or 'postal' in kw_lower or 'pin' in kw_lower:
+            min_b, max_b = 8.0, 450.0
+        else:
+            min_b, max_b = 5.0, 300.0
+
+        if not (min_b <= price <= max_b):
+            continue
+
+        valid_prices.append(price)
+
+    if len(valid_prices) < BARGAIN_MIN_SALES:
+        return None
+
+    valid_prices.sort()
+    mid = len(valid_prices) // 2
+    med = valid_prices[mid] if len(valid_prices) % 2 else (valid_prices[mid - 1] + valid_prices[mid]) / 2.0
+    return round(float(med), 2)
+
+
+def _deal_fields(item_price, postage, market_median):
+    """Landed cost and discount against the market median.
+
+    The median excludes postage, so a bargain needs known postage and a
+    landed price at least BARGAIN_DISCOUNT_PCT below it. Unknown postage gives
+    no bargain rather than a guess.
+    """
+    landed = round(item_price + postage, 2) if postage is not None else None
+    fields = {'postage': postage, 'landed_price': landed, 'market_median': market_median,
+              'discount_pct': None, 'is_bargain': False}
+    if landed is None or market_median is None:
+        return fields
+    discount = (market_median - landed) / market_median * 100
+    fields['discount_pct'] = round(discount, 1)
+    fields['is_bargain'] = discount >= BARGAIN_DISCOUNT_PCT
+    return fields
+
+
 def _ebay_browse_search(keywords, limit=5):
     """
     Query eBay's own Browse API for active Buy It Now listings.
@@ -1174,6 +1313,7 @@ def _ebay_browse_search(keywords, limit=5):
         condition = it.get('condition') or ''
         items.append({
             'price':    price,
+            'postage':  _ebay_postage(it),
             'title':    it.get('title') or '',
             'url':      it.get('itemWebUrl'),
             'subtitle': condition[:40] if condition else None,
@@ -1287,6 +1427,7 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
         return _link_only_option(retailer, keywords, coin_id=coin_id)
 
     q = urllib.parse.quote(keywords)
+    market_median = _market_median(coin_id)
     out = []
     for it in items:
         url = it.get('url')
@@ -1301,6 +1442,7 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
             'link_only':   False,
             'title':       it.get('title') or '',
             'subtitle':    it.get('subtitle'),
+            **_deal_fields(it['price'], it.get('postage'), market_median),
         })
 
     return sorted(out, key=lambda x: x['price'])[:3]
