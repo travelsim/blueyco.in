@@ -2928,7 +2928,7 @@ function _dashRow(coin) {
   const isWishlisted = !!wishlist[coin.id];
   const estValue = _referencePrice(coin);
   const image = typeof COIN_PRODUCT_IMAGES !== 'undefined' ? COIN_PRODUCT_IMAGES[coin.id] : null;
-  const mintage = coin.mintage ? `${Number(coin.mintage).toLocaleString('en-AU')} minted` : (coin.mintageLabel || 'Mintage unpublished');
+  const mintage = (coin.mintage != null && coin.denomination != null) ? `${Number(coin.mintage).toLocaleString('en-AU')} minted` : (coin.issueQuantity != null ? `${Number(coin.issueQuantity).toLocaleString('en-AU')} produced` : '');
   const rarity = mintageRarity(coin);
 
   const row = document.createElement('div');
@@ -4114,19 +4114,34 @@ function buildCard(coin) {
 
   const supplyCard = el('section', 'metric-card metric-supply');
   supplyCard.setAttribute('aria-label', 'Mintage and relative rarity');
-  supplyCard.append(el('div', 'metric-kicker', 'Mintage'));
-  const mintageValue = coin.mintage != null
+  const producedUnit = (/[\d,]+\s+([A-Za-z]+)\s+produced/i.exec(coin.mintageLabel || '') || [])[1] || 'units';
+  // Only a RAM-published coin mintage counts as a mintage figure: a numeric
+  // mintage on a product with no denomination (pins, stamp packs) is not one.
+  // Without a RAM mintage the production figure stands in; with neither, the
+  // Mintage figure is dropped.
+  const hasRamMintage = coin.mintage != null && coin.denomination != null;
+  const productionValue = coin.issueQuantity != null ? Number(coin.issueQuantity).toLocaleString('en-AU') : null;
+  // A stand-in that only repeats the Derived Scarcity figure adds no information.
+  const derivedNum = coin.derivedScarcity != null ? coin.derivedScarcity : (coin.id === 's1_coloured_insert_variant' ? 15750 : null);
+  const repeatsDerived = !hasRamMintage && derivedNum != null && coin.issueQuantity === derivedNum;
+  const mintageValue = hasRamMintage
     ? Number(coin.mintage).toLocaleString('en-AU')
-    : (/unlimited/i.test(coin.mintageLabel || '') ? 'Unlimited' : /circulating/i.test(coin.mintageLabel || '') ? 'Circulating' : 'Unpublished');
-  supplyCard.append(el('div', 'metric-amount', mintageValue));
+    : (repeatsDerived ? null : productionValue);
+  // When the production figure stands in as the mintage it keeps its unit, and
+  // the separate Produced block is skipped to avoid showing it twice.
+  const mergeProduced = !hasRamMintage && mintageValue != null;
+  if (mintageValue != null) {
+    supplyCard.append(el('div', 'metric-kicker', 'Mintage'));
+    supplyCard.append(el('div', 'metric-amount', mintageValue));
+    if (mergeProduced) supplyCard.append(el('div', 'supply-caption', producedUnit));
+  }
   // The Produced card shows the production figure and its unit, so the Mintage
   // caption and detail only add text when no production figure exists.
-  const producedUnit = (/[\d,]+\s+([A-Za-z]+)\s+produced/i.exec(coin.mintageLabel || '') || [])[1] || 'units';
-  let supplyCaption = coin.mintage != null ? 'published coins' : '';
+  let supplyCaption = (hasRamMintage && coin.denomination != null) ? 'published coins' : '';
   let supplyDetail = '';
   if (coin.mintageLabel) {
     const label = String(coin.mintageLabel);
-    if (coin.mintage != null) {
+    if (hasRamMintage) {
       const remainder = label.replace(/^\s*[\d,]+\s*/, '').trim();
       // With a production figure, a "N covers produced" phrase repeats the Produced card,
       // and its unit is not coins, so the Mintage caption is dropped instead.
@@ -4155,11 +4170,11 @@ function buildCard(coin) {
     supplyCard.append(el('div', 'metric-amount metric-derived', `~${derivedScarcityNum.toLocaleString('en-AU')}`));
     supplyCard.append(el('div', 'supply-caption', '1-in-10 hit'));
     more.append(el('p', 'coin-variant-note', 'From 157,500 tube sets'));
-  } else if (coin.issueQuantity != null) {
+  } else if (coin.issueQuantity != null && !mergeProduced) {
     supplyCard.append(el('div', 'metric-kicker metric-kicker-production', 'Produced'));
     supplyCard.append(el('div', 'metric-amount', Number(coin.issueQuantity).toLocaleString('en-AU')));
     supplyCard.append(el('div', 'supply-caption', producedUnit));
-  } else {
+  } else if (!mergeProduced) {
     supplyCard.append(el('div', 'metric-kicker metric-kicker-production', 'Produced'));
     supplyCard.append(el('div', 'metric-amount metric-unknown', 'Not published'));
   }
