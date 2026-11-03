@@ -52,6 +52,20 @@ class TestCatalogIntegrity(unittest.TestCase):
         # 11450: Coloured uncirculated coin PNC (5,000 produced)
         self.assertRegex(raw, r"id:\s*'s1_impressions_pnc_colour'[\s\S]*?productCode:\s*'11450'[\s\S]*?issueQuantity:\s*5000")
 
+    def test_folder_set_states_share_issue_price(self):
+        # All three 10-coin folder set states derive from RAM product 11448,
+        # issued at $29: sealed, opened base set, and lucky coloured insert.
+        raw = get_coins_raw()
+        lines = [line.strip() for line in raw.split('\n') if line.strip().startswith('{ id:')]
+        by_id = {}
+        for line in lines:
+            m_id = re.search(r"id:\s*'([^']+)'", line)
+            self.assertTrue(m_id, f'No id found in line: {line[:80]}')
+            by_id[m_id.group(1)] = line
+        for cid in ('s1_10_coin_folder_set', 's1_10_coin_folder_opened', 's1_coloured_insert_variant'):
+            self.assertIn(cid, by_id, f'{cid} missing from catalogue')
+            self.assertRegex(by_id[cid], r'mintPrice:\s*29(?![\d.])', f'{cid} missing $29 issue price')
+
     def test_estimated_value_kicker_is_universal(self):
         # Verify buildCard unconditionally sets priceHeading to 'Estimated value'
         self.assertIn("const priceHeading = 'Estimated value';", INDEX)
