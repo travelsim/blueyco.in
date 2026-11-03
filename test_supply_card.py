@@ -110,6 +110,11 @@ class TestSupplyCardText(unittest.TestCase):
             with self.subTest(coin=coin_id):
                 self.assertNotIn('Mintage', self.cards[coin_id])
 
+    def test_no_guide_range_footnote_text(self):
+        # The "Guide range $X – $Y · Collector estimate" footnote was removed
+        # from the Estimated value box; it must not appear anywhere.
+        self.assertNotIn('Guide range', INDEX.read_text(encoding='utf-8'))
+
     def test_published_coins_only_on_ram_coin_mintages(self):
         flags = coin_ram_flags()
         self.assertEqual(set(flags), set(self.cards))

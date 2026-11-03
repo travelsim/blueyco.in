@@ -4105,10 +4105,7 @@ function buildCard(coin) {
       priceCard.append(el('div', 'metric-footnote',
         `${saleCount} matched sold ${saleCount === 1 ? 'result' : 'results'} · checked ${checked}`));
     }
-  } else if (coin.marketLow != null && coin.marketHigh != null) {
-    priceCard.append(el('div', 'metric-footnote',
-      `Guide range ${formatAUD(coin.marketLow)} – ${formatAUD(coin.marketHigh)} · Collector estimate`));
-  } else if (coin.mintPrice != null) {
+  } else if (guide == null && coin.mintPrice != null) {
     priceCard.append(el('div', 'metric-footnote', 'Issue price baseline estimate'));
   }
 
