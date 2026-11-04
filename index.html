@@ -4001,10 +4001,15 @@ function getCoinCategory(coin) {
     };
   }
   if (coin.color) {
+    // Proofs are struck to proof quality, not uncirculated finish: RAM lists
+    // them as proof strikes with a colour print finish.
+    const isProof = coin.id.includes('proof') || /proof/i.test(coin.name || '');
     return {
       type: 'colour',
       badge: '🎨 Coloured Collector Coin',
-      hint: 'Uncirculated coin featuring vibrant printed colour artwork.'
+      hint: isProof
+        ? 'Proof-quality strike with colour print finish.'
+        : 'Uncirculated coin featuring vibrant printed colour artwork.'
     };
   }
   return {
