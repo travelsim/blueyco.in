@@ -26,7 +26,7 @@ class TestDerivedImagesAreHonest(unittest.TestCase):
     # text claimed an official RAM image over an empty folder render).
     def test_folder_set_fixes_show_derived_credit(self):
         block = INDEX.split('const COIN_PRODUCT_IMAGES = {')[1].split('};')[0]
-        for coin_id in ('s1_10_coin_folder_opened', 's1_coloured_insert_variant'):
+        for coin_id in ('s1_10_coin_folder_opened', 's1_coloured_insert_variant', 's3_folder_opened', 's3_folder_chase'):
             entry = re.search(rf"{coin_id}:\s*\{{[^}}]*\}}", block).group(0)
             self.assertIn('Derived', entry)
             self.assertNotIn('Official', entry)
