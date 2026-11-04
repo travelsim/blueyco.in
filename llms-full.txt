@@ -60,10 +60,10 @@
 | `s3_till_bingo` | **Bingo $2 Coloured Till Coin** | $2 | 2026 | TBD | Unlimited/Open | $30 – $70 | - |
 | `s3_pnc_bluey` | **Bluey For Real Life $2 Postal Numismatic Cover** | $2 | 2026 | TBD | 10,000 | $40 – $80 | - |
 | `s3_pnc_bingo` | **Bingo Hooray $2 Postal Numismatic Cover** | $2 | 2026 | TBD | 10,000 | $40 – $80 | - |
-| `s3_pin_babyrace` | **Baby Race Stamp & Pin Cover** | - | 2026 | TBD | 3,000 | $25 – $50 | - |
-| `s3_pin_camping` | **Camping Stamp & Pin Cover** | - | 2026 | TBD | 3,000 | $25 – $50 | - |
-| `s3_pin_granny` | **Granny Mobile Stamp & Pin Cover** | - | 2026 | TBD | 3,000 | $25 – $50 | - |
-| `s3_pin_rain` | **Rain Stamp & Pin Cover** | - | 2026 | TBD | 3,000 | $25 – $50 | - |
-| `s3_pin_sleepytime` | **Sleepytime Stamp & Pin Cover** | - | 2026 | TBD | 3,000 | $25 – $50 | - |
+| `s3_pin_babyrace` | **2026 Bluey Stamp and Pin Cover - Baby Race** | - | 2026 | 3,000 | 3,000 | $25 – $50 | 2336511 |
+| `s3_pin_camping` | **2026 Bluey Stamp and Pin Cover - Camping** | - | 2026 | 3,000 | 3,000 | $25 – $50 | 2336512 |
+| `s3_pin_granny` | **2026 Bluey Stamp and Pin Cover - Granny Mobile** | - | 2026 | 3,000 | 3,000 | $25 – $50 | 2336513 |
+| `s3_pin_rain` | **2026 Bluey Stamp and Pin Cover - Rain** | - | 2026 | 3,000 | 3,000 | $25 – $50 | 2336514 |
+| `s3_pin_sleepytime` | **2026 Bluey Stamp and Pin Cover - Sleepytime** | - | 2026 | 3,000 | 3,000 | $25 – $50 | 2336515 |
 | `s4_cricket_unc` | **Bluey Cricket $1 Coloured Uncirculated Coin** | $1 | 2027 | TBD | 200,000 | $30 – $60 | 12077 |
 | `s4_cricket_proof` | **Bluey Cricket $1 Coloured Silver Proof Coin** | $1 | 2027 | TBD | 20,000 | $150 – $280 | 12078 |
