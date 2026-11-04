@@ -64,7 +64,7 @@ class TestSupplyCardText(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         env = {**os.environ, 'INDEX_PATH': str(INDEX)}
-        out = subprocess.run(['node', '-e', RENDER_JS], env=env, capture_output=True, text=True, check=True)
+        out = subprocess.run(['node', '-e', RENDER_JS], env=env, capture_output=True, text=True, check=True, encoding='utf-8')
         cls.cards = json.loads(out.stdout)
 
     def test_pnc_family_states_each_fact_once(self):

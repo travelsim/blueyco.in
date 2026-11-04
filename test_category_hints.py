@@ -33,7 +33,7 @@ class TestCategoryHints(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         env = {**os.environ, 'INDEX_PATH': str(INDEX)}
-        out = subprocess.run(['node', '-e', RENDER_JS], env=env, capture_output=True, text=True, check=True)
+        out = subprocess.run(['node', '-e', RENDER_JS], env=env, capture_output=True, text=True, check=True, encoding='utf-8')
         cls.cats = json.loads(out.stdout)
 
     def test_proof_coins_are_not_called_uncirculated(self):
