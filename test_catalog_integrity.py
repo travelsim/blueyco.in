@@ -14,7 +14,9 @@ def get_coins_raw():
 
 class TestCatalogIntegrity(unittest.TestCase):
     def test_all_coins_have_market_ranges(self):
-        # Ensure no coins have null or missing marketLow/marketHigh
+        # Brand-new states with no secondary sales yet may carry a null guide
+        # range; they must then carry an issue price so the Estimated value
+        # box falls back to the issue baseline instead of showing nothing.
         raw = get_coins_raw()
         lines = [line.strip() for line in raw.split('\n') if line.strip().startswith('{ id:')]
         self.assertGreater(len(lines), 35, 'Catalog has fewer coins than expected')
@@ -24,8 +26,9 @@ class TestCatalogIntegrity(unittest.TestCase):
             cid = m_id.group(1)
             self.assertIn('marketLow:', line, f'{cid} missing marketLow')
             self.assertIn('marketHigh:', line, f'{cid} missing marketHigh')
-            self.assertNotIn('marketLow: null', line, f'{cid} has marketLow: null')
-            self.assertNotIn('marketHigh: null', line, f'{cid} has marketHigh: null')
+            if 'marketLow: null' in line or 'marketHigh: null' in line:
+                self.assertNotIn('mintPrice: null', line, f'{cid} has no guide range and no issue price')
+                self.assertRegex(line, r'mintPrice:\s*\d', f'{cid} has no guide range and no issue price')
 
     def test_ram_2023_24_annual_report_figures(self):
         raw = get_coins_raw()
@@ -111,6 +114,65 @@ class TestAttributePills(unittest.TestCase):
         self.assertNotIn("el('span', 'card-format'", INDEX)
         self.assertNotIn('catBadge', INDEX)
 
+
+    def test_tube_sets_come_in_three_states(self):
+        # Each tube set is sold sealed, opened without the chase coin, and
+        # opened complete with the chase coin. All three states share the RAM
+        # product code and issue price; only the sealed set carries the full
+        # production figure.
+        raw = get_coins_raw()
+        lines = [line.strip() for line in raw.split('\n') if line.strip().startswith('{ id:')]
+        by_id = {}
+        for line in lines:
+            m_id = re.search(r"id:\s*'([^']+)'", line)
+            by_id[m_id.group(1)] = line
+        for trio, code, price in (
+            (('s1_10_coin_folder_set', 's1_10_coin_folder_opened', 's1_coloured_insert_variant'), '11448', '29'),
+            (('s3_folder', 's3_folder_opened', 's3_folder_chase'), '11956', '34'),
+        ):
+            for cid in trio:
+                self.assertIn(cid, by_id, f'{cid} missing from catalogue')
+                self.assertRegex(by_id[cid], r'mintPrice:\s*%s(?!\d)' % price, f'{cid} wrong issue price')
+            # Sealed and opened states are the same RAM product; the chase
+            # state carries its own product code.
+            self.assertIn("productCode: '%s'" % code, by_id[trio[0]], f'{trio[0]} wrong product code')
+            self.assertIn("productCode: '%s'" % code, by_id[trio[1]], f'{trio[1]} wrong product code')
+            self.assertRegex(by_id[trio[2]], r"productCode: '\d+'", f'{trio[2]} missing product code')
+
+    def test_titles_start_with_year_and_carry_denom(self):
+        # Uniform titles: every product title opens with its year, and every
+        # coin title carries its $1/$2 denomination.
+        raw = get_coins_raw()
+        lines = [line.strip() for line in raw.split('\n') if line.strip().startswith('{ id:')]
+        for line in lines:
+            m_id = re.search(r"id:\s*'([^']+)'", line)
+            m_name = re.search(r"name: '((?:[^'\\]|\\.)*)'", line)
+            cid, name = m_id.group(1), m_name.group(1)
+            self.assertRegex(name, r'^(19|20)\d\d\b', f'{cid} title missing leading year: {name}')
+            m_denom = re.search(r'denomination:\s*(null|\d+)', line)
+            if m_denom.group(1) != 'null':
+                self.assertIn('$%s' % m_denom.group(1), name, f'{cid} title missing denomination: {name}')
+
+    def test_titles_preserve_code_coupled_tokens(self):
+        # Card logic keys off title words: proofs, pins, tills and folder sets
+        # must keep their tokens, and only the Impressions range may use the
+        # short PNC form (anything else would flip its frame type to pnc).
+        raw = get_coins_raw()
+        lines = [line.strip() for line in raw.split('\n') if line.strip().startswith('{ id:')]
+        for line in lines:
+            m_id = re.search(r"id:\s*'([^']+)'", line)
+            m_name = re.search(r"name: '((?:[^'\\]|\\.)*)'", line)
+            cid, name = m_id.group(1), m_name.group(1)
+            if 'proof' in cid or 'silv' in cid:
+                self.assertIn('Proof', name, f'{cid} title lost Proof: {name}')
+            if cid.startswith('s3_pin_'):
+                self.assertIn('Pin', name, f'{cid} title lost Pin: {name}')
+            if '_till_' in cid:
+                self.assertIn('Till', name, f'{cid} title lost Till: {name}')
+            if 'folder' in cid:
+                self.assertIn('Tube & Folder Set', name, f'{cid} title lost set format: {name}')
+            if 'pnc' in cid.lower() and not cid.startswith('s1_impressions_pnc_'):
+                self.assertNotIn('pnc', name.lower(), f'{cid} title gained PNC, flips frame type: {name}')
 
 if __name__ == '__main__':
     unittest.main()
