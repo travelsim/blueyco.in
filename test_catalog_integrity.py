@@ -135,6 +135,12 @@ class TestAttributePills(unittest.TestCase):
         self.assertEqual(names.get('s3_till_bingo'), '2026 Bingo $2 Coloured Till Coin')
 
 
+    def test_pnc_coins_carry_privy_attribute(self):
+        # The ten 2024 $1 PNCs hold envelope privy-mark coins (RAM 11635-11644);
+        # they must carry both PNC and PRIVY pills.
+        fn_body = INDEX.split('function coinAttributes(coin)')[1].split('function toggleAttr')[0]
+        self.assertIn("s1_pnc_", fn_body)
+
     def test_tube_sets_come_in_three_states(self):
         # Each tube set is sold sealed, opened without the chase coin, and
         # opened complete with the chase coin. All three states share the RAM
@@ -174,9 +180,9 @@ class TestAttributePills(unittest.TestCase):
                 self.assertIn('$%s' % m_denom.group(1), name, f'{cid} title missing denomination: {name}')
 
     def test_titles_preserve_code_coupled_tokens(self):
-        # Card logic keys off title words: proofs, pins, tills and folder sets
-        # must keep their tokens, and only the Impressions range may use the
-        # short PNC form (anything else would flip its frame type to pnc).
+        # Titles must keep code-coupled tokens. Category and frame type are
+        # id-based (getCoinCategory keys off id prefixes), so every PNC id
+        # uses the short PNC title form.
         raw = get_coins_raw()
         lines = [line.strip() for line in raw.split('\n') if line.strip().startswith('{ id:')]
         for line in lines:
@@ -192,8 +198,8 @@ class TestAttributePills(unittest.TestCase):
                 self.assertIn('Till', name, f'{cid} title lost Till: {name}')
             if 'folder' in cid:
                 self.assertIn('Tube & Folder Set', name, f'{cid} title lost set format: {name}')
-            if 'pnc' in cid.lower() and not cid.startswith('s1_impressions_pnc_'):
-                self.assertNotIn('pnc', name.lower(), f'{cid} title gained PNC, flips frame type: {name}')
+            if 'pnc' in cid.lower():
+                self.assertIn('pnc', name.lower(), f'{cid} title lost PNC: {name}')
 
 if __name__ == '__main__':
     unittest.main()
