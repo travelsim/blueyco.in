@@ -187,6 +187,7 @@ class TestAttributePills(unittest.TestCase):
                 self.assertIn('Proof', name, f'{cid} title lost Proof: {name}')
             if cid.startswith('s3_pin_'):
                 self.assertIn('Pin', name, f'{cid} title lost Pin: {name}')
+                self.assertTrue(name.startswith('2026 Bluey Stamp and Pin Cover - '), f'{cid} wrong title format: {name}')
             if '_till_' in cid:
                 self.assertIn('Till', name, f'{cid} title lost Till: {name}')
             if 'folder' in cid:

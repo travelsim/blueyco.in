@@ -98,10 +98,10 @@ class TestSupplyCardText(unittest.TestCase):
         self.assertEqual(self.cards['s1_bluey'], ['Mintage', '1,250,000', 'units'])
         self.assertEqual(self.cards['s3_folder'], ['Mintage', '15,000', 'units'])
 
-    def test_pin_covers_have_no_mintage_and_no_published_coins(self):
+    def test_pin_covers_show_limited_edition_production_mintage(self):
         for coin_id in ('s3_pin_babyrace', 's3_pin_camping', 's3_pin_granny', 's3_pin_rain', 's3_pin_sleepytime'):
             with self.subTest(coin=coin_id):
-                self.assertEqual(self.cards[coin_id], ['Produced', 'Not published'])
+                self.assertEqual(self.cards[coin_id], ['Mintage', '3,000', 'covers'])
 
     def test_products_without_any_figure_have_no_mintage(self):
         for coin_id in ('s0_2020_stamp_pack', 's1_auspost_stamp_pack', 's2_xmas_stamp_pack',
