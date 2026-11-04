@@ -114,6 +114,26 @@ class TestAttributePills(unittest.TestCase):
         self.assertNotIn("el('span', 'card-format'", INDEX)
         self.assertNotIn('catBadge', INDEX)
 
+    def test_till_coins_not_tagged_auspost(self):
+        # Circulating till coins are struck by RAM and distributed broadly;
+        # they must not carry the AUSPOST attribute pill.
+        self.assertNotIn('/^s3_till_/i.test(id)', INDEX)
+        fn_body = INDEX.split('function coinAttributes(coin)')[1].split('function toggleAttr')[0]
+        self.assertNotIn('s3_till', fn_body)
+
+    def test_s3_till_coins_named_consistently(self):
+        # Till coins carry the character name in their title.
+        raw = get_coins_raw()
+        lines = [line.strip() for line in raw.split('\n') if line.strip().startswith('{ id:')]
+        names = {}
+        for line in lines:
+            m_id = re.search(r"id:\s*'([^']+)'", line)
+            m_name = re.search(r"name: '((?:[^'\\]|\\.)*)'", line)
+            if m_id and m_name:
+                names[m_id.group(1)] = m_name.group(1)
+        self.assertEqual(names.get('s3_till_bluey'), '2026 Bluey $2 Coloured Till Coin')
+        self.assertEqual(names.get('s3_till_bingo'), '2026 Bingo $2 Coloured Till Coin')
+
 
     def test_tube_sets_come_in_three_states(self):
         # Each tube set is sold sealed, opened without the chase coin, and
