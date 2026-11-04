@@ -3593,7 +3593,7 @@ window.COINS = [
   { id: 's3_maxicard_pack', series: 'series3', name: '2026 Pre-Paid Concertina Maxicard Pack', keywords: '2026 Bluey five maxicard designs prepaid postage', denomination: null, year: 2026, mintage: null, mintageLabel: 'Mintage unpublished', mintPrice: 15.5, productCode: '2336510', color: '#5279a8', marketLow: 22, marketHigh: 32, collectionNote: 'Five Bluey maxicard designs with worldwide postage and foiled postmarks, as listed in Australia Post Stamp Bulletin 401.', sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2026/stamp-bulletin-401/stamp-bulletin-401.pdf', sourceLabel: 'Australia Post Stamp Bulletin 401 ↗' },
   { id: 's3_stamp_pack', series: 'series3', name: '2026 MyStamps Pack', keywords: '2026 Bluey MyStamps star shaped stamp pack 2336509 Australia Post', denomination: null, year: 2026, mintage: null, mintageLabel: 'Stamp print quantity unpublished', mintPrice: 22, productCode: '2336509', color: '#5279a8', marketLow: 35, marketHigh: 50, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2026/stamp-bulletin-401/stamp-bulletin-401.pdf', sourceLabel: 'Australia Post Stamp Bulletin 401 ↗' },
   { id: 's3_sleepytime_insert', series: 'series3', name: '2026 Sleepytime $2 Special Coloured Coin · Tube Insert', keywords: 'sleepytime 2026 insert', denomination: 2, year: 2026, mintage: null, mintageLabel: 'Derived scarcity: ~1,500 coins (1-in-10 hit from 15,000 tube sets)', derivedScarcity: 1500, derivedBase: 15000, derivedScarcityLabel: '~1,500 coins (1-in-10 hit from 15,000 tube sets)', mintPrice: null, color: true, marketLow: 120, marketHigh: 400, collectionNote: 'A special-coloured Sleepytime coin is randomly packed in approximately 1 in 10 tubes (10% hit rate): about 1,500 coins from 15,000 tube sets (RAM product 11956).', sourceUrl: 'https://www.ramint.gov.au/about-us/whats-new/cheese-crackers-bluey-returns-new-coin-collection' },
-  { id: 's3_till_bluey', series: 'series3', name: '2026 $2 Coloured Till Coin', keywords: 'till coin 2026 coloured', denomination: 2, year: 2026, mintage: null, mintageLabel: 'Circulating till coin (Face value $2)', mintPrice: null, color: true, marketLow: 30, marketHigh: 70, collectionNote: 'One of two additional coloured $2 designs that fit the 2026 folder. Bluey and Bingo till coins are obtained separately in change at participating Australia Post stores.' },
+  { id: 's3_till_bluey', series: 'series3', name: '2026 Bluey $2 Coloured Till Coin', keywords: 'till coin 2026 coloured', denomination: 2, year: 2026, mintage: null, mintageLabel: 'Circulating till coin (Face value $2)', mintPrice: null, color: true, marketLow: 30, marketHigh: 70, collectionNote: 'One of two additional coloured $2 designs that fit the 2026 folder. Bluey and Bingo till coins are obtained separately in change at participating Australia Post stores.' },
   { id: 's3_till_bingo', series: 'series3', name: '2026 Bingo $2 Coloured Till Coin', keywords: 'till coin 2026 bingo', denomination: 2, year: 2026, mintage: null, mintageLabel: 'Circulating till coin (Face value $2)', mintPrice: null, color: true, marketLow: 30, marketHigh: 70, collectionNote: 'One of two additional coloured $2 designs that fit the 2026 folder. Bluey and Bingo till coins are obtained separately in change at participating Australia Post stores.' },
   { id: 's3_pnc_bluey', series: 'series3', name: '2026 For Real Life $2 Postal Numismatic Cover', keywords: 'pnc 2026 bluey for real life', denomination: 2, year: 2026, mintage: 10000, mintageLabel: '10,000 PNCs produced', mintPrice: 27, color: true, marketLow: 40, marketHigh: 80, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2026/stamp-bulletin-401/stamp-bulletin-401.pdf', sourceLabel: 'AusPost Stamp Bulletin 401 ↗' },
   { id: 's3_pnc_bingo', series: 'series3', name: '2026 Bingo Hooray $2 Postal Numismatic Cover', keywords: 'pnc 2026 bingo hooray', denomination: 2, year: 2026, mintage: 10000, mintageLabel: '10,000 PNCs produced', mintPrice: 27, color: true, marketLow: 40, marketHigh: 80, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2026/stamp-bulletin-401/stamp-bulletin-401.pdf', sourceLabel: 'AusPost Stamp Bulletin 401 ↗' },
@@ -3636,8 +3636,7 @@ const charts     = {};
 // and PNCs whose coins are UNC); PROOF = proof in id/name; COLOURED = coin
 // with truthy color; PNC/STAMP/PIN/PRIVY/TILL COIN = id patterns (privy also
 // matches s1_card_ ids); SET = multi-coin id patterns or whole-word Set in
-// name; AUSPOST = PNC, PIN, STAMP, or s3 till coins documented as found in
-// participating Australia Post store change; RAM = every struck coin.
+// name; AUSPOST = PNC, PIN, or STAMP products; RAM = every struck coin.
 // Selected pills combine with AND: a coin must carry every chosen attribute.
 const ATTRIBUTES = ['UNC','PROOF','COLOURED','PNC','STAMP','SET','PRIVY','PIN','TILL COIN','AUSPOST','RAM'];
 
@@ -3662,9 +3661,8 @@ function coinAttributes(coin) {
   if (isPrivy) attrs.push('PRIVY');
   if (isPin) attrs.push('PIN');
   if (isTill) attrs.push('TILL COIN');
-  // Sold or distributed through the Australia Post network: covers, stamp
-  // products, and till coins found in participating-store change.
-  if (isPnc || isPin || isStamp || /^s3_till_/i.test(id)) attrs.push('AUSPOST');
+  // Sold or distributed through the Australia Post network: covers and stamp products.
+  if (isPnc || isPin || isStamp) attrs.push('AUSPOST');
   if (isCoin) attrs.push('RAM');
   return attrs;
 }
@@ -3883,8 +3881,8 @@ const COIN_PRODUCT_IMAGES = {
   s1_proof_silver: { src: 'coin-images/2024-proof-silver.png', alt: 'Official Royal Australian Mint 2024 Bluey Dollarbucks $1 fine silver coloured proof coin in its presentation display case', source: 'https://ramint.runfair.com/en-GB/au/2024-1-dollar-fine-silver-coloured-proof-coin-bluey-dollarbucks' },
   s1_proof_coloured: { src: 'coin-images/2024-proof-coloured.png', alt: 'Official Royal Australian Mint 2024 Bluey Dollarbucks $1 coloured proof coin in its presentation display case', source: 'https://ramint.runfair.com/en-US/au/2024-1-dollar-coloured-proof-coin-bluey-dollarbucks' },
   s1_10_coin_folder_set: { src: 'coin-images/2024-folder-set.jpg', alt: 'Official Australia Post 2024 Bluey ten-coin folder and tube set', source: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-391/stamp-bulletin-391.pdf' },
-  s1_10_coin_folder_opened: { src: 'coin-images/2024-folder-set-opened.jpg', alt: 'Bluey and Bingo 2024 $1 uncirculated coins, the standard coins from an opened ten-coin tube', source: 'Derived composite of official Royal Australian Mint coin photography' },
-  s1_coloured_insert_variant: { src: 'coin-images/2024-coloured-insert-variant.jpg', alt: '2024 special coloured $1 Dollarbuck coin beside a standard Bluey uncirculated coin', source: 'Derived composite of official Royal Australian Mint coloured-coin photography' },
+  s1_10_coin_folder_opened: { src: 'coin-images/2024-folder-set-opened.jpg', alt: '2024 ten-coin folder with a standard Bluey uncirculated $1 coin where the tube was', source: 'Derived composite of official Royal Australian Mint coin photography' },
+  s1_coloured_insert_variant: { src: 'coin-images/2024-coloured-insert-variant.jpg', alt: '2024 ten-coin folder with the special coloured $1 Dollarbuck coin where the tube was', source: 'Derived composite of official Royal Australian Mint coloured-coin photography' },
   s1_coloured_bluey: { src: 'coin-images/2024-unc-bluey-card.jpg', alt: 'Royal Australian Mint 2024 Bluey $1 coloured uncirculated coin in its Dollarbucks presentation card, front and back, mintage 30,000', source: 'https://ramint.runfair.com/en-US/au/bluey-dollarbucks-1-dollar-uncirculated-coin-2024' },
   s1_coloured_heelers: { src: 'coin-images/2024-unc-heelers-card.jpg', alt: 'Royal Australian Mint 2024 The Heelers $1 coloured uncirculated coin in its Dollarbucks presentation card, front and back, mintage 30,000', source: 'https://ramint.runfair.com/en-US/au/heelers-bluey-dollarbucks-1-dollar-uncirculated-coin-2024' },
   s1_coloured_grannies: { src: 'coin-images/2024-unc-grannies-card.jpg', alt: 'Royal Australian Mint 2024 The Grannies $1 coloured uncirculated coin in its Dollarbucks presentation card, front and back, mintage 30,000', source: 'https://ramint.runfair.com/en-US/au/grannies-bluey-dollarbucks-1-dollar-uncirculated-coin-2024' },
@@ -3914,8 +3912,8 @@ const COIN_PRODUCT_IMAGES = {
   s2_xmas_silv: { src: 'coin-images/2025-proof.png', alt: '2025 Bluey Christmas $1 silver proof coin in its bauble packaging', source: 'https://www.ramint.gov.au/about-us/whats-new/get-christmas-spirit-bluey' },
   s2_xmas_stamp_pack: { src: 'coin-images/2024-xmas-stamp-pack.jpg', alt: 'Official Australia Post 2024 Bluey Christmas stamp pack folder and 20-stamp sheetlet', source: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-393/stamp-bulletin-393.pdf' },
   s3_folder: { src: 'coin-images/2026-folder-and-tube.png', alt: 'Bluey 2026 $2 Uncirculated Coin Collection folder standing beside its coin tube; includes five coins, seven coins to collect', source: 'https://ramint.runfair.com/en-US/au' },
-  s3_folder_opened: { src: 'coin-images/2026-folder-set-opened.png', alt: 'Camping and Baby Race 2026 $2 uncirculated coins, the standard coins from an opened five-coin tube', source: 'Derived composite of official Royal Australian Mint blog and folder imagery' },
-  s3_folder_chase: { src: 'coin-images/2026-folder-set-chase.png', alt: 'Special-coloured Sleepytime 2026 $2 chase coin beside a standard Camping uncirculated coin', source: 'Derived composite of official Royal Australian Mint blog, folder and coin imagery' },
+  s3_folder_opened: { src: 'coin-images/2026-folder-set-opened.png', alt: '2026 five-coin folder with a standard Camping uncirculated $2 coin where the tube was', source: 'Derived composite of official Royal Australian Mint blog and folder imagery' },
+  s3_folder_chase: { src: 'coin-images/2026-folder-set-chase.png', alt: '2026 five-coin folder with the special-coloured Sleepytime $2 coin where the tube was', source: 'Derived composite of official Royal Australian Mint blog, folder and coin imagery' },
   s3_maxicard_pack: { src: 'coin-images/2026-maxicard-pack.jpg', alt: 'The five Bluey Series 3 maxicards of 6 May 2026 (Rain, Baby Race, Camping, Sleepytime and Granny Mobile), each with a star-shaped $1.70 stamp and Brisbane postmark', source: 'Owner photos supplied by James Love, 2026-10-07; composite of five cards' },
   s3_stamp_pack: { src: 'coin-images/2026-stamp-pack.jpg', alt: 'Official Australia Post 2026 Bluey star-shaped MyStamps pack folder and 12-stamp sheetlet', source: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2026/stamp-bulletin-401/stamp-bulletin-401.pdf' },
   s3_sleepytime_insert: { src: 'coin-images/2026-sleepytime-coin-official.png', alt: '2026 special-coloured Sleepytime $2 coin, cropped from the official Royal Australian Mint image', source: 'https://www.ramint.gov.au/sites/default/files/styles/full_width/public/2026-05/blog-2026-05-03-bluey-2-folder.jpg?itok=cPKmvMjN' },
@@ -4001,10 +3999,15 @@ function getCoinCategory(coin) {
     };
   }
   if (coin.color) {
+    // Proofs are struck to proof quality, not uncirculated finish: RAM lists
+    // them as proof strikes with a colour print finish.
+    const isProof = coin.id.includes('proof') || /proof/i.test(coin.name || '');
     return {
       type: 'colour',
       badge: '🎨 Coloured Collector Coin',
-      hint: 'Uncirculated coin featuring vibrant printed colour artwork.'
+      hint: isProof
+        ? 'Proof-quality strike with colour print finish.'
+        : 'Uncirculated coin featuring vibrant printed colour artwork.'
     };
   }
   return {
