@@ -12,6 +12,15 @@ def get_coins_raw():
     return match.group(1)
 
 
+def _coins_by_id(raw):
+    lines = [line.strip() for line in raw.split('\n') if line.strip().startswith('{ id:')]
+    by_id = {}
+    for line in lines:
+        m = re.search(r"id:\s*'([^']+)'", line)
+        by_id[m.group(1)] = line
+    return by_id
+
+
 class TestCatalogIntegrity(unittest.TestCase):
     def test_all_coins_have_market_ranges(self):
         # Brand-new states with no secondary sales yet may carry a null guide
@@ -54,6 +63,39 @@ class TestCatalogIntegrity(unittest.TestCase):
         self.assertRegex(raw, r"id:\s*'s1_impressions_pnc_silver'[\s\S]*?productCode:\s*'11645'[\s\S]*?issueQuantity:\s*150")
         # 11450: Coloured uncirculated coin PNC (5,000 produced)
         self.assertRegex(raw, r"id:\s*'s1_impressions_pnc_colour'[\s\S]*?productCode:\s*'11450'[\s\S]*?issueQuantity:\s*5000")
+        # Envelope privy PNCs: 11635 Bluey cover (7,500), 11636-11644 (6,500 each)
+        by_id = _coins_by_id(raw)
+        self.assertRegex(by_id['s1_pnc_bluey'], r"issueQuantity:\s*7500.*productCode:\s*'11635'")
+        self.assertRegex(by_id['s1_pnc_family'], r"issueQuantity:\s*6500.*productCode:\s*'11636'")
+        self.assertRegex(by_id['s1_pnc_grannies'], r"issueQuantity:\s*6500.*productCode:\s*'11644'")
+        # Privy cards 11429-11437 (7,250; 7,252 for 11435)
+        self.assertRegex(by_id['s1_card_heelers'], r"productCode:\s*'11429'.*issueQuantity:\s*7250")
+        self.assertRegex(by_id['s1_card_grannies'], r"productCode:\s*'11437'.*issueQuantity:\s*7250")
+
+    def test_ram_2025_26_annual_report_figures(self):
+        # Verified against the official RAM 2025-26 Annual Report appendices
+        # (Product name / Year / Product code / Quantity / Mintage table).
+        # Each entry is checked within its own catalogue line.
+        raw = get_coins_raw()
+        by_id = _coins_by_id(raw)
+        # 11956: $2 folder & five-coin set (15,000 produced, unlimited mintage)
+        self.assertRegex(by_id['s3_folder'], r"productCode:\s*'11956'.*issueQuantity:\s*15000")
+        # 12001/03/05/07/09: privy cards (20,000 produced, 20,500 mintage)
+        for cid, code in (('s3_rain_privy', '12001'), ('s3_sleepytime_privy', '12003'),
+                          ('s3_camping_privy', '12005'), ('s3_babyrace_privy', '12007'),
+                          ('s3_granny_privy', '12009')):
+            with self.subTest(cid=cid):
+                self.assertRegex(by_id[cid], r"productCode:\s*'" + code + r"'")
+                self.assertRegex(by_id[cid], r"mintage:\s*20500.*issueQuantity:\s*20000")
+        # 11997: AlBr proof (9,800 of 10,500); 11996: silver proof (10,800 of 12,000)
+        self.assertRegex(by_id['s3_proof_ab'], r"mintage:\s*10500.*productCode:\s*'11997'.*issueQuantity:\s*9800")
+        self.assertRegex(by_id['s3_proof_silv'], r"mintage:\s*12000.*productCode:\s*'11996'.*issueQuantity:\s*10800")
+        # 11982/11981: 2025 Christmas UNC (125,000) and silver proof (10,000)
+        self.assertRegex(by_id['s2_xmas_unc'], r"productCode:\s*'11982'.*issueQuantity:\s*125000")
+        self.assertRegex(by_id['s2_xmas_silv'], r"productCode:\s*'11981'.*issueQuantity:\s*10000")
+        # 2026 PNC covers: 10,000 covers produced per AusPost Stamp Bulletin 401
+        self.assertRegex(by_id['s3_pnc_bluey'], r"issueQuantity:\s*10000")
+        self.assertRegex(by_id['s3_pnc_bingo'], r"issueQuantity:\s*10000")
 
     def test_folder_set_states_share_issue_price(self):
         # All three 10-coin folder set states derive from RAM product 11448,
