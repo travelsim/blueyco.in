@@ -1,9 +1,11 @@
 import base64
+import importlib
 import json
 import os
 import re
 import time
 import threading
+import types
 import urllib.request
 import urllib.error
 import urllib.parse
@@ -281,7 +283,7 @@ def _is_rate_limited(ip):
 # ── CACHE PERSISTENCE ────────────────────────────────────────────────────────
 def _load_cache():
     try:
-        with open(CACHE_FILE, 'r') as f:
+        with open(CACHE_FILE, 'r', encoding='utf-8') as f:
             data = json.load(f)
         # Normalize fetchedAt to float — some entries may have string timestamps
         # from manual edits or older cache formats.
@@ -320,7 +322,7 @@ _price_history = []            # list[dict]; each item is {date, coins: {coinId:
 def _load_price_history():
     global _price_history
     try:
-        with open(PRICE_HISTORY_FILE, 'r') as f:
+        with open(PRICE_HISTORY_FILE, 'r', encoding='utf-8') as f:
             data = json.load(f)
         if isinstance(data, list):
             _price_history = data
@@ -1469,7 +1471,7 @@ def _manual_price_is_fresh(entry):
 
 def _load_manual():
     try:
-        with open(MANUAL_PRICES_FILE, 'r') as f:
+        with open(MANUAL_PRICES_FILE, 'r', encoding='utf-8') as f:
             return json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
         return {}
@@ -1580,6 +1582,15 @@ def _strip_seller_names(value):
     return value
 
 
+# ── SERVERLESS API MODULES ───────────────────────────────────────────────────
+# /api/prices and /api/buy-options run the same handlers that Vercel used
+# (api/prices.py, api/buy-options.py), so pricing logic stays in one place.
+# Imported on first use rather than at the top: buy-options imports this file
+# as `server`, so a top-level import here would be circular.
+def _api_module(name):
+    return importlib.import_module('api.' + name)
+
+
 # ── REQUEST HANDLER ──────────────────────────────────────────────────────────
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):
@@ -1595,11 +1606,21 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(payload)
 
+    def _run_api(self, name, method):
+        # A Vercel handler class carries its own response helpers (for example
+        # buy-options' _json with its cache headers). Borrow them for this request.
+        handler_cls = _api_module(name).handler
+        if hasattr(handler_cls, '_json'):
+            self._json = types.MethodType(handler_cls._json, self)
+        getattr(handler_cls, method)(self)
+
     def do_GET(self):
-        if self.path == '/api/prices':
-            with _lock:
-                snapshot = dict(_cache)
-            self._json(200, _strip_seller_names(snapshot))
+        path = urllib.parse.urlsplit(self.path).path
+        if path == '/api/prices':
+            self._run_api('prices', '_respond')
+            return
+        if path == '/api/buy-options':
+            self._run_api('buy-options', 'do_GET')
             return
 
         if self.path.startswith('/api/price-history'):
@@ -1674,6 +1695,18 @@ class Handler(BaseHTTPRequestHandler):
         self.do_GET()
 
     def do_POST(self):
+        path = urllib.parse.urlsplit(self.path).path
+        if path == '/api/prices':
+            self._run_api('prices', '_respond')
+            return
+        if path == '/api/buy-options':
+            # Rate limit stays on in-process: there is no Vercel edge in front.
+            if _is_rate_limited(_client_ip(self.headers, self.client_address)):
+                self._json(429, {'error': 'Too many requests.'})
+                return
+            self._run_api('buy-options', 'do_POST')
+            return
+
         if self.path == '/api/affiliate-redirect':
             length = int(self.headers.get('Content-Length', 0))
             if length > MAX_BODY_BYTES:
@@ -1699,47 +1732,14 @@ class Handler(BaseHTTPRequestHandler):
             self._json(200, {'url': aff, 'is_affiliate': aff != url})
             return
 
-        if self.path != '/api/buy-options':
-            self.send_response(404)
-            self.end_headers()
-            return
-
-        if _is_rate_limited(_client_ip(self.headers, self.client_address)):
-            self._json(429, {'error': 'Too many requests.'})
-            return
-
-        length = int(self.headers.get('Content-Length', 0))
-        if length > MAX_BODY_BYTES:
-            self._json(413, {'error': 'Request body too large.'})
-            return
-        try:
-            self.connection.settimeout(5)
-            try:
-                raw = self.rfile.read(length)
-            finally:
-                self.connection.settimeout(None)
-            body = json.loads(raw)
-        except (json.JSONDecodeError, ValueError):
-            self._json(400, {'error': 'Invalid JSON.'})
-            return
-        except OSError:
-            self._json(400, {'error': 'Request read timed out.'})
-            return
-
-        coin_id = str(body.get('coinId', ''))
-        if not coin_id or coin_id not in COIN_BY_ID:
-            self._json(400, {'error': 'Unknown coinId.'})
-            return
-        keywords = COIN_BY_ID[coin_id]['search']
-
-        try:
-            self._json(200, {'options': get_buy_options(coin_id, keywords)})
-        except _BusyError:
-            self._json(503, {'error': 'Server busy, please try again shortly.'},
-                       extra_headers={'Retry-After': '10'})
+        self.send_response(404)
+        self.end_headers()
 
 
 if __name__ == '__main__':
+    # Data files (ebay_cache.json, price_history.json, ...) are opened by
+    # relative name, so pin the working directory to the repo root.
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
     port = int(os.environ.get('PORT', 5000))
     print(f'Bluey Coin Tracker — http://0.0.0.0:{port}')
     if not RAPIDAPI_KEY:

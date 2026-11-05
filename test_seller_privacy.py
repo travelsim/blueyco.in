@@ -92,16 +92,22 @@ class TestSellerPrivacy(unittest.TestCase):
         self.assertEqual(data['s1_bluey']['coinxchange'], {'price': 5.0})
 
     def test_server_prices_route_strips_seller_names(self):
-        cache = {'full': {'s1_bluey': {'coinxchange': {'seller': 'shop-example', 'price': 5.0}}}, 'complete': True}
+        payload = {'s1_bluey': {'coinxchange': {'seller': 'shop-example', 'price': 5.0}}}
         handler = legacy.Handler.__new__(legacy.Handler)
         handler.path = '/api/prices'
-        handler._json = mock.Mock()
-        with mock.patch.dict(legacy._cache, cache, clear=True):
+        handler.command = 'GET'
+        handler.request_version = 'HTTP/1.1'
+        handler.requestline = 'GET /api/prices HTTP/1.1'
+        handler.client_address = ('127.0.0.1', 0)
+        handler.wfile = io.BytesIO()
+        with mock.patch.object(prices, '_build_payload', return_value=(payload, True)), \
+                mock.patch.object(legacy.Handler, 'log_message'):
             handler.do_GET()
-        status, body = handler._json.call_args.args[:2]
-        self.assertEqual(status, 200)
-        self.assert_no_seller_names(body)
-        self.assertEqual(body['full']['s1_bluey']['coinxchange'], {'price': 5.0})
+        head, _, body = handler.wfile.getvalue().partition(b'\r\n\r\n')
+        self.assertIn(b' 200 ', head.split(b'\r\n')[0])
+        data = json.loads(body)
+        self.assert_no_seller_names(data)
+        self.assertEqual(data['s1_bluey']['coinxchange'], {'price': 5.0})
 
     def test_server_price_history_route_strips_seller_names(self):
         history = [{'date': '2026-10-17', 'coins': {'s1_bluey': {'coinxchange': {'seller': 'shop-example', 'price': 5.0}}}}]
