@@ -1591,6 +1591,45 @@ def _api_module(name):
     return importlib.import_module('api.' + name)
 
 
+# Vercel function per API path (vercel.json serves each as its own function).
+_API_ROUTES = {
+    '/api/prices':     'prices',
+    '/api/buy-options': 'buy-options',
+    '/api/auth':       'auth',
+    '/api/collection': 'collection',
+    '/api/checkout':   'checkout',
+    '/api/contact':    'contact',
+}
+
+_SITE_ROOT = os.path.dirname(os.path.abspath(__file__))
+# Folders the front end loads files from; anything else falls to the app shell.
+_ASSET_DIRS = ('coin-images/', 'frames/', 'ballot/', 'distributors/')
+_MIME_TYPES = {
+    '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png',
+    '.webp': 'image/webp', '.svg': 'image/svg+xml', '.html': 'text/html; charset=utf-8',
+}
+
+
+def _asset_path(path):
+    # (file, content type) for a path under an asset folder; None for any other path.
+    # A file that is missing or has a non-allowed type comes back with file None.
+    rel = urllib.parse.unquote(path).lstrip('/')
+    if not rel.startswith(_ASSET_DIRS):
+        return None
+    if rel.endswith('/'):
+        rel += 'index.html'
+    ctype = _MIME_TYPES.get(os.path.splitext(rel)[1].lower())
+    if ctype is None:
+        return (None, 'application/octet-stream')
+    parts = rel.split('/')
+    if any(part.startswith('.') for part in parts):
+        return (None, ctype)
+    full = os.path.normpath(os.path.join(_SITE_ROOT, *parts))
+    if not full.startswith(_SITE_ROOT + os.sep) or not os.path.isfile(full):
+        return (None, ctype)
+    return (full, ctype)
+
+
 # ── REQUEST HANDLER ──────────────────────────────────────────────────────────
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):
@@ -1606,24 +1645,69 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(payload)
 
-    def _run_api(self, name, method):
-        # A Vercel handler class carries its own response helpers (for example
-        # buy-options' _json with its cache headers). Borrow them for this request.
+    def _adopt(self, handler_cls):
+        # The Vercel handler classes keep their own helpers (_json, _session_store,
+        # _google, ...). Bind them to this connection so their logic runs unchanged.
+        for name, attr in vars(handler_cls).items():
+            if isinstance(attr, types.FunctionType) and not name.startswith('__'):
+                setattr(self, name, types.MethodType(attr, self))
+
+    def _run_api(self, name, command):
         handler_cls = _api_module(name).handler
-        if hasattr(handler_cls, '_json'):
-            self._json = types.MethodType(handler_cls._json, self)
-        getattr(handler_cls, method)(self)
+        method = 'do_' + command
+        if not hasattr(handler_cls, method):
+            # The Vercel function has no such verb, so answer as the bare handler would.
+            self.send_error(501, f'Unsupported method ({command!r})')
+            return
+        self._adopt(handler_cls)
+        getattr(self, method)()
+
+    def _send_file(self, fname, ctype):
+        data = None
+        if fname is not None:
+            try:
+                with open(fname, 'rb') as f:
+                    data = f.read()
+            except FileNotFoundError:
+                data = None
+        if data is None:
+            self.send_response(404)
+            self.end_headers()
+            return
+        self.send_response(200)
+        self.send_header('Content-Type', ctype)
+        self.send_header('Content-Length', str(len(data)))
+        self.send_header('Cache-Control', 'no-store')
+        if ctype.startswith('text/html'):
+            self.send_header('X-Robots-Tag', 'index, follow')
+            self.send_header('Link', '</.well-known/api-catalog>; rel="api-catalog", </openapi.json>; rel="service-desc", </llms.txt>; rel="service-doc", </sitemap.xml>; rel="sitemap", </auth.md>; rel="describedby", </.well-known/ai-catalog.json>; rel="ai-catalog"')
+        self.end_headers()
+        if self.command != 'HEAD':
+            self.wfile.write(data)
+
+    def _api_route(self, path, command):
+        # True when the path is an API route and has been answered.
+        name = _API_ROUTES.get(path)
+        if name is None:
+            return False
+        if name == 'buy-options' and command == 'POST' and                 _is_rate_limited(_client_ip(self.headers, self.client_address)):
+            # Rate limit stays on in-process: there is no Vercel edge in front.
+            self._json(429, {'error': 'Too many requests.'})
+            return True
+        self._run_api(name, command)
+        return True
+
+    def _api_or_404(self, command):
+        if not self._api_route(urllib.parse.urlsplit(self.path).path, command):
+            self.send_response(404)
+            self.end_headers()
 
     def do_GET(self):
         path = urllib.parse.urlsplit(self.path).path
-        if path == '/api/prices':
-            self._run_api('prices', '_respond')
-            return
-        if path == '/api/buy-options':
-            self._run_api('buy-options', 'do_GET')
+        if self._api_route(path, 'GET'):
             return
 
-        if self.path.startswith('/api/price-history'):
+        if path == '/api/price-history':
             # /api/price-history            → all snapshots for all coins
             # /api/price-history?coinId=X&days=90 → filtered
             from urllib.parse import urlparse, parse_qs
@@ -1649,7 +1733,7 @@ class Handler(BaseHTTPRequestHandler):
             }))
             return
 
-        if self.path in ('/health', '/healthz'):
+        if path in ('/health', '/healthz'):
             self._json(200, {
                 'status': 'ok',
                 'cache_count': len(_cache),
@@ -1657,57 +1741,49 @@ class Handler(BaseHTTPRequestHandler):
             })
             return
 
-        if self.path in ('/', '/index.html'):
-            accept = self.headers.get('Accept', '')
-            if 'text/markdown' in accept:
-                entry = ('llms.txt', 'text/markdown; charset=utf-8')
-            else:
-                entry = STATIC_FILES.get(self.path)
-        else:
-            entry = STATIC_FILES.get(self.path)
+        if path == '/app':
+            # vercel.json: permanent redirect to the home page.
+            self.send_response(308)
+            self.send_header('Location', '/')
+            self.send_header('Content-Length', '0')
+            self.end_headers()
+            return
 
-        if entry is None:
+        if path.startswith(('/api/', '/_vercel/')):
+            # No Vercel function or file answers these here, so they are 404.
             self.send_response(404)
             self.end_headers()
             return
-        fname, ctype = entry
-        if not os.path.isabs(fname):
-            fname = os.path.join(os.path.dirname(__file__), fname)
-        try:
-            with open(fname, 'rb') as f:
-                data = f.read()
-        except FileNotFoundError:
-            self.send_response(404)
-            self.end_headers()
+
+        if path in ('/', '/index.html') and 'text/markdown' in self.headers.get('Accept', ''):
+            self._send_file(os.path.join(_SITE_ROOT, 'llms.txt'), 'text/markdown; charset=utf-8')
             return
-        self.send_response(200)
-        self.send_header('Content-Type', ctype)
-        self.send_header('Content-Length', str(len(data)))
-        self.send_header('Cache-Control', 'no-store')
-        if ctype.startswith('text/html'):
-            self.send_header('X-Robots-Tag', 'index, follow')
-            self.send_header('Link', '</.well-known/api-catalog>; rel="api-catalog", </openapi.json>; rel="service-desc", </llms.txt>; rel="service-doc", </sitemap.xml>; rel="sitemap", </auth.md>; rel="describedby", </.well-known/ai-catalog.json>; rel="ai-catalog"')
-        self.end_headers()
-        if self.command != 'HEAD':
-            self.wfile.write(data)
+        entry = STATIC_FILES.get(path)
+        if entry is not None:
+            self._send_file(os.path.join(_SITE_ROOT, entry[0]), entry[1])
+            return
+        asset = _asset_path(path)
+        if asset is not None:
+            self._send_file(asset[0], asset[1])
+            return
+        # vercel.json rewrite: any other GET gets the app shell.
+        self._send_file(os.path.join(_SITE_ROOT, 'index.html'), 'text/html; charset=utf-8')
 
     def do_HEAD(self):
         self.do_GET()
 
+    def do_PUT(self):
+        self._api_or_404('PUT')
+
+    def do_DELETE(self):
+        self._api_or_404('DELETE')
+
     def do_POST(self):
         path = urllib.parse.urlsplit(self.path).path
-        if path == '/api/prices':
-            self._run_api('prices', '_respond')
-            return
-        if path == '/api/buy-options':
-            # Rate limit stays on in-process: there is no Vercel edge in front.
-            if _is_rate_limited(_client_ip(self.headers, self.client_address)):
-                self._json(429, {'error': 'Too many requests.'})
-                return
-            self._run_api('buy-options', 'do_POST')
+        if self._api_route(path, 'POST'):
             return
 
-        if self.path == '/api/affiliate-redirect':
+        if path == '/api/affiliate-redirect':
             length = int(self.headers.get('Content-Length', 0))
             if length > MAX_BODY_BYTES:
                 self._json(413, {'error': 'Request body too large.'})
