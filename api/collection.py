@@ -13,17 +13,28 @@ import _auth as A  # noqa: E402
 
 
 class handler(BaseHTTPRequestHandler):
+    def _drain_body(self):
+        try:
+            length = int(self.headers.get('Content-Length') or 0)
+            if 0 < length <= A.MAX_BODY_BYTES:
+                self.rfile.read(length)
+        except Exception:
+            pass
+
     def _session_store(self, write=False):
         """Return (session, store), or send the error response and return None."""
         if write and not A.same_origin(self.headers):
+            self._drain_body()
             self._json(403, {'error': 'Cross-site request refused.'})
             return None
         session = A.read_session(self.headers.get('Cookie'))
         if not session:
+            self._drain_body()
             self._json(401, {'error': 'Sign in to sync your collection.'})
             return None
         store = A.get_store()
         if store is None:
+            self._drain_body()
             self._json(503, {'error': 'Saved collections are not available yet.'})
             return None
         return session, store

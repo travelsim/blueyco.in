@@ -214,8 +214,8 @@ COINS = [
     {'id': 's1_proof_coloured', 'ebay_kw': '2024 $1 Bluey Dollarbucks coloured proof coin', 'search': '2024 $1 Bluey Dollarbucks coloured proof coin'},
     {'id': 's1_10_coin_folder_set', 'ebay_kw': '2024 $1 Bluey folder tube set sealed unopened', 'search': '2024 $1 Bluey folder tube set sealed unopened'},
     {'id': 's1_10_coin_folder_opened', 'ebay_kw': '2024 $1 Bluey folder tube set opened', 'search': '2024 $1 Bluey folder tube set opened'},
-    {'id': 's1_coloured_insert_variant', 'ebay_kw': '2024 $1 Bluey ten coin collection folder tube set special coloured coin', 'search': '2024 $1 Bluey ten coin collection folder tube set special coloured coin'},
-    {'id': 's0_2020_stamp_pack', 'ebay_kw': '2020 Bluey MyStamps stamp pack Australia Post 1515510', 'search': '2020 Bluey MyStamps stamp pack Australia Post 1515510'},
+    {'id': 's1_coloured_insert_variant', 'ebay_kw': '2024 $1 Bluey special coloured coin folder tube set', 'search': '2024 $1 Bluey special coloured coin folder tube set'},
+    {'id': 's0_2020_stamp_pack', 'ebay_kw': '2020 Bluey MyStamps stamp pack Australia Post', 'search': '2020 Bluey MyStamps stamp pack Australia Post'},
     {'id': 's1_auspost_stamp_pack', 'ebay_kw': '2024 Bluey MyStamps pack 12 house shaped stamps', 'search': '2024 Bluey MyStamps pack 12 house shaped stamps'},
     {'id': 's1_impressions_pnc_colour', 'ebay_kw': '2024 Bluey limited edition coloured coin PNC', 'search': '2024 Bluey limited edition coloured coin PNC'},
     {'id': 's1_impressions_pnc_2coin', 'ebay_kw': '2024 Bluey limited edition 2 coin PNC', 'search': '2024 Bluey limited edition 2 coin PNC'},
@@ -251,20 +251,20 @@ COINS = [
     # records from the 11428/11430 envelope PNCs, not dedupes).
     {'id': 's2_xmas_unc', 'ebay_kw': '2025 $1 Bluey Christmas coloured uncirculated coin', 'search': '2025 $1 Bluey Christmas coloured uncirculated coin'},
     {'id': 's2_xmas_silv', 'ebay_kw': '2025 $1 Bluey Christmas silver proof coin', 'search': '2025 $1 Bluey Christmas silver proof coin'},
-    {'id': 's2_xmas_stamp_pack', 'ebay_kw': '2024 Bluey Christmas stamp pack 76602869 Australia Post', 'search': '2024 Bluey Christmas stamp pack 76602869 Australia Post'},
-    {'id': 's3_rain', 'ebay_kw': '2026 $2 Bluey Rain privy mark uncirculated coin', 'search': '2026 $2 Bluey Rain privy mark uncirculated coin'},
-    {'id': 's3_sleepytime', 'ebay_kw': '2026 $2 Bluey Sleepytime privy mark uncirculated', 'search': '2026 $2 Bluey Sleepytime privy mark uncirculated'},
-    {'id': 's3_camping', 'ebay_kw': '2026 $2 Bluey Camping privy mark uncirculated coin', 'search': '2026 $2 Bluey Camping privy mark uncirculated coin'},
-    {'id': 's3_babyrace', 'ebay_kw': '2026 $2 Bluey Baby Race privy mark uncirculated', 'search': '2026 $2 Bluey Baby Race privy mark uncirculated'},
-    {'id': 's3_granny', 'ebay_kw': '2026 $2 Bluey Granny Mobile privy mark uncirculated', 'search': '2026 $2 Bluey Granny Mobile privy mark uncirculated'},
-    {'id': 's3_rain_privy', 'ebay_kw': '2026 $2 Bluey Rain Privy Mark coin', 'search': '2026 $2 Bluey Rain Privy Mark coin'},
-    {'id': 's3_sleepytime_privy', 'ebay_kw': '2026 $2 Bluey Sleepytime Privy Mark coin', 'search': '2026 $2 Bluey Sleepytime Privy Mark coin'},
-    {'id': 's3_camping_privy', 'ebay_kw': '2026 $2 Bluey Camping Privy Mark coin', 'search': '2026 $2 Bluey Camping Privy Mark coin'},
-    {'id': 's3_babyrace_privy', 'ebay_kw': '2026 $2 Bluey Baby Race Privy Mark coin', 'search': '2026 $2 Bluey Baby Race Privy Mark coin'},
-    {'id': 's3_granny_privy', 'ebay_kw': '2026 $2 Bluey Granny Mobile Privy Mark coin', 'search': '2026 $2 Bluey Granny Mobile Privy Mark coin'},
+    {'id': 's2_xmas_stamp_pack', 'ebay_kw': '2024 Bluey Christmas stamp pack Australia Post', 'search': '2024 Bluey Christmas stamp pack Australia Post'},
+    {'id': 's3_rain', 'ebay_kw': '2026 $2 Bluey Rain Privy Mark coin in card', 'search': '2026 $2 Bluey Rain Privy Mark coin in card'},
+    {'id': 's3_sleepytime', 'ebay_kw': '2026 $2 Bluey Sleepytime Privy Mark coin in card', 'search': '2026 $2 Bluey Sleepytime Privy Mark coin in card'},
+    {'id': 's3_camping', 'ebay_kw': '2026 $2 Bluey Camping Privy Mark coin in card', 'search': '2026 $2 Bluey Camping Privy Mark coin in card'},
+    {'id': 's3_babyrace', 'ebay_kw': '2026 $2 Bluey Baby Race Privy Mark coin in card', 'search': '2026 $2 Bluey Baby Race Privy Mark coin in card'},
+    {'id': 's3_granny', 'ebay_kw': '2026 $2 Bluey Granny Mobile Privy Mark coin in card', 'search': '2026 $2 Bluey Granny Mobile Privy Mark coin in card'},
+    {'id': 's3_rain_privy', 'ebay_kw': '2026 $2 Bluey Rain Privy Mark coin in card', 'search': '2026 $2 Bluey Rain Privy Mark coin in card'},
+    {'id': 's3_sleepytime_privy', 'ebay_kw': '2026 $2 Bluey Sleepytime Privy Mark coin in card', 'search': '2026 $2 Bluey Sleepytime Privy Mark coin in card'},
+    {'id': 's3_camping_privy', 'ebay_kw': '2026 $2 Bluey Camping Privy Mark coin in card', 'search': '2026 $2 Bluey Camping Privy Mark coin in card'},
+    {'id': 's3_babyrace_privy', 'ebay_kw': '2026 $2 Bluey Baby Race Privy Mark coin in card', 'search': '2026 $2 Bluey Baby Race Privy Mark coin in card'},
+    {'id': 's3_granny_privy', 'ebay_kw': '2026 $2 Bluey Granny Mobile Privy Mark coin in card', 'search': '2026 $2 Bluey Granny Mobile Privy Mark coin in card'},
     {'id': 's3_proof_ab', 'ebay_kw': '2026 $2 Bluey coloured proof aluminium bronze coin', 'search': '2026 $2 Bluey coloured proof aluminium bronze coin'},
     {'id': 's3_proof_silv', 'ebay_kw': '2026 $2 Bluey coloured silver proof coin', 'search': '2026 $2 Bluey coloured silver proof coin'},
-    {'id': 's3_maxicard_pack', 'ebay_kw': '2026 Bluey prepaid concertina maxicard pack five designs', 'search': '2026 Bluey prepaid concertina maxicard pack five designs'},
+    {'id': 's3_maxicard_pack', 'ebay_kw': '2026 Bluey maxicard pack Australia Post', 'search': '2026 Bluey maxicard pack Australia Post'},
     {'id': 's3_stamp_pack', 'ebay_kw': '2026 Bluey MyStamps star shaped stamp pack 2336509 Australia Post', 'search': '2026 Bluey MyStamps star shaped stamp pack 2336509 Australia Post'},
     {'id': 's3_sleepytime_insert', 'ebay_kw': '2026 $2 Bluey Sleepytime Coloured Insert coin', 'search': '2026 $2 Bluey Sleepytime Coloured Insert coin'},
     {'id': 's3_till_bluey', 'ebay_kw': '2026 $2 Bluey coloured till coin circulation', 'search': '2026 $2 Bluey coloured till coin circulation'},
@@ -279,7 +279,7 @@ COINS = [
     # Series 4 — 2027 Cricket episode collectible coins (RAM launch prices).
     {'id': 's4_cricket_unc', 'ebay_kw': '2027 $1 Bluey Cricket coloured uncirculated coin', 'search': '2027 $1 Bluey Cricket coloured uncirculated coin'},
     {'id': 's4_cricket_proof', 'ebay_kw': '2027 $1 Bluey Cricket coloured silver proof coin', 'search': '2027 $1 Bluey Cricket coloured silver proof coin'},
-    {'id': 's3_folder', 'ebay_kw': '2026 $2 Bluey collection folder five coin set', 'search': '2026 $2 Bluey collection folder five coin set'},
+    {'id': 's3_folder', 'ebay_kw': '2026 $2 Bluey collection folder tube set', 'search': '2026 $2 Bluey collection folder tube set'},
     # Series 1 tube sets — these ship in the frontend catalogue and in
     # server.py; they were missing here so they never received live prices.
 ]
@@ -473,6 +473,11 @@ _NAMED_VARIANT_TOKENS = {
     'granny', 'grannies', 'rain', 'camping', 'cricket', 'sleepytime', 'sleeptime', 'heelers',
     'sleepy', 'baby', 'race',
 }
+_NAME_FAMILIES = (
+    {'muffin', 'muffinsocks', 'socks'}, {'stripe', 'stripes', 'trixie', 'nana'},
+    {'rad', 'frisky'}, {'friend', 'friends'}, {'mum', 'dad'},
+    {'granny', 'grannies'}, {'sleepytime', 'sleepy', 'sleeptime'}, {'baby', 'race'},
+)
 _BUNDLE_TOKENS = {
     'set', 'sets', 'folder', 'folders', 'tube', 'tubes', 'bundle', 'bundles',
     'collection', 'collections', 'bag', 'bags', 'roll', 'rolls', 'lot', 'lots',
@@ -549,7 +554,8 @@ def _product_matches_coin(product, coin, now=None, max_age_days=90):
     for group in (('proof',), ('silver',), ('privy', 'privymark'), ('pnc', 'postal'), ('maxicard',), ('sealed', 'unopened'), ('special',)):
         if set(group) & query_tokens and not set(group) & title_tokens:
             return False
-    unrequested_names = (title_tokens & _NAMED_VARIANT_TOKENS) - (query_tokens & _NAMED_VARIANT_TOKENS)
+    diff = (title_tokens & _NAMED_VARIANT_TOKENS) - (query_tokens & _NAMED_VARIANT_TOKENS)
+    unrequested_names = {t for t in diff if not any(t in fam and (fam & query_tokens) for fam in _NAME_FAMILIES)}
     if unrequested_names:
         return False
 
