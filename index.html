@@ -4632,7 +4632,18 @@ function _validSold(r) {
 function _sourceIsFresh(data) {
   const fetchedAt = Number(data && data.fetchedAt) * 1000;
   const now = Date.now();
-  return Number.isFinite(fetchedAt) && now - fetchedAt <= 90 * 24 * 60 * 60 * 1000 && fetchedAt - now <= 24 * 60 * 60 * 1000;
+  const maxAge = 90 * 24 * 60 * 60 * 1000;
+  if (Number.isFinite(fetchedAt)) {
+    return now - fetchedAt <= maxAge && fetchedAt - now <= 24 * 60 * 60 * 1000;
+  }
+  // Imported sales can arrive without a snapshot timestamp; the sale dates they
+  // carry are the evidence, so date the source from its newest sold record.
+  const dates = ((data && data.products) || [])
+    .map(p => Date.parse(p.date_sold || p.sold_date || ''))
+    .filter(Number.isFinite);
+  if (!dates.length) return false;
+  const newest = Math.max.apply(null, dates);
+  return now - newest <= maxAge && newest - now <= 24 * 60 * 60 * 1000;
 }
 
 const _CLIENT_BUNDLE_TOKENS = new Set([
