@@ -141,8 +141,6 @@ def get_buy_options(coin_id, keywords):
             # Unfinished or failed scrape still yields an actionable link.
             options.extend(_fallback(retailer, keywords, coin_id, manual))
             continue
-        if len(results) > 3:
-            results = sorted(results, key=lambda o: (o.get('price') is None, o.get('price') or 9999))[:3]
         for option in results:
             if option.get('price') is not None:
                 option.setdefault('price_type', 'asking')
@@ -150,11 +148,11 @@ def get_buy_options(coin_id, keywords):
 
     priced = sorted(
         [o for o in options if not o.get('link_only') and o.get('price') is not None],
-        key=lambda o: o['price'],
+        key=legacy._buy_total_sort_key,
     )
     link_only = [o for o in options if o.get('link_only') or o.get('price') is None]
 
-    final = priced + link_only
+    final = priced[:10] + link_only
     if complete:
         _cache[coin_id] = {'options': final, 'fetchedAt': now}
     return final, complete

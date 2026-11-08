@@ -633,10 +633,12 @@ def _cx_parse_active(lines, hrefs):
                 href = hrefs[p]
 
             f = i + 1
-            postage = 0.0
+            postage = None
             if f < n and lines[f] == 'Buy It Now':
                 f += 1
             if f < n and (lines[f] == 'Free postage' or re.match(r'^\+AU \$[\d,.]+ postage$', lines[f])):
+                if lines[f] == 'Free postage':
+                    postage = 0.0
                 if lines[f].startswith('+AU $'):
                     postage_match = re.search(r'\$([\d,.]+)', lines[f])
                     postage = _parse_price(postage_match.group(1)) if postage_match else None
@@ -1117,7 +1119,7 @@ def _coinxchange_buy_options(retailer, keywords, coin_id=None):
                 continue
             matched.append(listing)
         matched = _query_dedupe(matched, ('title', 'price', 'url'))
-        if len(matched) >= 3:
+        if len(matched) >= 10:
             break
     matched.sort(key=lambda l: (l.get('price') is None, l.get('price') or 0))
     if not matched:
@@ -1132,8 +1134,10 @@ def _coinxchange_buy_options(retailer, keywords, coin_id=None):
         'title':        l.get('title'),
         'currency':     'AUD',
         'price_type':   'asking',
+        'postage':      l.get('postage'),
+        'landed_price': round(l['price'] + l['postage'], 2) if l.get('price') is not None and l.get('postage') is not None else None,
         'link_only':   l['price'] is None,
-    } for l in matched[:3]]
+    } for l in sorted(matched, key=_buy_total_sort_key)[:10]]
 
 
 def _get_ebay_token():
@@ -1448,6 +1452,17 @@ def _browse_keywords(keywords):
     return ' '.join(words)
 
 
+def _buy_total_sort_key(option):
+    """Known delivery totals first; unknown postage is never treated as free."""
+    price = option.get('price')
+    shipping = option.get('postage')
+    if not isinstance(price, (int, float)):
+        return (2, float('inf'))
+    if not isinstance(shipping, (int, float)) or shipping < 0:
+        return (1, price)
+    return (0, price + shipping)
+
+
 def _ebay_live_options(retailer, keywords, coin_id=''):
     """
     Fetch active eBay AU Buy It Now listings from eBay's Browse API.
@@ -1477,7 +1492,7 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
                 continue
             items.append(it)
         items = _query_dedupe(items, ('title', 'price', 'url'))
-        if len(items) >= 3:
+        if len(items) >= 10:
             break
     if not items:
         return _link_only_option(retailer, keywords, coin_id=coin_id)
@@ -1501,7 +1516,7 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
             **_deal_fields(it['price'], it.get('postage'), market_median),
         })
 
-    return sorted(out, key=lambda x: x['price'])[:3]
+    return sorted(out, key=_buy_total_sort_key)[:10]
 
 
 def _link_only_option(retailer, keywords, coin_id=''):
@@ -1603,15 +1618,15 @@ def get_buy_options(coin_id, keywords):
                 print(f'Buy-panel scrape fail [{rid}]: {e}')
                 results = []
 
-            options.extend(results[:3] if results else _link_only_option(r, keywords, coin_id=coin_id))
+            options.extend(results if results else _link_only_option(r, keywords, coin_id=coin_id))
 
         priced    = sorted([o for o in options if not o['link_only'] and o['price'] is not None],
-                           key=lambda x: x['price'])
+                           key=_buy_total_sort_key)
         for option in priced:
             option.setdefault('price_type', 'asking')
         link_only = [o for o in options if o['link_only'] or o['price'] is None]
 
-        final = priced + link_only
+        final = priced[:10] + link_only
         with _lock:
             _buy_cache[coin_id] = {'options': final, 'fetchedAt': time.time()}
         return final

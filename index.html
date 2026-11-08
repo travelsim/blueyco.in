@@ -4482,7 +4482,12 @@ function renderBuyOptions(panel, options) {
     // Price column
     let priceEl;
     if (!opt.link_only && opt.price != null) {
-      priceEl = el('span', 'ret-price', `${opt.price_type === 'asking' ? 'Ask ' : ''}${formatAUD(opt.price)}`);
+      const postage = opt.postage;
+      const shippingKnown = postage !== null && postage !== undefined && Number.isFinite(Number(postage)) && Number(postage) >= 0;
+      const total = shippingKnown ? Number(opt.price) + Number(postage) : null;
+      priceEl = el('span', 'ret-price', shippingKnown
+        ? `${formatAUD(total)} total (${formatAUD(opt.price)} + ${Number(postage) === 0 ? 'free postage' : formatAUD(Number(postage)) + ' postage'})`
+        : `${formatAUD(opt.price)} + postage unknown`);
     } else {
       priceEl = el('span', 'ret-price link-only', opt.retailer_id === 'ebay' ? 'Live listings' : 'Listings');
     }
@@ -4518,7 +4523,7 @@ function renderBuyOptions(panel, options) {
     }
   });
 
-  panel.append(el('div', 'bp-note', 'Priced results are current asking prices, not completed sales. Dealer search links may show higher retail asks; no price is shown until it can be checked and dated.'));
+  panel.append(el('div', 'bp-note', 'Up to 10 matching asking listings, sorted by price plus known postage. Listings with unknown postage follow; delivery can vary by location. Search links open more listings.'));
 }
 
 // ────────────────────────────────────────────────
