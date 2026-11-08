@@ -880,6 +880,13 @@ def _cached_snapshot(coins, base_cache, manual, manual_ebay_sales=None):
                     continue
             if fetched_values:
                 ebay['fetchedAt'] = max(fetched_values)
+            else:
+                # An imported sale is itself evidence: date the snapshot from the
+                # newest imported record so the page treats it as a real fetch.
+                stamps = [_sold_timestamp(p.get('date_sold')) for p in imported_ebay['products']]
+                stamps = [s for s in stamps if s]
+                if stamps:
+                    ebay['fetchedAt'] = max(stamps)
         else:
             ebay = cached_ebay
         ebay = _quality_filter_ebay(ebay, coin)
