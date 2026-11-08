@@ -81,7 +81,7 @@ BARGAIN_DISCOUNT_PCT = 15
 BARGAIN_MIN_SALES    = 3
 REFRESH_SECS       = 14 * 24 * 3600   # 2 weeks
 CHECK_SECS         = 24 * 3600         # check daily whether refresh needed
-BUY_CACHE_TTL      = 24 * 3600         # retailer panel cache: 24 h
+BUY_CACHE_TTL      = 30 * 60             # retailer panel cache: 30 min
 MAX_BODY_BYTES     = 4_096
 RATE_LIMIT_RPM     = 10
 RATE_WINDOW_SECS   = 60
@@ -1463,6 +1463,37 @@ def _buy_total_sort_key(option):
     return (0, price + shipping)
 
 
+def _listing_key(option):
+    """Identity of one marketplace listing.
+
+    Search variants return the same item with a different query string in the
+    URL, so the eBay item number is used when present and the query string is
+    stripped otherwise.
+    """
+    url = str(option.get('url') or '')
+    match = re.search(r'/itm/(\d+)', url)
+    if match:
+        return (option.get('retailer_id'), 'itm', match.group(1))
+    if not url:
+        # No link to compare: keep anonymous rows distinct rather than merging
+        # unrelated retailers that only share a name.
+        return (option.get('retailer_id'), 'anon', option.get('name'), option.get('price'))
+    return (option.get('retailer_id'), 'url', url.split('?', 1)[0])
+
+
+def _dedupe_listings(options):
+    """Keep the first (best-sorted) row for each distinct listing."""
+    seen = set()
+    unique = []
+    for option in options:
+        key = _listing_key(option)
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append(option)
+    return unique
+
+
 def _ebay_live_options(retailer, keywords, coin_id=''):
     """
     Fetch active eBay AU Buy It Now listings from eBay's Browse API.
@@ -1480,6 +1511,7 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
     # Seller-wording variants widen the net; each result is gated against the
     # query that found it.
     items = []
+    seen_listings = set()
     required = _required_format_groups(keywords)
     for query in [keywords] + _query_variants(coin_id, MAX_ACTIVE_QUERIES - 1):
         browse_kw = _browse_keywords(query)
@@ -1490,8 +1522,12 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
             title_tokens = set(re.findall(r'[a-z0-9]+', str(title).lower()))
             if not all(set(group) & title_tokens for group in required):
                 continue
+            # A listing shows once even when several search variants find it.
+            key = _listing_key({'retailer_id': retailer['id'], 'url': it.get('url')})
+            if key in seen_listings:
+                continue
+            seen_listings.add(key)
             items.append(it)
-        items = _query_dedupe(items, ('title', 'price', 'url'))
         if len(items) >= 10:
             break
     if not items:
@@ -1620,7 +1656,7 @@ def get_buy_options(coin_id, keywords):
 
             options.extend(results if results else _link_only_option(r, keywords, coin_id=coin_id))
 
-        priced    = sorted([o for o in options if not o['link_only'] and o['price'] is not None],
+        priced    = sorted(_dedupe_listings([o for o in options if not o['link_only'] and o['price'] is not None]),
                            key=_buy_total_sort_key)
         for option in priced:
             option.setdefault('price_type', 'asking')

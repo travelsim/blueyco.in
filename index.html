@@ -4466,6 +4466,11 @@ function renderBuyOptions(panel, options) {
     const row  = el('div', 'retailer-row');
     const name = el('div', 'ret-name', safeText(opt.name));
 
+    const hasPrice = !opt.link_only && opt.price != null;
+    const postage  = opt.postage;
+    const shippingKnown = postage !== null && postage !== undefined && Number.isFinite(Number(postage)) && Number(postage) >= 0;
+    const total = hasPrice && shippingKnown ? Number(opt.price) + Number(postage) : null;
+
     // Show the observed date for manual asking prices, and conditions where present.
     const subtitles = [];
     if (opt.subtitle) subtitles.push(safeText(opt.subtitle));
@@ -4479,22 +4484,25 @@ function renderBuyOptions(panel, options) {
       name.append(sub);
     }
 
-    // Price column
+    // Price column: one delivered total, so the row stays on a single line.
     let priceEl;
-    if (!opt.link_only && opt.price != null) {
-      const postage = opt.postage;
-      const shippingKnown = postage !== null && postage !== undefined && Number.isFinite(Number(postage)) && Number(postage) >= 0;
-      const total = shippingKnown ? Number(opt.price) + Number(postage) : null;
-      priceEl = el('span', 'ret-price', shippingKnown
-        ? `${formatAUD(total)} total (${formatAUD(opt.price)} + ${Number(postage) === 0 ? 'free postage' : formatAUD(Number(postage)) + ' postage'})`
-        : `${formatAUD(opt.price)} + postage unknown`);
+    if (hasPrice) {
+      if (shippingKnown) {
+        priceEl = el('span', 'ret-price', formatAUD(total));
+        priceEl.title = Number(postage) === 0
+          ? 'Item price with free postage'
+          : `${formatAUD(Number(opt.price))} item plus ${formatAUD(Number(postage))} postage`;
+      } else {
+        priceEl = el('span', 'ret-price', `${formatAUD(Number(opt.price))}†`);
+        priceEl.title = 'Item price only; the seller did not state postage';
+      }
     } else {
       priceEl = el('span', 'ret-price link-only', opt.retailer_id === 'ebay' ? 'Live listings' : 'Listings');
     }
 
     // Stock badge (only for priced options)
     const badge = el('span', 'ret-badge');
-    if (!opt.link_only && opt.price != null) {
+    if (hasPrice) {
       if (opt.available !== false) {
         badge.textContent = 'In Stock';
         badge.classList.add('in');
@@ -4523,7 +4531,7 @@ function renderBuyOptions(panel, options) {
     }
   });
 
-  panel.append(el('div', 'bp-note', 'Up to 10 matching asking listings, sorted by price plus known postage. Listings with unknown postage follow; delivery can vary by location. Search links open more listings.'));
+  panel.append(el('div', 'bp-note', 'Prices are delivered totals: the item plus the seller\'s stated postage. † means postage was not stated, so the item price is shown. Up to 10 listings, lowest total first.'));
 }
 
 // ────────────────────────────────────────────────

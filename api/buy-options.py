@@ -34,7 +34,9 @@ import server as legacy  # noqa: E402
 # inside budget with useful links.
 DEADLINE = 7.0
 MAX_WORKERS = 6
-CACHE_TTL = 6 * 3600
+# Asking prices move and new listings appear, so the panel is rebuilt every
+# half hour rather than serving a day-old list.
+CACHE_TTL = 30 * 60
 MAX_BODY_BYTES = 4096
 
 _cache = {}
@@ -147,7 +149,7 @@ def get_buy_options(coin_id, keywords):
         options.extend(results)
 
     priced = sorted(
-        [o for o in options if not o.get('link_only') and o.get('price') is not None],
+        legacy._dedupe_listings([o for o in options if not o.get('link_only') and o.get('price') is not None]),
         key=legacy._buy_total_sort_key,
     )
     link_only = [o for o in options if o.get('link_only') or o.get('price') is None]
