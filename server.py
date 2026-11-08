@@ -191,6 +191,8 @@ COINS = [
     {'id': 's4_cricket_unc', 'ebay_kw': '2027 $1 Bluey Cricket coloured uncirculated coin', 'search': '2027 $1 Bluey Cricket coloured uncirculated coin'},
     {'id': 's4_cricket_proof', 'ebay_kw': '2027 $1 Bluey Cricket coloured silver proof coin', 'search': '2027 $1 Bluey Cricket coloured silver proof coin'},
     {'id': 's3_folder', 'ebay_kw': '2026 $2 Bluey collection folder tube set', 'search': '2026 $2 Bluey collection folder tube set'},
+    {'id': 's3_folder_opened', 'ebay_kw': '2026 $2 Bluey folder tube set opened', 'search': '2026 $2 Bluey folder tube set opened'},
+    {'id': 's3_folder_chase', 'ebay_kw': '2026 $2 Bluey folder tube set coloured sleepytime', 'search': '2026 $2 Bluey folder tube set coloured sleepytime'},
 
 ]
 COIN_BY_ID = {c['id']: c for c in COINS}

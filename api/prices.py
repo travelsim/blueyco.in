@@ -280,6 +280,11 @@ COINS = [
     {'id': 's4_cricket_unc', 'ebay_kw': '2027 $1 Bluey Cricket coloured uncirculated coin', 'search': '2027 $1 Bluey Cricket coloured uncirculated coin'},
     {'id': 's4_cricket_proof', 'ebay_kw': '2027 $1 Bluey Cricket coloured silver proof coin', 'search': '2027 $1 Bluey Cricket coloured silver proof coin'},
     {'id': 's3_folder', 'ebay_kw': '2026 $2 Bluey collection folder tube set', 'search': '2026 $2 Bluey collection folder tube set'},
+    # Frontend catalogue states 2 and 3 of the same RAM product (11956). They
+    # ship as separate cards in index.html and previously had no backend entry,
+    # so they could never show a price or a sold record.
+    {'id': 's3_folder_opened', 'ebay_kw': '2026 $2 Bluey folder tube set opened', 'search': '2026 $2 Bluey folder tube set opened'},
+    {'id': 's3_folder_chase', 'ebay_kw': '2026 $2 Bluey folder tube set coloured sleepytime', 'search': '2026 $2 Bluey folder tube set coloured sleepytime'},
     # Series 1 tube sets — these ship in the frontend catalogue and in
     # server.py; they were missing here so they never received live prices.
 ]
