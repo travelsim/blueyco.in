@@ -1501,30 +1501,6 @@
       ]
     },
     "s1_card_heelers": {
-      "source_type": "user_imported_csv",
-      "currency": "AU",
-      "fetchedAt": 1794100000.0,
-      "query": "2 results for 2024 blue the heelers $1 privy mark coin card",
-      "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+The+Heelers+%241+privy+mark+coin+card&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-      "results": 2,
-      "total_results": 2,
-      "matched_results": 2,
-      "import_metadata": {
-        "source": "User-provided cleaned eBay AU sold-results CSV",
-        "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
-        "captured_on": "2026-10-06",
-        "import_id": "cleaned-results-2026-10-06",
-        "records_imported": 2,
-        "selection": "All supplied rows for this catalog ID were marked Retained; the reviewed CoinId mapping is preserved.",
-        "price_basis": "PriceAUD from the supplied CSV; postage is not added to the item price.",
-        "api_verified": false,
-        "search_headings": [
-          "2 results for 2024 blue the heelers $1 privy mark coin card"
-        ],
-        "search_urls": [
-          "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+The+Heelers+%241+privy+mark+coin+card&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1"
-        ]
-      },
       "products": [
         {
           "coin_id": "s1_card_heelers",
@@ -1565,12 +1541,32 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 11 Jul 2026\n2024 $1 Bluey Dollarbucks 1 Dollar Privy Mark Coin In Card - The Heelers\nOpens in a new window or tab\nAU $51.00\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\n[seller] 100% positive (1.6K)\nderosnopS"
+        },
+        {
+          "coin_id": "s1_card_heelers",
+          "title": "2024 $1 Bluey Dollarbucks- The Heelers 'ENVELOPE' Privymark Carded Coin",
+          "sale_price": 50.0,
+          "currency": "AU",
+          "date_sold": "23 Sep 2026",
+          "record_status": "Retained",
+          "record_reason": "Heeler Family $1 Privy Mark card genuine sale",
+          "source_type": "user_pasted_search"
         }
       ],
-      "median_price": 37.03,
-      "average_price": 37.03,
+      "average_price": 41.35,
+      "median_price": 50.0,
       "min_price": 23.06,
-      "max_price": 51.0
+      "max_price": 51.0,
+      "matched_results": 3,
+      "total_results": 3,
+      "results": 3,
+      "fetchedAt": 1794100000.0,
+      "currency": "AU",
+      "source_type": "user_pasted_search",
+      "import_metadata": {
+        "imported_at": "2026-11-08T08:45:00Z",
+        "source": "ebay_pasted_batch"
+      }
     },
     "s1_card_muffinsocks": {
       "source_type": "user_pasted_search",
@@ -2889,20 +2885,30 @@
           "record_status": "Retained",
           "record_reason": "Bluey & Friends PNC",
           "source_type": "user_pasted_search"
+        },
+        {
+          "coin_id": "s1_pnc_blueyfriends",
+          "title": "2024 $1 Bluey & Friends PNC",
+          "sale_price": 50.0,
+          "currency": "AU",
+          "date_sold": "14 Sep 2026",
+          "record_status": "Retained",
+          "record_reason": "Bluey & Friends $1 PNC genuine sale",
+          "source_type": "user_pasted_search"
         }
       ],
-      "average_price": 40.28,
-      "median_price": 39.95,
+      "average_price": 42.71,
+      "median_price": 40.45,
       "min_price": 39.95,
-      "max_price": 40.95,
-      "matched_results": 3,
-      "total_results": 3,
-      "results": 3,
+      "max_price": 50.0,
+      "matched_results": 4,
+      "total_results": 4,
+      "results": 4,
       "fetchedAt": 1794100000.0,
       "currency": "AU",
       "source_type": "user_pasted_search",
       "import_metadata": {
-        "imported_at": "2026-11-08T08:30:00Z",
+        "imported_at": "2026-11-08T08:45:00Z",
         "source": "ebay_pasted_batch"
       }
     },
@@ -10422,20 +10428,30 @@
           "record_status": "Retained",
           "record_reason": "Bluey, Bingo & Friends $1 PNC market benchmark",
           "source_type": "user_pasted_search"
+        },
+        {
+          "coin_id": "s1_pnc_blueybingofriends",
+          "title": "2024 $1 Bluey, Bingo & Friends PNC",
+          "sale_price": 50.0,
+          "currency": "AU",
+          "date_sold": "14 Sep 2026",
+          "record_status": "Retained",
+          "record_reason": "Bluey, Bingo & Friends $1 PNC genuine sale",
+          "source_type": "user_pasted_search"
         }
       ],
-      "average_price": 39.95,
-      "median_price": 39.95,
+      "average_price": 44.98,
+      "median_price": 44.98,
       "min_price": 39.95,
-      "max_price": 39.95,
-      "matched_results": 1,
-      "total_results": 1,
-      "results": 1,
+      "max_price": 50.0,
+      "matched_results": 2,
+      "total_results": 2,
+      "results": 2,
       "fetchedAt": 1794100000.0,
       "currency": "AU",
       "source_type": "user_pasted_search",
       "import_metadata": {
-        "imported_at": "2026-11-08T08:40:00Z",
+        "imported_at": "2026-11-08T08:45:00Z",
         "source": "ebay_pasted_batch"
       }
     }
