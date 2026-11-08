@@ -1061,6 +1061,10 @@ def _coinxchange_title_matches(title, keywords, allow_coloured=False):
         if variant in title_tokens and variant not in query_tokens:
             return False
     named_variants = set(_NAMED_VARIANTS)
+    # Sellers sometimes truncate Friends to Fr in the Bluey, Bingo & Friends PNC.
+    if query_tokens & {'pnc', 'postal'} and 'bingo' in query_tokens and not query_tokens & {'friend', 'friends'}:
+        if 'fr' in title_tokens or title_tokens & {'friend', 'friends'}:
+            return False
     diff = (title_tokens & named_variants) - (query_tokens & named_variants)
     if any(t for t in diff if not any(t in fam and (fam & query_tokens) for fam in _NAME_FAMILIES)):
         return False

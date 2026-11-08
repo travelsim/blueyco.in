@@ -1,4 +1,4 @@
-﻿import unittest
+import unittest
 import server
 
 class PncListingMatchingTests(unittest.TestCase):
@@ -16,5 +16,6 @@ class PncListingMatchingTests(unittest.TestCase):
 
     def test_other_character_and_sets_do_not_match(self):
         self.assertFalse(self.matches('s1_pnc_bingo', '2024 Bluey Mum & Dad PNC'))
+        self.assertFalse(self.matches('s1_pnc_bingo', '2024 Australia Bluey $1 Coin Privy Mark PNC Stamp & Coin Cover Bluey,Bingo Fr'))
         self.assertFalse(self.matches('s1_pnc_bingo', '2024 Bluey Bingo PNC and card set'))
         self.assertFalse(self.matches('s1_pnc_mumdad', '2024 Bluey Bingo PNC'))
