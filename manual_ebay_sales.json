@@ -6413,9 +6413,9 @@
       "fetchedAt": 1791278227.893,
       "query": "8 results for 2026 blue camping privy mark",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Camping+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-      "results": 8,
-      "total_results": 8,
-      "matched_results": 8,
+      "results": 6,
+      "total_results": 6,
+      "matched_results": 6,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -6535,19 +6535,6 @@
         },
         {
           "coin_id": "s3_camping_privy",
-          "title": "2026 bluey privy marked carded 2 dollar - camping",
-          "sale_price": 22.0,
-          "currency": "AU",
-          "date_sold": "15 Jul 2026",
-          "shipping_price": 9.0,
-          "source_type": "user_pasted_search",
-          "import_source": "user-sold-paste-2026-11-08",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
-        },
-        {
-          "coin_id": "s3_camping_privy",
           "title": "Bluey 2026 $2 Coin in Card with Privy Mark – Camping",
           "sale_price": 35.0,
           "currency": "AU",
@@ -6558,23 +6545,10 @@
           "best_offer": false,
           "record_status": "Retained",
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
-        },
-        {
-          "coin_id": "s3_camping_privy",
-          "title": "2026 $2 Bluey Camping 'Privy Mark' Coin in Card",
-          "sale_price": 25.0,
-          "currency": "AU",
-          "date_sold": "24 May 2026",
-          "shipping_price": 10.0,
-          "source_type": "user_pasted_search",
-          "import_source": "user-sold-paste-2026-11-08",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
         }
       ],
-      "median_price": 26.89,
-      "average_price": 26.73,
+      "median_price": 30.89,
+      "average_price": 27.81,
       "min_price": 11.09,
       "max_price": 35.0
     },
@@ -13938,6 +13912,34 @@
       "date_sold": "1 Jul 2026",
       "import_source": "user-sold-paste-2026-11-08",
       "reason": "AU $11.00 is implausibly low for s3_folder; matches the owner's 8 Nov flag about dodgy results, so it is excluded from every median"
+    },
+    {
+      "coin_id": "s3_camping_privy",
+      "title": "2026 bluey privy marked carded 2 dollar - camping",
+      "sale_price": 22.0,
+      "currency": "AU",
+      "date_sold": "15 Jul 2026",
+      "shipping_price": 9.0,
+      "source_type": "user_pasted_search",
+      "import_source": "user-sold-paste-2026-11-08",
+      "best_offer": false,
+      "record_status": "Retained",
+      "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage",
+      "reason": "Duplicate observation also present in CoinXchange sold history; source attributed to eBay during paste import."
+    },
+    {
+      "coin_id": "s3_camping_privy",
+      "title": "2026 $2 Bluey Camping 'Privy Mark' Coin in Card",
+      "sale_price": 25.0,
+      "currency": "AU",
+      "date_sold": "24 May 2026",
+      "shipping_price": 10.0,
+      "source_type": "user_pasted_search",
+      "import_source": "user-sold-paste-2026-11-08",
+      "best_offer": false,
+      "record_status": "Retained",
+      "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage",
+      "reason": "Duplicate observation also present in CoinXchange sold history; source attributed to eBay during paste import."
     }
   ]
 }
