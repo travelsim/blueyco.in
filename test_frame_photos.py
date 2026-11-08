@@ -9,7 +9,7 @@ FRAMES_DIR = ROOT / 'frames'
 
 def photo_map():
     block = INDEX.split('const FRAME_PHOTOS = {')[1].split('};')[0]
-    return dict(re.findall(r"'(s[123]_[a-z0-9_]+)':\s*\{\s*file:\s*'([^']+)'", block))
+    return dict(re.findall(r"'(s[1234]_[a-z0-9_]+)':\s*\{\s*file:\s*'([^']+)'", block))
 
 
 class TestFramePhotosExist(unittest.TestCase):
