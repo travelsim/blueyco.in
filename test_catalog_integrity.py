@@ -174,7 +174,7 @@ class TestAttributePills(unittest.TestCase):
             if m_id and m_name:
                 names[m_id.group(1)] = m_name.group(1)
         self.assertEqual(names.get('s3_till_bluey'), '2026 Bluey $2 Coloured Till Coin')
-        self.assertEqual(names.get('s3_till_bingo'), '2026 Bingo $2 Coloured Till Coin')
+        self.assertEqual(names.get('s3_till_bingo'), '2026 Bluey Bingo $2 Coloured Till Coin')
 
 
     def test_pnc_coins_carry_privy_attribute(self):
