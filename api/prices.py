@@ -305,14 +305,37 @@ def _strip_seller_names(value):
 # See: https://vercel.com/docs/functions/serverless-functions/runtimes/python
 from http.server import BaseHTTPRequestHandler
 
+def _trim_and_strip_payload(payload):
+    stripped = _strip_seller_names(payload)
+    if not isinstance(stripped, dict):
+        return stripped
+    for cid, entry in stripped.items():
+        if not isinstance(entry, dict):
+            continue
+        ebay = entry.get('ebay')
+        if isinstance(ebay, dict):
+            ebay.pop('manual_import', None)
+            ebay.pop('import_metadata', None)
+            ebay.pop('historical_outliers', None)
+            ebay.pop('outliers', None)
+            ebay.pop('response_url', None)
+            hist = ebay.get('historical_products')
+            if isinstance(hist, list) and len(hist) > 25:
+                ebay['historical_products'] = hist[:25]
+    return stripped
+
+
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         self._respond()
 
+    def do_HEAD(self):
+        self._respond(head=True)
+
     def do_POST(self):
         self._respond()
 
-    def _respond(self):
+    def _respond(self, head=False):
         try:
             payload, complete = _build_payload()
         except Exception as e:
@@ -327,10 +350,11 @@ class handler(BaseHTTPRequestHandler):
         max_age = CACHE_TTL if complete else PARTIAL_CACHE_TTL
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
-        self.send_header('Cache-Control', f's-maxage={max_age}, stale-while-revalidate')
+        self.send_header('Cache-Control', f'public, max-age=300, s-maxage={max_age}, stale-while-revalidate=600')
         self.send_header('X-Prices-Complete', 'true' if complete else 'false')
         self.end_headers()
-        self.wfile.write(json.dumps(_strip_seller_names(payload)).encode())
+        if not head:
+            self.wfile.write(json.dumps(_trim_and_strip_payload(payload)).encode())
 
 
 def _load_base_cache():
