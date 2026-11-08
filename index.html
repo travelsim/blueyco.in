@@ -4235,9 +4235,11 @@ function buildCard(coin) {
   sellPanel.id = `sell-panel-${coin.id}`;
   body.append(sellPanel);
 
-  // Recent sold listings toggle (eBay AU + CoinXchange)
-  if (hasMedian && currentSales.length) {
-    const toggleBtn = el('button', 'toggle-sales', 'See recent sold listings ▾');
+  // Matched sold listings (eBay AU + CoinXchange), current and earlier
+  const soldRecords = _allSoldRecords(coinEntry, coin);
+  if (soldRecords.length) {
+    const listLabel = `See matched sold listings (${soldRecords.length}) ▾`;
+    const toggleBtn = el('button', 'toggle-sales', listLabel);
     const salesList = el('div', 'sales-list');
     salesList.id = `sales-${coin.id}`;
     toggleBtn.setAttribute('aria-expanded', 'false');
@@ -4246,12 +4248,12 @@ function buildCard(coin) {
       salesList.classList.toggle('open');
       const open = salesList.classList.contains('open');
       toggleBtn.setAttribute('aria-expanded', String(open));
-      toggleBtn.textContent = open ? 'Hide sold listings ▴' : 'See recent sold listings ▾';
+      toggleBtn.textContent = open ? 'Hide sold listings ▴' : listLabel;
     });
 
-    const sources = Array.from(new Set(currentSales.map(p => p.source)));
-    salesList.append(el('div', 'sales-list-title', `Matched sold listings · ${sources.join(' + ')}`));
-    currentSales.slice(0, 8).forEach(p => {
+    const sources = Array.from(new Set(soldRecords.map(p => p.source)));
+    salesList.append(el('div', 'sales-list-title', `Matched sold listings · ${sources.join(' + ')} · ${soldRecords.length} records`));
+    soldRecords.slice(0, 12).forEach(p => {
       const row      = el('div', 'sale-row');
       const raw      = safeText(p.title);
       const short    = raw.length > 42 ? raw.substring(0, 42) + '…' : raw;
@@ -4261,12 +4263,24 @@ function buildCard(coin) {
         el('span', 'sale-source', p.source === 'CoinXchange' ? 'CX' : 'eBay'),
         el('span', 'sale-date',  safeText(p.date))
       );
-      const href = safeUrl(affiliateUrl(p.link, coin.id, 'ebay_sold'));
+      let href = safeUrl(affiliateUrl(p.link, coin.id, 'ebay_sold'));
+      let aria = `View ${p.source} sold listing`;
+      if (!href) {
+        // Imported sales keep no item URL, so link to the same sale in an eBay AU
+        // sold search on its title. Keeps every record verifiable.
+        const query = String(p.title || '').replace(/[^\w\s$&+.-]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 110);
+        if (query) {
+          href = safeUrl(affiliateUrl(
+            `https://www.ebay.com.au/sch/i.html?_nkw=${encodeURIComponent(query)}&LH_Sold=1&LH_Complete=1`,
+            coin.id, 'ebay_sold'));
+          aria = 'Search this sale on eBay AU';
+        }
+      }
       if (href) {
         const a = el('a', 'view-ebay', '↗');
         a.href = href; a.target = '_blank';
         a.rel = p.source === 'eBay AU' ? 'sponsored noopener noreferrer' : 'noopener noreferrer';
-        a.setAttribute('aria-label', `View ${p.source} sold listing`);
+        a.setAttribute('aria-label', aria);
         row.append(a);
       }
       salesList.append(row);
