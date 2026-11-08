@@ -2946,10 +2946,12 @@ function _dashRow(coin) {
   if (image) {
     thumb = document.createElement('img');
     thumb.className = 'dash-thumb';
-    thumb.src = image.src;
-    thumb.alt = '';
+    // loading must be set before src, or the browser fetches the image at once.
     thumb.loading = 'lazy';
+    thumb.decoding = 'async';
     thumb.width = 48; thumb.height = 48;
+    thumb.alt = '';
+    thumb.src = image.src;
   } else {
     thumb = el('div', 'dash-thumb dash-thumb-empty', '🪙');
     thumb.setAttribute('aria-hidden', 'true');
@@ -4288,10 +4290,11 @@ function buildCard(coin) {
   if (product) {
     const figure = el('figure', 'coin-product-figure');
     const image = el('img', 'coin-product-image');
-    image.src = product.src;
-    image.alt = product.alt;
+    // loading must be set before src, or the browser fetches the image at once.
     image.loading = 'lazy';
     image.decoding = 'async';
+    image.alt = product.alt;
+    image.src = product.src;
     figure.append(image);
     card.append(hdr, figure, body);
   } else {
