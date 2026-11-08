@@ -4022,7 +4022,7 @@ function buildCard(coin) {
   const ebay      = coinEntry.ebay      || null;
   const currentSales = _currentSoldRecords(coinEntry, coin);
   const hasEbay = currentSales.length > 0;
-  const median = hasEbay ? _referenceFromEntry(coinEntry, coin) : null;
+  const median = _referenceFromEntry(coinEntry, coin);
   const hasMedian = Number.isFinite(median) && median > 0;
   const guide = _guidePrice(coin);
   const refPrice = hasMedian ? median : guide;
@@ -4758,20 +4758,19 @@ function _currentSoldRecords(entry) {
   return _filterClientSoldOutliers(current, coin);
 }
 
-// Estimated value: median of recent sold prices across eBay AU and CoinXchange.
-// With eBay data alone the server-computed median is kept.
+// Estimated value: the server median over the 90-day window when it exists,
+// otherwise a client median across current eBay AU and CoinXchange sales.
 function _referenceFromEntry(entry) {
   const coin = arguments[1] || (entry && (entry.coin || (typeof COINS !== 'undefined' && COINS.find(c => (coinData[c.id] === entry)))));
-  const current = _currentSoldRecords(entry, coin);
-  if (!current.length) return null;
   const ebay = (entry && entry.ebay) || {};
-  if (!current.some(r => r.source === 'CoinXchange')) {
-    const feedMedian = parseFloat(ebay.median_price);
-    const [minBound, maxBound] = _clientPriceBounds(coin);
-    if (Number.isFinite(feedMedian) && feedMedian >= minBound && feedMedian <= maxBound) {
-      return feedMedian;
-    }
-  }
+  const feedMedian = parseFloat(ebay.median_price);
+  const [minBound, maxBound] = _clientPriceBounds(coin);
+  const usableFeed = Number.isFinite(feedMedian) && feedMedian >= minBound && feedMedian <= maxBound;
+  const current = _currentSoldRecords(entry, coin);
+  // Blend CoinXchange evidence only when it actually has current sales;
+  // otherwise the server median over the same window is authoritative.
+  if (usableFeed && !current.some(r => r.source === 'CoinXchange')) return feedMedian;
+  if (!current.length) return usableFeed ? feedMedian : null;
   return _medianOfPrices(current.map(r => r.price));
 }
 
