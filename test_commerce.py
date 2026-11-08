@@ -114,7 +114,7 @@ class TestMedianPricing(unittest.TestCase):
 
     def test_estimated_value_and_sold_list_include_coinxchange(self):
         self.assertIn("(cx.products || []).forEach(p => out.push(_normSold(p, 'CoinXchange')))", INDEX)
-        self.assertIn("current.some(r => r.source === 'CoinXchange')", INDEX)
+        self.assertIn("current.some(r => r.source.includes('CoinXchange'))", INDEX)
         self.assertNotIn('Show historical eBay sales', INDEX)
         self.assertIn('function buildTrendChart(coin, records)', INDEX)
 

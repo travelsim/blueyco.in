@@ -4258,9 +4258,9 @@ function buildCard(coin) {
       const raw      = safeText(p.title);
       const short    = raw.length > 42 ? raw.substring(0, 42) + '…' : raw;
       row.append(
-        el('span', 'sale-price', formatAUD(p.price)),
+        el('span', 'sale-price', p.postage != null ? `${formatAUD(p.price + p.postage)} total (${formatAUD(p.price)} + ${formatAUD(p.postage)} post)` : `${formatAUD(p.price)} + postage unknown`),
         el('span', 'sale-title', short),
-        el('span', 'sale-source', p.source === 'CoinXchange' ? 'CX' : 'eBay'),
+        el('span', 'sale-source', p.possibleDuplicate ? 'eBay + CX (possible match)' : (p.source === 'CoinXchange' ? 'CX' : 'eBay')),
         el('span', 'sale-date',  safeText(p.date))
       );
       let href = safeUrl(affiliateUrl(p.link, coin.id, 'ebay_sold'));
@@ -4282,6 +4282,15 @@ function buildCard(coin) {
         a.rel = p.source === 'eBay AU' ? 'sponsored noopener noreferrer' : 'noopener noreferrer';
         a.setAttribute('aria-label', aria);
         row.append(a);
+      }
+      if (p.possibleDuplicate && p.alternateLink) {
+        const alternate = safeUrl(p.alternateLink);
+        if (alternate) {
+          const a = el('a', 'view-ebay', '?');
+          a.href = alternate; a.target = '_blank'; a.rel = 'noopener noreferrer';
+          a.setAttribute('aria-label', 'View possible matching sale from the other source');
+          row.append(a);
+        }
       }
       salesList.append(row);
     });
@@ -4616,6 +4625,7 @@ function _normSold(p, source) {
   const date = p.date_sold || p.sold_date || '';
   return {
     price: parseFloat(p.sale_price != null ? p.sale_price : p.price),
+    postage: Number(p.shipping_price != null ? p.shipping_price : p.postage) > 0 ? Number(p.shipping_price != null ? p.shipping_price : p.postage) : null,
     soldAt: Date.parse(date),
     title: p.title,
     source_type: p.source_type,
@@ -4732,6 +4742,33 @@ function _filterClientSoldOutliers(records, coin) {
   return domainValid.filter(r => r.price >= lowerFence && r.price <= upperFence);
 }
 
+// Pair likely cross-source copies one-to-one. Keep the evidence from both
+// marketplaces; identical records within either source are not collapsed.
+function _mergeCrossSourceSold(records) {
+  const output = [];
+  const waiting = new Map();
+  for (const row of records) {
+    const title = String(row.title || '').toLowerCase().normalize('NFKC')
+      .replace(/[^\p{L}\p{N}]+/gu, ' ').trim().replace(/\s+/g, ' ');
+    if (!title) { output.push(row); continue; }
+    const day = new Date(row.soldAt).toISOString().slice(0, 10);
+    const key = `${day}|${Math.round(row.price * 100)}|${title}`;
+    const opposite = row.source === 'eBay AU' ? 'CoinXchange' : 'eBay AU';
+    const queue = waiting.get(key + '|' + opposite) || [];
+    if (queue.length) {
+      const index = queue.shift();
+      output[index] = { ...output[index], source: 'eBay AU + CoinXchange',
+        possibleDuplicate: true, alternateLink: row.link };
+    } else {
+      const own = key + '|' + row.source;
+      if (!waiting.has(own)) waiting.set(own, []);
+      waiting.get(own).push(output.length);
+      output.push(row);
+    }
+  }
+  return output;
+}
+
 function _allSoldRecords(entry) {
   const coin = arguments[1] || (entry && (entry.coin || (typeof COINS !== 'undefined' && COINS.find(c => (coinData[c.id] === entry)))));
   const ebay = (entry && entry.ebay) || {};
@@ -4740,7 +4777,7 @@ function _allSoldRecords(entry) {
   [ebay.products, ebay.historical_products].forEach(list => (list || []).forEach(p => out.push(_normSold(p, 'eBay AU'))));
   [cx.products, cx.historical_products].forEach(list => (list || []).forEach(p => out.push(_normSold(p, 'CoinXchange'))));
   const valid = out.filter(_validSold).sort((a, b) => b.soldAt - a.soldAt);
-  return _filterClientSoldOutliers(valid, coin);
+  return _filterClientSoldOutliers(_mergeCrossSourceSold(valid), coin);
 }
 
 // Sales from the last 90 days, from sources whose snapshot is itself fresh.
@@ -4755,7 +4792,7 @@ function _currentSoldRecords(entry) {
   if (_sourceIsFresh(ebay)) (ebay.products || []).forEach(p => out.push(_normSold(p, 'eBay AU')));
   if (_sourceIsFresh(cx)) (cx.products || []).forEach(p => out.push(_normSold(p, 'CoinXchange')));
   const current = out.filter(inWindow).sort((a, b) => b.soldAt - a.soldAt);
-  return _filterClientSoldOutliers(current, coin);
+  return _filterClientSoldOutliers(_mergeCrossSourceSold(current), coin);
 }
 
 // Estimated value: the server median over the 90-day window when it exists,
@@ -4769,7 +4806,7 @@ function _referenceFromEntry(entry) {
   const current = _currentSoldRecords(entry, coin);
   // Blend CoinXchange evidence only when it actually has current sales;
   // otherwise the server median over the same window is authoritative.
-  if (usableFeed && !current.some(r => r.source === 'CoinXchange')) return feedMedian;
+  if (usableFeed && !current.some(r => r.source.includes('CoinXchange'))) return feedMedian;
   if (!current.length) return usableFeed ? feedMedian : null;
   return _medianOfPrices(current.map(r => r.price));
 }
