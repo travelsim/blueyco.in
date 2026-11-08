@@ -4028,7 +4028,7 @@ function buildCard(coin) {
   const refPrice = hasMedian ? median : guide;
   const premium = hasMedian ? calcPremium(median, coin.mintPrice) : null;
   const guidePremium = (!hasMedian && guide && coin.mintPrice) ? calcPremium(guide, coin.mintPrice) : null;
-  const displayPremium = premium != null ? premium : guidePremium;
+  const displayPremium = coin.id === 's2_xmas_stamp_pack' && !hasMedian ? null : (premium != null ? premium : guidePremium);
   const premiumValue = displayPremium == null ? null : Number(displayPremium);
 
   const card = el('div', 'coin-card');
@@ -4084,11 +4084,12 @@ function buildCard(coin) {
   const rarity = mintageRarity(coin);
   const metrics = el('div', 'coin-metrics');
   const priceCard = el('section', 'metric-card metric-price');
-  priceCard.setAttribute('aria-label', (hasMedian || guide != null) && coin.mintPrice != null
-    ? 'Estimated value and gain from issue price'
-    : 'Estimated value');
-  const priceHeading = 'Estimated value';
-  const priceValue = hasMedian ? median : (guide != null ? guide : coin.mintPrice);
+  priceCard.setAttribute('aria-label', coin.id === 's2_xmas_stamp_pack' && !hasMedian
+    ? 'No sold price yet' : ((hasMedian || guide != null) && coin.mintPrice != null
+    ? 'Estimated value and gain from issue price' : 'Estimated value'));
+  const noSoldStampPrice = coin.id === 's2_xmas_stamp_pack' && !hasMedian;
+  const priceHeading = noSoldStampPrice ? 'No sold price yet' : 'Estimated value';
+  const priceValue = noSoldStampPrice ? null : (hasMedian ? median : (guide != null ? guide : coin.mintPrice));
   priceCard.append(el('div', 'metric-kicker', priceHeading));
   priceCard.append(el('div', 'metric-amount', priceValue == null ? '—' : formatAUD(priceValue)));
   if ((hasMedian || guide != null) && coin.mintPrice != null) {

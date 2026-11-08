@@ -12539,52 +12539,21 @@
       }
     },
     "s2_xmas_stamp_pack": {
-      "products": [
-        {
-          "coin_id": "s2_xmas_stamp_pack",
-          "title": "Bluey 2024 Merry Christmas Bluey Christmas Stamp Pack Brand New",
-          "sale_price": 29.95,
-          "currency": "AU",
-          "date_sold": "08 Nov 2026",
-          "record_status": "Retained",
-          "record_reason": "2024 Christmas Stamp Pack asking median benchmark",
-          "source_type": "user_pasted_search"
-        },
-        {
-          "coin_id": "s2_xmas_stamp_pack",
-          "title": "Bluey 2024 Christmas Stamp Collection Limited Edition - Official Auspost Stamps",
-          "sale_price": 29.0,
-          "currency": "AU",
-          "date_sold": "08 Nov 2026",
-          "record_status": "Retained",
-          "record_reason": "2024 Christmas Stamp Pack asking benchmark",
-          "source_type": "user_pasted_search"
-        },
-        {
-          "coin_id": "s2_xmas_stamp_pack",
-          "title": "BLUEY 2024 Christmas Australia Post StampPack 20 x 65 cent self adhesive stamps",
-          "sale_price": 25.0,
-          "currency": "AU",
-          "date_sold": "08 Nov 2026",
-          "record_status": "Retained",
-          "record_reason": "2024 Christmas Stamp Pack asking benchmark",
-          "source_type": "user_pasted_search"
-        }
-      ],
-      "average_price": 27.98,
-      "median_price": 29.0,
-      "min_price": 25.0,
-      "max_price": 29.95,
-      "matched_results": 3,
-      "total_results": 3,
-      "results": 3,
+      "average_price": null,
+      "median_price": null,
+      "min_price": null,
+      "max_price": null,
+      "matched_results": 0,
+      "total_results": 0,
+      "results": 0,
       "fetchedAt": 1794100000.0,
       "currency": "AU",
       "source_type": "user_pasted_search",
       "import_metadata": {
         "imported_at": "2026-11-08T08:30:00Z",
         "source": "ebay_pasted_batch"
-      }
+      },
+      "products": []
     },
     "s1_pnc_bluey": {
       "products": [
@@ -13940,6 +13909,39 @@
       "record_status": "Retained",
       "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage",
       "reason": "Duplicate observation also present in CoinXchange sold history; source attributed to eBay during paste import."
+    },
+    {
+      "coin_id": "s2_xmas_stamp_pack",
+      "title": "Bluey 2024 Merry Christmas Bluey Christmas Stamp Pack Brand New",
+      "sale_price": 29.95,
+      "currency": "AU",
+      "date_sold": "08 Nov 2026",
+      "record_status": "Excluded",
+      "record_reason": "2024 Christmas Stamp Pack asking median benchmark",
+      "source_type": "user_pasted_search",
+      "reason": "Asking listing, not a completed sale; the recorded sold date was not supplied as a sale date."
+    },
+    {
+      "coin_id": "s2_xmas_stamp_pack",
+      "title": "Bluey 2024 Christmas Stamp Collection Limited Edition - Official Auspost Stamps",
+      "sale_price": 29.0,
+      "currency": "AU",
+      "date_sold": "08 Nov 2026",
+      "record_status": "Excluded",
+      "record_reason": "2024 Christmas Stamp Pack asking benchmark",
+      "source_type": "user_pasted_search",
+      "reason": "Asking listing, not a completed sale; the recorded sold date was not supplied as a sale date."
+    },
+    {
+      "coin_id": "s2_xmas_stamp_pack",
+      "title": "BLUEY 2024 Christmas Australia Post StampPack 20 x 65 cent self adhesive stamps",
+      "sale_price": 25.0,
+      "currency": "AU",
+      "date_sold": "08 Nov 2026",
+      "record_status": "Excluded",
+      "record_reason": "2024 Christmas Stamp Pack asking benchmark",
+      "source_type": "user_pasted_search",
+      "reason": "Asking listing, not a completed sale; the recorded sold date was not supplied as a sale date."
     }
   ]
 }
