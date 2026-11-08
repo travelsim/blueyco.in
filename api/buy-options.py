@@ -34,7 +34,9 @@ import server as legacy  # noqa: E402
 # inside budget with useful links.
 DEADLINE = 7.0
 MAX_WORKERS = 6
-CACHE_TTL = 6 * 3600
+# Asking prices move and new listings appear, so the panel is rebuilt every
+# half hour rather than serving a day-old list.
+CACHE_TTL = 30 * 60
 MAX_BODY_BYTES = 4096
 
 _cache = {}
@@ -141,20 +143,18 @@ def get_buy_options(coin_id, keywords):
             # Unfinished or failed scrape still yields an actionable link.
             options.extend(_fallback(retailer, keywords, coin_id, manual))
             continue
-        if len(results) > 3:
-            results = sorted(results, key=lambda o: (o.get('price') is None, o.get('price') or 9999))[:3]
         for option in results:
             if option.get('price') is not None:
                 option.setdefault('price_type', 'asking')
         options.extend(results)
 
     priced = sorted(
-        [o for o in options if not o.get('link_only') and o.get('price') is not None],
-        key=lambda o: o['price'],
+        legacy._dedupe_listings([o for o in options if not o.get('link_only') and o.get('price') is not None]),
+        key=legacy._buy_total_sort_key,
     )
     link_only = [o for o in options if o.get('link_only') or o.get('price') is None]
 
-    final = priced + link_only
+    final = priced[:10] + link_only
     if complete:
         _cache[coin_id] = {'options': final, 'fetchedAt': now}
     return final, complete

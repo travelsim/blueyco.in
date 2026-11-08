@@ -20,6 +20,14 @@ import _auth as A  # noqa: E402
 
 
 class handler(BaseHTTPRequestHandler):
+    def _drain_body(self):
+        try:
+            length = int(self.headers.get('Content-Length') or 0)
+            if 0 < length <= A.MAX_BODY_BYTES:
+                self.rfile.read(length)
+        except Exception:
+            pass
+
     def do_GET(self):
         session = A.read_session(self.headers.get('Cookie'))
         self._json(200, {
@@ -31,6 +39,7 @@ class handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         if not A.same_origin(self.headers):
+            self._drain_body()
             self._json(403, {'error': 'Cross-site request refused.'})
             return
         payload = self._body()
