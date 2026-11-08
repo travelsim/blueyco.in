@@ -144,13 +144,13 @@ COINS = [
     {'id': 's1_card_grannies', 'ebay_kw': '2024 Bluey Grannies $1 privy mark coin card', 'search': '2024 Bluey Grannies $1 privy mark coin card'},
     {'id': 's1_pnc_bluey', 'ebay_kw': '2024 Bluey postal numismatic cover PNC', 'search': '2024 Bluey postal numismatic cover PNC'},
     {'id': 's1_pnc_family', 'ebay_kw': '2024 Bluey Her Family postal numismatic cover PNC', 'search': '2024 Bluey Her Family postal numismatic cover PNC'},
-    {'id': 's1_pnc_bingo', 'ebay_kw': '2024 Bingo postal numismatic cover PNC', 'search': '2024 Bingo postal numismatic cover PNC'},
+    {'id': 's1_pnc_bingo', 'ebay_kw': '2024 Bluey Bingo PNC', 'search': '2024 Bluey Bingo PNC'},
     {'id': 's1_pnc_muffinsocks', 'ebay_kw': '2024 Bluey Muffin Socks postal numismatic cover PNC', 'search': '2024 Bluey Muffin Socks postal numismatic cover PNC'},
     {'id': 's1_pnc_stripes', 'ebay_kw': '2024 Bluey Nana Striped Trixie postal numismatic cover PNC envelope privymark', 'search': '2024 Bluey Nana Striped Trixie postal numismatic cover PNC envelope privymark'},
     {'id': 's1_pnc_radfrisky', 'ebay_kw': '2024 Bluey Rad Frisky postal numismatic cover PNC', 'search': '2024 Bluey Rad Frisky postal numismatic cover PNC'},
     {'id': 's1_pnc_blueyfriends', 'ebay_kw': '2024 Bluey Friends postal numismatic cover PNC', 'search': '2024 Bluey Friends postal numismatic cover PNC'},
     {'id': 's1_pnc_blueybingofriends', 'ebay_kw': '2024 Bluey Bingo Friends postal numismatic cover PNC', 'search': '2024 Bluey Bingo Friends postal numismatic cover PNC'},
-    {'id': 's1_pnc_mumdad', 'ebay_kw': '2024 Bluey Chillo Bandit postal numismatic cover PNC envelope privymark', 'search': '2024 Bluey Chillo Bandit postal numismatic cover PNC envelope privymark'},
+    {'id': 's1_pnc_mumdad', 'ebay_kw': '2024 Bluey Mum Dad PNC', 'search': '2024 Bluey Mum Dad PNC'},
     {'id': 's1_pnc_grannies', 'ebay_kw': '2024 Bluey Grannies postal numismatic cover PNC', 'search': '2024 Bluey Grannies postal numismatic cover PNC'},
     {'id': 's1_pnc_set_ten', 'ebay_kw': '2024 Bluey PNC set all 10 postal numismatic covers', 'search': '2024 Bluey PNC set all 10 postal numismatic covers'},
     # Further 2024 $1 PNCs + 5th Anniversary proof from RAM 2024-25 Annual
@@ -1002,7 +1002,7 @@ _NAMED_VARIANTS = (
 # member must not exclude the others from eBay results.
 _NAME_FAMILIES = (
     {'muffin', 'muffinsocks', 'socks'}, {'stripe', 'stripes', 'trixie', 'nana'},
-    {'rad', 'frisky'}, {'friend', 'friends'}, {'mum', 'dad'},
+    {'rad', 'frisky'}, {'friend', 'friends'}, {'mum', 'dad', 'chilli', 'bandit'},
     {'granny', 'grannies'}, {'sleepytime', 'sleepy'}, {'baby', 'race'},
 )
 
@@ -1053,6 +1053,10 @@ def _coinxchange_title_matches(title, keywords, allow_coloured=False):
     unrequested = {'proof', 'silver', 'privy', 'privymark', 'envelope', 'postal', 'pnc', 'card', 'sealed', 'unopened', 'opened', 'special'}
     if not allow_coloured:
         unrequested |= {'coloured', 'colored'}
+    # PNC covers commonly mention the envelope privy mark even when the
+    # query uses only PNC; those words identify the same product format.
+    if query_tokens & {'pnc', 'postal'} and title_tokens & {'pnc', 'postal'}:
+        unrequested -= {'privy', 'privymark', 'envelope', 'postal', 'pnc'}
     for variant in unrequested:
         if variant in title_tokens and variant not in query_tokens:
             return False
@@ -1060,6 +1064,13 @@ def _coinxchange_title_matches(title, keywords, allow_coloured=False):
     diff = (title_tokens & named_variants) - (query_tokens & named_variants)
     if any(t for t in diff if not any(t in fam and (fam & query_tokens) for fam in _NAME_FAMILIES)):
         return False
+    if query_tokens & {'pnc', 'postal'}:
+        expected_names = query_tokens & named_variants
+        if expected_names and not any(
+            name in title_tokens or any(name in fam and fam & title_tokens for fam in _NAME_FAMILIES)
+            for name in expected_names
+        ):
+            return False
     stop = {'a', 'and', 'au', 'australia', 'australian', 'coin', 'coins', 'dollar',
             'dollars', 'for', 'in', 'new', 'of', 'the', 'unc', 'uncirculated', 'with'}
     identity = query_tokens - stop - years - {'1', '2'}
