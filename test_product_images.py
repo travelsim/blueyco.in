@@ -31,3 +31,17 @@ class TestDerivedImagesAreHonest(unittest.TestCase):
             self.assertIn('Derived', entry)
             self.assertNotIn('Official', entry)
 
+
+class TestImagesLoadLazily(unittest.TestCase):
+    # Nov 2026: both image builders assigned src before loading='lazy', so the
+    # browser fetched all ~66 product images (~12 MB) on first load, including
+    # on mobile. Lazy loading only works when it is set before src.
+    def test_lazy_loading_is_set_before_src(self):
+        for var in ('thumb', 'image'):
+            for match in re.finditer(rf"\b{var}\.src = ", INDEX):
+                before = INDEX[max(0, match.start() - 400):match.start()]
+                after = INDEX[match.end():match.end() + 400]
+                self.assertIn(f"{var}.loading = 'lazy'", before,
+                              f'{var}.src is assigned before {var}.loading')
+                self.assertNotIn(f"{var}.loading = ", after,
+                                 f'{var}.loading is set after {var}.src')
