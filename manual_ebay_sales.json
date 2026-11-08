@@ -9,7 +9,7 @@
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2027+%241+Bluey+Cricket+Rusty+coloured+uncirculated+coin+card&LH_Sold=1&LH_Complete=1",
       "results": 13,
       "total_results": 13,
-      "matched_results": 13,
+      "matched_results": 0,
       "average_price": 27.56,
       "median_price": 27.99,
       "min_price": 23.95,
@@ -1058,9 +1058,9 @@
       "fetchedAt": 1791277880.722,
       "query": "0 results for 2024 Bluey MyStamps pack 12 house shaped stamps",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+MyStamps+pack+12+house+shaped+stamps&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-      "results": 2,
-      "total_results": 2,
-      "matched_results": 2,
+      "results": 4,
+      "total_results": 4,
+      "matched_results": 4,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -1158,7 +1158,11 @@
           "record_reason": "Strict single-product title match from user paste batch 2",
           "raw_listing_text": "Sold 9 Sep 2026\nAustralia 2024 Bluey Stamps $1.50 x 12 Postage Collector Pack+Large $1.50 Stamp\nAU $34.89\nor Best Offer\nFree delivery\n[seller] 99.9% positive (16.4K)"
         }
-      ]
+      ],
+      "median_price": 34.64,
+      "average_price": 34.18,
+      "min_price": 32.45,
+      "max_price": 34.99
     },
     "s1_bingo": {
       "source_type": "user_imported_csv",
@@ -1206,7 +1210,11 @@
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 21 Aug 2026\nBluey Buck 2024 One Dollar Coin Dollarbuck Dog Bingo Blue $1 Australia UNC #2\nOpens in a new window or tab\nAU $7.25\nBuy It Now\n+AU $4.30 delivery\nView similar active items\nSell one like this\n[seller] 99.9% positive (1.5K)\nderosnopS"
         }
-      ]
+      ],
+      "median_price": 7.25,
+      "average_price": 7.25,
+      "min_price": 7.25,
+      "max_price": 7.25
     },
     "s1_bluey": {
       "source_type": "user_imported_csv",
@@ -1254,7 +1262,11 @@
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 23 Sep 2026\nBLUEY 1x 2024 $1 New BLUEY DOLLARBUCK Individual Coin Uncirculated\nOpens in a new window or tab\nAU $12.00\nBuy It Now\n+AU $1.00 delivery\nView similar active items\nSell one like this\n[seller] 99.6% positive (4.3K)\nderosnopS"
         }
-      ]
+      ],
+      "median_price": 12.0,
+      "average_price": 12.0,
+      "min_price": 12.0,
+      "max_price": 12.0
     },
     "s1_card_bingo": {
       "source_type": "user_imported_csv",
@@ -1342,7 +1354,11 @@
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 25 Aug 2026\n2024 BLUEY $1 PRIVY MARK UNC PICTURED COIN BLUEY BINGO\nOpens in a new window or tab\nAU $20.00\n1 bid\n+AU $3.40 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (10.9K)\nderosnopS"
         }
-      ]
+      ],
+      "median_price": 20.0,
+      "average_price": 19.5,
+      "min_price": 18.51,
+      "max_price": 20.0
     },
     "s1_card_bluey": {
       "source_type": "user_pasted_search",
@@ -1353,10 +1369,10 @@
       "results": 6,
       "total_results": 6,
       "matched_results": 6,
-      "average_price": 34.04,
-      "median_price": 33.56,
+      "average_price": 87.03,
+      "median_price": 34.28,
       "min_price": 33.56,
-      "max_price": 35.0,
+      "max_price": 351.5,
       "import_metadata": {
         "source": "User-pasted eBay AU sold results (2024 $1 Bluey Privy Mark Carded Coin)",
         "captured_on": "2026-11-08",
@@ -1430,26 +1446,6 @@
         {
           "coin_id": "s1_card_bluey",
           "coin_name": "Bluey $1 Privy Mark Coin in Card",
-          "item_id": "287589117321",
-          "title": "Bluey 2024 $1 Privy Mark Uncirculated Decimal Coin on Card AlBr Gold",
-          "sale_price": 33.56,
-          "currency": "AU",
-          "date_sold": "3 Oct 2026",
-          "link": "https://www.ebay.com.au/itm/287589117321",
-          "source_type": "user_imported_csv",
-          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+%241+privy+mark+coin+in+card&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-          "search_heading": "6 results for 2024 blue $1 privy mark coin in card",
-          "source_page": 1,
-          "captured_at": "2026-10-06T09:12:34.860000+00:00",
-          "displayed_price": "AU $33.56",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Strict title match; displayed sold price",
-          "raw_listing_text": "Sold 3 Oct 2026\nBluey 2024 $1 Privy Mark Uncirculated Decimal Coin on Card AlBr Gold\nOpens in a new window or tab\nAU $33.56\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\n[seller] 100% positive (143)\nderosnopS"
-        },
-        {
-          "coin_id": "s1_card_bluey",
-          "coin_name": "Bluey $1 Privy Mark Coin in Card",
           "item_id": "287589102600",
           "title": "Bluey 2024 $1 Privy Mark Uncirculated Decimal Coin AlBr Gold Australia",
           "sale_price": 33.56,
@@ -1486,6 +1482,26 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 17 Jul 2026\n2024 Bluey $1 coin dollar buck privy mark uncirculated coin\nOpens in a new window or tab\nAU $34.99\nBuy It Now\n+AU $6.00 delivery\nView similar active items\nSell one like this\n[seller] 99.7% positive (21.1K)\nderosnopS"
+        },
+        {
+          "coin_id": "s1_three_coin_set",
+          "coin_name": "Bluey Dollarbucks Three-Coin Set",
+          "item_id": "406622617810",
+          "title": "2024 Australia $1 UNC Coloured Coin Bluey Dollarbucks 3 Coin in Card RAM Set",
+          "sale_price": 351.5,
+          "currency": "AU",
+          "date_sold": "15 Jul 2026",
+          "link": "https://www.ebay.com.au/itm/406622617810",
+          "source_type": "user_imported_csv",
+          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+Dollarbucks+coloured+three+coin+set&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
+          "search_heading": "3 results for 2024 blue dollar bucks coloured three coin set",
+          "source_page": 1,
+          "captured_at": "2026-10-06T09:22:23.501000+00:00",
+          "displayed_price": "AU $351.50",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Strict title match; displayed sold price",
+          "raw_listing_text": "Sold 15 Jul 2026\n2024 Australia $1 UNC Coloured Coin Bluey Dollarbucks 3 Coin in Card RAM Set\nOpens in a new window or tab\nAU $351.50AU $370.00\nBuy It Now\n+AU $12.00 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (816)\nderosnopS"
         }
       ]
     },
@@ -2044,7 +2060,11 @@
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 27 Jul 2026\n2024 BLUEY $1 PRIVY MARK UNC PICTURED COIN MUM AND DAD\nOpens in a new window or tab\nAU $25.00\n1 bid\n+AU $3.40 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (10.9K)\nderosnopS"
         }
-      ]
+      ],
+      "median_price": 32.5,
+      "average_price": 32.5,
+      "min_price": 25.0,
+      "max_price": 39.99
     },
     "s1_card_radfrisky": {
       "source_type": "user_imported_csv",
@@ -2242,11 +2262,11 @@
       "fetchedAt": 1794124800,
       "query": "eBay AU sold search 2024 $1 Bluey folder tube set (s1_coloured_bluey)",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+%241+Bluey+Tube+Folder+Set&LH_Sold=1&LH_Complete=1",
-      "results": 6,
-      "total_results": 6,
-      "matched_results": 6,
-      "average_price": 184.51,
-      "median_price": 158.0,
+      "results": 7,
+      "total_results": 7,
+      "matched_results": 7,
+      "average_price": 203.53,
+      "median_price": 196.0,
       "min_price": 96.1,
       "max_price": 324.95,
       "import_metadata": {
@@ -2355,6 +2375,26 @@
           "best_offer": false,
           "record_status": "Retained",
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
+        },
+        {
+          "coin_id": "s1_three_coin_set",
+          "coin_name": "Bluey Dollarbucks Three-Coin Set",
+          "item_id": "137549074222",
+          "title": "Bluey Dollarbucks 2024 $1 Coloured Three-Coin Collection. New.",
+          "sale_price": 317.64,
+          "currency": "AU",
+          "date_sold": "10 Aug 2026",
+          "link": "https://www.ebay.com.au/itm/137549074222",
+          "source_type": "user_imported_csv",
+          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+Dollarbucks+coloured+three+coin+set&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
+          "search_heading": "3 results for 2024 blue dollar bucks coloured three coin set",
+          "source_page": 1,
+          "captured_at": "2026-10-06T09:22:23.501000+00:00",
+          "displayed_price": "AU $317.64",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Strict title match; displayed sold price",
+          "raw_listing_text": "Sold 10 Aug 2026\nBluey Dollarbucks 2024 $1 Coloured Three-Coin Collection. New.\nOpens in a new window or tab\nAU $317.64\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\n[seller] 100% positive (1.5K)\nderosnopS"
         }
       ]
     },
@@ -2424,7 +2464,11 @@
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 26 Sep 2026\n⚪️UNC 2024 ⭐️BLUEY DOLLARBUCKS THE GRANNIES $1 ONE DOLLAR COLOURED COIN ⭐️RARE\nOpens in a new window or tab\nAU $115.00\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\n[seller] 100% positive (4.9K)\nderosnopS"
         }
-      ]
+      ],
+      "median_price": 107.45,
+      "average_price": 107.45,
+      "min_price": 99.91,
+      "max_price": 115.0
     },
     "s1_coloured_heelers": {
       "source_type": "user_imported_csv",
@@ -2512,7 +2556,11 @@
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 5 Sep 2026\n2024 Bluey Dollarbucks- The Heelers $1 Coloured Coin on Card\nOpens in a new window or tab\nAU $69.60\nBuy It Now\n+AU $15.00 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (71)\nderosnopS"
         }
-      ]
+      ],
+      "median_price": 85.5,
+      "average_price": 94.33,
+      "min_price": 69.6,
+      "max_price": 127.9
     },
     "s1_impressions_pnc_2coin": {
       "products": [
@@ -2608,16 +2656,6 @@
         },
         {
           "coin_id": "s1_impressions_pnc_2coin",
-          "title": "RARE Australia BLUEY 2024 Two 2 COINS PNC COLOURED $1 LIMITED EDITION 1205/1300",
-          "sale_price": 233.9,
-          "currency": "AU",
-          "date_sold": "26 Sep 2026",
-          "record_status": "Retained",
-          "record_reason": "PNC 2-coin limited edition #1205/1300",
-          "source_type": "user_pasted_search"
-        },
-        {
-          "coin_id": "s1_impressions_pnc_2coin",
           "title": "BLUEY 2024 TWO $1 COLOURED COIN PNC 425/1300 BRAND NEW READY TO SHIP",
           "sale_price": 185.0,
           "currency": "AU",
@@ -2625,19 +2663,6 @@
           "record_status": "Retained",
           "record_reason": "PNC 2-coin limited edition #425/1300",
           "source_type": "user_pasted_search"
-        },
-        {
-          "coin_id": "s1_impressions_pnc_2coin",
-          "title": "2024 Bluey $1 Coin Limited 2-Coin Set Postal Numismatic Cover (PNC) #0460/1300",
-          "sale_price": 202.1,
-          "currency": "AU",
-          "date_sold": "6 Nov 2026",
-          "shipping_price": 0.0,
-          "source_type": "user_pasted_search",
-          "import_source": "user-sold-paste-2026-11-08",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
         },
         {
           "coin_id": "s1_impressions_pnc_2coin",
@@ -2653,13 +2678,13 @@
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
         }
       ],
-      "average_price": 191.34,
-      "median_price": 190.0,
+      "average_price": 183.73,
+      "median_price": 189.0,
       "min_price": 140.0,
-      "max_price": 233.9,
-      "matched_results": 9,
-      "total_results": 9,
-      "results": 9,
+      "max_price": 202.1,
+      "matched_results": 7,
+      "total_results": 7,
+      "results": 7,
       "fetchedAt": 1794100000.0,
       "currency": "AU",
       "source_type": "user_pasted_search",
@@ -2812,32 +2837,6 @@
         },
         {
           "coin_id": "s1_impressions_pnc_3coin",
-          "title": "2024 Bluey $1 Coin Limited 3-Coin Set Postal Numismatic Cover (PNC) #294/700",
-          "sale_price": 244.5,
-          "currency": "AU",
-          "date_sold": "6 Nov 2026",
-          "shipping_price": 0.0,
-          "source_type": "user_pasted_search",
-          "import_source": "user-sold-paste-2026-11-08",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
-        },
-        {
-          "coin_id": "s1_impressions_pnc_3coin",
-          "title": "2024 Bluey $1 Coin Limited 3-Coin Set Postal Numismatic Cover (PNC) #294/700",
-          "sale_price": 255.1,
-          "currency": "AU",
-          "date_sold": "3 Nov 2026",
-          "shipping_price": 0.0,
-          "source_type": "user_pasted_search",
-          "import_source": "user-sold-paste-2026-11-08",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
-        },
-        {
-          "coin_id": "s1_impressions_pnc_3coin",
           "title": "2024 Bluey $1 Coin Limited 1, 2 & 3 Coin Set Postal Numismatic Cover (PNC) 3 Set",
           "sale_price": 529.64,
           "currency": "AU",
@@ -2889,13 +2888,13 @@
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
         }
       ],
-      "average_price": 256.38,
+      "average_price": 257.32,
       "median_price": 246.75,
       "min_price": 199.99,
       "max_price": 529.64,
-      "matched_results": 16,
-      "total_results": 16,
-      "results": 16,
+      "matched_results": 14,
+      "total_results": 14,
+      "results": 14,
       "fetchedAt": 1794100000.0,
       "currency": "AU",
       "source_type": "user_pasted_search",
@@ -3086,32 +3085,12 @@
         },
         {
           "coin_id": "s1_impressions_pnc_colour",
-          "title": "BLUEY COLOURED COIN $1 PNC 2024 IMPRESSIONS LIMITED EDITION FREE SHIPPING",
-          "sale_price": 210.0,
-          "currency": "AU",
-          "date_sold": "03 Oct 2026",
-          "record_status": "Retained",
-          "record_reason": "PNC Coloured coin limited edition",
-          "source_type": "user_pasted_search"
-        },
-        {
-          "coin_id": "s1_impressions_pnc_colour",
           "title": "2024 Bluey $1 Coin - Limited Coin Set Postal Numismatic Cover (PNC) #2423/3000",
           "sale_price": 191.5,
           "currency": "AU",
           "date_sold": "30 Sep 2026",
           "record_status": "Retained",
           "record_reason": "PNC Coloured coin limited edition #2423/3000",
-          "source_type": "user_pasted_search"
-        },
-        {
-          "coin_id": "s1_impressions_pnc_colour",
-          "title": "2024 BLUEY COLOURED COIN $1 PNC IMPRESSIONS LIMITED EDITION FREE SHIPPING",
-          "sale_price": 210.0,
-          "currency": "AU",
-          "date_sold": "08 Sep 2026",
-          "record_status": "Retained",
-          "record_reason": "PNC Coloured coin limited edition",
           "source_type": "user_pasted_search"
         },
         {
@@ -3133,19 +3112,6 @@
           "record_status": "Retained",
           "record_reason": "PNC Coloured coin limited edition",
           "source_type": "user_pasted_search"
-        },
-        {
-          "coin_id": "s1_impressions_pnc_colour",
-          "title": "BLUEY COLOURED COIN $1 PNC 2024 IMPRESSIONS LIMITED EDITION FREE SHIPPING",
-          "sale_price": 210.0,
-          "currency": "AU",
-          "date_sold": "3 Nov 2026",
-          "shipping_price": 0.0,
-          "source_type": "user_pasted_search",
-          "import_source": "user-sold-paste-2026-11-08",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
         },
         {
           "coin_id": "s1_impressions_pnc_colour",
@@ -3175,36 +3141,10 @@
         },
         {
           "coin_id": "s1_impressions_pnc_colour",
-          "title": "BLUEY 2024 $1 COLOURED COIN PNC 0925/3000 ✅ BRAND NEW READY TO SHIP ✅",
-          "sale_price": 212.7,
-          "currency": "AU",
-          "date_sold": "5 Oct 2026",
-          "shipping_price": 0.0,
-          "source_type": "user_pasted_search",
-          "import_source": "user-sold-paste-2026-11-08",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
-        },
-        {
-          "coin_id": "s1_impressions_pnc_colour",
           "title": "RARE Australia BLUEY 2024 Two 2 COINS PNC COLOURED $1 LIMITED EDITION 1205/1300",
           "sale_price": 233.9,
           "currency": "AU",
           "date_sold": "26 Sep 2026",
-          "shipping_price": 0.0,
-          "source_type": "user_pasted_search",
-          "import_source": "user-sold-paste-2026-11-08",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
-        },
-        {
-          "coin_id": "s1_impressions_pnc_colour",
-          "title": "BLUEY 2024 $1 COLOURED COIN PNC 2997/3000 ✅ BRAND NEW READY TO SHIP ✅",
-          "sale_price": 180.0,
-          "currency": "AU",
-          "date_sold": "1 Sep 2026",
           "shipping_price": 0.0,
           "source_type": "user_pasted_search",
           "import_source": "user-sold-paste-2026-11-08",
@@ -3239,13 +3179,13 @@
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
         }
       ],
-      "average_price": 201.45,
-      "median_price": 207.26,
+      "average_price": 200.59,
+      "median_price": 201.02,
       "min_price": 179.84,
       "max_price": 233.9,
-      "matched_results": 23,
-      "total_results": 25,
-      "results": 25,
+      "matched_results": 18,
+      "total_results": 20,
+      "results": 20,
       "fetchedAt": 1794100000.0,
       "currency": "AU",
       "source_type": "user_pasted_search",
@@ -3298,16 +3238,6 @@
         },
         {
           "coin_id": "s1_impressions_pnc_silver",
-          "title": "2024 $1 Bluey Silver Proof PNC Very Limited Edition!!! 148/150",
-          "sale_price": 1539.5,
-          "currency": "AU",
-          "date_sold": "09 Sep 2026",
-          "record_status": "Retained",
-          "record_reason": "Silver proof prestige PNC #148/150",
-          "source_type": "user_pasted_search"
-        },
-        {
-          "coin_id": "s1_impressions_pnc_silver",
           "title": "Bluey 2024 $1 silver proof pnc impressions, free Australian shipping, super rare",
           "sale_price": 1399.1,
           "currency": "AU",
@@ -3337,13 +3267,13 @@
           "source_type": "user_pasted_search"
         }
       ],
-      "average_price": 1691.47,
-      "median_price": 1555.62,
+      "average_price": 1721.87,
+      "median_price": 1571.74,
       "min_price": 1399.1,
       "max_price": 2100.0,
-      "matched_results": 6,
-      "total_results": 6,
-      "results": 6,
+      "matched_results": 5,
+      "total_results": 5,
+      "results": 5,
       "fetchedAt": 1794100000.0,
       "currency": "AU",
       "source_type": "user_pasted_search",
@@ -3406,19 +3336,6 @@
         },
         {
           "coin_id": "s1_pnc_bingo",
-          "title": "2024 Bluey Postal Numismatic Covers PNC $1 UNC Bluey Coins (Bingo)",
-          "sale_price": 39.95,
-          "currency": "AU",
-          "date_sold": "2 Oct 2026",
-          "shipping_price": 0.0,
-          "source_type": "user_pasted_search",
-          "import_source": "user-sold-paste-2026-11-08",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
-        },
-        {
-          "coin_id": "s1_pnc_bingo",
           "title": "2024 RAM Bluey $1 'Bingo' PNC - Privy Mark",
           "sale_price": 19.0,
           "currency": "AU",
@@ -3431,13 +3348,13 @@
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
         }
       ],
-      "average_price": 26.68,
-      "median_price": 25.57,
+      "average_price": 24.02,
+      "median_price": 20.15,
       "min_price": 10.0,
       "max_price": 39.95,
-      "matched_results": 6,
-      "total_results": 6,
-      "results": 6,
+      "matched_results": 5,
+      "total_results": 5,
+      "results": 5,
       "fetchedAt": 1794100000.0,
       "currency": "AU",
       "source_type": "user_pasted_search",
@@ -3467,16 +3384,6 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 2 Oct 2026\n2024 Bluey Postal Numismatic Covers PNC $1 UNC Bluey Coins (Bluey & Friends)\nOpens in a new window or tab\nAU $39.95\nBuy It Now\nFree delivery\nLast one\nView similar active items\nSell one like this\n[seller] 100% positive (3.4K)\nderosnopS"
-        },
-        {
-          "coin_id": "s1_pnc_blueyfriends",
-          "title": "2024 Bluey Postal Numismatic Covers PNC $1 UNC Bluey Coins (Bluey & Friends)",
-          "sale_price": 39.95,
-          "currency": "AU",
-          "date_sold": "02 Oct 2026",
-          "record_status": "Retained",
-          "record_reason": "Bluey & Friends PNC",
-          "source_type": "user_pasted_search"
         },
         {
           "coin_id": "s1_pnc_blueyfriends",
@@ -3525,13 +3432,13 @@
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
         }
       ],
-      "average_price": 40.97,
-      "median_price": 39.98,
+      "average_price": 41.17,
+      "median_price": 40.0,
       "min_price": 34.95,
       "max_price": 50.0,
-      "matched_results": 6,
-      "total_results": 6,
-      "results": 6,
+      "matched_results": 5,
+      "total_results": 5,
+      "results": 5,
       "fetchedAt": 1794100000.0,
       "currency": "AU",
       "source_type": "user_pasted_search",
@@ -3594,19 +3501,6 @@
         },
         {
           "coin_id": "s1_pnc_grannies",
-          "title": "2024 Bluey Postal Numismatic Covers PNC $1 UNC Bluey Coins (The Grannies)",
-          "sale_price": 39.95,
-          "currency": "AU",
-          "date_sold": "6 Nov 2026",
-          "shipping_price": 0.0,
-          "source_type": "user_pasted_search",
-          "import_source": "user-sold-paste-2026-11-08",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
-        },
-        {
-          "coin_id": "s1_pnc_grannies",
           "title": "2024 RAM Bluey $1 'The Grannies' PNC - Privy Mark",
           "sale_price": 19.5,
           "currency": "AU",
@@ -3632,13 +3526,13 @@
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
         }
       ],
-      "average_price": 28.71,
-      "median_price": 31.5,
+      "average_price": 26.84,
+      "median_price": 25.82,
       "min_price": 10.0,
       "max_price": 39.95,
-      "matched_results": 7,
-      "total_results": 7,
-      "results": 7,
+      "matched_results": 6,
+      "total_results": 6,
+      "results": 6,
       "fetchedAt": 1794100000.0,
       "currency": "AU",
       "source_type": "user_pasted_search",
@@ -3681,16 +3575,6 @@
         },
         {
           "coin_id": "s1_pnc_muffinsocks",
-          "title": "2024 Bluey Postal Numismatic Covers PNC $1 UNC Bluey Coins (Muff & Socks)",
-          "sale_price": 39.95,
-          "currency": "AU",
-          "date_sold": "02 Oct 2026",
-          "record_status": "Retained",
-          "record_reason": "Muffin & Socks PNC",
-          "source_type": "user_pasted_search"
-        },
-        {
-          "coin_id": "s1_pnc_muffinsocks",
           "title": "2024 Australia Bluey $1 Coin Privy Mark -PNC Stamp & Coin Cover Muffin & Socks",
           "sale_price": 24.95,
           "currency": "AU",
@@ -3703,13 +3587,13 @@
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
         }
       ],
-      "average_price": 34.69,
-      "median_price": 36.92,
+      "average_price": 32.93,
+      "median_price": 33.9,
       "min_price": 24.95,
       "max_price": 39.95,
-      "matched_results": 4,
-      "total_results": 4,
-      "results": 4,
+      "matched_results": 3,
+      "total_results": 3,
+      "results": 3,
       "fetchedAt": 1794100000.0,
       "currency": "AU",
       "source_type": "user_pasted_search",
@@ -3752,16 +3636,6 @@
         },
         {
           "coin_id": "s1_pnc_mumdad",
-          "title": "2024 Bluey Postal Numismatic Covers PNC $1 UNC Bluey Coins (Mum & Dad)",
-          "sale_price": 39.95,
-          "currency": "AU",
-          "date_sold": "02 Oct 2026",
-          "record_status": "Retained",
-          "record_reason": "Mum & Dad PNC",
-          "source_type": "user_pasted_search"
-        },
-        {
-          "coin_id": "s1_pnc_mumdad",
           "title": "2024 $1 Bluey - Mum & Dad PNC with Express Post",
           "sale_price": 35.0,
           "currency": "AU",
@@ -3774,13 +3648,13 @@
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
         }
       ],
-      "average_price": 40.78,
+      "average_price": 41.05,
       "median_price": 39.95,
       "min_price": 35.0,
       "max_price": 48.2,
-      "matched_results": 4,
-      "total_results": 4,
-      "results": 4,
+      "matched_results": 3,
+      "total_results": 3,
+      "results": 3,
       "fetchedAt": 1794100000.0,
       "currency": "AU",
       "source_type": "user_pasted_search",
@@ -3830,25 +3704,15 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 17 Jul 2026\nBluey - Uncle Stripe Aunty Trixie & Nana - 2024 PNC the $1 coin\nOpens in a new window or tab\nAU $28.21\nBuy It Now\n+AU $6.95 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (4.6K)\nderosnopS"
-        },
-        {
-          "coin_id": "s1_pnc_stripes",
-          "title": "2024 Bluey Postal Numismatic Covers PNC $1 UNC Bluey Coins (Uncle & Aunt)",
-          "sale_price": 39.95,
-          "currency": "AU",
-          "date_sold": "02 Oct 2026",
-          "record_status": "Retained",
-          "record_reason": "Stripe, Trixie & Nana / Uncle & Aunt PNC",
-          "source_type": "user_pasted_search"
         }
       ],
-      "average_price": 37.09,
-      "median_price": 39.95,
+      "average_price": 35.66,
+      "median_price": 35.66,
       "min_price": 28.21,
       "max_price": 43.1,
-      "matched_results": 3,
-      "total_results": 3,
-      "results": 3,
+      "matched_results": 2,
+      "total_results": 2,
+      "results": 2,
       "fetchedAt": 1794100000.0,
       "currency": "AU",
       "source_type": "user_pasted_search",
@@ -4003,7 +3867,11 @@
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 30 Jul 2026\n2024 Royal Australian Mint Bluey $1 Albr Coloured Proof Coin\nOpens in a new window or tab\nAU $565.00\nBuy It Now\n+AU $14.00 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (1.1K)\nderosnopS"
         }
-      ]
+      ],
+      "median_price": 528.05,
+      "average_price": 528.97,
+      "min_price": 477.7,
+      "max_price": 565.0
     },
     "s1_proof_silver": {
       "source_type": "user_imported_csv",
@@ -4013,7 +3881,7 @@
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+%241+Bluey+Dollarbucks+fine+silver+coloured+proof&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
       "results": 17,
       "total_results": 17,
-      "matched_results": 17,
+      "matched_results": 16,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -4360,7 +4228,11 @@
           "source_type": "user_pasted_search",
           "import_id": "may2026-sold-paste-2026-10-08"
         }
-      ]
+      ],
+      "median_price": 1254.35,
+      "average_price": 1255.71,
+      "min_price": 946.7,
+      "max_price": 1520.0
     },
     "s1_three_coin_set": {
       "source_type": "user_imported_csv",
@@ -4368,9 +4240,9 @@
       "fetchedAt": 1791278543.501,
       "query": "3 results for 2024 blue dollar bucks coloured three coin set",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+Dollarbucks+coloured+three+coin+set&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-      "results": 10,
-      "total_results": 10,
-      "matched_results": 10,
+      "results": 8,
+      "total_results": 8,
+      "matched_results": 8,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -4451,26 +4323,6 @@
         {
           "coin_id": "s1_three_coin_set",
           "coin_name": "Bluey Dollarbucks Three-Coin Set",
-          "item_id": "137549074222",
-          "title": "Bluey Dollarbucks 2024 $1 Coloured Three-Coin Collection. New.",
-          "sale_price": 317.64,
-          "currency": "AU",
-          "date_sold": "10 Aug 2026",
-          "link": "https://www.ebay.com.au/itm/137549074222",
-          "source_type": "user_imported_csv",
-          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+Dollarbucks+coloured+three+coin+set&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-          "search_heading": "3 results for 2024 blue dollar bucks coloured three coin set",
-          "source_page": 1,
-          "captured_at": "2026-10-06T09:22:23.501000+00:00",
-          "displayed_price": "AU $317.64",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Strict title match; displayed sold price",
-          "raw_listing_text": "Sold 10 Aug 2026\nBluey Dollarbucks 2024 $1 Coloured Three-Coin Collection. New.\nOpens in a new window or tab\nAU $317.64\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\n[seller] 100% positive (1.5K)\nderosnopS"
-        },
-        {
-          "coin_id": "s1_three_coin_set",
-          "coin_name": "Bluey Dollarbucks Three-Coin Set",
           "item_id": "236811582290",
           "title": "2024 Bluey Dollarbucks $1 Coloured Uncirculated 3 Coin RAM Set",
           "sale_price": 315.0,
@@ -4507,26 +4359,6 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 1 Oct 2026\n2024 Bluey Dollarbucks 3 coin set\nOpens in a new window or tab\nAU $225.00\nBuy It Now\n+AU $8.50 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (3.5K)\nderosnopS"
-        },
-        {
-          "coin_id": "s1_three_coin_set",
-          "coin_name": "Bluey Dollarbucks Three-Coin Set",
-          "item_id": "406622617810",
-          "title": "2024 Australia $1 UNC Coloured Coin Bluey Dollarbucks 3 Coin in Card RAM Set",
-          "sale_price": 351.5,
-          "currency": "AU",
-          "date_sold": "15 Jul 2026",
-          "link": "https://www.ebay.com.au/itm/406622617810",
-          "source_type": "user_imported_csv",
-          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+Bluey+Dollarbucks+coloured+three+coin+set&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-          "search_heading": "3 results for 2024 blue dollar bucks coloured three coin set",
-          "source_page": 1,
-          "captured_at": "2026-10-06T09:22:23.501000+00:00",
-          "displayed_price": "AU $351.50",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Strict title match; displayed sold price",
-          "raw_listing_text": "Sold 15 Jul 2026\n2024 Australia $1 UNC Coloured Coin Bluey Dollarbucks 3 Coin in Card RAM Set\nOpens in a new window or tab\nAU $351.50AU $370.00\nBuy It Now\n+AU $12.00 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (816)\nderosnopS"
         },
         {
           "coin_id": "s1_three_coin_set",
@@ -4588,7 +4420,11 @@
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 14 Sep 2026\n2024 $1 uncirculated bluey dollarbucks carded coloured 3 coin set\nOpens in a new window or tab\nAU $159.70\n1 bid\n+AU $17.82 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (247)\nderosnopS"
         }
-      ]
+      ],
+      "median_price": 255.0,
+      "average_price": 255.49,
+      "min_price": 159.7,
+      "max_price": 350.5
     },
     "s2_xmas_silv": {
       "source_type": "user_imported_csv",
@@ -5100,9 +4936,9 @@
       "fetchedAt": 1791278175.67,
       "query": "77 results for 2025 $1 blue christmas coloured uncirculated coin",
       "response_url": "https://www.ebay.com.au/sch/9355/i.html?_nkw=2025+%241+Bluey+Christmas+coloured+uncirculated+coin&LH_Sold=1&LH_Complete=1&_ipg=60&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-      "results": 69,
-      "total_results": 69,
-      "matched_results": 68,
+      "results": 68,
+      "total_results": 68,
+      "matched_results": 67,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -5844,26 +5680,6 @@
         {
           "coin_id": "s2_xmas_unc",
           "coin_name": "$1 Coloured Uncirculated Christmas Coin",
-          "item_id": "267763308152",
-          "title": "$1 Bluey Coloured Christmas Australian Dollar 2025 *NEW & UNCIRCULATED* n03",
-          "sale_price": 23.5,
-          "currency": "AU",
-          "date_sold": "25 Aug 2026",
-          "link": "https://www.ebay.com.au/itm/267763308152",
-          "source_type": "user_imported_csv",
-          "source_search_url": "https://www.ebay.com.au/sch/9355/i.html?_nkw=2025+%241+Bluey+Christmas+coloured+uncirculated+coin&LH_Sold=1&LH_Complete=1&_ipg=60&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-          "search_heading": "85 results for 2025 $1 Bluey Christmas coloured uncirculated coin",
-          "source_page": 1,
-          "captured_at": "2026-10-06T09:16:15.670000+00:00",
-          "displayed_price": "AU $23.50",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Strict title match; displayed sold price",
-          "raw_listing_text": "Sold 25 Aug 2026\n$1 Bluey Coloured Christmas Australian Dollar 2025 *NEW & UNCIRCULATED* n03\nOpens in a new window or tab\nAU $23.50\nBuy It Now\n+AU $5.00 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (3.5K)\nderosnopS"
-        },
-        {
-          "coin_id": "s2_xmas_unc",
-          "coin_name": "$1 Coloured Uncirculated Christmas Coin",
           "item_id": "267750223896",
           "title": "2025 BLUEY CHRISTMAS DOLLARBUCK $1 COLOURED UNCIRCULATED COIN DECORATION RAM",
           "sale_price": 29.0,
@@ -6421,8 +6237,8 @@
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
         }
       ],
-      "median_price": 34.6,
-      "average_price": 33.87,
+      "median_price": 34.95,
+      "average_price": 34.02,
       "min_price": 17.54,
       "max_price": 62.56
     },
@@ -6432,9 +6248,9 @@
       "fetchedAt": 1791278240.036,
       "query": "7 results for 2026 blue baby race privy mark",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Baby+Race+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-      "results": 5,
-      "total_results": 5,
-      "matched_results": 5,
+      "results": 6,
+      "total_results": 6,
+      "matched_results": 6,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -6572,7 +6388,11 @@
           "record_reason": "Strict single-product title match from user paste",
           "raw_listing_text": "Sold 7 Oct 2026\nBluey - Baby Race - 2026 Privy Mark Coin in Card $2 Two Dollar Bingo BlueOpens in a new window or tab\nAU $34.95\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\nSave up to 10% when you buy more\n[seller] 99.9% positive (17.9K)\nUNC, $2 2026 Bluey and Bingo, Australian 2 Dollar Colored Coin\n"
         }
-      ]
+      ],
+      "median_price": 32.45,
+      "average_price": 33.2,
+      "min_price": 27.0,
+      "max_price": 42.99
     },
     "s3_camping_privy": {
       "source_type": "user_imported_csv",
@@ -6751,9 +6571,9 @@
       "fetchedAt": 1791278617.091,
       "query": "8 results for 2026 blue granny mobile privy mark",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Granny+Mobile+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-      "results": 4,
-      "total_results": 4,
-      "matched_results": 4,
+      "results": 5,
+      "total_results": 5,
+      "matched_results": 5,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -6871,7 +6691,11 @@
           "record_reason": "Strict single-product title match from user paste",
           "raw_listing_text": "Sold 30 Jul 2026\nAustralia 2026 Bluey Bingo Privy Mark - Granny Mobile $2 UNC in Card Carded x1Opens in a new window or tab\nAU $34.50\nBuy It Now\nFree delivery\nLast one\nView similar active items\nSell one like this\n[seller] 100% positive (2K)\n2026 Bluey & Bingo PNC $2 Coin Set Limited Issue in hand AUS POST\n"
         }
-      ]
+      ],
+      "median_price": 34.5,
+      "average_price": 33.48,
+      "min_price": 25.03,
+      "max_price": 39.95
     },
     "s3_pin_babyrace": {
       "source_type": "user_imported_csv",
@@ -7361,7 +7185,11 @@
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 8 Sep 2026\nBluey 2026 Stamp and Pin Cover – Rain Only 3000 Limited!!!\nOpens in a new window or tab\nAU $30.00\nBuy It Now\n+AU $6.70 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (1.3K)\nderosnopS"
         }
-      ]
+      ],
+      "median_price": 32.25,
+      "average_price": 32.62,
+      "min_price": 30.0,
+      "max_price": 36.0
     },
     "s3_pnc_bingo": {
       "source_type": "user_imported_csv",
@@ -7369,9 +7197,9 @@
       "fetchedAt": 1791278436.032,
       "query": "3 results for 2026 Bingo Hooray PNC",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bingo+Hooray+PNC&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-      "results": 3,
-      "total_results": 3,
-      "matched_results": 2,
+      "results": 5,
+      "total_results": 5,
+      "matched_results": 4,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -7430,58 +7258,6 @@
           "best_offer": false,
           "record_status": "Retained",
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
-        }
-      ],
-      "median_price": 59.0,
-      "average_price": 59.0,
-      "min_price": 38.0,
-      "max_price": 80.0
-    },
-    "s3_pnc_bluey": {
-      "source_type": "user_imported_csv",
-      "currency": "AU",
-      "fetchedAt": 1791278621.529,
-      "query": "8 results for 2026 blue for real life pnc",
-      "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+For+Real+Life+PNC&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-      "results": 3,
-      "total_results": 3,
-      "matched_results": 3,
-      "import_metadata": {
-        "source": "User-provided cleaned eBay AU sold-results CSV",
-        "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
-        "captured_on": "2026-10-06",
-        "import_id": "cleaned-results-2026-10-06",
-        "records_imported": 3,
-        "selection": "All supplied rows for this catalog ID were marked Retained; the reviewed CoinId mapping is preserved.",
-        "price_basis": "PriceAUD from the supplied CSV; postage is not added to the item price.",
-        "api_verified": false,
-        "search_headings": [
-          "8 results for 2026 blue for real life pnc"
-        ],
-        "search_urls": [
-          "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+For+Real+Life+PNC&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1"
-        ]
-      },
-      "products": [
-        {
-          "coin_id": "s3_pnc_bluey",
-          "coin_name": "Bluey For Real Life PNC",
-          "item_id": "198339355836",
-          "title": "⚪️UNC 2026 BLUEY ⭐️FOR REAL LIFE $2 TWO DOLLAR COLOURED COIN UNCIRCULATED⭐️PNC",
-          "sale_price": 38.0,
-          "currency": "AU",
-          "date_sold": "13 Sep 2026",
-          "link": "https://www.ebay.com.au/itm/198339355836",
-          "source_type": "user_imported_csv",
-          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+For+Real+Life+PNC&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-          "search_heading": "8 results for 2026 blue for real life pnc",
-          "source_page": 1,
-          "captured_at": "2026-10-06T09:23:41.529000+00:00",
-          "displayed_price": "AU $38.00",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Strict title match; displayed sold price",
-          "raw_listing_text": "Sold 13 Sep 2026\n⚪️UNC 2026 BLUEY ⭐️FOR REAL LIFE $2 TWO DOLLAR COLOURED COIN UNCIRCULATED⭐️PNC\nOpens in a new window or tab\nAU $38.00\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\n[seller] 100% positive (4.9K)\nderosnopS"
         },
         {
           "coin_id": "s3_pnc_bluey",
@@ -7523,7 +7299,63 @@
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 13 Aug 2026\n2026 PNC Bluey For Real Life PNC UNC Bingo Blue Coloured $2 Coin With Stamp\nOpens in a new window or tab\nAU $39.92\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\n[seller] 100% positive (14)\nderosnopS"
         }
-      ]
+      ],
+      "median_price": 39.92,
+      "average_price": 49.46,
+      "min_price": 38.0,
+      "max_price": 80.0
+    },
+    "s3_pnc_bluey": {
+      "source_type": "user_imported_csv",
+      "currency": "AU",
+      "fetchedAt": 1791278621.529,
+      "query": "8 results for 2026 blue for real life pnc",
+      "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+For+Real+Life+PNC&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
+      "results": 1,
+      "total_results": 1,
+      "matched_results": 1,
+      "import_metadata": {
+        "source": "User-provided cleaned eBay AU sold-results CSV",
+        "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
+        "captured_on": "2026-10-06",
+        "import_id": "cleaned-results-2026-10-06",
+        "records_imported": 3,
+        "selection": "All supplied rows for this catalog ID were marked Retained; the reviewed CoinId mapping is preserved.",
+        "price_basis": "PriceAUD from the supplied CSV; postage is not added to the item price.",
+        "api_verified": false,
+        "search_headings": [
+          "8 results for 2026 blue for real life pnc"
+        ],
+        "search_urls": [
+          "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+For+Real+Life+PNC&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1"
+        ]
+      },
+      "products": [
+        {
+          "coin_id": "s3_pnc_bluey",
+          "coin_name": "Bluey For Real Life PNC",
+          "item_id": "198339355836",
+          "title": "⚪️UNC 2026 BLUEY ⭐️FOR REAL LIFE $2 TWO DOLLAR COLOURED COIN UNCIRCULATED⭐️PNC",
+          "sale_price": 38.0,
+          "currency": "AU",
+          "date_sold": "13 Sep 2026",
+          "link": "https://www.ebay.com.au/itm/198339355836",
+          "source_type": "user_imported_csv",
+          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+For+Real+Life+PNC&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
+          "search_heading": "8 results for 2026 blue for real life pnc",
+          "source_page": 1,
+          "captured_at": "2026-10-06T09:23:41.529000+00:00",
+          "displayed_price": "AU $38.00",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Strict title match; displayed sold price",
+          "raw_listing_text": "Sold 13 Sep 2026\n⚪️UNC 2026 BLUEY ⭐️FOR REAL LIFE $2 TWO DOLLAR COLOURED COIN UNCIRCULATED⭐️PNC\nOpens in a new window or tab\nAU $38.00\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\n[seller] 100% positive (4.9K)\nderosnopS"
+        }
+      ],
+      "median_price": 38.0,
+      "average_price": 38.0,
+      "min_price": 38.0,
+      "max_price": 38.0
     },
     "s3_proof_ab": {
       "source_type": "user_imported_csv",
@@ -8035,9 +7867,9 @@
       "fetchedAt": 1791278258.371,
       "query": "1 result for 2026 $2 blue coloured silver proof coin",
       "response_url": "https://www.ebay.com.au/sch/9355/i.html?_nkw=2026+%242+Bluey+coloured+silver+proof+coin&LH_Sold=1&LH_Complete=1&_ipg=60&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-      "results": 83,
-      "total_results": 83,
-      "matched_results": 72,
+      "results": 81,
+      "total_results": 81,
+      "matched_results": 70,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -8236,26 +8068,6 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 23 Sep 2026\n2026 BLUEY $2 FINE SILVER COLOURED PROOF COIN\nOpens in a new window or tab\nAU $249.00\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\n[seller] 100% positive (100)\nderosnopS"
-        },
-        {
-          "coin_id": "s3_proof_silv",
-          "coin_name": "Coloured Silver Proof $2",
-          "item_id": "227331562759",
-          "title": "IN HAND ✅ Bluey 2026 $2 Fine Silver Coloured Proof Coin #01196 / 12000",
-          "sale_price": 249.0,
-          "currency": "AU",
-          "date_sold": "23 Sep 2026",
-          "link": "https://www.ebay.com.au/itm/227331562759",
-          "source_type": "user_imported_csv",
-          "source_search_url": "https://www.ebay.com.au/sch/9355/i.html?_nkw=2026+%242+Bluey+coloured+silver+proof+coin&LH_Sold=1&LH_Complete=1&_ipg=60&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-          "search_heading": "145 results for 2026 $2 Bluey coloured silver proof coin",
-          "source_page": 1,
-          "captured_at": "2026-10-06T09:17:38.371000+00:00",
-          "displayed_price": "AU $249.00",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Strict title match; displayed sold price",
-          "raw_listing_text": "Sold 23 Sep 2026\nIN HAND ✅ Bluey 2026 $2 Fine Silver Coloured Proof Coin #01196 / 12000\nOpens in a new window or tab\nAU $249.00\nBuy It Now\n+AU $10.00 delivery by Mon 12 Oct\nView similar active items\nSell one like this\n[seller] 100% positive (88)\nderosnopS"
         },
         {
           "coin_id": "s3_proof_silv",
@@ -9040,26 +8852,6 @@
         {
           "coin_id": "s3_proof_silv",
           "coin_name": "Coloured Silver Proof $2",
-          "item_id": "278406825609",
-          "title": "INHAND 2026 $1 Bluey Cricket Coloured Silver Proof Coin - RAM ✅",
-          "sale_price": 191.5,
-          "currency": "AU",
-          "date_sold": "25 Sep 2026",
-          "link": "https://www.ebay.com.au/itm/278406825609",
-          "source_type": "user_imported_csv",
-          "source_search_url": "https://www.ebay.com.au/sch/9355/i.html?_nkw=2026+%242+Bluey+coloured+silver+proof+coin&LH_Sold=1&LH_Complete=1&_ipg=60&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-          "search_heading": "1 result for 2026 $2 blue coloured silver proof coin",
-          "source_page": 3,
-          "captured_at": "2026-10-06T09:17:38.371000+00:00",
-          "displayed_price": "AU $191.50",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Strict title match; displayed sold price",
-          "raw_listing_text": "Sold 25 Sep 2026\nINHAND 2026 $1 Bluey Cricket Coloured Silver Proof Coin - RAM ✅\nOpens in a new window or tab\nAU $191.50\nBuy It Now\n+AU $11.21 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (352)\nderosnopS"
-        },
-        {
-          "coin_id": "s3_proof_silv",
-          "coin_name": "Coloured Silver Proof $2",
           "item_id": "278173132905",
           "title": "Bluey 2026 $2 Fine Silver Coloured Proof Coin",
           "sale_price": 215.38,
@@ -9451,7 +9243,7 @@
         }
       ],
       "median_price": 240.0,
-      "average_price": 246.85,
+      "average_price": 247.61,
       "min_price": 175.0,
       "max_price": 520.0
     },
@@ -9601,7 +9393,11 @@
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 19 Sep 2026\nBluey - 2026 Rain Privy Mark Uncirculated $2 Coin in Card. Brand New Sealed\nOpens in a new window or tab\nAU $25.00\nBuy It Now\n+AU $5.00 delivery by Mon 12 Oct\nView similar active items\nSell one like this\n[seller] 100% positive (117)\nderosnopS"
         }
-      ]
+      ],
+      "median_price": 27.25,
+      "average_price": 28.49,
+      "min_price": 23.49,
+      "max_price": 34.95
     },
     "s3_sleepytime_insert": {
       "source_type": "user_imported_csv",
@@ -9609,9 +9405,9 @@
       "fetchedAt": 1791278374.71,
       "query": "0 results for 2026 Bluey Sleepytime Coloured Insert",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Sleepytime+Coloured+Insert&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-      "results": 13,
-      "total_results": 13,
-      "matched_results": 12,
+      "results": 12,
+      "total_results": 12,
+      "matched_results": 11,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -9688,26 +9484,6 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 2 Oct 2026\nBluey Coloured Sleepytime 2026 Two Dollar $2 Coin Sleepy Time - Single Unc Coin\nOpens in a new window or tab\nAU $186.20\nBuy It Now\n+AU $10.00 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (955)\nderosnopS"
-        },
-        {
-          "coin_id": "s3_sleepytime_insert",
-          "coin_name": "Sleepytime Coloured Insert Variant",
-          "item_id": "127855055460",
-          "title": "2026 $2 BLUEY Coin - Coloured Sleepytime - Uncirculated - in 2x2 - FREE TRACKED",
-          "sale_price": 264.99,
-          "currency": "AU",
-          "date_sold": "25 Jul 2026",
-          "link": "https://www.ebay.com.au/itm/127855055460",
-          "source_type": "user_imported_csv",
-          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Sleepytime+Coloured+Insert&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-          "search_heading": "0 results for 2026 Bluey Sleepytime Coloured Insert",
-          "source_page": 1,
-          "captured_at": "2026-10-06T09:19:34.710000+00:00",
-          "displayed_price": "AU $264.99",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Strict title match; displayed sold price",
-          "raw_listing_text": "Sold 25 Jul 2026\n2026 $2 BLUEY Coin - Coloured Sleepytime - Uncirculated - in 2x2 - FREE TRACKED\nOpens in a new window or tab\nAU $264.99\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\n[seller] 99.8% positive (2.4K)\nderosnopS"
         },
         {
           "coin_id": "s3_sleepytime_insert",
@@ -9858,10 +9634,10 @@
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
         }
       ],
-      "median_price": 178.91,
-      "average_price": 183.11,
+      "median_price": 175.81,
+      "average_price": 175.67,
       "min_price": 127.9,
-      "max_price": 264.99
+      "max_price": 229.95
     },
     "s3_sleepytime_privy": {
       "source_type": "user_pasted_search",
@@ -10345,9 +10121,9 @@
       "fetchedAt": 1791278418.294,
       "query": "419 results for 2026 Bluey till coin",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+till+coin&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-      "results": 2,
-      "total_results": 2,
-      "matched_results": 2,
+      "results": 6,
+      "total_results": 6,
+      "matched_results": 6,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -10464,8 +10240,32 @@
           "record_status": "Retained",
           "record_reason": "Strict single-product title match from user paste",
           "raw_listing_text": "Sold 23 Sep 2026\n2026 Bluey $2 Dollar Bucks Coloured Coin - Bluey - for Real LifeOpens in a new window or tab\nAU $8.00\nBuy It Now\n+AU $2.00 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (51)\n2026 $2 BLUEY Coin - Baby Race - Uncirculated - comes in 2x2\n"
+        },
+        {
+          "coin_id": "s3_sleepytime_insert",
+          "coin_name": "Sleepytime Coloured Insert Variant",
+          "item_id": "127855055460",
+          "title": "2026 $2 BLUEY Coin - Coloured Sleepytime - Uncirculated - in 2x2 - FREE TRACKED",
+          "sale_price": 264.99,
+          "currency": "AU",
+          "date_sold": "25 Jul 2026",
+          "link": "https://www.ebay.com.au/itm/127855055460",
+          "source_type": "user_imported_csv",
+          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Sleepytime+Coloured+Insert&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
+          "search_heading": "0 results for 2026 Bluey Sleepytime Coloured Insert",
+          "source_page": 1,
+          "captured_at": "2026-10-06T09:19:34.710000+00:00",
+          "displayed_price": "AU $264.99",
+          "best_offer": false,
+          "record_status": "Retained",
+          "record_reason": "Strict title match; displayed sold price",
+          "raw_listing_text": "Sold 25 Jul 2026\n2026 $2 BLUEY Coin - Coloured Sleepytime - Uncirculated - in 2x2 - FREE TRACKED\nOpens in a new window or tab\nAU $264.99\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\n[seller] 99.8% positive (2.4K)\nderosnopS"
         }
-      ]
+      ],
+      "median_price": 6.95,
+      "average_price": 49.58,
+      "min_price": 4.99,
+      "max_price": 264.99
     },
     "s1_10_coin_folder_opened": {
       "source_type": "user_pasted_search",
@@ -10473,13 +10273,13 @@
       "fetchedAt": 1794124800,
       "query": "eBay AU sold search 2024 $1 Bluey folder tube set (s1_10_coin_folder_opened)",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2024+%241+Bluey+Tube+Folder+Set&LH_Sold=1&LH_Complete=1",
-      "results": 19,
-      "total_results": 19,
-      "matched_results": 19,
-      "average_price": 132.13,
-      "median_price": 120.0,
+      "results": 17,
+      "total_results": 17,
+      "matched_results": 16,
+      "average_price": 131.28,
+      "median_price": 121.3,
       "min_price": 87.0,
-      "max_price": 180.9,
+      "max_price": 174.54,
       "import_metadata": {
         "source": "User-pasted eBay AU sold results (2024 $1 Bluey Tube Folder Set search)",
         "captured_on": "2026-11-08",
@@ -10632,17 +10432,6 @@
           "record_status": "Retained"
         },
         {
-          "title": "BLUEY $1 Dollar Bucks 2024 10-Coin Full Set Uncirculated Folder Opened NOTSEALED",
-          "sale_price": 119.0,
-          "currency": "AU",
-          "date_sold": "23 Aug 2026",
-          "buying_format": "Buy It Now",
-          "shipping_price": 11.15,
-          "source_type": "user_pasted_search",
-          "coin_id": "s1_10_coin_folder_opened",
-          "record_status": "Retained"
-        },
-        {
           "title": "BLUEY COIN SET OF 10 2024 $1 UNCIRCULATED",
           "sale_price": 159.7,
           "currency": "AU",
@@ -10671,17 +10460,6 @@
           "date_sold": "15 Aug 2026",
           "buying_format": "Buy It Now",
           "shipping_price": 10.0,
-          "source_type": "user_pasted_search",
-          "coin_id": "s1_10_coin_folder_opened",
-          "record_status": "Retained"
-        },
-        {
-          "title": "2024 BLUEY- 10 COIN TUBE unopenned with FOLDER , COMPLETE SET, no coloured.",
-          "sale_price": 180.9,
-          "currency": "AU",
-          "date_sold": "11 Aug 2026",
-          "buying_format": "Best Offer",
-          "shipping_price": 12.0,
           "source_type": "user_pasted_search",
           "coin_id": "s1_10_coin_folder_opened",
           "record_status": "Retained"
@@ -10869,7 +10647,14 @@
           "record_reason": "Strict single-product title match from user paste batch 2",
           "raw_listing_text": "Sold 14 Oct 2026\n2026 Australian Stamps - Bluey Stamp Pack of 12 Stamps\nAU $29.99\nBuy It Now\n+AU $10.95 delivery\n[seller] 99.8% positive (60.5K)"
         }
-      ]
+      ],
+      "matched_results": 5,
+      "total_results": 5,
+      "results": 5,
+      "median_price": 29.99,
+      "average_price": 28.54,
+      "min_price": 16.5,
+      "max_price": 34.95
     },
     "s3_folder": {
       "products": [
@@ -10945,19 +10730,6 @@
         },
         {
           "coin_id": "s3_folder",
-          "title": "2026 Bluey $2 UNC Collector Folder & 5 Coin Set in Sealed Tube in Hand ✅✅✅",
-          "sale_price": 49.95,
-          "currency": "AU",
-          "date_sold": "3 Sep 2026",
-          "shipping_price": 0.0,
-          "source_type": "user_pasted_search",
-          "import_source": "user-sold-paste-2026-11-08",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
-        },
-        {
-          "coin_id": "s3_folder",
           "title": "2026 BLUEY FOLDER & TUBE 5-COIN SET",
           "sale_price": 50.0,
           "currency": "AU",
@@ -10983,13 +10755,13 @@
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
         }
       ],
-      "average_price": 52.89,
-      "median_price": 49.95,
+      "average_price": 53.26,
+      "median_price": 49.98,
       "min_price": 39.97,
       "max_price": 79.3,
-      "matched_results": 9,
-      "total_results": 9,
-      "results": 9,
+      "matched_results": 8,
+      "total_results": 8,
+      "results": 8,
       "fetchedAt": 1794100000.0,
       "currency": "AU",
       "source_type": "user_pasted_search",
@@ -11044,7 +10816,7 @@
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=bluey+coin+sleepytime+privy&LH_Sold=1&LH_Complete=1",
       "results": 9,
       "total_results": 9,
-      "matched_results": 9,
+      "matched_results": 0,
       "average_price": 30.54,
       "median_price": 30.91,
       "min_price": 20.82,
@@ -11149,9 +10921,9 @@
       "fetchedAt": 1791278227.893,
       "query": "8 results for 2026 blue camping privy mark",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Camping+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-      "results": 5,
-      "total_results": 5,
-      "matched_results": 5,
+      "results": 3,
+      "total_results": 3,
+      "matched_results": 3,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -11192,26 +10964,6 @@
         {
           "coin_id": "s3_camping_privy",
           "coin_name": "Camping Privy Mark $2",
-          "item_id": "306942243986",
-          "title": "2026 Bluey CAMPING $2 Coin CARD Privy Mark Sealed Limited Free Post",
-          "sale_price": 28.79,
-          "currency": "AU",
-          "date_sold": "7 Aug 2026",
-          "link": "https://www.ebay.com.au/itm/306942243986",
-          "source_type": "user_imported_csv",
-          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Camping+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-          "search_heading": "8 results for 2026 blue camping privy mark",
-          "source_page": 1,
-          "captured_at": "2026-10-06T09:17:07.893000+00:00",
-          "displayed_price": "AU $28.79",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Strict title match; displayed sold price",
-          "raw_listing_text": "Sold 7 Aug 2026\n2026 Bluey CAMPING $2 Coin CARD Privy Mark Sealed Limited Free Post\nOpens in a new window or tab\nAU $28.79\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\n[seller] 100% positive (367)\nderosnopS"
-        },
-        {
-          "coin_id": "s3_camping_privy",
-          "coin_name": "Camping Privy Mark $2",
           "item_id": "406909543548",
           "title": "2026 Australian Bluey $2 Privy Mark Uncirculated Coin - Camping",
           "sale_price": 24.02,
@@ -11248,28 +11000,12 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 31 Aug 2026\n⚪️UNC 2026 BLUEY CAMPING -$2 TWO DOLLAR CARDED COIN UNCIRCULATED⭐️PRIVY MARK\nOpens in a new window or tab\nAU $33.00\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\n[seller] 100% positive (4.9K)\nderosnopS"
-        },
-        {
-          "coin_id": "s3_camping_privy",
-          "coin_name": "Camping Privy Mark $2",
-          "item_id": "287284501173",
-          "title": "Bluey - Camping - 2026 Privy Mark Coin in Card $2 Two Dollar Bingo Blue",
-          "sale_price": 34.95,
-          "currency": "AU",
-          "date_sold": "11 Jul 2026",
-          "link": "https://www.ebay.com.au/itm/287284501173",
-          "source_type": "user_imported_csv",
-          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Camping+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-          "search_heading": "8 results for 2026 blue camping privy mark",
-          "source_page": 1,
-          "captured_at": "2026-10-06T09:17:07.893000+00:00",
-          "displayed_price": "AU $34.95",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Strict title match; displayed sold price",
-          "raw_listing_text": "Sold 11 Jul 2026\nBluey - Camping - 2026 Privy Mark Coin in Card $2 Two Dollar Bingo Blue\nOpens in a new window or tab\nAU $34.95\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\nSave up to 10% when you buy more\n[seller] 99.9% positive (17.8K)\nderosnopS"
         }
-      ]
+      ],
+      "median_price": 24.02,
+      "average_price": 22.7,
+      "min_price": 11.09,
+      "max_price": 33.0
     },
     "s3_babyrace": {
       "source_type": "user_imported_csv",
@@ -11277,9 +11013,9 @@
       "fetchedAt": 1791278240.036,
       "query": "7 results for 2026 blue baby race privy mark",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Baby+Race+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-      "results": 5,
-      "total_results": 5,
-      "matched_results": 5,
+      "results": 3,
+      "total_results": 3,
+      "matched_results": 3,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -11297,26 +11033,6 @@
         ]
       },
       "products": [
-        {
-          "coin_id": "s3_babyrace_privy",
-          "coin_name": "Baby Race Privy Mark $2",
-          "item_id": "306942248876",
-          "title": "2026 Bluey BABY RACE Privy Mark $2 Coin in Card Set Brand New LIMITED",
-          "sale_price": 29.32,
-          "currency": "AU",
-          "date_sold": "11 Jul 2026",
-          "link": "https://www.ebay.com.au/itm/306942248876",
-          "source_type": "user_imported_csv",
-          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Baby+Race+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-          "search_heading": "7 results for 2026 blue baby race privy mark",
-          "source_page": 1,
-          "captured_at": "2026-10-06T09:17:20.036000+00:00",
-          "displayed_price": "AU $29.32",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Strict title match; displayed sold price",
-          "raw_listing_text": "Sold 11 Jul 2026\n2026 Bluey BABY RACE Privy Mark $2 Coin in Card Set Brand New LIMITED\nOpens in a new window or tab\nAU $29.32\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\n[seller] 100% positive (367)\nderosnopS"
-        },
         {
           "coin_id": "s3_babyrace_privy",
           "coin_name": "Baby Race Privy Mark $2",
@@ -11376,48 +11092,12 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 5 Sep 2026\n2026 Australian Bluey $2 Privy Mark Uncirculated Coin - Baby Race\nOpens in a new window or tab\nAU $29.95\nBuy It Now\n+AU $7.95 delivery by Mon 12 Oct\nView similar active items\nSell one like this\n[seller] 99.8% positive (60.5K)\nderosnopS"
-        },
-        {
-          "coin_id": "s3_babyrace_privy",
-          "coin_name": "Baby Race Privy Mark $2",
-          "item_id": "137299993125",
-          "title": "Baby Race | 2026 Bluey Privy Mark UNC $2 Coin in Card Set | Brand New Sealed",
-          "sale_price": 42.99,
-          "currency": "AU",
-          "date_sold": "14 Aug 2026",
-          "link": "https://www.ebay.com.au/itm/137299993125",
-          "source_type": "user_imported_csv",
-          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Baby+Race+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-          "search_heading": "7 results for 2026 blue baby race privy mark",
-          "source_page": 1,
-          "captured_at": "2026-10-06T09:17:20.036000+00:00",
-          "displayed_price": "AU $42.99",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Strict title match; displayed sold price",
-          "raw_listing_text": "Sold 14 Aug 2026\nBaby Race | 2026 Bluey Privy Mark UNC $2 Coin in Card Set | Brand New Sealed\nOpens in a new window or tab\nAU $42.99\nBuy It Now\n+AU $5.00 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (448)\nderosnopS"
-        },
-        {
-          "coin_id": "s3_babyrace_privy",
-          "coin_name": "Baby Race Privy Mark $2",
-          "item_id": "",
-          "title": "Bluey - Baby Race - 2026 Privy Mark Coin in Card $2 Two Dollar Bingo Blue",
-          "sale_price": 34.95,
-          "currency": "AU",
-          "date_sold": "7 Oct 2026",
-          "link": "",
-          "source_type": "user_pasted_search",
-          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=Bluey+2026+Stamps+Pack&_sacat=0&_from=R40&LH_BIN=1&_sop=13&LH_Sold=1&_blrs=spell_auto_correct",
-          "search_heading": "eBay AU completed sales paste (Bluey 2026 Stamps Pack)",
-          "source_page": 1,
-          "captured_at": "2026-10-21T02:44:00+00:00",
-          "displayed_price": "AU $34.95",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Strict single-product title match from user paste",
-          "raw_listing_text": "Sold 7 Oct 2026\nBluey - Baby Race - 2026 Privy Mark Coin in Card $2 Two Dollar Bingo BlueOpens in a new window or tab\nAU $34.95\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\nSave up to 10% when you buy more\n[seller] 99.9% positive (17.9K)\nUNC, $2 2026 Bluey and Bingo, Australian 2 Dollar Colored Coin\n"
         }
-      ]
+      ],
+      "median_price": 29.95,
+      "average_price": 30.65,
+      "min_price": 27.0,
+      "max_price": 35.0
     },
     "s3_granny": {
       "source_type": "user_imported_csv",
@@ -11425,9 +11105,9 @@
       "fetchedAt": 1791278617.091,
       "query": "8 results for 2026 blue granny mobile privy mark",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Granny+Mobile+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-      "results": 4,
-      "total_results": 4,
-      "matched_results": 4,
+      "results": 3,
+      "total_results": 3,
+      "matched_results": 3,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -11488,26 +11168,6 @@
         {
           "coin_id": "s3_granny_privy",
           "coin_name": "Granny Mobile Privy Mark $2",
-          "item_id": "287284503386",
-          "title": "Bluey - Granny Mobile - 2026 Privy Mark Coin in Card $2 Two Dollar Bingo Blue",
-          "sale_price": 39.95,
-          "currency": "AU",
-          "date_sold": "21 Sep 2026",
-          "link": "https://www.ebay.com.au/itm/287284503386",
-          "source_type": "user_imported_csv",
-          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Granny+Mobile+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-          "search_heading": "8 results for 2026 blue granny mobile privy mark",
-          "source_page": 1,
-          "captured_at": "2026-10-06T09:23:37.091000+00:00",
-          "displayed_price": "AU $39.95",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Strict title match; displayed sold price",
-          "raw_listing_text": "Sold 21 Sep 2026\nBluey - Granny Mobile - 2026 Privy Mark Coin in Card $2 Two Dollar Bingo Blue\nOpens in a new window or tab\nAU $39.95\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\nSave up to 10% when you buy more\n[seller] 99.9% positive (17.8K)\nderosnopS"
-        },
-        {
-          "coin_id": "s3_granny_privy",
-          "coin_name": "Granny Mobile Privy Mark $2",
           "item_id": "198339084823",
           "title": "⚪️UNC 2026 BLUEY GRANNYMOBILE-$2 TWO DOLLAR CARDED COIN UNCIRCULATED⭐️PRIVY MARK",
           "sale_price": 33.0,
@@ -11524,28 +11184,12 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 22 Sep 2026\n⚪️UNC 2026 BLUEY GRANNYMOBILE-$2 TWO DOLLAR CARDED COIN UNCIRCULATED⭐️PRIVY MARK\nOpens in a new window or tab\nAU $33.00\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\n[seller] 100% positive (4.9K)\nderosnopS"
-        },
-        {
-          "coin_id": "s3_granny_privy",
-          "coin_name": "Granny Mobile Privy Mark $2",
-          "item_id": "",
-          "title": "Australia 2026 Bluey Bingo Privy Mark - Granny Mobile $2 UNC in Card Carded x1",
-          "sale_price": 34.5,
-          "currency": "AU",
-          "date_sold": "30 Jul 2026",
-          "link": "",
-          "source_type": "user_pasted_search",
-          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=Bluey+2026+Stamps+Pack&_sacat=0&_from=R40&LH_BIN=1&_sop=13&LH_Sold=1&_blrs=spell_auto_correct",
-          "search_heading": "eBay AU completed sales paste (Bluey 2026 Stamps Pack)",
-          "source_page": 1,
-          "captured_at": "2026-10-21T02:44:00+00:00",
-          "displayed_price": "AU $34.50",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Strict single-product title match from user paste",
-          "raw_listing_text": "Sold 30 Jul 2026\nAustralia 2026 Bluey Bingo Privy Mark - Granny Mobile $2 UNC in Card Carded x1Opens in a new window or tab\nAU $34.50\nBuy It Now\nFree delivery\nLast one\nView similar active items\nSell one like this\n[seller] 100% positive (2K)\n2026 Bluey & Bingo PNC $2 Coin Set Limited Issue in hand AUS POST\n"
         }
-      ]
+      ],
+      "median_price": 33.0,
+      "average_price": 30.98,
+      "min_price": 25.03,
+      "max_price": 34.9
     },
     "s3_rain": {
       "source_type": "user_imported_csv",
@@ -11553,9 +11197,9 @@
       "fetchedAt": 1791278203.097,
       "query": "8 results for 2026 blue rain privy mark",
       "response_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Rain+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-      "results": 6,
-      "total_results": 6,
-      "matched_results": 6,
+      "results": 2,
+      "total_results": 2,
+      "matched_results": 2,
       "import_metadata": {
         "source": "User-provided cleaned eBay AU sold-results CSV",
         "source_file": "3d0fd2ca-d9ae-4b8f-a8ac-46910414f2d5.csv",
@@ -11573,46 +11217,6 @@
         ]
       },
       "products": [
-        {
-          "coin_id": "s3_rain_privy",
-          "coin_name": "Rain Privy Mark $2",
-          "item_id": "206257929905",
-          "title": "Australia 2026 Bluey Bingo Privy Mark - Rain $2 UNC in Card Carded x1",
-          "sale_price": 29.5,
-          "currency": "AU",
-          "date_sold": "20 Sep 2026",
-          "link": "https://www.ebay.com.au/itm/206257929905",
-          "source_type": "user_imported_csv",
-          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Rain+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-          "search_heading": "8 results for 2026 blue rain privy mark",
-          "source_page": 1,
-          "captured_at": "2026-10-06T09:16:43.097000+00:00",
-          "displayed_price": "AU $29.50",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Strict title match; displayed sold price",
-          "raw_listing_text": "Sold 20 Sep 2026\nAustralia 2026 Bluey Bingo Privy Mark - Rain $2 UNC in Card Carded x1\nOpens in a new window or tab\nAU $29.50\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\n[seller] 100% positive (2K)\nderosnopS"
-        },
-        {
-          "coin_id": "s3_rain_privy",
-          "coin_name": "Rain Privy Mark $2",
-          "item_id": "366401623331",
-          "title": "Bluey - 2026 Rain Privy Mark Uncirculated $2 Coin in Card. Brand New Sealed",
-          "sale_price": 25.0,
-          "currency": "AU",
-          "date_sold": "31 Jul 2026",
-          "link": "https://www.ebay.com.au/itm/366401623331",
-          "source_type": "user_imported_csv",
-          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Rain+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-          "search_heading": "8 results for 2026 blue rain privy mark",
-          "source_page": 1,
-          "captured_at": "2026-10-06T09:16:43.097000+00:00",
-          "displayed_price": "AU $25.00",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Strict title match; displayed sold price",
-          "raw_listing_text": "Sold 31 Jul 2026\nBluey - 2026 Rain Privy Mark Uncirculated $2 Coin in Card. Brand New Sealed\nOpens in a new window or tab\nAU $25.00\nBuy It Now\n+AU $5.00 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (117)\nderosnopS"
-        },
         {
           "coin_id": "s3_rain_privy",
           "coin_name": "Rain Privy Mark $2",
@@ -11636,26 +11240,6 @@
         {
           "coin_id": "s3_rain_privy",
           "coin_name": "Rain Privy Mark $2",
-          "item_id": "287284499270",
-          "title": "Bluey - Rain - 2026 Privy Mark Coin in Card $2 Two Dollar Bingo Blue Australia",
-          "sale_price": 34.95,
-          "currency": "AU",
-          "date_sold": "17 Sep 2026",
-          "link": "https://www.ebay.com.au/itm/287284499270",
-          "source_type": "user_imported_csv",
-          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Rain+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-          "search_heading": "8 results for 2026 blue rain privy mark",
-          "source_page": 1,
-          "captured_at": "2026-10-06T09:16:43.097000+00:00",
-          "displayed_price": "AU $34.95",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Strict title match; displayed sold price",
-          "raw_listing_text": "Sold 17 Sep 2026\nBluey - Rain - 2026 Privy Mark Coin in Card $2 Two Dollar Bingo Blue Australia\nOpens in a new window or tab\nAU $34.95\nBuy It Now\nFree delivery\nLast one\nView similar active items\nSell one like this\nSave up to 10% when you buy more\n[seller] 99.9% positive (17.8K)\nderosnopS"
-        },
-        {
-          "coin_id": "s3_rain_privy",
-          "coin_name": "Rain Privy Mark $2",
           "item_id": "158254959521",
           "title": "Bluey 2026 Rain coin in card $2 privy mark 🪙 unc RAM Australia",
           "sale_price": 23.49,
@@ -11672,28 +11256,12 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 14 Sep 2026\nBluey 2026 Rain coin in card $2 privy mark 🪙 unc RAM Australia\nOpens in a new window or tab\nAU $23.49\n1 bid\n+AU $10.95 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (943)\nderosnopS"
-        },
-        {
-          "coin_id": "s3_rain_privy",
-          "coin_name": "Rain Privy Mark $2",
-          "item_id": "366575537395",
-          "title": "Bluey - 2026 Rain Privy Mark Uncirculated $2 Coin in Card. Brand New Sealed",
-          "sale_price": 25.0,
-          "currency": "AU",
-          "date_sold": "19 Sep 2026",
-          "link": "https://www.ebay.com.au/itm/366575537395",
-          "source_type": "user_imported_csv",
-          "source_search_url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+Rain+Privy+Mark&LH_Sold=1&LH_Complete=1&_sop=15&mkcid=1&mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1",
-          "search_heading": "8 results for 2026 blue rain privy mark",
-          "source_page": 1,
-          "captured_at": "2026-10-06T09:16:43.097000+00:00",
-          "displayed_price": "AU $25.00",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Strict title match; displayed sold price",
-          "raw_listing_text": "Sold 19 Sep 2026\nBluey - 2026 Rain Privy Mark Uncirculated $2 Coin in Card. Brand New Sealed\nOpens in a new window or tab\nAU $25.00\nBuy It Now\n+AU $5.00 delivery by Mon 12 Oct\nView similar active items\nSell one like this\n[seller] 100% positive (117)\nderosnopS"
         }
-      ]
+      ],
+      "median_price": 28.24,
+      "average_price": 28.24,
+      "min_price": 23.49,
+      "max_price": 33.0
     },
     "s1_coloured_insert_variant": {
       "source_type": "user_pasted_search",
@@ -11856,19 +11424,6 @@
         },
         {
           "coin_id": "s1_pnc_set_ten",
-          "title": "Bluey 2024 $1 Dollar Privy Mark PNC Postal Numismatic Cover Full Set of 10◉MINT◉",
-          "sale_price": 349.0,
-          "currency": "AU",
-          "date_sold": "1 Oct 2026",
-          "shipping_price": 0.0,
-          "source_type": "user_pasted_search",
-          "import_source": "user-sold-paste-2026-11-08",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
-        },
-        {
-          "coin_id": "s1_pnc_set_ten",
           "title": "2024 bluey PNC full set of 10",
           "sale_price": 290.0,
           "currency": "AU",
@@ -11894,13 +11449,13 @@
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
         }
       ],
-      "average_price": 333.82,
+      "average_price": 330.79,
       "median_price": 349.0,
       "min_price": 290.0,
       "max_price": 365.0,
-      "matched_results": 6,
-      "total_results": 6,
-      "results": 6,
+      "matched_results": 5,
+      "total_results": 5,
+      "results": 5,
       "fetchedAt": 1794100000.0,
       "currency": "AU",
       "source_type": "user_pasted_search",
@@ -11933,19 +11488,6 @@
         },
         {
           "coin_id": "s1_pnc_radfrisky",
-          "title": "2024 Bluey Postal Numismatic Covers PNC $1 UNC Bluey Coins (Uncle & Aunt)",
-          "sale_price": 39.95,
-          "currency": "AU",
-          "date_sold": "2 Oct 2026",
-          "shipping_price": 0.0,
-          "source_type": "user_pasted_search",
-          "import_source": "user-sold-paste-2026-11-08",
-          "best_offer": false,
-          "record_status": "Retained",
-          "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
-        },
-        {
-          "coin_id": "s1_pnc_radfrisky",
           "title": "2024 RAM Bluey $1 'Uncle Rad & Risky' PNC - Privy Mark",
           "sale_price": 20.5,
           "currency": "AU",
@@ -11958,13 +11500,13 @@
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
         }
       ],
-      "average_price": 33.23,
-      "median_price": 36.23,
+      "average_price": 30.98,
+      "median_price": 32.5,
       "min_price": 20.5,
       "max_price": 39.95,
-      "matched_results": 4,
-      "total_results": 4,
-      "results": 4,
+      "matched_results": 3,
+      "total_results": 3,
+      "results": 3,
       "fetchedAt": 1794100000.0,
       "currency": "AU",
       "source_type": "user_pasted_search",
