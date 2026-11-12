@@ -59,10 +59,10 @@ class TestCatalogIntegrity(unittest.TestCase):
         # Proofs & PNCs from Page 5:
         # 11624: Coloured proof (5,000 produced, 5,000 mintage)
         self.assertRegex(raw, r"id:\s*'s1_proof_coloured'[\s\S]*?productCode:\s*'11624'[\s\S]*?issueQuantity:\s*5000")
-        # 11645: Silver proof PNC (150 produced, 2,650 mintage)
+        # 11645: Silver proof PNC (150 covers produced; coin mintage lives on s1_proof_silver)
         self.assertRegex(raw, r"id:\s*'s1_impressions_pnc_silver'[\s\S]*?productCode:\s*'11645'[\s\S]*?issueQuantity:\s*150")
-        # 11450: Coloured uncirculated coin PNC (5,000 produced)
-        self.assertRegex(raw, r"id:\s*'s1_impressions_pnc_colour'[\s\S]*?productCode:\s*'11450'[\s\S]*?issueQuantity:\s*5000")
+        # 11450: Coloured uncirculated coin PNC (3,000 covers produced; RAM records 5,000 struck in its note)
+        self.assertRegex(raw, r"id:\s*'s1_impressions_pnc_colour'[\s\S]*?productCode:\s*'11450'[\s\S]*?issueQuantity:\s*3000")
         # Envelope privy PNCs: 11635 Bluey cover (7,500), 11636-11644 (6,500 each)
         by_id = _coins_by_id(raw)
         self.assertRegex(by_id['s1_pnc_bluey'], r"issueQuantity:\s*7500.*productCode:\s*'11635'")

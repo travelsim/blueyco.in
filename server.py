@@ -112,7 +112,7 @@ STATIC_FILES = {
     '/.well-known/poppy.json':                          ('.well-known/poppy.json', 'application/json'),
 }
 
-# ── PRICING CATALOGUE (73 IDs: 68 current items + 5 historical IDs) ────────────────────────────────────
+# ── PRICING CATALOGUE (81 IDs: 76 current items + 5 historical IDs) ────────────────────────────────────
 COINS = [
     # Series 1 - 2024 Dollarbucks
     {'id': 's1_bluey', 'ebay_kw': '2024 $1 Bluey Dollarbuck till coin', 'search': '2024 $1 Bluey Dollarbuck till coin'},
@@ -128,6 +128,17 @@ COINS = [
     {'id': 's1_impressions_pnc_2coin', 'ebay_kw': '2024 Bluey limited edition 2 coin PNC', 'search': '2024 Bluey limited edition 2 coin PNC'},
     {'id': 's1_impressions_pnc_3coin', 'ebay_kw': '2024 Bluey limited edition 3 coin PNC envelope privy', 'search': '2024 Bluey limited edition 3 coin PNC envelope privy'},
     {'id': 's1_impressions_pnc_silver', 'ebay_kw': '2024 Bluey limited edition silver proof prestige PNC', 'search': '2024 Bluey limited edition silver proof prestige PNC'},
+    {'id': 's1_impressions_2coin_privy_minisheet_bluey', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Bluey', 'search': '2024 Bluey limited edition 2 coin minisheet collection Bluey'},
+    {'id': 's1_impressions_2coin_privy_minisheet_heelers', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Heelers', 'search': '2024 Bluey limited edition 2 coin minisheet collection Heelers'},
+    {'id': 's1_impressions_2coin_privy_minisheet_blueybingofriends', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Bluey Bingo Friends', 'search': '2024 Bluey limited edition 2 coin minisheet collection Bluey Bingo Friends'},
+    {'id': 's1_impressions_2coin_privy_minisheet_stripes', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Stripe Trixie Nana', 'search': '2024 Bluey limited edition 2 coin minisheet collection Stripe Trixie Nana'},
+    {'id': 's1_impressions_2coin_privy_minisheet_bingo', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Bingo', 'search': '2024 Bluey limited edition 2 coin minisheet collection Bingo'},
+    {'id': 's1_impressions_2coin_privy_minisheet_mumdad', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Mum Dad', 'search': '2024 Bluey limited edition 2 coin minisheet collection Mum Dad'},
+    {'id': 's1_impressions_2coin_privy_minisheet_grannies', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Grannies', 'search': '2024 Bluey limited edition 2 coin minisheet collection Grannies'},
+    {'id': 's1_impressions_2coin_privy_minisheet_radfrisky', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Rad Frisky', 'search': '2024 Bluey limited edition 2 coin minisheet collection Rad Frisky'},
+    {'id': 's1_impressions_2coin_privy_minisheet_blueyfriends', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Bluey Friends', 'search': '2024 Bluey limited edition 2 coin minisheet collection Bluey Friends'},
+    {'id': 's1_impressions_2coin_privy_minisheet_muffinsocks', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Muffin Socks', 'search': '2024 Bluey limited edition 2 coin minisheet collection Muffin Socks'},
+    {'id': 's1_impressions_2coin_privy_minisheet_set', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection set slipcase', 'search': '2024 Bluey limited edition 2 coin minisheet collection set slipcase'},
     {'id': 's1_coloured_bluey', 'ebay_kw': '2024 Bluey coloured uncirculated dollarbuck coin card', 'search': '2024 Bluey coloured uncirculated dollarbuck coin card'},
     {'id': 's1_coloured_heelers', 'ebay_kw': '2024 Bluey Heelers coloured uncirculated dollarbuck', 'search': '2024 Bluey Heelers coloured uncirculated dollarbuck'},
     {'id': 's1_coloured_grannies', 'ebay_kw': '2024 Bluey Grannies coloured uncirculated dollarbuck', 'search': '2024 Bluey Grannies coloured uncirculated dollarbuck'},
@@ -867,6 +878,17 @@ QUERY_VARIANTS = {
                                   '2024 Bluey special coloured coin folder',
                                   '2024 Bluey special lucky coin'],
     's1_three_coin_set': ['2024 Bluey Dollarbucks $1 X 3 coin Coloured RAM set UNC'],
+    's1_impressions_2coin_privy_minisheet_bluey': ['2024 Bluey 2-Coin and Minisheet Collection Bluey', 'Bluey 2024 Limited Edition 2-Coin Minisheet Collection'],
+    's1_impressions_2coin_privy_minisheet_heelers': ['2024 Bluey 2-Coin and Minisheet Collection Heelers', 'Bluey Heelers 2-Coin Minisheet Collection'],
+    's1_impressions_2coin_privy_minisheet_blueybingofriends': ['2024 Bluey Bingo Friends 2-Coin Minisheet Collection', 'Bluey Bingo and Friends Minisheet Collection'],
+    's1_impressions_2coin_privy_minisheet_stripes': ['2024 Bluey Stripe Trixie Nana Minisheet Collection', 'Bluey Nana Stripe and Trixie 2-Coin Minisheet'],
+    's1_impressions_2coin_privy_minisheet_bingo': ['2024 Bluey Bingo 2-Coin Minisheet Collection', 'Bluey Bingo Minisheet Collection'],
+    's1_impressions_2coin_privy_minisheet_mumdad': ['2024 Bluey Mum Dad Minisheet Collection', 'Bluey Chilli Bandit 2-Coin Minisheet'],
+    's1_impressions_2coin_privy_minisheet_grannies': ['2024 Bluey Grannies 2-Coin Minisheet Collection', 'Bluey Grannies Minisheet Collection'],
+    's1_impressions_2coin_privy_minisheet_radfrisky': ['2024 Bluey Rad Frisky Minisheet Collection', 'Bluey Uncle Rad Frisky 2-Coin Minisheet'],
+    's1_impressions_2coin_privy_minisheet_blueyfriends': ['2024 Bluey Friends 2-Coin Minisheet Collection', 'Bluey and Friends Minisheet Collection'],
+    's1_impressions_2coin_privy_minisheet_muffinsocks': ['2024 Bluey Muffin Socks 2-Coin Minisheet Collection', 'Bluey Muffin and Socks Minisheet Collection'],
+    's1_impressions_2coin_privy_minisheet_set': ['2024 Bluey Minisheet Collection Set Slipcase', 'Bluey 2-Coin Minisheet Complete Set'],
     's1_impressions_pnc_colour': ['2024 Bluey Coloured Coin Postal Numismatic Cover PNC',
                                   '2024 $1 Coloured Bluey Limited Edition PNC',
                                   'Royal Australian Mint 2024 Bluey Bucks Limited Edition Coloured Coin $1 PNC'],

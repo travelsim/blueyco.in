@@ -81,7 +81,7 @@ class TestSupplyCardText(unittest.TestCase):
         self.assertEqual(self.cards['s3_maxicard_pack'], ['Produced', 'Not published'])
 
     def test_covers_mintage_is_not_labelled_as_coins(self):
-        self.assertEqual(self.cards['s1_impressions_pnc_2coin'], ['Mintage', '1,300', 'Produced', '1,300', 'covers'])
+        self.assertEqual(self.cards['s1_impressions_pnc_2coin'], ['Mintage', '1,300', 'covers'])
 
     def test_production_unit_follows_the_product(self):
         self.assertEqual(self.cards['s1_pnc_set_ten'][-1], 'sets')
@@ -89,7 +89,8 @@ class TestSupplyCardText(unittest.TestCase):
 
     def test_mintage_caption_kept_when_it_adds_information(self):
         self.assertIn('mintage ceiling (5,000 carded / 25,000 in sets)', self.cards['s1_coloured_bluey'])
-        self.assertIn('covers issued (5,000 coins struck by RAM)', self.cards['s1_impressions_pnc_colour'])
+        self.assertEqual(self.cards['s1_impressions_pnc_colour'], ['Mintage', '3,000', 'covers'])
+        self.assertIn('5,000 struck', INDEX.read_text(encoding='utf-8'))
 
     def test_production_figure_stands_in_as_single_mintage_block(self):
         # Products without a RAM mintage show the production figure under
