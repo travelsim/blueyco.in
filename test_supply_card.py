@@ -70,7 +70,7 @@ class TestSupplyCardText(unittest.TestCase):
     def test_pnc_family_states_each_fact_once(self):
         # The 6,500 production figure stands in as the mintage in a single
         # block, so the separate Produced block is skipped, not repeated.
-        self.assertEqual(self.cards['s1_pnc_family'], ['Mintage', '6,500', 'covers'])
+        self.assertEqual(self.cards['s1_pnc_family'], ['Issued', '6,500', 'covers'])
 
     def test_word_produced_appears_once_per_card(self):
         for coin_id, card in self.cards.items():
@@ -81,7 +81,7 @@ class TestSupplyCardText(unittest.TestCase):
         self.assertEqual(self.cards['s3_maxicard_pack'], ['Produced', 'Not published'])
 
     def test_covers_mintage_is_not_labelled_as_coins(self):
-        self.assertEqual(self.cards['s1_impressions_pnc_2coin'], ['Mintage', '1,300', 'covers'])
+        self.assertEqual(self.cards['s1_impressions_pnc_2coin'], ['Issued', '1,300', 'covers'])
 
     def test_production_unit_follows_the_product(self):
         self.assertEqual(self.cards['s1_pnc_set_ten'][-1], 'sets')
@@ -89,34 +89,34 @@ class TestSupplyCardText(unittest.TestCase):
 
     def test_mintage_caption_kept_when_it_adds_information(self):
         self.assertIn('mintage ceiling (5,000 carded / 25,000 in sets)', self.cards['s1_coloured_bluey'])
-        self.assertEqual(self.cards['s1_impressions_pnc_colour'], ['Mintage', '3,000', 'covers'])
+        self.assertEqual(self.cards['s1_impressions_pnc_colour'], ['Issued', '3,000', 'covers'])
         self.assertIn('5,000 struck', INDEX.read_text(encoding='utf-8'))
 
     def test_production_figure_stands_in_as_single_mintage_block(self):
         # Products without a RAM mintage show the production figure under
         # Mintage with its unit, and no separate Produced block.
-        self.assertEqual(self.cards['s1_card_bluey'], ['Mintage', '7,250', 'units'])
-        self.assertEqual(self.cards['s1_bluey'], ['Mintage', '1,250,000', 'units'])
-        self.assertEqual(self.cards['s3_folder'], ['Mintage', '15,000', 'units'])
+        self.assertEqual(self.cards['s1_card_bluey'], ['Issued', '7,250', 'units'])
+        self.assertEqual(self.cards['s1_bluey'], ['Issued', '1,250,000', 'units'])
+        self.assertEqual(self.cards['s3_folder'], ['Issued', '15,000', 'units'])
 
     def test_pin_covers_show_limited_edition_production_mintage(self):
         for coin_id in ('s3_pin_babyrace', 's3_pin_camping', 's3_pin_granny', 's3_pin_rain', 's3_pin_sleepytime'):
             with self.subTest(coin=coin_id):
-                self.assertEqual(self.cards[coin_id], ['Mintage', '3,000', 'covers'])
+                self.assertEqual(self.cards[coin_id], ['Issued', '3,000', 'covers'])
 
     def test_products_without_any_figure_have_no_mintage(self):
         for coin_id in ('s0_2020_stamp_pack', 's1_auspost_stamp_pack', 's2_xmas_stamp_pack',
                         's3_stamp_pack', 's3_maxicard_pack', 's3_till_bluey', 's3_till_bingo',
                         's3_sleepytime_insert'):
             with self.subTest(coin=coin_id):
-                self.assertNotIn('Mintage', self.cards[coin_id])
+                self.assertNotIn('Issued', self.cards[coin_id])
 
     def test_no_guide_range_footnote_text(self):
         # The "Guide range $X – $Y · Collector estimate" footnote was removed
         # from the Estimated value box; it must not appear anywhere.
         self.assertNotIn('Guide range', INDEX.read_text(encoding='utf-8'))
 
-    def test_published_coins_only_on_ram_coin_mintages(self):
+    def test_published_coins_only_on_ram_coin_issued(self):
         flags = coin_ram_flags()
         self.assertEqual(set(flags), set(self.cards))
         for coin_id, card in self.cards.items():
