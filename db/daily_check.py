@@ -66,7 +66,7 @@ def main():
                     "INSERT INTO listings(listing_id, product_id, title, price_aud, "
                     "source, source_url, status) VALUES (%s,%s,%s,%s,'browse_daily',%s,'available') "
                     "ON CONFLICT (listing_id) DO UPDATE SET last_seen_at=now(), "
-                    "status='available', price_aud=EXCLUDED.price_aud",
+                    "price_aud=EXCLUDED.price_aud, status=CASE WHEN listings.status='confirmed_sold' THEN 'confirmed_sold' ELSE 'available' END",
                     (lid, pid, opt.get("title") or opt.get("name") or "",
                      opt.get("price"), url),
                 )
