@@ -31,23 +31,27 @@ def main():
     conn.execute(open(os.path.join(ROOT, "db", "schema.sql"), encoding="utf-8").read())
     conn.commit()
 
-    prices = json.load(urllib.request.urlopen(f"{base}/api/prices", timeout=30))
-    coins = prices.get("coins") or prices if isinstance(prices, list) else prices.get("coins", [])
+    prices = json.load(urllib.request.urlopen(
+        urllib.request.Request(f"{base}/api/prices",
+            headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) blueyco-in-daily-check"}),
+        timeout=30))
+    # /api/prices returns {coin_id: entry} directly (no list wrapper).
+    coin_ids = list(prices.keys()) if isinstance(prices, dict) else [c.get("id") for c in prices]
     seen_ids = set()
     with conn.transaction():
-        for coin in coins:
-            pid = coin.get("id")
+        for pid in coin_ids:
+            entry = prices.get(pid) if isinstance(prices, dict) else {}
             if not pid:
                 continue
             conn.execute(
                 "INSERT INTO products(product_id, name) VALUES (%s,%s) "
                 "ON CONFLICT (product_id) DO NOTHING",
-                (pid, coin.get("name") or pid),
+                (pid, (entry or {}).get("name") or pid),
             )
             req = urllib.request.Request(
                 f"{base}/api/buy-options",
-                data=json.dumps({"coin_id": pid, "keywords": coin.get("search_keywords") or coin.get("name")}).encode(),
-                headers={"Content-Type": "application/json"},
+                data=json.dumps({"coinId": pid}).encode(),
+                headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) blueyco-in-daily-check"},
             )
             try:
                 options = json.load(urllib.request.urlopen(req, timeout=60))
