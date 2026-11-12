@@ -61,7 +61,8 @@ def main():
             for opt in (options if isinstance(options, list) else options.get("options", [])):
                 url = opt.get("url") or ""
                 item = url.split("/itm/")[-1].split("?")[0].split("&")[0] if "/itm/" in url else None
-                lid = item or f"live-{pid}-{abs(hash(url + str(opt.get('price')))) % 10**12}"
+                import hashlib
+                lid = item or f"live-{pid}-{hashlib.sha1((url + str(opt.get('price'))).encode()).hexdigest()[:16]}"
                 conn.execute(
                     "INSERT INTO listings(listing_id, product_id, title, price_aud, "
                     "source, source_url, status) VALUES (%s,%s,%s,%s,'browse_daily',%s,'available') "
