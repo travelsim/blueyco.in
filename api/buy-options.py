@@ -56,7 +56,6 @@ EXCLUDED_EBAY_ITEMS = {
     's3_sleepytime_privy': {'198351768831'},
     's3_pin_babyrace': {'206286072326'},
     's3_pin_camping': {'206286072326'},
-    's4_cricket_proof': {'168704548951'},
 }
 
 # Audit 2026-11-13: privy twins with identical search keywords show the same
