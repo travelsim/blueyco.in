@@ -16,7 +16,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Blueycoin">
 <meta property="og:locale" content="en_AU">
-<meta property="og:title" content="Blueycoin — Australia's Most Complete Bluey Coin Resource">
+<meta property="og:title" content="Blueycoin — Bluey Coin Value Guide & Collection Tracker">
 <meta property="og:description" content="Track, value, and complete your official Bluey coin collection with live market data and an interactive dashboard.">
 <meta property="og:url" id="og-url" content="https://blueyco.in/">
 <meta property="og:image" content="https://blueyco.in/frames/blister-bluey-dollarbuck-2024.jpg">
@@ -836,6 +836,19 @@
     transition: transform 0.2s, box-shadow 0.2s;
   }
 
+  .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-hero-secondary {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 44px; padding: 12px 24px; border-radius: 999px;
+    border: 2px solid currentColor; color: inherit; font-weight: 700; text-decoration: none;
+  }
+  .btn-hero-secondary:hover { background: rgba(255,255,255,0.14); }
+  .btn-hero-secondary:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
+  .link-button { background: none; border: 0; padding: 0; font: inherit; color: var(--orange); font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .bundle-card { border: 1px solid var(--border); border-radius: 16px; padding: 24px; background: white; display: flex; flex-direction: column; gap: 8px; }
+  .bundle-card .bundle-name { font-weight: 700; font-size: 1.1rem; }
+  .bundle-card .bundle-sub { color: var(--slate); }
+  .bundle-card .bundle-sum { font-weight: 700; }
   .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 15px -3px rgb(249 115 22 / 0.3);
@@ -1697,12 +1710,15 @@
 <section class="hero">
   <div style="max-width: 720px; margin: 0 auto;">
       <h1>Track every Bluey collectible in one place</h1>
-    <p>Track your collection, inspect sold-search evidence, compare current asking prices, and find the right frame.</p>
-    <a href="#dashboard" class="btn-primary">
-      Start your collection
-    </a>
+    <p>Tick off what you own, check what coins have actually sold for, and display your set in a handmade frame.</p>
+    <div class="hero-actions">
+      <a href="#dashboard" class="btn-primary">
+        Start your collection
+      </a>
+      <a href="#shop" class="btn-hero-secondary">Shop display frames</a>
+    </div>
     <div class="hero-meta">
-      63 tracked products · official mintages and product images
+      <span data-catalogue-count>76</span> tracked products · official mintages and product images
     </div>
   </div>
 </section>
@@ -1725,7 +1741,7 @@
 
       <div class="dashboard-stats">
         <div class="stat">
-          <div class="stat-value" id="owned-count">0 / 63</div>
+          <div class="stat-value" id="owned-count">0 of 76 types</div>
           <div class="stat-label">Items owned</div>
         </div>
         <div class="stat">
@@ -1841,36 +1857,29 @@
 
   <!-- Bundles -->
   <div id="bundles" style="margin-top: 64px; padding-top: 48px; border-top: 1px solid var(--border);">
-    <h3 style="font-size: 1.75rem; margin-bottom: 24px;">Complete Your Set</h3>
-    
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
-      <!-- Bundle 1 -->
-      <div style="border: 1px solid var(--border); border-radius: 16px; padding: 24px; background: white;">
-        <div style="font-weight: 700; font-size: 1.1rem;">2024 Dollarbucks Frames</div>
-        <div style="color: var(--slate); margin: 8px 0 16px;">June, September and November 2024 releases</div>
-        <div style="display: flex; align-items: baseline; gap: 8px;">
-          <span style="font-size: 2rem; font-weight: 800;">$799</span>
-          <span style="color: var(--slate); text-decoration: line-through;">$1,068</span>
-        </div>
-        <button onclick="addBundleToCart('s1')" class="btn-primary" style="width: 100%; margin-top: 16px; justify-content: center;">Add Bundle to Cart</button>
+    <h3 style="font-size: 1.75rem; margin-bottom: 8px;">Complete Your Set</h3>
+    <p style="color: var(--slate); margin: 0 0 24px;">Framing a whole release? Tell us which set and we will quote one price for the lot.</p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+      <div class="bundle-card">
+        <div class="bundle-name">2024 Dollarbucks Frames</div>
+        <div class="bundle-sub">June, September and November 2024 releases</div>
+        <div class="bundle-sum" id="bundle-s1-summary">Every 2024 frame in one order</div>
+        <button type="button" onclick="requestBundleQuote('s1')" class="btn-primary" style="width: 100%; margin-top: 8px; justify-content: center;">Request a bundle quote</button>
       </div>
 
-      <!-- Bundle 2 -->
-      <div style="border: 1px solid var(--border); border-radius: 16px; padding: 24px; background: white;">
-        <div style="font-weight: 700; font-size: 1.1rem;">Full Collection</div>
-        <div style="color: var(--slate); margin: 8px 0 16px;">Every official Bluey coin frame — the ultimate display</div>
-        <div style="display: flex; align-items: baseline; gap: 8px;">
-          <span style="font-size: 2rem; font-weight: 800;">$3,599</span>
-          <span style="color: var(--slate); text-decoration: line-through;">$4,512</span>
-        </div>
-        <button onclick="addBundleToCart('full')" class="btn-primary" style="width: 100%; margin-top: 16px; justify-content: center;">Add Full Collection</button>
+      <div class="bundle-card">
+        <div class="bundle-name">Full Collection</div>
+        <div class="bundle-sub">A frame for every tracked Bluey product</div>
+        <div class="bundle-sum" id="bundle-full-summary">Every frame in one order</div>
+        <button type="button" onclick="requestBundleQuote('full')" class="btn-primary" style="width: 100%; margin-top: 8px; justify-content: center;">Request a bundle quote</button>
       </div>
     </div>
   </div>
 
   <div style="margin-top: 40px; text-align: center; font-size: 0.9rem; color: var(--slate);">
     Free shipping on orders over $250 • 30-day returns • Handcrafted in Australia<br>
-    <a href="#" onclick="showDesignModal(); return false;" style="color: var(--orange); font-weight: 600;">Need a custom frame for a coin we don't have yet? Design to order →</a>
+    <button type="button" class="link-button" onclick="showDesignModal()">Need a custom frame for a coin we don't have yet? Design to order →</button>
   </div>
 </section>
 
@@ -1882,14 +1891,14 @@
   <div class="aeo-summary-capsule">
     <div class="aeo-summary-header">
       <h2 class="aeo-summary-title">
-        <span aria-hidden="true">🪙</span> Official Bluey Numismatics &amp; Value Guide
+        <span aria-hidden="true">🪙</span> Bluey coin quick facts
       </h2>
-      <span class="aeo-verified-badge" title="Reconciled with Royal Australian Mint reports">
-        <span aria-hidden="true">✓</span> Royal Australian Mint Verified
+      <span class="aeo-verified-badge" title="Figures checked against published Royal Australian Mint reports">
+        <span aria-hidden="true">✓</span> Checked against Mint reports
       </span>
     </div>
     <p style="margin: 0 0 10px; font-size: 0.95rem; color: var(--text); line-height: 1.5;">
-      Official guide to Australian Bluey $1 and $2 coins produced by the Royal Australian Mint in Canberra. Features verified mintages, legal tender specifications, circulation guides, and live secondary market price tracking.
+      Independent guide to Australian Bluey $1 and $2 coins produced by the Royal Australian Mint in Canberra. Features published mintages, legal tender specifications, circulation guides, and live secondary market price tracking.
     </p>
     <div class="aeo-grid">
       <div class="aeo-stat-item">
@@ -1908,9 +1917,9 @@
         <span class="aeo-stat-sub">2024 Fine Silver Proof</span>
       </div>
       <div class="aeo-stat-item">
-        <span class="aeo-stat-label">Market Value Range</span>
-        <span class="aeo-stat-value">$5 – $650+ AUD</span>
-        <span class="aeo-stat-sub">From till coins to proofs</span>
+        <span class="aeo-stat-label">Tracked Products</span>
+        <span class="aeo-stat-value"><span data-catalogue-count>76</span> Items</span>
+        <span class="aeo-stat-sub">Coins, stamps and covers</span>
       </div>
     </div>
   </div>
@@ -2170,20 +2179,32 @@ function addToCart(frameId) {
   toast(`${frame.name} added — $${frame.price}`, 'success');
 }
 
-function addBundleToCart(bundleType) {
-  let added = false;
-  if (bundleType === 's1') {
-    const s1Frames = FRAMES.filter(f => ['series1_june', 'series1_september', 'series1_november'].includes(f.series));
-    cart = cart.concat(s1Frames);
-    added = true;
-    toast(`Dollarbucks Complete Bundle (${s1Frames.length} frames) added — $799`, 'success');
-  } else if (bundleType === 'full') {
-    cart = cart.concat(FRAMES);
-    added = true;
-    toast(`Full Collection Bundle (${FRAMES.length} frames) added — $3599`, 'success');
-  }
-  if (added) trackEvent('Add to Cart');
-  updateCartCount();
+// Bundles are quoted, not carted. The old buttons advertised a fixed bundle
+// price but added every frame at its single price, so the cart total never
+// matched the offer. A quote request keeps the promise honest.
+const BUNDLE_SERIES = { s1: ['series1_june', 'series1_september', 'series1_november'] };
+const BUNDLE_NAMES = { s1: '2024 Dollarbucks frame bundle', full: 'Full collection frame bundle' };
+
+function bundleFrames(bundleType) {
+  const series = BUNDLE_SERIES[bundleType];
+  return series ? FRAMES.filter(f => series.includes(f.series)) : FRAMES.slice();
+}
+
+function updateBundleSummaries() {
+  ['s1', 'full'].forEach((type) => {
+    const el = document.getElementById(`bundle-${type}-summary`);
+    const frames = bundleFrames(type);
+    if (!el || !frames.length) return;
+    const sum = frames.reduce((t, f) => t + f.price, 0);
+    el.textContent = `${frames.length} frames · $${sum.toLocaleString('en-AU')} if bought one by one`;
+  });
+}
+
+function requestBundleQuote(bundleType) {
+  const frames = bundleFrames(bundleType);
+  showDesignModal();
+  const field = document.getElementById('design-coin');
+  if (field) field.value = `${BUNDLE_NAMES[bundleType] || 'Frame bundle'} (${frames.length} frames)`;
 }
 
 function updateCartCount() {
@@ -2310,6 +2331,10 @@ function initShop() {
   syncFrameCatalogueToggle();
   applyFrameFilters();
   updateCartCount();
+  updateBundleSummaries();
+  document.querySelectorAll('[data-catalogue-count]').forEach((el) => {
+    if ((window.COINS || []).length) el.textContent = window.COINS.length;
+  });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -3523,7 +3548,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <footer id="site-footer">
   eBay AU completed-sale search links · Current eBay asking-price links · Prices in AUD · Not financial advice · Built for collectors<br><br>
   <small>Some links on this site are affiliate links through the eBay Partner Network (EPN). We may earn a commission if you make a purchase through these links, at no extra cost to you.</small><br><br>
-  <small>Bluey Coin Tracker is an independent, fan-run collector guide. It is not affiliated with, endorsed by, or associated with Ludo Studio, BBC Studios, or the Royal Australian Mint.</small>
+  <small>Blueycoin is an independent, fan-run collector guide. It is not affiliated with, endorsed by, or associated with Ludo Studio, BBC Studios, or the Royal Australian Mint.</small>
 </footer>
 
 <script>
@@ -5112,13 +5137,13 @@ document.addEventListener('click', (e) => {
 </script>
 <!-- Mobile-First Sticky Action Dock -->
 <nav class="mobile-action-dock" aria-label="Mobile quick actions">
-  <a href="#dashboard" class="mobile-dock-btn" aria-label="My collection and values">
+  <a href="#dashboard" class="mobile-dock-btn" aria-label="My collection">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M14.8 9A2 2 0 0 0 13 8h-2a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4h-2a2 2 0 0 1-1.8-1"></path><path d="M12 6v2m0 8v2"></path></svg>
-    <span>Values</span>
+    <span>Collection</span>
   </a>
-  <a href="#all-coins" class="mobile-dock-btn" aria-label="Browse all 68 Bluey coins">
+  <a href="#all-coins" class="mobile-dock-btn" aria-label="Bluey coin prices">
     <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>
-    <span>Coins</span>
+    <span>Prices</span>
   </a>
   <a href="#shop" class="mobile-dock-btn" aria-label="Display frames store">
     <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
