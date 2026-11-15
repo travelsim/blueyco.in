@@ -65,7 +65,7 @@ def magic_enabled():
 
 
 def auth_enabled():
-    return google_enabled() or magic_enabled()
+    return google_enabled() or magic_enabled() or apple_enabled()
 
 
 # ── Store ────────────────────────────────────────────────────────────────────
@@ -183,8 +183,12 @@ def mask_email(email):
 
 
 def make_session(email, now=None):
+    return make_session_for(user_id(email), mask_email(email), now)
+
+
+def make_session_for(uid, label, now=None):
     now = int(now if now is not None else time.time())
-    payload = {'uid': user_id(email), 'em': mask_email(email), 'exp': now + SESSION_TTL}
+    payload = {'uid': uid, 'em': label, 'exp': now + SESSION_TTL}
     body = _b64(json.dumps(payload, separators=(',', ':')).encode())
     return body + '.' + _sign(body)
 
@@ -248,6 +252,98 @@ def verify_google_credential(credential, fetch=None):
             or str(info.get('email_verified')).lower() != 'true' or not EMAIL_RE.match(email)):
         return None
     return email
+
+
+# ── Sign in with Apple ───────────────────────────────────────────────────────
+APPLE_ISSUER = 'https://appleid.apple.com'
+APPLE_KEYS_URL = 'https://appleid.apple.com/auth/keys'
+APPLE_KEYS_TTL = 3600
+# DER prefix of a SHA-256 DigestInfo (RFC 8017, section 9.2).
+_SHA256_DIGEST_INFO = bytes.fromhex('3031300d060960864801650304020105000420')
+_apple_keys_cache = {'at': 0.0, 'keys': []}
+
+
+def apple_enabled():
+    return bool(cfg('APPLE_CLIENT_ID') and session_secret() and kv_available())
+
+
+def apple_redirect_uri():
+    return cfg('APPLE_REDIRECT_URI', site_url() + '/')
+
+
+def apple_user_id(sub):
+    """Account key from Apple's subject id. Used instead of email, which Apple may hide behind a relay."""
+    return hashlib.sha256(('bluey-user:apple:' + sub).encode()).hexdigest()[:40]
+
+
+def _fetch_json(url):
+    with urllib.request.urlopen(url, timeout=6) as r:
+        return json.loads(r.read())
+
+
+def apple_public_keys(fetch=None, now=None):
+    """Apple's RSA signing keys, cached for an hour so a bad token cannot trigger a fetch per request."""
+    now = time.time() if now is None else now
+    if now - _apple_keys_cache['at'] >= APPLE_KEYS_TTL or not _apple_keys_cache['keys']:
+        data = (fetch or _fetch_json)(APPLE_KEYS_URL)
+        keys = [k for k in (data.get('keys') or []) if isinstance(k, dict) and k.get('kty') == 'RSA']
+        _apple_keys_cache.update(at=now, keys=keys)
+    return _apple_keys_cache['keys']
+
+
+def _rs256_verify(n, e, message, signature):
+    """RSASSA-PKCS1-v1_5 with SHA-256, using integer arithmetic only (no third-party crypto)."""
+    k = (n.bit_length() + 7) // 8
+    s = int.from_bytes(signature, 'big')
+    if len(signature) != k or s >= n:
+        return False
+    em = pow(s, e, n).to_bytes(k, 'big')
+    t = _SHA256_DIGEST_INFO + hashlib.sha256(message).digest()
+    padding = k - len(t) - 3
+    if padding < 8:
+        return False
+    expected = b'\x00\x01' + b'\xff' * padding + b'\x00' + t
+    return hmac.compare_digest(em, expected)
+
+
+def verify_apple_identity_token(token, fetch=None, now=None, client_id=None):
+    """Return Apple's verified claims for an identity token, or None."""
+    now = time.time() if now is None else now
+    client_id = cfg('APPLE_CLIENT_ID') if client_id is None else client_id
+    if not client_id or not isinstance(token, str) or not (20 <= len(token) <= 8192):
+        return None
+    parts = token.split('.')
+    if len(parts) != 3:
+        return None
+    try:
+        header = json.loads(_unb64(parts[0]))
+        claims = json.loads(_unb64(parts[1]))
+        signature = _unb64(parts[2])
+    except (ValueError, TypeError):
+        return None
+    if not isinstance(header, dict) or not isinstance(claims, dict):
+        return None
+    if header.get('alg') != 'RS256' or not header.get('kid'):
+        return None
+    try:
+        key = next((k for k in apple_public_keys(fetch, now) if k.get('kid') == header['kid']), None)
+        if key is None:
+            return None
+        n = int.from_bytes(_unb64(key['n']), 'big')
+        e = int.from_bytes(_unb64(key['e']), 'big')
+    except Exception:
+        return None
+    if not _rs256_verify(n, e, (parts[0] + '.' + parts[1]).encode(), signature):
+        return None
+    try:
+        expires = int(claims.get('exp', 0))
+    except (TypeError, ValueError):
+        return None
+    sub = claims.get('sub')
+    if (claims.get('iss') != APPLE_ISSUER or claims.get('aud') != client_id or expires <= now
+            or not isinstance(sub, str) or not (1 <= len(sub) <= 256)):
+        return None
+    return claims
 
 
 # ── Magic link ───────────────────────────────────────────────────────────────

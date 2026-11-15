@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#3d3a63">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://accounts.google.com/gsi/client https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com/gsi/style; font-src https://fonts.gstatic.com; connect-src 'self' https://accounts.google.com/gsi/ https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.google.com; frame-src https://accounts.google.com/gsi/; img-src 'self' data: https://accounts.google.com/ https://*.google-analytics.com https://*.googletagmanager.com;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://accounts.google.com/gsi/client https://appleid.cdn-apple.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com/gsi/style; font-src https://fonts.gstatic.com; connect-src 'self' https://accounts.google.com/gsi/ https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.google.com; frame-src https://accounts.google.com/gsi/; img-src 'self' data: https://accounts.google.com/ https://*.google-analytics.com https://*.googletagmanager.com;">
 <title>Blueycoin — Complete Bluey Coins Value Guide & Collector Tracker (2024–2027)</title>
 <meta name="keywords" content="Bluey coins, Bluey coin values, Bluey dollarbucks, Royal Australian Mint Bluey, Bluey coin price guide, rare Bluey coins, Bluey till coins, 2024 Bluey dollarbuck, Bluey coin frames, Bluey coin checklist">
 <meta name="description" content="Track 76 Bluey collectibles, including coins and stamps, with official Royal Australian Mint issue figures, market evidence, eBay sold prices, and a collection dashboard.">
@@ -1520,6 +1520,9 @@
     .auth-dialog .close-auth { float: right; border: 0; background: transparent; font-size: 1.4rem; cursor: pointer; }
     #google-signin { display: flex; justify-content: center; }
     #google-signin iframe { max-width: 100%; }
+    .apple-signin { display: flex; align-items: center; justify-content: center; width: 280px; max-width: 100%; min-height: 44px; margin: 0 auto; padding: 0 16px; border: 0; border-radius: 8px; background: #000; color: #fff; font: 600 16px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; cursor: pointer; }
+    .apple-signin[hidden] { display: none; }
+    .apple-signin:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
 
 
     /* ===== AEO & SEO SUMMARY CAPSULE ===== */
@@ -1991,7 +1994,8 @@
 <dialog class="auth-dialog" id="auth-dialog" aria-labelledby="auth-dialog-title">
   <button class="close-auth" id="auth-close" type="button" aria-label="Close sign-in">×</button>
   <h2 id="auth-dialog-title">Sign in to Blueycoin</h2>
-  <p>Use a Google account or email link. We store only a private account key and your collection.</p>
+  <p>Use Apple, a Google account or an email link. We store only a private account key and your collection.</p>
+  <button type="button" class="apple-signin" id="apple-signin" hidden>Sign in with Apple</button>
   <div id="google-signin" hidden></div>
   <p id="google-unavailable" class="auth-status" hidden>Google sign-in is not configured yet.</p>
   <hr>
@@ -2620,6 +2624,7 @@ async function loadAuth() {
     authConfig = await authFetch('/api/auth');
     setAuthUser(authConfig.user);
     if (authConfig.google && authConfig.googleClientId) loadGoogleButton(authConfig.googleClientId);
+    if (authConfig.apple && authConfig.appleClientId) loadAppleButton(authConfig.appleClientId, authConfig.appleRedirectUri);
     const token = new URLSearchParams(location.hash.slice(1)).get('login');
     if (token) {
       history.replaceState(null, '', location.pathname + location.search);
@@ -2629,6 +2634,37 @@ async function loadAuth() {
       await finishAuth(authConfig, { hydrateOnly: true });
     }
   } catch (error) { setAuthStatus(error.message, true); }
+}
+
+let appleReady = null;
+function loadAppleButton(clientId, redirectURI) {
+  const button = document.getElementById('apple-signin');
+  if (!button) return;
+  if (!appleReady) {
+    appleReady = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js';
+      script.async = true;
+      script.onload = () => {
+        window.AppleID.auth.init({ clientId, scope: 'email', redirectURI, usePopup: true });
+        resolve();
+      };
+      script.onerror = () => reject(new Error('Apple sign-in could not load. Try again, or use an email link.'));
+      document.head.append(script);
+    });
+  }
+  button.hidden = false;
+  button.addEventListener('click', async () => {
+    try {
+      await appleReady;
+      const response = await window.AppleID.auth.signIn();
+      await finishAuth(await authFetch('/api/auth', { method: 'POST', body: JSON.stringify({ action: 'apple', credential: response.authorization.id_token }) }));
+    } catch (error) {
+      // Closing Apple's window is a choice, not a failure.
+      if (error && (error.error === 'popup_closed_by_user' || error.error === 'user_cancelled_authorize')) return;
+      setAuthStatus(error.message || 'Apple sign-in did not complete.', true);
+    }
+  });
 }
 
 function loadGoogleButton(clientId) {
