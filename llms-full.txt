@@ -1,6 +1,7 @@
-# Blueycoin Complete Official Numismatic Catalogue (68 Items)
+# Blueycoin Independent Numismatic Catalogue (68 Items)
 > Exhaustive technical specification and collector market guide for all official Royal Australian Mint and Australia Post Bluey coins, covers, and stamp issues.
 > Canonical URL: https://blueyco.in
+> Independent guide: Blueycoin is not affiliated with, endorsed by, or sponsored by Ludo Studio, BBC Studios, the ABC, or the Royal Australian Mint. "Official" below refers to the coins themselves, which are issued by the Royal Australian Mint.
 
 | ID | Name | Denom | Year | Issue Qty | Mintage Limit | Est. Market Band (AUD) | Product Code |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
