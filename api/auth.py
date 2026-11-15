@@ -33,6 +33,9 @@ class handler(BaseHTTPRequestHandler):
         self._json(200, {
             'google': A.google_enabled(),
             'googleClientId': A.cfg('GOOGLE_CLIENT_ID') if A.google_enabled() else '',
+            'apple': A.apple_enabled(),
+            'appleClientId': A.cfg('APPLE_CLIENT_ID') if A.apple_enabled() else '',
+            'appleRedirectUri': A.apple_redirect_uri() if A.apple_enabled() else '',
             'magic': A.magic_enabled(),
             'user': {'email': session['em']} if session else None,
         })
@@ -56,6 +59,8 @@ class handler(BaseHTTPRequestHandler):
         try:
             if action == 'google':
                 self._google(payload)
+            elif action == 'apple':
+                self._apple(payload)
             elif action == 'magic_request':
                 self._magic_request(payload)
             elif action == 'magic_verify':
@@ -75,6 +80,19 @@ class handler(BaseHTTPRequestHandler):
             self._json(401, {'error': 'Google sign-in could not be verified.'})
             return
         self._signed_in(email)
+
+    def _apple(self, payload):
+        if not A.apple_enabled():
+            self._json(503, {'error': 'Apple sign-in is not available yet.'})
+            return
+        claims = A.verify_apple_identity_token(payload.get('credential'))
+        if not claims:
+            self._json(401, {'error': 'Apple sign-in could not be verified.'})
+            return
+        email = str(claims.get('email') or '').strip().lower()
+        label = A.mask_email(email) if A.EMAIL_RE.match(email) else 'Apple account'
+        session = A.make_session_for(A.apple_user_id(claims['sub']), label)
+        self._json(200, {'user': {'email': label}}, cookie=A.session_cookie(session))
 
     def _magic_request(self, payload):
         if not A.magic_enabled():
