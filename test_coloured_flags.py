@@ -32,7 +32,8 @@ process.stdout.write(JSON.stringify(out));
 NOT_COLOURED = [
     's1_10_coin_folder_set',
     's1_10_coin_folder_opened',
-    's3_folder',
+    # 2026 sealed/opened tube & folder sets are reviewed COLOURED below:
+    # every set includes the two coloured $2 till coins.
     's3_rain_privy',
     's3_sleepytime_privy',
     's3_camping_privy',
@@ -51,6 +52,8 @@ COLOURED_WITHOUT_NAME_WORD = [
     's1_three_coin_set',
     's3_pnc_bluey',
     's3_pnc_bingo',
+    's3_folder',
+    's3_folder_opened',
 ]
 
 

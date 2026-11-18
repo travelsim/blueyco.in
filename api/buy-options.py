@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import sys
 import time
 import urllib.parse
@@ -34,10 +35,46 @@ import server as legacy  # noqa: E402
 # inside budget with useful links.
 DEADLINE = 7.0
 MAX_WORKERS = 6
-CACHE_TTL = 6 * 3600
+# Asking prices move and new listings appear, so the panel is rebuilt every
+# half hour rather than serving a day-old list.
+CACHE_TTL = 30 * 60
 MAX_BODY_BYTES = 4096
 
 _cache = {}
+
+# Audit 2026-11-13: eBay listings that belong to a different product (or cannot
+# be tied to one). Keyed by coin id, value is the eBay item ids to drop.
+EXCLUDED_EBAY_ITEMS = {
+    's1_card_bingo': {'296857674494'},
+    's1_10_coin_folder_opened': {'147300593732'},
+    's3_folder_opened': {'147300593732'},
+    's1_pnc_bluey': {'297694790286'},
+    's1_card_bluey': {'178152522378'},
+    's3_granny': {'198351768831'},
+    's3_granny_privy': {'198351768831'},
+    's3_sleepytime': {'198351768831'},
+    's3_sleepytime_privy': {'198351768831'},
+    's3_pin_babyrace': {'206286072326'},
+    's3_pin_camping': {'206286072326'},
+}
+
+# Audit 2026-11-13: privy twins with identical search keywords show the same
+# listings, so they are served from the primary product's panel.
+MERGED_INTO = {
+    's3_babyrace_privy': 's3_babyrace',
+    's3_camping_privy': 's3_camping',
+    's3_granny_privy': 's3_granny',
+    's3_rain_privy': 's3_rain',
+    's3_sleepytime_privy': 's3_sleepytime',
+}
+
+
+def _excluded(coin_id, option):
+    banned = EXCLUDED_EBAY_ITEMS.get(coin_id)
+    if not banned:
+        return False
+    match = re.search(r'/itm/(\d+)', option.get('url') or '')
+    return bool(match and match.group(1) in banned)
 
 
 def _manual():
@@ -141,20 +178,20 @@ def get_buy_options(coin_id, keywords):
             # Unfinished or failed scrape still yields an actionable link.
             options.extend(_fallback(retailer, keywords, coin_id, manual))
             continue
-        if len(results) > 3:
-            results = sorted(results, key=lambda o: (o.get('price') is None, o.get('price') or 9999))[:3]
         for option in results:
             if option.get('price') is not None:
                 option.setdefault('price_type', 'asking')
         options.extend(results)
 
     priced = sorted(
-        [o for o in options if not o.get('link_only') and o.get('price') is not None],
-        key=lambda o: o['price'],
+        legacy._dedupe_listings([o for o in options if not o.get('link_only') and o.get('price') is not None]),
+        key=legacy._buy_total_sort_key,
     )
     link_only = [o for o in options if o.get('link_only') or o.get('price') is None]
 
-    final = priced + link_only
+    priced = [o for o in priced if not _excluded(coin_id, o)]
+    link_only = [o for o in link_only if not _excluded(coin_id, o)]
+    final = priced[:10] + link_only
     if complete:
         _cache[coin_id] = {'options': final, 'fetchedAt': now}
     return final, complete
@@ -180,6 +217,8 @@ class handler(BaseHTTPRequestHandler):
         if not coin:
             self._json(400, {'error': 'Unknown coinId.'})
             return
+        coin_id = MERGED_INTO.get(coin_id, coin_id)
+        coin = legacy.COIN_BY_ID[coin_id]
 
         try:
             options, complete = get_buy_options(coin_id, coin['search'])

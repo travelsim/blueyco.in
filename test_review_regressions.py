@@ -10,6 +10,7 @@ These tests cover production-risk issues that are cheap to verify locally:
 import importlib.util
 from pathlib import Path
 import unittest
+from unittest import mock
 
 import server
 
@@ -108,11 +109,15 @@ class TestPriceOutlierAndBundleRegressions(unittest.TestCase):
         prices = load_api_prices_module()
         coin = next(c for c in prices.COINS if c["id"] == "s3_till_bluey")
 
-        payload, _ = prices._build_payload(
-            [coin],
-            fetch_coin=lambda c: {"ebay": None, "coinxchange": None},
-            deadline=1,
-        )
+        # Pin the clock: current stats only use sales from the last 90 days, so
+        # an unpinned run drifts as the cached sales age (the 17 Aug 2026 sale
+        # left the window on 15 Nov 2026 and moved the median to 6.95).
+        with mock.patch.object(prices.time, "time", return_value=1794268800):  # 10 Nov 2026 UTC
+            payload, _ = prices._build_payload(
+                [coin],
+                fetch_coin=lambda c: {"ebay": None, "coinxchange": None},
+                deadline=1,
+            )
         bluey = payload["s3_till_bluey"]
         self.assertEqual(bluey["ebay"]["median_price"], 5.9)
         self.assertEqual(bluey["coinxchange"]["matched_results"], 0)

@@ -133,6 +133,16 @@ class TestAffiliateDisclosure(unittest.TestCase):
         footer = INDEX.split('<footer id="site-footer">')[1].split('</footer>')[0]
         self.assertIn('eBay Partner Network', footer)
         self.assertIn('not affiliated', footer.lower())
+        self.assertIn('BBC Studios', footer)
+        self.assertIn('trademarks of their respective owners', footer)
+
+    def test_independence_is_stated_in_faq_and_llms_files(self):
+        self.assertIn('Is this an official Bluey site?', INDEX)
+        for name in ('llms.txt', 'llms-full.txt'):
+            text = (ROOT / name).read_text(encoding='utf-8')
+            self.assertIn('not affiliated', text, name)
+            self.assertNotIn('Official Bluey Coin & Collectables Guide', text, name)
+            self.assertNotIn("Australia's authoritative", text, name)
 
 
 if __name__ == '__main__':

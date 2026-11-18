@@ -150,6 +150,13 @@ class TestHonestCopy(unittest.TestCase):
     def test_no_stale_48_frame_claim(self):
         self.assertNotIn('48 Frames', INDEX)
 
+    def test_card_title_shows_full_official_name(self):
+        match = re.search(r'\.card-title \{[^}]*white-space:[^}]*\}', INDEX)
+        self.assertIsNotNone(match)
+        self.assertIn('white-space: normal', match.group(0))
+        self.assertNotIn('text-overflow: ellipsis', match.group(0))
+        self.assertIn('titleEl.title = coin.name', INDEX)
+
 
 class TestClutterReduction(unittest.TestCase):
     def test_navigation_has_one_frames_destination(self):

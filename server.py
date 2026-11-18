@@ -81,7 +81,7 @@ BARGAIN_DISCOUNT_PCT = 15
 BARGAIN_MIN_SALES    = 3
 REFRESH_SECS       = 14 * 24 * 3600   # 2 weeks
 CHECK_SECS         = 24 * 3600         # check daily whether refresh needed
-BUY_CACHE_TTL      = 24 * 3600         # retailer panel cache: 24 h
+BUY_CACHE_TTL      = 30 * 60             # retailer panel cache: 30 min
 MAX_BODY_BYTES     = 4_096
 RATE_LIMIT_RPM     = 10
 RATE_WINDOW_SECS   = 60
@@ -112,7 +112,7 @@ STATIC_FILES = {
     '/.well-known/poppy.json':                          ('.well-known/poppy.json', 'application/json'),
 }
 
-# ── PRICING CATALOGUE (73 IDs: 68 current items + 5 historical IDs) ────────────────────────────────────
+# ── PRICING CATALOGUE (81 IDs: 76 current items + 5 historical IDs) ────────────────────────────────────
 COINS = [
     # Series 1 - 2024 Dollarbucks
     {'id': 's1_bluey', 'ebay_kw': '2024 $1 Bluey Dollarbuck till coin', 'search': '2024 $1 Bluey Dollarbuck till coin'},
@@ -128,6 +128,17 @@ COINS = [
     {'id': 's1_impressions_pnc_2coin', 'ebay_kw': '2024 Bluey limited edition 2 coin PNC', 'search': '2024 Bluey limited edition 2 coin PNC'},
     {'id': 's1_impressions_pnc_3coin', 'ebay_kw': '2024 Bluey limited edition 3 coin PNC envelope privy', 'search': '2024 Bluey limited edition 3 coin PNC envelope privy'},
     {'id': 's1_impressions_pnc_silver', 'ebay_kw': '2024 Bluey limited edition silver proof prestige PNC', 'search': '2024 Bluey limited edition silver proof prestige PNC'},
+    {'id': 's1_impressions_2coin_privy_minisheet_bluey', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Bluey', 'search': '2024 Bluey limited edition 2 coin minisheet collection Bluey'},
+    {'id': 's1_impressions_2coin_privy_minisheet_heelers', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Heelers', 'search': '2024 Bluey limited edition 2 coin minisheet collection Heelers'},
+    {'id': 's1_impressions_2coin_privy_minisheet_blueybingofriends', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Bluey Bingo Friends', 'search': '2024 Bluey limited edition 2 coin minisheet collection Bluey Bingo Friends'},
+    {'id': 's1_impressions_2coin_privy_minisheet_stripes', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Stripe Trixie Nana', 'search': '2024 Bluey limited edition 2 coin minisheet collection Stripe Trixie Nana'},
+    {'id': 's1_impressions_2coin_privy_minisheet_bingo', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Bingo', 'search': '2024 Bluey limited edition 2 coin minisheet collection Bingo'},
+    {'id': 's1_impressions_2coin_privy_minisheet_mumdad', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Mum Dad', 'search': '2024 Bluey limited edition 2 coin minisheet collection Mum Dad'},
+    {'id': 's1_impressions_2coin_privy_minisheet_grannies', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Grannies', 'search': '2024 Bluey limited edition 2 coin minisheet collection Grannies'},
+    {'id': 's1_impressions_2coin_privy_minisheet_radfrisky', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Rad Frisky', 'search': '2024 Bluey limited edition 2 coin minisheet collection Rad Frisky'},
+    {'id': 's1_impressions_2coin_privy_minisheet_blueyfriends', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Bluey Friends', 'search': '2024 Bluey limited edition 2 coin minisheet collection Bluey Friends'},
+    {'id': 's1_impressions_2coin_privy_minisheet_muffinsocks', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Muffin Socks', 'search': '2024 Bluey limited edition 2 coin minisheet collection Muffin Socks'},
+    {'id': 's1_impressions_2coin_privy_minisheet_set', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection set slipcase', 'search': '2024 Bluey limited edition 2 coin minisheet collection set slipcase'},
     {'id': 's1_coloured_bluey', 'ebay_kw': '2024 Bluey coloured uncirculated dollarbuck coin card', 'search': '2024 Bluey coloured uncirculated dollarbuck coin card'},
     {'id': 's1_coloured_heelers', 'ebay_kw': '2024 Bluey Heelers coloured uncirculated dollarbuck', 'search': '2024 Bluey Heelers coloured uncirculated dollarbuck'},
     {'id': 's1_coloured_grannies', 'ebay_kw': '2024 Bluey Grannies coloured uncirculated dollarbuck', 'search': '2024 Bluey Grannies coloured uncirculated dollarbuck'},
@@ -144,13 +155,13 @@ COINS = [
     {'id': 's1_card_grannies', 'ebay_kw': '2024 Bluey Grannies $1 privy mark coin card', 'search': '2024 Bluey Grannies $1 privy mark coin card'},
     {'id': 's1_pnc_bluey', 'ebay_kw': '2024 Bluey postal numismatic cover PNC', 'search': '2024 Bluey postal numismatic cover PNC'},
     {'id': 's1_pnc_family', 'ebay_kw': '2024 Bluey Her Family postal numismatic cover PNC', 'search': '2024 Bluey Her Family postal numismatic cover PNC'},
-    {'id': 's1_pnc_bingo', 'ebay_kw': '2024 Bingo postal numismatic cover PNC', 'search': '2024 Bingo postal numismatic cover PNC'},
+    {'id': 's1_pnc_bingo', 'ebay_kw': '2024 Bluey Bingo PNC', 'search': '2024 Bluey Bingo PNC'},
     {'id': 's1_pnc_muffinsocks', 'ebay_kw': '2024 Bluey Muffin Socks postal numismatic cover PNC', 'search': '2024 Bluey Muffin Socks postal numismatic cover PNC'},
     {'id': 's1_pnc_stripes', 'ebay_kw': '2024 Bluey Nana Striped Trixie postal numismatic cover PNC envelope privymark', 'search': '2024 Bluey Nana Striped Trixie postal numismatic cover PNC envelope privymark'},
     {'id': 's1_pnc_radfrisky', 'ebay_kw': '2024 Bluey Rad Frisky postal numismatic cover PNC', 'search': '2024 Bluey Rad Frisky postal numismatic cover PNC'},
     {'id': 's1_pnc_blueyfriends', 'ebay_kw': '2024 Bluey Friends postal numismatic cover PNC', 'search': '2024 Bluey Friends postal numismatic cover PNC'},
     {'id': 's1_pnc_blueybingofriends', 'ebay_kw': '2024 Bluey Bingo Friends postal numismatic cover PNC', 'search': '2024 Bluey Bingo Friends postal numismatic cover PNC'},
-    {'id': 's1_pnc_mumdad', 'ebay_kw': '2024 Bluey Chillo Bandit postal numismatic cover PNC envelope privymark', 'search': '2024 Bluey Chillo Bandit postal numismatic cover PNC envelope privymark'},
+    {'id': 's1_pnc_mumdad', 'ebay_kw': '2024 Bluey Mum Dad PNC', 'search': '2024 Bluey Mum Dad PNC'},
     {'id': 's1_pnc_grannies', 'ebay_kw': '2024 Bluey Grannies postal numismatic cover PNC', 'search': '2024 Bluey Grannies postal numismatic cover PNC'},
     {'id': 's1_pnc_set_ten', 'ebay_kw': '2024 Bluey PNC set all 10 postal numismatic covers', 'search': '2024 Bluey PNC set all 10 postal numismatic covers'},
     # Further 2024 $1 PNCs + 5th Anniversary proof from RAM 2024-25 Annual
@@ -191,6 +202,8 @@ COINS = [
     {'id': 's4_cricket_unc', 'ebay_kw': '2027 $1 Bluey Cricket coloured uncirculated coin', 'search': '2027 $1 Bluey Cricket coloured uncirculated coin'},
     {'id': 's4_cricket_proof', 'ebay_kw': '2027 $1 Bluey Cricket coloured silver proof coin', 'search': '2027 $1 Bluey Cricket coloured silver proof coin'},
     {'id': 's3_folder', 'ebay_kw': '2026 $2 Bluey collection folder tube set', 'search': '2026 $2 Bluey collection folder tube set'},
+    {'id': 's3_folder_opened', 'ebay_kw': '2026 $2 Bluey folder tube set opened', 'search': '2026 $2 Bluey folder tube set opened'},
+    {'id': 's3_folder_chase', 'ebay_kw': '2026 $2 Bluey folder tube set coloured sleepytime', 'search': '2026 $2 Bluey folder tube set coloured sleepytime'},
 
 ]
 COIN_BY_ID = {c['id']: c for c in COINS}
@@ -631,10 +644,12 @@ def _cx_parse_active(lines, hrefs):
                 href = hrefs[p]
 
             f = i + 1
-            postage = 0.0
+            postage = None
             if f < n and lines[f] == 'Buy It Now':
                 f += 1
             if f < n and (lines[f] == 'Free postage' or re.match(r'^\+AU \$[\d,.]+ postage$', lines[f])):
+                if lines[f] == 'Free postage':
+                    postage = 0.0
                 if lines[f].startswith('+AU $'):
                     postage_match = re.search(r'\$([\d,.]+)', lines[f])
                     postage = _parse_price(postage_match.group(1)) if postage_match else None
@@ -863,6 +878,17 @@ QUERY_VARIANTS = {
                                   '2024 Bluey special coloured coin folder',
                                   '2024 Bluey special lucky coin'],
     's1_three_coin_set': ['2024 Bluey Dollarbucks $1 X 3 coin Coloured RAM set UNC'],
+    's1_impressions_2coin_privy_minisheet_bluey': ['2024 Bluey 2-Coin and Minisheet Collection Bluey', 'Bluey 2024 Limited Edition 2-Coin Minisheet Collection'],
+    's1_impressions_2coin_privy_minisheet_heelers': ['2024 Bluey 2-Coin and Minisheet Collection Heelers', 'Bluey Heelers 2-Coin Minisheet Collection'],
+    's1_impressions_2coin_privy_minisheet_blueybingofriends': ['2024 Bluey Bingo Friends 2-Coin Minisheet Collection', 'Bluey Bingo and Friends Minisheet Collection'],
+    's1_impressions_2coin_privy_minisheet_stripes': ['2024 Bluey Stripe Trixie Nana Minisheet Collection', 'Bluey Nana Stripe and Trixie 2-Coin Minisheet'],
+    's1_impressions_2coin_privy_minisheet_bingo': ['2024 Bluey Bingo 2-Coin Minisheet Collection', 'Bluey Bingo Minisheet Collection'],
+    's1_impressions_2coin_privy_minisheet_mumdad': ['2024 Bluey Mum Dad Minisheet Collection', 'Bluey Chilli Bandit 2-Coin Minisheet'],
+    's1_impressions_2coin_privy_minisheet_grannies': ['2024 Bluey Grannies 2-Coin Minisheet Collection', 'Bluey Grannies Minisheet Collection'],
+    's1_impressions_2coin_privy_minisheet_radfrisky': ['2024 Bluey Rad Frisky Minisheet Collection', 'Bluey Uncle Rad Frisky 2-Coin Minisheet'],
+    's1_impressions_2coin_privy_minisheet_blueyfriends': ['2024 Bluey Friends 2-Coin Minisheet Collection', 'Bluey and Friends Minisheet Collection'],
+    's1_impressions_2coin_privy_minisheet_muffinsocks': ['2024 Bluey Muffin Socks 2-Coin Minisheet Collection', 'Bluey Muffin and Socks Minisheet Collection'],
+    's1_impressions_2coin_privy_minisheet_set': ['2024 Bluey Minisheet Collection Set Slipcase', 'Bluey 2-Coin Minisheet Complete Set'],
     's1_impressions_pnc_colour': ['2024 Bluey Coloured Coin Postal Numismatic Cover PNC',
                                   '2024 $1 Coloured Bluey Limited Edition PNC',
                                   'Royal Australian Mint 2024 Bluey Bucks Limited Edition Coloured Coin $1 PNC'],
@@ -1000,7 +1026,7 @@ _NAMED_VARIANTS = (
 # member must not exclude the others from eBay results.
 _NAME_FAMILIES = (
     {'muffin', 'muffinsocks', 'socks'}, {'stripe', 'stripes', 'trixie', 'nana'},
-    {'rad', 'frisky'}, {'friend', 'friends'}, {'mum', 'dad'},
+    {'rad', 'frisky'}, {'friend', 'friends'}, {'mum', 'dad', 'chilli', 'bandit'},
     {'granny', 'grannies'}, {'sleepytime', 'sleepy'}, {'baby', 'race'},
 )
 
@@ -1051,13 +1077,28 @@ def _coinxchange_title_matches(title, keywords, allow_coloured=False):
     unrequested = {'proof', 'silver', 'privy', 'privymark', 'envelope', 'postal', 'pnc', 'card', 'sealed', 'unopened', 'opened', 'special'}
     if not allow_coloured:
         unrequested |= {'coloured', 'colored'}
+    # PNC covers commonly mention the envelope privy mark even when the
+    # query uses only PNC; those words identify the same product format.
+    if query_tokens & {'pnc', 'postal'} and title_tokens & {'pnc', 'postal'}:
+        unrequested -= {'privy', 'privymark', 'envelope', 'postal', 'pnc'}
     for variant in unrequested:
         if variant in title_tokens and variant not in query_tokens:
             return False
     named_variants = set(_NAMED_VARIANTS)
+    # Sellers sometimes truncate Friends to Fr in the Bluey, Bingo & Friends PNC.
+    if query_tokens & {'pnc', 'postal'} and 'bingo' in query_tokens and not query_tokens & {'friend', 'friends'}:
+        if 'fr' in title_tokens or title_tokens & {'friend', 'friends'}:
+            return False
     diff = (title_tokens & named_variants) - (query_tokens & named_variants)
     if any(t for t in diff if not any(t in fam and (fam & query_tokens) for fam in _NAME_FAMILIES)):
         return False
+    if query_tokens & {'pnc', 'postal'}:
+        expected_names = query_tokens & named_variants
+        if expected_names and not any(
+            name in title_tokens or any(name in fam and fam & title_tokens for fam in _NAME_FAMILIES)
+            for name in expected_names
+        ):
+            return False
     stop = {'a', 'and', 'au', 'australia', 'australian', 'coin', 'coins', 'dollar',
             'dollars', 'for', 'in', 'new', 'of', 'the', 'unc', 'uncirculated', 'with'}
     identity = query_tokens - stop - years - {'1', '2'}
@@ -1100,7 +1141,7 @@ def _coinxchange_buy_options(retailer, keywords, coin_id=None):
                 continue
             matched.append(listing)
         matched = _query_dedupe(matched, ('title', 'price', 'url'))
-        if len(matched) >= 3:
+        if len(matched) >= 10:
             break
     matched.sort(key=lambda l: (l.get('price') is None, l.get('price') or 0))
     if not matched:
@@ -1115,8 +1156,10 @@ def _coinxchange_buy_options(retailer, keywords, coin_id=None):
         'title':        l.get('title'),
         'currency':     'AUD',
         'price_type':   'asking',
+        'postage':      l.get('postage'),
+        'landed_price': round(l['price'] + l['postage'], 2) if l.get('price') is not None and l.get('postage') is not None else None,
         'link_only':   l['price'] is None,
-    } for l in matched[:3]]
+    } for l in sorted(matched, key=_buy_total_sort_key)[:10]]
 
 
 def _get_ebay_token():
@@ -1431,6 +1474,48 @@ def _browse_keywords(keywords):
     return ' '.join(words)
 
 
+def _buy_total_sort_key(option):
+    """Known delivery totals first; unknown postage is never treated as free."""
+    price = option.get('price')
+    shipping = option.get('postage')
+    if not isinstance(price, (int, float)):
+        return (2, float('inf'))
+    if not isinstance(shipping, (int, float)) or shipping < 0:
+        return (1, price)
+    return (0, price + shipping)
+
+
+def _listing_key(option):
+    """Identity of one marketplace listing.
+
+    Search variants return the same item with a different query string in the
+    URL, so the eBay item number is used when present and the query string is
+    stripped otherwise.
+    """
+    url = str(option.get('url') or '')
+    match = re.search(r'/itm/(\d+)', url)
+    if match:
+        return (option.get('retailer_id'), 'itm', match.group(1))
+    if not url:
+        # No link to compare: keep anonymous rows distinct rather than merging
+        # unrelated retailers that only share a name.
+        return (option.get('retailer_id'), 'anon', option.get('name'), option.get('price'))
+    return (option.get('retailer_id'), 'url', url.split('?', 1)[0])
+
+
+def _dedupe_listings(options):
+    """Keep the first (best-sorted) row for each distinct listing."""
+    seen = set()
+    unique = []
+    for option in options:
+        key = _listing_key(option)
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append(option)
+    return unique
+
+
 def _ebay_live_options(retailer, keywords, coin_id=''):
     """
     Fetch active eBay AU Buy It Now listings from eBay's Browse API.
@@ -1448,6 +1533,7 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
     # Seller-wording variants widen the net; each result is gated against the
     # query that found it.
     items = []
+    seen_listings = set()
     required = _required_format_groups(keywords)
     for query in [keywords] + _query_variants(coin_id, MAX_ACTIVE_QUERIES - 1):
         browse_kw = _browse_keywords(query)
@@ -1458,9 +1544,13 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
             title_tokens = set(re.findall(r'[a-z0-9]+', str(title).lower()))
             if not all(set(group) & title_tokens for group in required):
                 continue
+            # A listing shows once even when several search variants find it.
+            key = _listing_key({'retailer_id': retailer['id'], 'url': it.get('url')})
+            if key in seen_listings:
+                continue
+            seen_listings.add(key)
             items.append(it)
-        items = _query_dedupe(items, ('title', 'price', 'url'))
-        if len(items) >= 3:
+        if len(items) >= 10:
             break
     if not items:
         return _link_only_option(retailer, keywords, coin_id=coin_id)
@@ -1484,7 +1574,7 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
             **_deal_fields(it['price'], it.get('postage'), market_median),
         })
 
-    return sorted(out, key=lambda x: x['price'])[:3]
+    return sorted(out, key=_buy_total_sort_key)[:10]
 
 
 def _link_only_option(retailer, keywords, coin_id=''):
@@ -1586,15 +1676,15 @@ def get_buy_options(coin_id, keywords):
                 print(f'Buy-panel scrape fail [{rid}]: {e}')
                 results = []
 
-            options.extend(results[:3] if results else _link_only_option(r, keywords, coin_id=coin_id))
+            options.extend(results if results else _link_only_option(r, keywords, coin_id=coin_id))
 
-        priced    = sorted([o for o in options if not o['link_only'] and o['price'] is not None],
-                           key=lambda x: x['price'])
+        priced    = sorted(_dedupe_listings([o for o in options if not o['link_only'] and o['price'] is not None]),
+                           key=_buy_total_sort_key)
         for option in priced:
             option.setdefault('price_type', 'asking')
         link_only = [o for o in options if o['link_only'] or o['price'] is None]
 
-        final = priced + link_only
+        final = priced[:10] + link_only
         with _lock:
             _buy_cache[coin_id] = {'options': final, 'fetchedAt': time.time()}
         return final

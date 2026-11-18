@@ -255,11 +255,11 @@ class TestQueryVariants(unittest.TestCase):
     def test_active_lookup_stops_after_enough_matches(self):
         retailer = {'id': 'coinxchange_buy', 'name': 'CoinXchange',
                     'search_url': 'https://www.coinxchange.com.au/buy?search={q}'}
-        rows = [{'price': 10.0 + i, 'title': f'2025 $1 Bluey Christmas Coloured Coin {i}', 'url': f'u{i}'} for i in range(3)]
+        rows = [{'price': 10.0 + i, 'title': f'2025 $1 Bluey Christmas Coloured Coin {i}', 'url': f'u{i}'} for i in range(10)]
         with mock.patch.object(legacy, '_scrape_coinxchange', return_value=rows) as scrape:
             out = legacy._coinxchange_buy_options(retailer, legacy.COIN_BY_ID['s2_xmas_unc']['search'], coin_id='s2_xmas_unc')
         self.assertEqual(scrape.call_count, 1)
-        self.assertEqual(len(out), 3)
+        self.assertEqual(len(out), 10)
 
     def test_sold_lookup_merges_variants(self):
         coin = {'id': 's1_card_bingo', 'search': 'x', 'ebay_kw': 'x'}

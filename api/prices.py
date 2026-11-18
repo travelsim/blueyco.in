@@ -221,6 +221,17 @@ COINS = [
     {'id': 's1_impressions_pnc_2coin', 'ebay_kw': '2024 Bluey limited edition 2 coin PNC', 'search': '2024 Bluey limited edition 2 coin PNC'},
     {'id': 's1_impressions_pnc_3coin', 'ebay_kw': '2024 Bluey limited edition 3 coin PNC envelope privy', 'search': '2024 Bluey limited edition 3 coin PNC envelope privy'},
     {'id': 's1_impressions_pnc_silver', 'ebay_kw': '2024 Bluey limited edition silver proof prestige PNC', 'search': '2024 Bluey limited edition silver proof prestige PNC'},
+    {'id': 's1_impressions_2coin_privy_minisheet_bluey', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Bluey', 'search': '2024 Bluey limited edition 2 coin minisheet collection Bluey'},
+    {'id': 's1_impressions_2coin_privy_minisheet_heelers', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Heelers', 'search': '2024 Bluey limited edition 2 coin minisheet collection Heelers'},
+    {'id': 's1_impressions_2coin_privy_minisheet_blueybingofriends', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Bluey Bingo Friends', 'search': '2024 Bluey limited edition 2 coin minisheet collection Bluey Bingo Friends'},
+    {'id': 's1_impressions_2coin_privy_minisheet_stripes', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Stripe Trixie Nana', 'search': '2024 Bluey limited edition 2 coin minisheet collection Stripe Trixie Nana'},
+    {'id': 's1_impressions_2coin_privy_minisheet_bingo', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Bingo', 'search': '2024 Bluey limited edition 2 coin minisheet collection Bingo'},
+    {'id': 's1_impressions_2coin_privy_minisheet_mumdad', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Mum Dad', 'search': '2024 Bluey limited edition 2 coin minisheet collection Mum Dad'},
+    {'id': 's1_impressions_2coin_privy_minisheet_grannies', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Grannies', 'search': '2024 Bluey limited edition 2 coin minisheet collection Grannies'},
+    {'id': 's1_impressions_2coin_privy_minisheet_radfrisky', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Rad Frisky', 'search': '2024 Bluey limited edition 2 coin minisheet collection Rad Frisky'},
+    {'id': 's1_impressions_2coin_privy_minisheet_blueyfriends', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Bluey Friends', 'search': '2024 Bluey limited edition 2 coin minisheet collection Bluey Friends'},
+    {'id': 's1_impressions_2coin_privy_minisheet_muffinsocks', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection Muffin Socks', 'search': '2024 Bluey limited edition 2 coin minisheet collection Muffin Socks'},
+    {'id': 's1_impressions_2coin_privy_minisheet_set', 'ebay_kw': '2024 Bluey limited edition 2 coin minisheet collection set slipcase', 'search': '2024 Bluey limited edition 2 coin minisheet collection set slipcase'},
     {'id': 's1_coloured_bluey', 'ebay_kw': '2024 Bluey coloured uncirculated dollarbuck coin card', 'search': '2024 Bluey coloured uncirculated dollarbuck coin card'},
     {'id': 's1_coloured_heelers', 'ebay_kw': '2024 Bluey Heelers coloured uncirculated dollarbuck', 'search': '2024 Bluey Heelers coloured uncirculated dollarbuck'},
     {'id': 's1_coloured_grannies', 'ebay_kw': '2024 Bluey Grannies coloured uncirculated dollarbuck', 'search': '2024 Bluey Grannies coloured uncirculated dollarbuck'},
@@ -237,13 +248,13 @@ COINS = [
     {'id': 's1_card_grannies', 'ebay_kw': '2024 Bluey Grannies $1 privy mark coin card', 'search': '2024 Bluey Grannies $1 privy mark coin card'},
     {'id': 's1_pnc_bluey', 'ebay_kw': '2024 Bluey postal numismatic cover PNC', 'search': '2024 Bluey postal numismatic cover PNC'},
     {'id': 's1_pnc_family', 'ebay_kw': '2024 Bluey Her Family postal numismatic cover PNC', 'search': '2024 Bluey Her Family postal numismatic cover PNC'},
-    {'id': 's1_pnc_bingo', 'ebay_kw': '2024 Bingo postal numismatic cover PNC', 'search': '2024 Bingo postal numismatic cover PNC'},
+    {'id': 's1_pnc_bingo', 'ebay_kw': '2024 Bluey Bingo PNC', 'search': '2024 Bluey Bingo PNC'},
     {'id': 's1_pnc_muffinsocks', 'ebay_kw': '2024 Bluey Muffin Socks postal numismatic cover PNC', 'search': '2024 Bluey Muffin Socks postal numismatic cover PNC'},
     {'id': 's1_pnc_stripes', 'ebay_kw': '2024 Bluey Nana Striped Trixie postal numismatic cover PNC envelope privymark', 'search': '2024 Bluey Nana Striped Trixie postal numismatic cover PNC envelope privymark'},
     {'id': 's1_pnc_radfrisky', 'ebay_kw': '2024 Bluey Rad Frisky postal numismatic cover PNC', 'search': '2024 Bluey Rad Frisky postal numismatic cover PNC'},
     {'id': 's1_pnc_blueyfriends', 'ebay_kw': '2024 Bluey Friends postal numismatic cover PNC', 'search': '2024 Bluey Friends postal numismatic cover PNC'},
     {'id': 's1_pnc_blueybingofriends', 'ebay_kw': '2024 Bluey Bingo Friends postal numismatic cover PNC', 'search': '2024 Bluey Bingo Friends postal numismatic cover PNC'},
-    {'id': 's1_pnc_mumdad', 'ebay_kw': '2024 Bluey Chillo Bandit postal numismatic cover PNC envelope privymark', 'search': '2024 Bluey Chillo Bandit postal numismatic cover PNC envelope privymark'},
+    {'id': 's1_pnc_mumdad', 'ebay_kw': '2024 Bluey Mum Dad PNC', 'search': '2024 Bluey Mum Dad PNC'},
     {'id': 's1_pnc_grannies', 'ebay_kw': '2024 Bluey Grannies postal numismatic cover PNC', 'search': '2024 Bluey Grannies postal numismatic cover PNC'},
     {'id': 's1_pnc_set_ten', 'ebay_kw': '2024 Bluey PNC set all 10 postal numismatic covers', 'search': '2024 Bluey PNC set all 10 postal numismatic covers'},
     # Further 2024 $1 PNCs + 5th Anniversary proof from RAM 2024-25 Annual
@@ -280,6 +291,11 @@ COINS = [
     {'id': 's4_cricket_unc', 'ebay_kw': '2027 $1 Bluey Cricket coloured uncirculated coin', 'search': '2027 $1 Bluey Cricket coloured uncirculated coin'},
     {'id': 's4_cricket_proof', 'ebay_kw': '2027 $1 Bluey Cricket coloured silver proof coin', 'search': '2027 $1 Bluey Cricket coloured silver proof coin'},
     {'id': 's3_folder', 'ebay_kw': '2026 $2 Bluey collection folder tube set', 'search': '2026 $2 Bluey collection folder tube set'},
+    # Frontend catalogue states 2 and 3 of the same RAM product (11956). They
+    # ship as separate cards in index.html and previously had no backend entry,
+    # so they could never show a price or a sold record.
+    {'id': 's3_folder_opened', 'ebay_kw': '2026 $2 Bluey folder tube set opened', 'search': '2026 $2 Bluey folder tube set opened'},
+    {'id': 's3_folder_chase', 'ebay_kw': '2026 $2 Bluey folder tube set coloured sleepytime', 'search': '2026 $2 Bluey folder tube set coloured sleepytime'},
     # Series 1 tube sets — these ship in the frontend catalogue and in
     # server.py; they were missing here so they never received live prices.
 ]
@@ -305,14 +321,37 @@ def _strip_seller_names(value):
 # See: https://vercel.com/docs/functions/serverless-functions/runtimes/python
 from http.server import BaseHTTPRequestHandler
 
+def _trim_and_strip_payload(payload):
+    stripped = _strip_seller_names(payload)
+    if not isinstance(stripped, dict):
+        return stripped
+    for cid, entry in stripped.items():
+        if not isinstance(entry, dict):
+            continue
+        ebay = entry.get('ebay')
+        if isinstance(ebay, dict):
+            ebay.pop('manual_import', None)
+            ebay.pop('import_metadata', None)
+            ebay.pop('historical_outliers', None)
+            ebay.pop('outliers', None)
+            ebay.pop('response_url', None)
+            hist = ebay.get('historical_products')
+            if isinstance(hist, list) and len(hist) > 25:
+                ebay['historical_products'] = hist[:25]
+    return stripped
+
+
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         self._respond()
 
+    def do_HEAD(self):
+        self._respond(head=True)
+
     def do_POST(self):
         self._respond()
 
-    def _respond(self):
+    def _respond(self, head=False):
         try:
             payload, complete = _build_payload()
         except Exception as e:
@@ -327,10 +366,11 @@ class handler(BaseHTTPRequestHandler):
         max_age = CACHE_TTL if complete else PARTIAL_CACHE_TTL
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
-        self.send_header('Cache-Control', f's-maxage={max_age}, stale-while-revalidate')
+        self.send_header('Cache-Control', f'public, max-age=300, s-maxage={max_age}, stale-while-revalidate=600')
         self.send_header('X-Prices-Complete', 'true' if complete else 'false')
         self.end_headers()
-        self.wfile.write(json.dumps(_strip_seller_names(payload)).encode())
+        if not head:
+            self.wfile.write(json.dumps(_trim_and_strip_payload(payload)).encode())
 
 
 def _load_base_cache():
@@ -851,6 +891,13 @@ def _cached_snapshot(coins, base_cache, manual, manual_ebay_sales=None):
                     continue
             if fetched_values:
                 ebay['fetchedAt'] = max(fetched_values)
+            else:
+                # An imported sale is itself evidence: date the snapshot from the
+                # newest imported record so the page treats it as a real fetch.
+                stamps = [_sold_timestamp(p.get('date_sold')) for p in imported_ebay['products']]
+                stamps = [s for s in stamps if s]
+                if stamps:
+                    ebay['fetchedAt'] = max(stamps)
         else:
             ebay = cached_ebay
         ebay = _quality_filter_ebay(ebay, coin)
