@@ -605,5 +605,13 @@
       "available": true,
       "url": "https://www.gumtree.com.au/s-2027+bluey+cricket+%241+silver+proof/k0"
     }
+  },
+  "s3_impressions_2coin_minisheet_boxed5": {
+    "auspost": {
+      "price": null,
+      "available": true,
+      "url": "https://auspost.com.au/shop/product/bluey-2-coin-and-minisheet-collection-limited-edition-boxed-set-of-5-76604957",
+      "status": "unverified: AP code 76604957 and this URL are from James, not checked against the live AP page (403 to our browser)"
+    }
   }
 }
