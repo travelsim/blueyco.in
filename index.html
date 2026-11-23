@@ -1837,6 +1837,7 @@
       <option value="series1_november">2024 Bluey Impressions</option>
       <option value="series2">2025 Christmas</option>
       <option value="series3">2026 Bluey collection</option>
+      <option value="impressions2026">2026 Bluey Impressions</option>
       <option value="series4">2027 Cricket</option>
     </select>
 
@@ -1965,6 +1966,7 @@
     <button class="tab-btn" data-series="series1_november">2024 Bluey Impressions</button>
     <button class="tab-btn" data-series="series2">2025 Christmas</button>
     <button class="tab-btn" data-series="series3">2026 Bluey collection</button>
+    <button class="tab-btn" data-series="impressions2026">2026 Bluey Impressions</button>
     <button class="tab-btn" data-series="series4">2027 Cricket</button>
   </div>
 
@@ -2903,7 +2905,7 @@ function renderSwapMatches(errorMessage = '') {
 }
 
 // Collection list state; kept at module level because price cards re-render the list.
-const DASH_SERIES_ORDER = ['series1_june', 'series1_september', 'series1_november', 'series2', 'series3', 'series4'];
+const DASH_SERIES_ORDER = ['series1_june', 'series1_september', 'series1_november', 'series2', 'series3', 'impressions2026', 'series4'];
 const dashState = { filter: 'all', query: '', open: new Set(), seeded: false };
 
 function _dashGroups() {
@@ -3684,10 +3686,14 @@ window.COINS = [
   { id: 's3_pin_granny', series: 'series3', name: '2026 Bluey Stamp and Pin Cover - Granny Mobile', keywords: 'pin cover 2026 granny mobile', denomination: null, year: 2026, mintage: 3000, mintageLabel: '3,000 covers produced', issueQuantity: 3000, productCode: '2336513', mintPrice: 20, color: false, marketLow: 25, marketHigh: 50, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-granny-mobile-2336513int', sourceLabel: 'Australia Post Stamp Bulletin 401 ↗' },
   { id: 's3_pin_rain', series: 'series3', name: '2026 Bluey Stamp and Pin Cover - Rain', keywords: 'pin cover 2026 rain', denomination: null, year: 2026, mintage: 3000, mintageLabel: '3,000 covers produced', issueQuantity: 3000, productCode: '2336514', mintPrice: 20, color: false, marketLow: 25, marketHigh: 50, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-rain-2336514int', sourceLabel: 'Australia Post Stamp Bulletin 401 ↗' },
   { id: 's3_pin_sleepytime', series: 'series3', name: '2026 Bluey Stamp and Pin Cover - Sleepytime', keywords: 'pin cover 2026 sleepy time', denomination: null, year: 2026, mintage: 3000, mintageLabel: '3,000 covers produced', issueQuantity: 3000, productCode: '2336515', mintPrice: 20, color: false, marketLow: 28, marketHigh: 38, sourceUrl: 'https://auspost.com.au/shop/product/bluey-stamp-and-pin-cover-sleepy-time-2336515int', sourceLabel: 'Australia Post Stamp Bulletin 401 ↗' },
-  { id: 's3_impressions_2coin_minisheet_boxed5', series: 'series3', name: '2026 Bluey Two-Coin & Minisheet Collection, Limited-Edition Boxed Set of 5', keywords: 'impressions 2026 release 1 boxed set minisheet two coin sleepytime camping rain granny mobile baby race', denomination: null, year: 2026, mintage: null, mintageLabel: '500 produced', issueQuantity: 500, productCode: null, mintPrice: 300, color: false, marketLow: null, marketHigh: null, limitPerHousehold: 1, releaseAt: '2026-11-23T08:30:00+11:00', releaseChannel: 'Release 1, online only', apProductCode: '76604957', apCodeStatus: 'unverified', themes: ['Sleepytime', 'Camping', 'Rain', 'Granny Mobile', 'Baby Race'], coins: [{ desc: '2026 $2 uncirculated coin, struck by the Royal Australian Mint', ramReleaseCode: 'pending' }, { desc: '2026 $2 privy mark uncirculated coin, struck by the Royal Australian Mint', ramReleaseCode: 'pending' }], sourceLabel: 'Australia Post Limited Editions & Collectables 2026, p.5' },
-  { id: 's3_impressions_pnc_3coin', series: 'series3', name: '2026 Bluey Limited-Edition Three-Coin PNC', keywords: 'impressions 2026 release 1 pnc three coin bluey bingo sleepytime', denomination: null, year: 2026, mintage: null, mintageLabel: '1,000 produced', issueQuantity: 1000, productCode: null, mintPrice: 100, color: true, marketLow: null, marketHigh: null, limitPerHousehold: 1, releaseAt: '2026-11-23T08:30:00+11:00', releaseChannel: 'Release 1, online only', apProductCode: null, apCodeStatus: 'blank-flagged', coins: [{ desc: '2026 $2 Bluey coloured uncirculated coin, struck by the Royal Australian Mint', ramReleaseCode: 'pending' }, { desc: '2026 $2 Bingo coloured uncirculated coin, struck by the Royal Australian Mint', ramReleaseCode: 'pending' }, { desc: '2026 $2 Sleepytime coloured uncirculated coin, struck by the Royal Australian Mint', ramReleaseCode: 'pending' }], sourceLabel: 'Australia Post Limited Editions & Collectables 2026, p.5' },
-  { id: 's3_impressions_pnc_bluey_1_2', series: 'series3', name: '2026 Bluey $1 and $2 Limited-Edition Two-Coin PNC', keywords: 'impressions 2026 release 1 pnc two coin bluey privy 2024 $1', denomination: null, year: 2026, mintage: null, mintageLabel: '150 produced', issueQuantity: 150, productCode: null, mintPrice: 90, color: true, marketLow: null, marketHigh: null, limitPerHousehold: 1, releaseAt: '2026-11-23T08:30:00+11:00', releaseChannel: 'Release 1, online only', apProductCode: null, apCodeStatus: 'blank-flagged', coins: [{ desc: '2024 $1 Bluey privy mark uncirculated coin, struck by the Royal Australian Mint', ramReleaseCode: 'pending' }, { desc: '2026 $2 Bluey coloured uncirculated coin, struck by the Royal Australian Mint', ramReleaseCode: 'pending' }], sourceLabel: 'Australia Post Limited Editions & Collectables 2026, p.5' },
-  { id: 's3_impressions_pnc_bingo_1_2', series: 'series3', name: '2026 Bingo $1 and $2 Limited-Edition Two-Coin PNC', keywords: 'impressions 2026 release 1 pnc two coin bingo 2024 $1', denomination: null, year: 2026, mintage: null, mintageLabel: '150 produced', issueQuantity: 150, productCode: null, mintPrice: 90, color: true, marketLow: null, marketHigh: null, limitPerHousehold: 1, releaseAt: '2026-11-23T08:30:00+11:00', releaseChannel: 'Release 1, online only', apProductCode: null, apCodeStatus: 'blank-flagged', coins: [{ desc: '2024 $1 Bingo uncirculated coin, struck by the Royal Australian Mint', ramReleaseCode: 'pending' }, { desc: '2026 $2 Bingo coloured uncirculated coin, struck by the Royal Australian Mint', ramReleaseCode: 'pending' }], sourceLabel: 'Australia Post Limited Editions & Collectables 2026, p.5' },
+  { id: 's3_impressions_2coin_minisheet_boxed5', series: 'impressions2026', name: '2026 Bluey Two-Coin & Minisheet Collection, Limited-Edition Boxed Set of 5', keywords: 'impressions 2026 release 1 boxed set minisheet two coin sleepytime camping rain granny mobile baby race', denomination: null, year: 2026, mintage: null, mintageLabel: '500 produced', issueQuantity: 500, productCode: null, mintPrice: 300, rrpAP: 300, askingEstimate: { lowest: 549.00, seller: 'mic754616', delivery: 13.44, captured: '23 Nov 2026' }, color: false, marketLow: null, marketHigh: null, limitPerHousehold: 1, releaseAt: '2026-11-23T08:30:00+11:00', releaseChannel: 'Release 1, online only', apProductCode: '76604957', apCodeStatus: 'unverified', themes: ['Sleepytime', 'Camping', 'Rain', 'Granny Mobile', 'Baby Race'], coins: [{ desc: '2026 $2 uncirculated coin, struck by the Royal Australian Mint', ramReleaseCode: 'pending' }, { desc: '2026 $2 privy mark uncirculated coin, struck by the Royal Australian Mint', ramReleaseCode: 'pending' }], sourceLabel: 'Australia Post Limited Editions & Collectables 2026, p.5' },
+  { id: 's3_impressions_pnc_3coin', series: 'impressions2026', name: '2026 Bluey Limited-Edition Three-Coin PNC', keywords: 'impressions 2026 release 1 pnc three coin bluey bingo sleepytime', denomination: null, year: 2026, mintage: null, mintageLabel: '1,000 produced', issueQuantity: 1000, productCode: null, mintPrice: 100, rrpAP: 100, askingEstimate: { lowest: null }, color: true, marketLow: null, marketHigh: null, limitPerHousehold: 1, releaseAt: '2026-11-23T08:30:00+11:00', releaseChannel: 'Release 1, online only', apProductCode: null, apCodeStatus: 'blank-flagged', coins: [{ desc: '2026 $2 Bluey coloured uncirculated coin, struck by the Royal Australian Mint', ramReleaseCode: 'pending' }, { desc: '2026 $2 Bingo coloured uncirculated coin, struck by the Royal Australian Mint', ramReleaseCode: 'pending' }, { desc: '2026 $2 Sleepytime coloured uncirculated coin, struck by the Royal Australian Mint', ramReleaseCode: 'pending' }], sourceLabel: 'Australia Post Limited Editions & Collectables 2026, p.5' },
+  { id: 's3_impressions_pnc_bluey_1_2', series: 'impressions2026', name: '2026 Bluey $1 and $2 Limited-Edition Two-Coin PNC', keywords: 'impressions 2026 release 1 pnc two coin bluey privy 2024 $1', denomination: null, year: 2026, mintage: null, mintageLabel: '150 produced', issueQuantity: 150, productCode: null, mintPrice: 90, rrpAP: 90, askingEstimate: { lowest: null }, color: true, marketLow: null, marketHigh: null, limitPerHousehold: 1, releaseAt: '2026-11-23T08:30:00+11:00', releaseChannel: 'Release 1, online only', apProductCode: null, apCodeStatus: 'blank-flagged', coins: [{ desc: '2024 $1 Bluey privy mark uncirculated coin, struck by the Royal Australian Mint', ramReleaseCode: 'pending' }, { desc: '2026 $2 Bluey coloured uncirculated coin, struck by the Royal Australian Mint', ramReleaseCode: 'pending' }], sourceLabel: 'Australia Post Limited Editions & Collectables 2026, p.5' },
+  { id: 's3_impressions_pnc_bingo_1_2', series: 'impressions2026', name: '2026 Bingo $1 and $2 Limited-Edition Two-Coin PNC', keywords: 'impressions 2026 release 1 pnc two coin bingo 2024 $1', denomination: null, year: 2026, mintage: null, mintageLabel: '150 produced', issueQuantity: 150, productCode: null, mintPrice: 90, rrpAP: 90, askingEstimate: { lowest: null }, color: true, marketLow: null, marketHigh: null, limitPerHousehold: 1, releaseAt: '2026-11-23T08:30:00+11:00', releaseChannel: 'Release 1, online only', apProductCode: null, apCodeStatus: 'blank-flagged', coins: [{ desc: '2024 $1 Bingo uncirculated coin, struck by the Royal Australian Mint', ramReleaseCode: 'pending' }, { desc: '2026 $2 Bingo coloured uncirculated coin, struck by the Royal Australian Mint', ramReleaseCode: 'pending' }], sourceLabel: 'Australia Post Limited Editions & Collectables 2026, p.5' },
+  { id: 's3_impressions_heelers_proof_2coin_minisheet', series: 'impressions2026', name: '2026 Heelers Proof 2-Coin Limited-Edition Minisheet Collection', keywords: 'impressions 2026 heelers proof 2 coin minisheet collection limited edition', denomination: null, year: 2026, mintage: null, mintageLabel: 'Seller-stated 500 (RAM verification pending)', issueQuantity: null, productCode: null, mintPrice: 315, rrpAP: 315, color: false, marketLow: null, marketHigh: null, limitPerHousehold: 1, releaseAt: '2026-11-23T08:30:00+11:00', releaseChannel: 'Release 1, online only', apProductCode: null, apCodeStatus: 'blank-flagged', askingEstimate: { lowest: 456.50, seller: 'jinfengwan', delivery: 15.00, captured: '23 Nov 2026', nextLowest: { price: 475.00, seller: 'edcmarket', delivery: 0 } }, collectionNote: 'Seller titles state a mintage of 500 (seller-stated, RAM verification pending). Coin contents not yet confirmed against the Australia Post product page.', sourceLabel: 'Australia Post Impressions 2026 (RRP as relayed); eBay AU captured listings 23 Nov 2026' },
+  { id: 's3_impressions_heelers_silver_pnc', series: 'impressions2026', name: '2026 Heelers Silver Proof Limited-Edition PNC', keywords: 'impressions 2026 heelers silver proof limited edition pnc', denomination: null, year: 2026, mintage: null, mintageLabel: 'Seller-stated 700 (RAM verification pending)', issueQuantity: null, productCode: null, mintPrice: 190, rrpAP: 190, color: true, marketLow: null, marketHigh: null, limitPerHousehold: 1, releaseAt: '2026-11-23T08:30:00+11:00', releaseChannel: 'Release 1, online only', apProductCode: null, apCodeStatus: 'blank-flagged', askingEstimate: { lowest: 304.95, seller: 'collectz1988', delivery: 9.95, captured: '23 Nov 2026', preorder: true, nextLowest: { price: 324.95, seller: 'adlcollectco', delivery: 0 } }, coins: [{ desc: '2026 Heelers $2 silver coloured proof coin', ramReleaseCode: 'pending' }], collectionNote: 'Seller titles state a mintage of 700 (seller-stated, RAM verification pending). Preorder listing.', sourceLabel: 'Australia Post Impressions 2026 (RRP as relayed); eBay AU captured listings 23 Nov 2026' },
+  { id: 's3_impressions_heelers_bronze_proof_pnc', series: 'impressions2026', name: '2026 Heelers $2 Bronze Proof Coin Limited-Edition PNC', keywords: 'impressions 2026 heelers bronze proof coin limited edition pnc aluminium bronze', denomination: null, year: 2026, mintage: null, mintageLabel: 'Seller-stated 200 (RAM verification pending)', issueQuantity: null, productCode: null, mintPrice: 120, rrpAP: 120, color: true, marketLow: null, marketHigh: null, limitPerHousehold: 1, releaseAt: '2026-11-23T08:30:00+11:00', releaseChannel: 'Release 1, online only', apProductCode: null, apCodeStatus: 'blank-flagged', askingEstimate: { lowest: 299.95, seller: 'spectrum_design22', delivery: 0, captured: '23 Nov 2026' }, coins: [{ desc: '2026 Heelers $2 aluminium bronze coloured proof coin', ramReleaseCode: 'pending' }], collectionNote: 'Seller title states a mintage of 200 (seller-stated, RAM verification pending). RRP of $120 is mapped from the Australia Post listing "The Heelers Proof Limited-Edition PNC" (mapping unconfirmed). Only Buy It Now listing captured.', sourceLabel: 'Australia Post Impressions 2026 (RRP as relayed); eBay AU captured listings 23 Nov 2026' },
+  { id: 's3_impressions_pnc_sleepytime', series: 'impressions2026', name: '2026 Bluey Sleepytime Limited-Edition PNC', keywords: 'impressions 2026 sleepytime limited edition pnc candidate', denomination: null, year: 2026, mintage: null, mintageLabel: 'Quantity not confirmed', issueQuantity: null, productCode: null, mintPrice: 65, rrpAP: 65, color: true, marketLow: null, marketHigh: null, limitPerHousehold: 1, releaseAt: '2026-11-23T08:30:00+11:00', releaseChannel: 'Release 1, online only', apProductCode: null, apCodeStatus: 'blank-flagged', candidate: true, askingEstimate: { lowest: 117.30, seller: 'jinfengwan', delivery: 15.00, captured: '23 Nov 2026' }, coins: [{ desc: '2026 Sleepytime coin (contents to be confirmed)', ramReleaseCode: 'pending' }], collectionNote: 'Candidate entry: listed at $65 (limit 1) on the Australia Post 2026 Impressions page as relayed. Product URL, AP code and contents not yet confirmed.', sourceLabel: 'Australia Post Impressions 2026 (RRP as relayed); eBay AU captured listings 23 Nov 2026' },
 
   // Series 4 — 2027 Cricket episode ($1; official RAM specifications).
   { id: 's4_cricket_unc', series: 'series4', name: '2027 Bluey Cricket $1 AlBr Coloured Uncirculated', keywords: 'cricket rusty bluey 2027 carded 200000 mintage', denomination: 1, year: 2027, mintage: 200000, productCode: '12077', officialName: '2027 $1 Coloured Uncirculated Coin - Bluey Cricket', mintPrice: 25, color: true, marketLow: 30, marketHigh: 60, sourceUrl: 'https://ramint.runfair.com/en-US/au/2027-1-dollar-coloured-uncirculated-coin-bluey-cricket' },
@@ -3947,6 +3953,7 @@ const RAM_RELEASES = {
   series1_november: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/impressions/impressions-catalogue-2024.pdf',
   series2: 'https://www.ramint.gov.au/about-us/whats-new/get-christmas-spirit-bluey',
   series3: 'https://www.ramint.gov.au/about-us/whats-new/cheese-crackers-bluey-returns-new-coin-collection',
+  impressions2026: 'https://www.ramint.gov.au/about-us/whats-new/cheese-crackers-bluey-returns-new-coin-collection',
   series4: 'https://www.ramint.gov.au/about-us/whats-new/bluey-cricket-collectible-coins-celebrating-aussie-tradition',
 };
 
@@ -3956,6 +3963,7 @@ const SERIES_LABELS = {
   series1_november: '2024 Bluey Impressions',
   series2: '2025 Christmas',
   series3: '2026 Bluey collection',
+  impressions2026: '2026 Bluey Impressions',
   series4: '2027 Cricket',
 };
 
@@ -4187,13 +4195,16 @@ function buildCard(coin) {
   const rarity = mintageRarity(coin);
   const metrics = el('div', 'coin-metrics');
   const priceCard = el('section', 'metric-card metric-price');
+  // Impressions 2026 entries carry askingEstimate (lowest Buy It Now, not sold); RRP is a sold-out reference only.
+  const asking = 'askingEstimate' in coin ? (coin.askingEstimate || { lowest: null }) : null;
   priceCard.setAttribute('aria-label', coin.id === 's2_xmas_stamp_pack' && !hasMedian
-    ? 'No sold price yet' : ((hasMedian || guide != null) && coin.mintPrice != null
+    ? 'No sold price yet' : asking ? 'Lowest Buy It Now asking price, not sold' : ((hasMedian || guide != null) && coin.mintPrice != null
     ? 'Estimated value and gain from issue price' : 'Estimated value'));
   const noSoldStampPrice = coin.id === 's2_xmas_stamp_pack' && !hasMedian;
   const priceHeading = noSoldStampPrice ? 'No sold price yet' : 'Estimated value';
-  const priceValue = noSoldStampPrice ? null : (hasMedian ? median : (guide != null ? guide : coin.mintPrice));
-  priceCard.append(el('div', 'metric-kicker', priceHeading));
+  const kickerText = asking ? 'Lowest Buy It Now asking price, not sold' : priceHeading;
+  const priceValue = noSoldStampPrice ? null : asking ? asking.lowest : (hasMedian ? median : (guide != null ? guide : coin.mintPrice));
+  priceCard.append(el('div', 'metric-kicker', kickerText));
   priceCard.append(el('div', 'metric-amount', priceValue == null ? '—' : formatAUD(priceValue)));
   if ((hasMedian || guide != null) && coin.mintPrice != null) {
     const issueRow = el('div', 'metric-issue-row');
@@ -4215,6 +4226,17 @@ function buildCard(coin) {
     if (!manualSalesCount) {
       priceCard.append(el('div', 'metric-footnote',
         `${saleCount} matched sold ${saleCount === 1 ? 'result' : 'results'} · checked ${checked}`));
+    }
+  } else if (asking) {
+    if (asking.lowest == null) {
+      priceCard.append(el('div', 'metric-footnote', 'No Buy It Now listing yet'));
+    } else {
+      priceCard.append(el('div', 'metric-footnote', `Seller: ${asking.seller}`));
+      priceCard.append(el('div', 'metric-footnote', `Delivery: ${asking.delivery > 0 ? '+' + formatAUD(asking.delivery) + ' (seller stated)' : 'free (seller stated)'}`));
+      priceCard.append(el('div', 'metric-footnote', `Captured eBay AU listing, ${asking.captured}`));
+    }
+    if (coin.rrpAP != null) {
+      priceCard.append(el('div', 'metric-footnote', `AP RRP ${formatAUD(coin.rrpAP)} · sold out (reference only)`));
     }
   } else if (guide == null && coin.mintPrice != null) {
     priceCard.append(el('div', 'metric-footnote', 'Issue price baseline estimate'));
