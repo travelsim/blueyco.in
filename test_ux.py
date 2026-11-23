@@ -131,6 +131,10 @@ class TestCartBadgeReflectsState(unittest.TestCase):
 
 
 class TestHonestCopy(unittest.TestCase):
+    # The live count is 80 and the meta says "Track 80". 85 is the target count:
+    # five privy-mark products (Rain, Sleepytime, Camping, Baby Race, Granny Mobile;
+    # s3_rain_privy, s3_sleepytime_privy, s3_camping_privy, s3_babyrace_privy,
+    # s3_granny_privy) are pending RAM trace and are not in index.html yet.
     def test_meta_description_coin_count_matches_the_catalogue(self):
         ids = re.findall(r"\{\s*id:\s*'([^']+)'\s*,\s*series:", INDEX)
         count = len(ids)
