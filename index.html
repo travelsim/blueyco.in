@@ -4220,21 +4220,8 @@ function buildCard(coin) {
     }
     priceCard.append(issueRow);
   }
-  if (hasMedian) {
-    const saleCount = currentSales.length;
-    const fetchedTimes = [ebay, coinEntry.coinxchange].map(d => Number(d && d.fetchedAt) * 1000).filter(Number.isFinite);
-    const checked = new Date(Math.max.apply(null, fetchedTimes)).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
-    const manualSalesCount = currentSales.filter(product =>
-      product.source_type === 'user_pasted_search' || product.source_type === 'user_imported_csv'
-    ).length;
-    if (!manualSalesCount) {
-      priceCard.append(el('div', 'metric-footnote',
-        `${saleCount} matched sold ${saleCount === 1 ? 'result' : 'results'} · checked ${checked}`));
-    }
-  } else if (asking) {
-    const askingChecked = asking.captured ? ` · checked ${asking.captured}` : '';
-    priceCard.append(el('div', 'metric-footnote', asking.lowest == null ? 'No Buy It Now listing yet' : `Live Buy It Now${askingChecked}`));
-  } else if (guide == null && coin.mintPrice != null) {
+  // Sold-result and Buy It Now footers (with match counts and check dates) are not shown on cards.
+  if (!hasMedian && !asking && guide == null && coin.mintPrice != null) {
     priceCard.append(el('div', 'metric-footnote', 'Issue price baseline estimate'));
   }
 
