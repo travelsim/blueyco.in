@@ -614,6 +614,38 @@
       "status": "unverified: AP code 76604957 and this URL are from James, not checked against the live AP page (403 to our browser)"
     }
   },
+  "s3_impressions_2coin_minisheet_boxed5": {
+    "ebay": {
+      "price": null,
+      "available": true,
+      "url": "https://www.ebay.com.au/sch/i.html?_nkw=Bluey+Two+Coin+Minisheet+Collection+Boxed+Set+of+5+2026&LH_BIN=1&_sop=15",
+      "status": "search link, item URL pending"
+    }
+  },
+  "s3_impressions_pnc_3coin": {
+    "ebay": {
+      "price": null,
+      "available": true,
+      "url": "https://www.ebay.com.au/sch/i.html?_nkw=Bluey+Limited+Edition+Three+Coin+PNC+2026&LH_BIN=1&_sop=15",
+      "status": "search link, item URL pending"
+    }
+  },
+  "s3_impressions_pnc_bluey_1_2": {
+    "ebay": {
+      "price": null,
+      "available": true,
+      "url": "https://www.ebay.com.au/sch/i.html?_nkw=Bluey+Limited+Edition+Two+Coin+PNC+2026&LH_BIN=1&_sop=15",
+      "status": "search link, item URL pending"
+    }
+  },
+  "s3_impressions_pnc_bingo_1_2": {
+    "ebay": {
+      "price": null,
+      "available": true,
+      "url": "https://www.ebay.com.au/sch/i.html?_nkw=Bingo+Limited+Edition+Two+Coin+PNC+2026&LH_BIN=1&_sop=15",
+      "status": "search link, item URL pending"
+    }
+  },
   "s3_impressions_heelers_proof_2coin_minisheet": {
     "ebay": {
       "price": null,
