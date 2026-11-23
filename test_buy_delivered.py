@@ -71,6 +71,6 @@ class ImpressionsStampCoverExclusionTests(unittest.TestCase):
         ]
         with patch.object(server, '_ebay_browse_search', return_value=listings), \
                 patch.object(server, '_market_median', return_value=None):
-            out = server._ebay_live_options(retailer, '2026 Bluey Sleepytime PNC', coin_id='s3_impressions_pnc_sleepytime')
+            out = server._ebay_live_options(retailer, '2026 Bluey Sleepytime PNC', coin_id='76604949')
         # Affiliate tracking parameters are appended to the item URL; compare the item itself.
         self.assertEqual([o['url'].split('?')[0] for o in out], ['https://www.ebay.com.au/itm/111000000002'])

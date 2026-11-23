@@ -206,14 +206,14 @@ COINS = [
     {'id': 's3_folder_chase', 'ebay_kw': '2026 $2 Bluey folder tube set coloured sleepytime', 'search': '2026 $2 Bluey folder tube set coloured sleepytime'},
     # 2026 Impressions Release 1 (Australia Post). Without these entries the
     # buy-options endpoint answers "Unknown coinId" for the Where to Buy panel.
-    {'id': 's3_impressions_2coin_minisheet_boxed5', 'ebay_kw': '2026 Bluey two coin minisheet collection boxed set of 5', 'search': '2026 Bluey two coin minisheet collection boxed set of 5'},
-    {'id': 's3_impressions_pnc_3coin', 'ebay_kw': '2026 Bluey three coin PNC', 'search': '2026 Bluey three coin PNC'},
-    {'id': 's3_impressions_pnc_bluey_1_2', 'ebay_kw': '2026 Bluey $1 and $2 two coin PNC', 'search': '2026 Bluey $1 and $2 two coin PNC'},
-    {'id': 's3_impressions_pnc_bingo_1_2', 'ebay_kw': '2026 Bingo $1 and $2 two coin PNC', 'search': '2026 Bingo $1 and $2 two coin PNC'},
-    {'id': 's3_impressions_heelers_proof_2coin_minisheet', 'ebay_kw': '2026 Heelers Proof 2 coin minisheet collection', 'search': '2026 Heelers Proof 2 coin minisheet collection'},
-    {'id': 's3_impressions_heelers_silver_pnc', 'ebay_kw': '2026 Heelers Silver Proof PNC', 'search': '2026 Heelers Silver Proof PNC'},
-    {'id': 's3_impressions_heelers_proof_pnc', 'ebay_kw': '2026 Heelers Proof PNC', 'search': '2026 Heelers Proof PNC'},
-    {'id': 's3_impressions_pnc_sleepytime', 'ebay_kw': '2026 Bluey Sleepytime PNC', 'search': '2026 Bluey Sleepytime PNC'},
+    {'id': '76604957', 'ebay_kw': '2026 Bluey two coin minisheet collection boxed set of 5', 'search': '2026 Bluey two coin minisheet collection boxed set of 5'},
+    {'id': '76604959', 'ebay_kw': '2026 Bluey three coin PNC', 'search': '2026 Bluey three coin PNC'},
+    {'id': '76604956', 'ebay_kw': '2026 Bluey $1 and $2 two coin PNC', 'search': '2026 Bluey $1 and $2 two coin PNC'},
+    {'id': '76605600', 'ebay_kw': '2026 Bingo $1 and $2 two coin PNC', 'search': '2026 Bingo $1 and $2 two coin PNC'},
+    {'id': '76604958', 'ebay_kw': '2026 Heelers Proof 2 coin minisheet collection', 'search': '2026 Heelers Proof 2 coin minisheet collection'},
+    {'id': '76604951', 'ebay_kw': '2026 Heelers Silver Proof PNC', 'search': '2026 Heelers Silver Proof PNC'},
+    {'id': '76604950', 'ebay_kw': '2026 Heelers Proof PNC', 'search': '2026 Heelers Proof PNC'},
+    {'id': '76604949', 'ebay_kw': '2026 Bluey Sleepytime PNC', 'search': '2026 Bluey Sleepytime PNC'},
 
 ]
 COIN_BY_ID = {c['id']: c for c in COINS}
@@ -1528,14 +1528,14 @@ def _dedupe_listings(options):
 
 # 2026 Impressions Release 1 coin products; their search also matches stamp & pin covers.
 _IMPRESSIONS_COIN_IDS = frozenset({
-    's3_impressions_2coin_minisheet_boxed5',
-    's3_impressions_pnc_3coin',
-    's3_impressions_pnc_bluey_1_2',
-    's3_impressions_pnc_bingo_1_2',
-    's3_impressions_heelers_proof_2coin_minisheet',
-    's3_impressions_heelers_silver_pnc',
-    's3_impressions_heelers_proof_pnc',
-    's3_impressions_pnc_sleepytime',
+    '76604957',
+    '76604959',
+    '76604956',
+    '76605600',
+    '76604958',
+    '76604951',
+    '76604950',
+    '76604949',
 })
 
 

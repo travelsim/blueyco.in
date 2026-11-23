@@ -23,7 +23,7 @@ for (; i < html.length; i++) {
 }
 const getCoinCategory = new Function('coin', html.slice(fnStart, i + 1).replace(/^function getCoinCategory\(coin\) \{/, '').replace(/\}$/, ''));
 const out = {};
-for (const coin of COINS) out[coin.id] = getCoinCategory(coin);
+for (const coin of COINS) out[coin.id] = Object.assign({ name: coin.name }, getCoinCategory(coin));
 process.stdout.write(JSON.stringify(out));
 """
 
@@ -41,7 +41,8 @@ class TestCategoryHints(unittest.TestCase):
         for coin_id, cat in self.cats.items():
             if cat.get('type') != 'colour':
                 continue
-            is_proof = 'proof' in coin_id or 'silv' in coin_id
+            # Match the product name: AusPost-number ids carry no finish words.
+            is_proof = 'proof' in cat['name'].lower() or 'silv' in cat['name'].lower()
             with self.subTest(coin=coin_id):
                 if is_proof:
                     self.assertIn('Proof', cat['hint'], cat)
@@ -51,7 +52,7 @@ class TestCategoryHints(unittest.TestCase):
 
     def test_proof_hint_uses_official_finish_terms(self):
         for coin_id, cat in self.cats.items():
-            if cat.get('type') == 'colour' and ('proof' in coin_id or 'silv' in coin_id):
+            if cat.get('type') == 'colour' and ('proof' in cat['name'].lower() or 'silv' in cat['name'].lower()):
                 with self.subTest(coin=coin_id):
                     self.assertEqual(cat['hint'], 'Proof-quality strike with colour print finish.')
 

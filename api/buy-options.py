@@ -66,6 +66,15 @@ MERGED_INTO = {
     's3_granny_privy': 's3_granny',
     's3_rain_privy': 's3_rain',
     's3_sleepytime_privy': 's3_sleepytime',
+    # 2026 Impressions coins were renamed to their AusPost product numbers; old ids still resolve.
+    's3_impressions_pnc_sleepytime': '76604949',
+    's3_impressions_heelers_proof_pnc': '76604950',
+    's3_impressions_heelers_silver_pnc': '76604951',
+    's3_impressions_pnc_bluey_1_2': '76604956',
+    's3_impressions_2coin_minisheet_boxed5': '76604957',
+    's3_impressions_heelers_proof_2coin_minisheet': '76604958',
+    's3_impressions_pnc_3coin': '76604959',
+    's3_impressions_pnc_bingo_1_2': '76605600',
 }
 
 
