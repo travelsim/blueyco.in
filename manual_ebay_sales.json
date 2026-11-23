@@ -4240,6 +4240,20 @@
           "shipping_price": 12.0,
           "source_type": "user_pasted_search",
           "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "Bluey 2024 Australia $1 Fine Silver 0.999 Colour Proof Coin #1151/2650",
+          "sale_price": 1102.7,
+          "currency": "AU",
+          "date_sold": "23 Nov 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0.0,
+          "source_type": "user_imported_csv",
+          "record_status": "Retained",
+          "coin_id": "s1_proof_silver",
+          "listing_id": "batch3-8e71e59e48c4fdf29ffd6365",
+          "batch_id": "sold-listings-batch3-2026-11-23",
+          "seller": "lote8888"
         }
       ],
       "median_price": 1254.35,
@@ -6248,6 +6262,20 @@
           "best_offer": false,
           "record_status": "Retained",
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
+        },
+        {
+          "title": "Australia 2025 $1 Bluey Christmas AlBr Uncirculated Decimal Coin Highly Sorted",
+          "sale_price": 16.54,
+          "currency": "AU",
+          "date_sold": "23 Nov 2026",
+          "buying_format": "auction (4 bids)",
+          "shipping_price": 10.0,
+          "source_type": "user_imported_csv",
+          "record_status": "Retained",
+          "coin_id": "s2_xmas_unc",
+          "listing_id": "batch3-21a49344e66a8c5fc9416228",
+          "batch_id": "sold-listings-batch3-2026-11-23",
+          "seller": "bees-collectables"
         }
       ],
       "median_price": 34.95,
@@ -7906,6 +7934,20 @@
           "best_offer": false,
           "record_status": "Retained",
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
+        },
+        {
+          "title": "2026 Bluey $2 Coloured AlBr Proof Coin Brand New",
+          "sale_price": 220.0,
+          "currency": "AU",
+          "date_sold": "23 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0.0,
+          "source_type": "user_imported_csv",
+          "record_status": "Retained",
+          "coin_id": "s3_proof_ab",
+          "listing_id": "batch3-8e40435c3c532dfec999d923",
+          "batch_id": "sold-listings-batch3-2026-11-23",
+          "seller": "franchise.curios"
         }
       ],
       "median_price": 175.0,
@@ -10173,6 +10215,20 @@
           "best_offer": false,
           "record_status": "Retained",
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
+        },
+        {
+          "title": "Bingo Hooray 2026 Orange Two Dollar Bucks Bluey Coin Blue $2 Australia Color UNC",
+          "sale_price": 5.43,
+          "currency": "AU",
+          "date_sold": "23 Nov 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0.0,
+          "source_type": "user_imported_csv",
+          "record_status": "Retained",
+          "coin_id": "s3_till_bingo",
+          "listing_id": "batch3-77101ea0bf57cd1a25201588",
+          "batch_id": "sold-listings-batch3-2026-11-23",
+          "seller": "pardoart"
         }
       ],
       "median_price": 14.99,
@@ -10351,6 +10407,20 @@
           "best_offer": false,
           "record_status": "Retained",
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
+        },
+        {
+          "title": "Bluey For Real Life 2026 Two Dollar Bucks Coin Bingo Blue $2 Color Australia UNC",
+          "sale_price": 5.43,
+          "currency": "AU",
+          "date_sold": "23 Nov 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0.0,
+          "source_type": "user_imported_csv",
+          "record_status": "Retained",
+          "coin_id": "s3_till_bluey",
+          "listing_id": "batch3-5bbf29c68989f35a5a347a23",
+          "batch_id": "sold-listings-batch3-2026-11-23",
+          "seller": "pardoart"
         }
       ],
       "median_price": 8.0,
@@ -12071,6 +12141,20 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 31 Aug 2026\n⚪️UNC 2026 BLUEY CAMPING -$2 TWO DOLLAR CARDED COIN UNCIRCULATED⭐️PRIVY MARK\nOpens in a new window or tab\nAU $33.00\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\n[seller] 100% positive (4.9K)\nderosnopS"
+        },
+        {
+          "title": "2026 BLUEY CAMPING $2 Coin. 1x AUSTRALIAN Two Dollar Non-Colour Coin",
+          "sale_price": 8.5,
+          "currency": "AU",
+          "date_sold": "23 Nov 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 1.85,
+          "source_type": "user_imported_csv",
+          "record_status": "Retained",
+          "coin_id": "s3_camping",
+          "listing_id": "batch3-687fe0264b0a801cb0ea3647",
+          "batch_id": "sold-listings-batch3-2026-11-23",
+          "seller": "jono.lisa"
         }
       ],
       "median_price": 24.02,
@@ -12163,6 +12247,20 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 5 Sep 2026\n2026 Australian Bluey $2 Privy Mark Uncirculated Coin - Baby Race\nOpens in a new window or tab\nAU $29.95\nBuy It Now\n+AU $7.95 delivery by Mon 12 Oct\nView similar active items\nSell one like this\n[seller] 99.8% positive (60.5K)\nderosnopS"
+        },
+        {
+          "title": "2026 BLUEY BABY RACE $2 Coin. 1x AUSTRALIAN Two Dollar Non-Colour Coin",
+          "sale_price": 8.5,
+          "currency": "AU",
+          "date_sold": "23 Nov 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 1.85,
+          "source_type": "user_imported_csv",
+          "record_status": "Retained",
+          "coin_id": "s3_babyrace",
+          "listing_id": "batch3-6b5fbfcc3eafb120a99adf6a",
+          "batch_id": "sold-listings-batch3-2026-11-23",
+          "seller": "jono.lisa"
         }
       ],
       "median_price": 29.95,
@@ -12255,6 +12353,20 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 22 Sep 2026\n⚪️UNC 2026 BLUEY GRANNYMOBILE-$2 TWO DOLLAR CARDED COIN UNCIRCULATED⭐️PRIVY MARK\nOpens in a new window or tab\nAU $33.00\nBuy It Now\nFree delivery\nView similar active items\nSell one like this\n[seller] 100% positive (4.9K)\nderosnopS"
+        },
+        {
+          "title": "2026 BLUEY Granny Mobile $2 Coin. 1x AUSTRALIAN Two Dollar Non-Colour Coin",
+          "sale_price": 8.39,
+          "currency": "AU",
+          "date_sold": "23 Nov 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 1.85,
+          "source_type": "user_imported_csv",
+          "record_status": "Retained",
+          "coin_id": "s3_granny",
+          "listing_id": "batch3-c13cea496f17e4b682f383e9",
+          "batch_id": "sold-listings-batch3-2026-11-23",
+          "seller": "jono.lisa"
         }
       ],
       "median_price": 33.0,
@@ -12327,6 +12439,20 @@
           "record_status": "Retained",
           "record_reason": "Strict title match; displayed sold price",
           "raw_listing_text": "Sold 14 Sep 2026\nBluey 2026 Rain coin in card $2 privy mark 🪙 unc RAM Australia\nOpens in a new window or tab\nAU $23.49\n1 bid\n+AU $10.95 delivery\nView similar active items\nSell one like this\n[seller] 100% positive (943)\nderosnopS"
+        },
+        {
+          "title": "2026 BLUEY RAINING $2 Coin. 1x AUSTRALIAN Two Dollar Non-Colour Coin",
+          "sale_price": 8.9,
+          "currency": "AU",
+          "date_sold": "23 Nov 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 1.85,
+          "source_type": "user_imported_csv",
+          "record_status": "Retained",
+          "coin_id": "s3_rain",
+          "listing_id": "batch3-c1ffe1011eb54526a6558b0d",
+          "batch_id": "sold-listings-batch3-2026-11-23",
+          "seller": "jono.lisa"
         }
       ],
       "median_price": 28.24,
