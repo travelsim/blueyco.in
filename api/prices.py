@@ -296,6 +296,15 @@ COINS = [
     # so they could never show a price or a sold record.
     {'id': 's3_folder_opened', 'ebay_kw': '2026 $2 Bluey folder tube set opened', 'search': '2026 $2 Bluey folder tube set opened'},
     {'id': 's3_folder_chase', 'ebay_kw': '2026 $2 Bluey folder tube set coloured sleepytime', 'search': '2026 $2 Bluey folder tube set coloured sleepytime'},
+    # 2026 Impressions Release 1 (Australia Post); mirrors server.py COINS.
+    {'id': 's3_impressions_2coin_minisheet_boxed5', 'ebay_kw': '2026 Bluey two coin minisheet collection boxed set of 5', 'search': '2026 Bluey two coin minisheet collection boxed set of 5'},
+    {'id': 's3_impressions_pnc_3coin', 'ebay_kw': '2026 Bluey three coin PNC', 'search': '2026 Bluey three coin PNC'},
+    {'id': 's3_impressions_pnc_bluey_1_2', 'ebay_kw': '2026 Bluey $1 and $2 two coin PNC', 'search': '2026 Bluey $1 and $2 two coin PNC'},
+    {'id': 's3_impressions_pnc_bingo_1_2', 'ebay_kw': '2026 Bingo $1 and $2 two coin PNC', 'search': '2026 Bingo $1 and $2 two coin PNC'},
+    {'id': 's3_impressions_heelers_proof_2coin_minisheet', 'ebay_kw': '2026 Heelers Proof 2 coin minisheet collection', 'search': '2026 Heelers Proof 2 coin minisheet collection'},
+    {'id': 's3_impressions_heelers_silver_pnc', 'ebay_kw': '2026 Heelers Silver Proof PNC', 'search': '2026 Heelers Silver Proof PNC'},
+    {'id': 's3_impressions_heelers_proof_pnc', 'ebay_kw': '2026 Heelers Proof PNC', 'search': '2026 Heelers Proof PNC'},
+    {'id': 's3_impressions_pnc_sleepytime', 'ebay_kw': '2026 Bluey Sleepytime PNC', 'search': '2026 Bluey Sleepytime PNC'},
     # Series 1 tube sets — these ship in the frontend catalogue and in
     # server.py; they were missing here so they never received live prices.
 ]

@@ -4232,7 +4232,8 @@ function buildCard(coin) {
         `${saleCount} matched sold ${saleCount === 1 ? 'result' : 'results'} · checked ${checked}`));
     }
   } else if (asking) {
-    priceCard.append(el('div', 'metric-footnote', asking.lowest == null ? 'No Buy It Now listing yet' : 'Lowest live Buy It Now · not sold'));
+    const askingChecked = asking.captured ? ` · checked ${asking.captured}` : '';
+    priceCard.append(el('div', 'metric-footnote', asking.lowest == null ? 'No Buy It Now listing yet' : `Live Buy It Now${askingChecked}`));
   } else if (guide == null && coin.mintPrice != null) {
     priceCard.append(el('div', 'metric-footnote', 'Issue price baseline estimate'));
   }
