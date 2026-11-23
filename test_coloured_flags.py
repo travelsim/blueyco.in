@@ -34,11 +34,6 @@ NOT_COLOURED = [
     's1_10_coin_folder_opened',
     # 2026 sealed/opened tube & folder sets are reviewed COLOURED below:
     # every set includes the two coloured $2 till coins.
-    's3_rain_privy',
-    's3_sleepytime_privy',
-    's3_camping_privy',
-    's3_babyrace_privy',
-    's3_granny_privy',
 ]
 
 # Products that include a coloured coin without "coloured" in the name. Each was
