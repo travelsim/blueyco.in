@@ -35,6 +35,8 @@ class TestCatalogIntegrity(unittest.TestCase):
             cid = m_id.group(1)
             self.assertIn('marketLow:', line, f'{cid} missing marketLow')
             self.assertIn('marketHigh:', line, f'{cid} missing marketHigh')
+            if 'askingEstimate:' in line:
+                continue  # Impressions 2026: lowest Buy It Now estimate, no mintPrice fallback
             if 'marketLow: null' in line or 'marketHigh: null' in line:
                 self.assertNotIn('mintPrice: null', line, f'{cid} has no guide range and no issue price')
                 self.assertRegex(line, r'mintPrice:\s*\d', f'{cid} has no guide range and no issue price')
