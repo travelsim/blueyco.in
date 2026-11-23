@@ -613,5 +613,45 @@
       "url": "https://auspost.com.au/shop/product/bluey-2-coin-and-minisheet-collection-limited-edition-boxed-set-of-5-76604957",
       "status": "unverified: AP code 76604957 and this URL are from James, not checked against the live AP page (403 to our browser)"
     }
+  },
+  "s3_impressions_heelers_proof_2coin_minisheet": {
+    "ebay": {
+      "price": null,
+      "available": true,
+      "url": "https://www.ebay.com.au/sch/i.html?_nkw=Heelers+Proof+2-Coin+Minisheet+Collection+2026&LH_BIN=1&_sop=15",
+      "status": "search link, item URL pending"
+    }
+  },
+  "s3_impressions_heelers_silver_pnc": {
+    "ebay": {
+      "price": null,
+      "available": true,
+      "url": "https://www.ebay.com.au/sch/i.html?_nkw=Heelers+Silver+Proof+Limited+Edition+PNC+2026&LH_BIN=1&_sop=15",
+      "status": "search link, item URL pending"
+    }
+  },
+  "s3_impressions_pnc_sleepytime": {
+    "ebay": {
+      "price": null,
+      "available": true,
+      "url": "https://www.ebay.com.au/sch/i.html?_nkw=Bluey+Sleepytime+Limited+Edition+PNC+2026&LH_BIN=1&_sop=15",
+      "status": "search link, item URL pending"
+    }
+  },
+  "s3_impressions_heelers_bronze_proof_pnc": {
+    "ebay": {
+      "price": null,
+      "available": true,
+      "url": "https://www.ebay.com.au/sch/i.html?_nkw=Heelers+2026+Bronze+Proof+Coin+Limited+Edition+PNC&LH_BIN=1&_sop=15",
+      "status": "search link, item URL pending"
+    }
+  },
+  "s3_impressions_heelers_proof_pnc": {
+    "ebay": {
+      "price": null,
+      "available": true,
+      "url": "https://www.ebay.com.au/sch/i.html?_nkw=Heelers+Proof+Limited+Edition+PNC+2026&LH_BIN=1&_sop=15",
+      "status": "search link, item URL pending"
+    }
   }
 }

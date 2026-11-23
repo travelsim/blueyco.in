@@ -35,6 +35,11 @@ class TestCatalogIntegrity(unittest.TestCase):
             cid = m_id.group(1)
             self.assertIn('marketLow:', line, f'{cid} missing marketLow')
             self.assertIn('marketHigh:', line, f'{cid} missing marketHigh')
+            if 'askingEstimate:' in line:
+                # Impressions 2026 rule: the estimate is the lowest Buy It Now
+                # price (or null when none exists), never a guide-range fallback.
+                self.assertRegex(line, r'askingEstimate:\s*\{\s*lowest:\s*(\d|null)', f'{cid} estimate is not a Buy It Now price')
+                continue
             if 'marketLow: null' in line or 'marketHigh: null' in line:
                 self.assertNotIn('mintPrice: null', line, f'{cid} has no guide range and no issue price')
                 self.assertRegex(line, r'mintPrice:\s*\d', f'{cid} has no guide range and no issue price')
@@ -80,13 +85,9 @@ class TestCatalogIntegrity(unittest.TestCase):
         by_id = _coins_by_id(raw)
         # 11956: $2 folder & five-coin set (15,000 produced, unlimited mintage)
         self.assertRegex(by_id['s3_folder'], r"productCode:\s*'11956'.*issueQuantity:\s*15000")
-        # 12001/03/05/07/09: privy cards (20,000 produced, 20,500 mintage)
-        for cid, code in (('s3_rain_privy', '12001'), ('s3_sleepytime_privy', '12003'),
-                          ('s3_camping_privy', '12005'), ('s3_babyrace_privy', '12007'),
-                          ('s3_granny_privy', '12009')):
-            with self.subTest(cid=cid):
-                self.assertRegex(by_id[cid], r"productCode:\s*'" + code + r"'")
-                self.assertRegex(by_id[cid], r"mintage:\s*20500.*issueQuantity:\s*20000")
+        # Privy twins of the 2026 $2 cards (12001/03/05/07/09) were removed from
+        # the catalogue as aliases; api/buy-options.py MERGED_INTO serves them
+        # from the base products, so there is no catalogue line left to check.
         # 11997: AlBr proof (9,800 of 10,500); 11996: silver proof (10,800 of 12,000)
         self.assertRegex(by_id['s3_proof_ab'], r"mintage:\s*10500.*productCode:\s*'11997'.*issueQuantity:\s*9800")
         self.assertRegex(by_id['s3_proof_silv'], r"mintage:\s*12000.*productCode:\s*'11996'.*issueQuantity:\s*10800")
