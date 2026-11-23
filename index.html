@@ -4134,9 +4134,12 @@ function buildCard(coin) {
   const hasMedian = Number.isFinite(median) && median > 0;
   const guide = _guidePrice(coin);
   const refPrice = hasMedian ? median : guide;
+  // Impressions 2026 entries carry askingEstimate (lowest Buy It Now, not sold); RRP is a sold-out reference only.
+  const asking = 'askingEstimate' in coin ? (coin.askingEstimate || { lowest: null }) : null;
+  const askingPremium = (!hasMedian && asking && asking.lowest != null && coin.mintPrice) ? calcPremium(asking.lowest, coin.mintPrice) : null;
   const premium = hasMedian ? calcPremium(median, coin.mintPrice) : null;
   const guidePremium = (!hasMedian && guide && coin.mintPrice) ? calcPremium(guide, coin.mintPrice) : null;
-  const displayPremium = coin.id === 's2_xmas_stamp_pack' && !hasMedian ? null : (premium != null ? premium : guidePremium);
+  const displayPremium = coin.id === 's2_xmas_stamp_pack' && !hasMedian ? null : (premium != null ? premium : (askingPremium != null ? askingPremium : guidePremium));
   const premiumValue = displayPremium == null ? null : Number(displayPremium);
 
   const card = el('div', 'coin-card');
@@ -4198,15 +4201,13 @@ function buildCard(coin) {
   const rarity = mintageRarity(coin);
   const metrics = el('div', 'coin-metrics');
   const priceCard = el('section', 'metric-card metric-price');
-  // Impressions 2026 entries carry askingEstimate (lowest Buy It Now, not sold); RRP is a sold-out reference only.
-  const asking = 'askingEstimate' in coin ? (coin.askingEstimate || { lowest: null }) : null;
   priceCard.setAttribute('aria-label', coin.id === 's2_xmas_stamp_pack' && !hasMedian
-    ? 'No sold price yet' : asking ? 'Lowest Buy It Now asking price, not sold' : ((hasMedian || guide != null) && coin.mintPrice != null
+    ? 'No sold price yet' : ((hasMedian || guide != null || asking) && coin.mintPrice != null
     ? 'Estimated value and gain from issue price' : 'Estimated value'));
   const noSoldStampPrice = coin.id === 's2_xmas_stamp_pack' && !hasMedian;
   const priceHeading = noSoldStampPrice ? 'No sold price yet' : 'Estimated value';
-  const kickerText = asking ? 'Lowest Buy It Now asking price, not sold' : priceHeading;
-  const priceValue = noSoldStampPrice ? null : asking ? asking.lowest : (hasMedian ? median : (guide != null ? guide : coin.mintPrice));
+  const kickerText = priceHeading;
+  const priceValue = noSoldStampPrice ? null : (!hasMedian && asking) ? asking.lowest : (hasMedian ? median : (guide != null ? guide : coin.mintPrice));
   priceCard.append(el('div', 'metric-kicker', kickerText));
   priceCard.append(el('div', 'metric-amount', priceValue == null ? '—' : formatAUD(priceValue)));
   if ((hasMedian || guide != null) && coin.mintPrice != null) {
@@ -4231,16 +4232,7 @@ function buildCard(coin) {
         `${saleCount} matched sold ${saleCount === 1 ? 'result' : 'results'} · checked ${checked}`));
     }
   } else if (asking) {
-    if (asking.lowest == null) {
-      priceCard.append(el('div', 'metric-footnote', 'No Buy It Now listing yet'));
-    } else {
-      priceCard.append(el('div', 'metric-footnote', `Seller: ${asking.seller}`));
-      priceCard.append(el('div', 'metric-footnote', `Delivery: ${asking.delivery > 0 ? '+' + formatAUD(asking.delivery) + ' (seller stated)' : 'free (seller stated)'}`));
-      priceCard.append(el('div', 'metric-footnote', `Captured eBay AU listing, ${asking.captured}`));
-    }
-    if (coin.rrpAP != null) {
-      priceCard.append(el('div', 'metric-footnote', `AP RRP ${formatAUD(coin.rrpAP)} · sold out (reference only)`));
-    }
+    priceCard.append(el('div', 'metric-footnote', asking.lowest == null ? 'No Buy It Now listing yet' : 'Lowest live Buy It Now · not sold'));
   } else if (guide == null && coin.mintPrice != null) {
     priceCard.append(el('div', 'metric-footnote', 'Issue price baseline estimate'));
   }
