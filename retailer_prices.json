@@ -632,18 +632,18 @@
   },
   "s3_impressions_pnc_bluey_1_2": {
     "ebay": {
-      "price": null,
-      "available": true,
-      "url": "https://www.ebay.com.au/sch/i.html?_nkw=Bluey+Limited+Edition+Two+Coin+PNC+2026&LH_BIN=1&_sop=15",
-      "status": "search link, item URL pending"
+      "price": 239.95,
+      "available": false,
+      "url": "https://www.ebay.com.au/itm/117536837515",
+      "status": "sold 22 Nov 2026, incl. postage (item page read)"
     }
   },
   "s3_impressions_pnc_bingo_1_2": {
     "ebay": {
-      "price": null,
-      "available": true,
-      "url": "https://www.ebay.com.au/sch/i.html?_nkw=Bingo+Limited+Edition+Two+Coin+PNC+2026&LH_BIN=1&_sop=15",
-      "status": "search link, item URL pending"
+      "price": 199.95,
+      "available": false,
+      "url": "https://www.ebay.com.au/itm/117536821495",
+      "status": "sold 22 Nov 2026, incl. postage (item page read)"
     }
   },
   "s3_impressions_heelers_proof_2coin_minisheet": {
@@ -656,18 +656,18 @@
   },
   "s3_impressions_heelers_silver_pnc": {
     "ebay": {
-      "price": null,
+      "price": 349.95,
       "available": true,
-      "url": "https://www.ebay.com.au/sch/i.html?_nkw=Heelers+Silver+Proof+Limited+Edition+PNC+2026&LH_BIN=1&_sop=15",
-      "status": "search link, item URL pending"
+      "url": "https://www.ebay.com.au/itm/117536870456",
+      "status": "live, free Parcel Post (item page read 23 Nov 2026)"
     }
   },
   "s3_impressions_pnc_sleepytime": {
     "ebay": {
-      "price": null,
+      "price": 117.30,
       "available": true,
-      "url": "https://www.ebay.com.au/sch/i.html?_nkw=Bluey+Sleepytime+Limited+Edition+PNC+2026&LH_BIN=1&_sop=15",
-      "status": "search link, item URL pending"
+      "url": "https://www.ebay.com.au/itm/860168676720",
+      "status": "live, +$15.00 Registered Post (item page read 23 Nov 2026)"
     }
   },
   "s3_impressions_heelers_proof_pnc": {

@@ -13268,6 +13268,70 @@
       "average_price": 190.25,
       "min_price": 150.0,
       "max_price": 249.0
+    },
+    "s3_impressions_pnc_bluey_1_2": {
+      "source_type": "item_page_read",
+      "currency": "AU",
+      "fetchedAt": "2026-11-23",
+      "query": "eBay item 117536837515",
+      "response_url": "https://www.ebay.com.au/itm/117536837515",
+      "results": 1,
+      "total_results": 1,
+      "matched_results": 1,
+      "average_price": 239.95,
+      "median_price": 239.95,
+      "min_price": 239.95,
+      "max_price": 239.95,
+      "import_metadata": {
+        "import_source": "searchify-item-page-2026-11-23",
+        "shipping": "included in sale price",
+        "date_note": "eBay banner reads sold Sun 22 Nov 12:53 PM; recorded as 22 Nov 2026. A 23 Nov 2026 date conflict was flagged."
+      },
+      "products": [
+        {
+          "title": "2026 Bluey: Bluey $1 and $2 Limited-Edition 2-Coin PNC 150 ONLY",
+          "sale_price": 239.95,
+          "currency": "AU",
+          "date_sold": "22 Nov 2026",
+          "shipping_price": 0.0,
+          "source_type": "item_page_read",
+          "record_status": "Retained",
+          "record_reason": "Sold eBay AU listing read from item page; price includes postage",
+          "item_id": "117536837515"
+        }
+      ]
+    },
+    "s3_impressions_pnc_bingo_1_2": {
+      "source_type": "item_page_read",
+      "currency": "AU",
+      "fetchedAt": "2026-11-23",
+      "query": "eBay item 117536821495",
+      "response_url": "https://www.ebay.com.au/itm/117536821495",
+      "results": 1,
+      "total_results": 1,
+      "matched_results": 1,
+      "average_price": 199.95,
+      "median_price": 199.95,
+      "min_price": 199.95,
+      "max_price": 199.95,
+      "import_metadata": {
+        "import_source": "searchify-item-page-2026-11-23",
+        "shipping": "included in sale price",
+        "date_note": "eBay banner reads sold Sun 22 Nov 12:53 PM; recorded as 22 Nov 2026. A 23 Nov 2026 date conflict was flagged."
+      },
+      "products": [
+        {
+          "title": "2026 Bingo $1 and $2 Limited-Edition 2-Coin PNC 150 ONLY",
+          "sale_price": 199.95,
+          "currency": "AU",
+          "date_sold": "22 Nov 2026",
+          "shipping_price": 0.0,
+          "source_type": "item_page_read",
+          "record_status": "Retained",
+          "record_reason": "Sold eBay AU listing read from item page; price includes postage",
+          "item_id": "117536821495"
+        }
+      ]
     }
   },
   "imports": [
