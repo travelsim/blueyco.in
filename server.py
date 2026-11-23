@@ -1526,6 +1526,19 @@ def _dedupe_listings(options):
     return unique
 
 
+# 2026 Impressions Release 1 coin products; their search also matches stamp & pin covers.
+_IMPRESSIONS_COIN_IDS = frozenset({
+    's3_impressions_2coin_minisheet_boxed5',
+    's3_impressions_pnc_3coin',
+    's3_impressions_pnc_bluey_1_2',
+    's3_impressions_pnc_bingo_1_2',
+    's3_impressions_heelers_proof_2coin_minisheet',
+    's3_impressions_heelers_silver_pnc',
+    's3_impressions_heelers_proof_pnc',
+    's3_impressions_pnc_sleepytime',
+})
+
+
 def _ebay_live_options(retailer, keywords, coin_id=''):
     """
     Fetch active eBay AU Buy It Now listings from eBay's Browse API.
@@ -1533,6 +1546,10 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
     real-time-ebay host; trying to reuse it there produced HTTP 404s. If
     Browse API credentials are unavailable, return an affiliate search link.
     """
+    # Impressions PNC titles usually omit the year, which the year gate would
+    # reject; the stamp & pin exclusion below keeps the covers out instead.
+    if coin_id in _IMPRESSIONS_COIN_IDS:
+        keywords = re.sub(r'20\d{2}', ' ', keywords).strip()
     # Cheapest-first over a wide page, then keep only titles that really are
     # this coin; the 5 cheapest raw results are usually other products.
     # The Browse 'q' parameter is capped in length, so the exclusion list from
@@ -1552,6 +1569,9 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
             if not _coinxchange_title_matches(title, browse_kw):
                 continue
             title_tokens = set(re.findall(r'[a-z0-9]+', str(title).lower()))
+            # 2026 Impressions coins: 'PNC' also matches the stamp & pin covers.
+            if coin_id in _IMPRESSIONS_COIN_IDS and title_tokens & {'stamp', 'pin'}:
+                continue
             if not all(set(group) & title_tokens for group in required):
                 continue
             # A listing shows once even when several search variants find it.

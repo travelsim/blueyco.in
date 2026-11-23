@@ -60,3 +60,17 @@ class DuplicateListingTests(unittest.TestCase):
                 patch.object(buy, '_scrape', return_value=[item, same, other]):
             options, _ = buy.get_buy_options('test', 'test')
         self.assertEqual([o['price'] for o in options], [24.95, 29.95])
+
+
+class ImpressionsStampCoverExclusionTests(unittest.TestCase):
+    def test_stamp_and_pin_covers_are_not_listed_as_the_coin_pnc(self):
+        retailer = {'id': 'ebay', 'name': 'eBay AU', 'type': 'ebay_live', 'search_url': 'https://example.com/?q={q}'}
+        listings = [
+            {'title': '2026 Australia PNC Bluey Sleepytime Stamp & Pin Cover (Individually Numbered)', 'price': 69.25, 'postage': 8.0, 'url': 'https://www.ebay.com.au/itm/111000000001'},
+            {'title': 'Bluey: Sleepytime Limited-Edition PNC Only 3.5k Made', 'price': 149.0, 'postage': 9.0, 'url': 'https://www.ebay.com.au/itm/111000000002'},
+        ]
+        with patch.object(server, '_ebay_browse_search', return_value=listings), \
+                patch.object(server, '_market_median', return_value=None):
+            out = server._ebay_live_options(retailer, '2026 Bluey Sleepytime PNC', coin_id='s3_impressions_pnc_sleepytime')
+        # Affiliate tracking parameters are appended to the item URL; compare the item itself.
+        self.assertEqual([o['url'].split('?')[0] for o in out], ['https://www.ebay.com.au/itm/111000000002'])
