@@ -616,10 +616,10 @@
   },
   "s3_impressions_2coin_minisheet_boxed5": {
     "ebay": {
-      "price": null,
+      "price": 450.0,
       "available": true,
-      "url": "https://www.ebay.com.au/sch/i.html?_nkw=Bluey+Two+Coin+Minisheet+Collection+Boxed+Set+of+5+2026&LH_BIN=1&_sop=15",
-      "status": "search link, item URL pending"
+      "url": "https://www.ebay.com.au/itm/377668768205",
+      "status": "live presale, +$13.44 delivery (search card read 23 Nov 2026; item page not opened)"
     }
   },
   "s3_impressions_pnc_3coin": {
@@ -656,10 +656,10 @@
   },
   "s3_impressions_heelers_silver_pnc": {
     "ebay": {
-      "price": 349.95,
+      "price": 299.0,
       "available": true,
-      "url": "https://www.ebay.com.au/itm/117536870456",
-      "status": "live, free Parcel Post (item page read 23 Nov 2026)"
+      "url": "https://www.ebay.com.au/sch/i.html?_nkw=Heelers+Silver+Proof+Limited+Edition+PNC+2026&LH_BIN=1&_sop=15",
+      "status": "lowest live listing AU$299.00 by mic754616, +$8.26 (search card read 23 Nov 2026); item URL pending"
     }
   },
   "s3_impressions_pnc_sleepytime": {
