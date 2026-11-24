@@ -1247,7 +1247,7 @@ def _ebay_postage(item):
 
 
 def _market_median(coin_id):
-    """Sold-item median for a coin from manual_ebay_sales.json or cache (excludes postage).
+    """Sold-item median for a coin from manual_ebay_sales.json or cache (includes postage). Delivered total = sale_price + shipping_price. The stored median_price is item-price only and is not returned directly; the median is recomputed from delivered totals.
 
     Excludes multi-coin bundles, sets, lots, and price outliers so the median reflects
     genuine individual coin sales, eliminating the set/bundle skew (e.g. median ~$12.95
@@ -1262,9 +1262,7 @@ def _market_median(coin_id):
     except (OSError, json.JSONDecodeError, AttributeError):
         entry = {}
 
-    median = entry.get('median_price')
-    if isinstance(median, (int, float)) and median > 0 and (entry.get('matched_results') or 0) >= BARGAIN_MIN_SALES:
-        return float(median)
+    # stored median_price is item-price only (excludes postage) - not used when including postage
 
     coin = COIN_BY_ID.get(coin_id)
     if not coin:
@@ -1295,7 +1293,9 @@ def _market_median(coin_id):
     for p in candidates:
         if not isinstance(p, dict):
             continue
-        price = _parse_price(p.get('sale_price') or p.get('price'))
+        _item = _parse_price(p.get('sale_price') or p.get('price'))
+        _ship = _parse_price(p.get('shipping_price') or p.get('postage') or 0) or 0
+        price = round(_item + _ship, 2) if _item else None
         if not price or price <= 0:
             continue
         title = p.get('title') or ''
@@ -1339,7 +1339,7 @@ def _market_median(coin_id):
 def _deal_fields(item_price, postage, market_median):
     """Landed cost and discount against the market median.
 
-    The median excludes postage, so a bargain needs known postage and a
+    The median includes postage (delivered total), so a bargain needs known postage and a
     landed price at least BARGAIN_DISCOUNT_PCT below it. Unknown postage gives
     no bargain rather than a guess.
     """
