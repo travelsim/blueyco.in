@@ -4883,8 +4883,8 @@ function _allSoldRecords(entry) {
   const ebay = (entry && entry.ebay) || {};
   const cx = (entry && entry.coinxchange) || {};
   const out = [];
-  [ebay.products, ebay.historical_products].forEach(list => (list || []).forEach(p => out.push(_normSold(p, 'eBay AU'))));
-  [cx.products, cx.historical_products].forEach(list => (list || []).forEach(p => out.push(_normSold(p, 'CoinXchange'))));
+  [ebay.products, ebay.historical_products, ebay.outliers, ebay.historical_outliers].forEach(list => (list || []).forEach(p => out.push(_normSold(p, 'eBay AU'))));
+  [cx.products, cx.historical_products, cx.outliers, cx.historical_outliers].forEach(list => (list || []).forEach(p => out.push(_normSold(p, 'CoinXchange'))));
   // Every verified published sale, regardless of outlier status (Recent
   // Sales display). Market Value keeps outlier filtering via
   // _currentSoldRecords.

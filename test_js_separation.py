@@ -47,6 +47,34 @@ def extract_functions(source):
     return found
 
 
+NODE_OUTLIER_HARNESS = """
+const day = 24 * 60 * 60 * 1000;
+const now = Date.now();
+const _normSold = (p, source) => ({price: p.sale_price,
+  soldAt: Date.parse(p.date_sold), title: p.title, source: source});
+const _validSold = (r) => Number.isFinite(r.price) && r.soldAt > 0;
+const _sourceIsFresh = () => true;
+const _isClientTitleMismatched = () => false;
+const _isSetCatalogItem = () => false;
+const coin = {id: 't'};
+const mk = (price, daysAgo, lid) => ({sale_price: price,
+  date_sold: new Date(now - daysAgo * day).toISOString(),
+  title: 'T', listing_id: lid});
+const entry = {ebay: {
+  products: [mk(50, 1, 'p1'), mk(51, 2, 'p2')],
+  historical_products: [mk(52, 100, 'h1')],
+  outliers: [mk(500, 3, 'o1')],
+  historical_outliers: [mk(400, 101, 'ho1')],
+}, coinxchange: {}};
+const all = _allSoldRecords(entry, coin);
+const current = _currentSoldRecords(entry, coin);
+console.log(JSON.stringify({
+  all: all.map(r => r.price).sort((a, b) => a - b),
+  current: current.map(r => r.price).sort((a, b) => a - b),
+}));
+""";
+
+
 NODE_HARNESS = """
 const day = 24 * 60 * 60 * 1000;
 const now = Date.now();
@@ -88,6 +116,21 @@ class TestRecentVsMarketSeparation(unittest.TestCase):
         result = json.loads(proc.stdout.strip().splitlines()[-1])
         self.assertEqual(result["all"], [50, 51, 52, 53, 54, 200])
         self.assertEqual(result["current"], [50, 51, 52, 53, 54])
+
+    def test_recent_sales_include_outliers_market_value_excludes(self):
+        source = INDEX.read_text(encoding="utf-8")
+        funcs = extract_functions(source)
+        script = "\n".join(funcs[name] for name in WANTED) + NODE_OUTLIER_HARNESS
+        with tempfile.NamedTemporaryFile("w", suffix=".js",
+                                         delete=False) as handle:
+            handle.write(script)
+            path = handle.name
+        proc = subprocess.run(["node", path], capture_output=True, text=True,
+                              timeout=60)
+        self.assertEqual(proc.returncode, 0, proc.stderr[-2000:])
+        result = json.loads(proc.stdout.strip().splitlines()[-1])
+        self.assertEqual(result["all"], [50, 51, 52, 400, 500])
+        self.assertEqual(result["current"], [50, 51])
 
     def test_current_still_applies_client_outlier_filter(self):
         source = INDEX.read_text(encoding="utf-8")
