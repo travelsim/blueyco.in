@@ -290,12 +290,15 @@ class TestReviewDecisions(unittest.TestCase):
         self.assertEqual(len(recs), 1)
         self.assertNotIn("value_eligible", recs[0])
 
-    def test_unknown_decision_excluded_fail_closed(self):
-        rows = [mrow("p1", "A", 10.0, "2026-11-21", "a")]
-        coins, manifest = self._gen(rows, dmap(("a", "keep-out")))
+    def test_unknown_decision_queued_hidden_fail_closed(self):
+        rows = [mrow("p1", "A", 10.0, "2026-11-21", "a"),
+                mrow("p1", "B", 11.0, "2026-11-21", "b")]
+        coins, manifest = self._gen(
+            rows, dmap(("a", "keep-out"), ("b", "hide-everything")))
         by_lid = {m["listing_id"]: m for m in manifest["rows"]}
-        self.assertEqual(by_lid["a"]["disposition"], "excluded")
-        self.assertIn("fail closed", by_lid["a"]["reason"])
+        for lid in ("a", "b"):
+            self.assertEqual(by_lid[lid]["disposition"], "pending-review")
+            self.assertIn("fail closed", by_lid[lid]["reason"])
         self.assertEqual(coins, {})
 
     def test_publication_hold_outranks_reviewer_approval(self):

@@ -1,6 +1,6 @@
 {
-  "batch_id": "ledger-publish-20261124-220355",
-  "generated_at": "2026-11-24T22:03:55",
+  "batch_id": "ledger-publish-20261124-222417",
+  "generated_at": "2026-11-24T22:24:17",
   "total_input": 1035,
   "rows": [
     {
@@ -90,8 +90,8 @@
       "listing_id": "306783817343",
       "product_id": "s1_bluey",
       "review_decision": "keep-out",
-      "disposition": "excluded",
-      "reason": "reviewer keep-out (unmapped, fail closed)"
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "137174296905",
@@ -130,8 +130,8 @@
       "listing_id": "306771230620",
       "product_id": "s1_bluey",
       "review_decision": "keep-out",
-      "disposition": "excluded",
-      "reason": "reviewer keep-out (unmapped, fail closed)"
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "186754265188",
