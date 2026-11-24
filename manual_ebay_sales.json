@@ -16248,8 +16248,77 @@
     }
    ]
   },
+  "76604950": {
+   "products": [
+    {
+     "coin_id": "76604950",
+     "title": "PRESALE 2026 Bluey The Heelers $2 Coloured Proof PNC Limited Edition /200",
+     "sale_price": 219.99,
+     "currency": "AU",
+     "date_sold": "24 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-d6869033f29f9e19"
+    },
+    {
+     "coin_id": "76604950",
+     "title": "pre-order 2026 Heelers $2 proof PNC /200",
+     "sale_price": 210.0,
+     "currency": "AU",
+     "date_sold": "24 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "batch4-d1fe9e8f8570bcda8046e574"
+    },
+    {
+     "coin_id": "76604950",
+     "title": "2026 Bluey: The Heelers $2 Bronze Proof Coin Limited EDITION PNC 200 ONLY",
+     "sale_price": 223.3,
+     "currency": "AU",
+     "date_sold": "23 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "batch3-cf4ecf7548978ca7d6f06703"
+    }
+   ]
+  },
+  "76605600": {
+   "products": [
+    {
+     "coin_id": "76605600",
+     "title": "2026 Bluey: Bingo $1 and $2 Limited-Edition 2-Coin PNC 150 ONLY",
+     "sale_price": 199.95,
+     "currency": "AU",
+     "date_sold": "23 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "batch3-68de6ae5c7989f41fc9ea494"
+    },
+    {
+     "title": "2026 Bingo $1 and $2 Limited-Edition 2-Coin PNC 150 ONLY",
+     "sale_price": 199.95,
+     "currency": "AU",
+     "date_sold": "22 Nov 2026",
+     "shipping_price": 0.0,
+     "source_type": "item_page_read",
+     "record_status": "Retained",
+     "record_reason": "Sold eBay AU listing read from item page; price includes postage",
+     "item_id": "117536821495"
+    }
+   ]
+  },
   "76604956": {
    "products": [
+    {
+     "coin_id": "76604956",
+     "title": "2026 Bluey: Bluey $1 and $2 Limited-Edition 2-Coin PNC 150 ONLY",
+     "sale_price": 239.95,
+     "currency": "AU",
+     "date_sold": "23 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "batch3-303bc206271e952af024bcc9"
+    },
     {
      "title": "2026 Bluey: Bluey $1 and $2 Limited-Edition 2-Coin PNC 150 ONLY",
      "sale_price": 239.95,
@@ -16263,18 +16332,45 @@
     }
    ]
   },
-  "76605600": {
+  "76604951": {
    "products": [
     {
-     "title": "2026 Bingo $1 and $2 Limited-Edition 2-Coin PNC 150 ONLY",
-     "sale_price": 199.95,
+     "coin_id": "76604951",
+     "title": "Bluey The Heelers Silver Proof PNC 2026 Limited Edition Mintage 700 PRESALE",
+     "sale_price": 244.9,
      "currency": "AU",
-     "date_sold": "22 Nov 2026",
-     "shipping_price": 0.0,
-     "source_type": "item_page_read",
-     "record_status": "Retained",
-     "record_reason": "Sold eBay AU listing read from item page; price includes postage",
-     "item_id": "117536821495"
+     "date_sold": "24 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-db6159532d100612"
+    }
+   ]
+  },
+  "76604959": {
+   "products": [
+    {
+     "coin_id": "76604959",
+     "title": "Bluey 2026 Limited-Edition 3-Coin (PNC) Colour, PRESALE, mintage 1000",
+     "sale_price": 200.0,
+     "currency": "AU",
+     "date_sold": "24 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-cd597ad8b466a744"
+    }
+   ]
+  },
+  "76604957": {
+   "products": [
+    {
+     "coin_id": "76604957",
+     "title": "Bluey 2026 $2 Coin Minisheet Collection Boxed Set 5 PRESALE 500 Mintage",
+     "sale_price": 400.0,
+     "currency": "AU",
+     "date_sold": "24 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-e7653c3ccde18bac"
     }
    ]
   }

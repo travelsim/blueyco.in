@@ -303,8 +303,8 @@ COINS = [
     {'id': '76605600', 'ebay_kw': '2026 Bingo $1 and $2 two coin PNC', 'search': '2026 Bingo $1 and $2 two coin PNC'},
     {'id': '76604958', 'ebay_kw': '2026 Heelers Proof 2 coin minisheet collection', 'search': '2026 Heelers Proof 2 coin minisheet collection'},
     {'id': '76604951', 'ebay_kw': '2026 Heelers Silver Proof PNC', 'search': '2026 Heelers Silver Proof PNC'},
-    {'id': '76604950', 'ebay_kw': '2026 Heelers Proof PNC', 'search': '2026 Heelers Proof PNC'},
-    {'id': '76604949', 'ebay_kw': '2026 Bluey Sleepytime PNC', 'search': '2026 Bluey Sleepytime PNC'},
+    {'id': '76604950', 'ebay_kw': '2026 Heelers Proof PNC coloured', 'search': '2026 Heelers Proof PNC coloured'},
+    {'id': '76604949', 'ebay_kw': '2026 Bluey Sleepytime PNC coloured', 'search': '2026 Bluey Sleepytime PNC coloured'},
     # Series 1 tube sets — these ship in the frontend catalogue and in
     # server.py; they were missing here so they never received live prices.
 ]
