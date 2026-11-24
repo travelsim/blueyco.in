@@ -1,7 +1,7 @@
 {
-  "batch_id": "ledger-publish-20261124-210431",
-  "generated_at": "2026-11-24T21:04:31",
-  "total_input": 1012,
+  "batch_id": "ledger-publish-20261124-213546",
+  "generated_at": "2026-11-24T21:35:46",
+  "total_input": 1035,
   "rows": [
     {
       "listing_id": "198341345495",
@@ -7906,7 +7906,7 @@
       "product_id": "76604950",
       "price": 260.0,
       "date": "23 Nov 2026",
-      "disposition": "old-history",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -7982,7 +7982,7 @@
       "product_id": "76604959",
       "price": 212.7,
       "date": "24 Nov 2026",
-      "disposition": "old-history",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8004,7 +8004,7 @@
       "product_id": "76604956",
       "price": 288.0,
       "date": "23 Nov 2026",
-      "disposition": "old-history",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8012,7 +8012,187 @@
       "product_id": "76605600",
       "price": 288.0,
       "date": "23 Nov 2026",
+      "disposition": "published",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-90c77760fa2f5e2a05da8e76",
+      "product_id": "s4_cricket_proof",
+      "price": 109.95,
+      "date": "23 Sep 2026",
       "disposition": "old-history",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-e0c4228ab6981acb0ad5b77e",
+      "product_id": "s4_cricket_proof",
+      "price": 119.5,
+      "date": "23 Sep 2026",
+      "disposition": "published",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-b16f2fde140b164c4c7f0db7",
+      "product_id": "s4_cricket_proof",
+      "price": 130.0,
+      "date": "18 Nov 2026",
+      "disposition": "approved-awaiting",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-4a47b3e2aa158b4995e8763b",
+      "product_id": "s4_cricket_proof",
+      "price": 139.0,
+      "date": "16 Nov 2026",
+      "disposition": "approved-awaiting",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-41e15bb48a0ad83ae0174f68",
+      "product_id": "s4_cricket_proof",
+      "price": 139.99,
+      "date": "17 Nov 2026",
+      "disposition": "approved-awaiting",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-86402221b8eec8dee8db5df8",
+      "product_id": "s4_cricket_proof",
+      "price": 135.0,
+      "date": "18 Nov 2026",
+      "disposition": "approved-awaiting",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-38770ec5d828c7a64768be5c",
+      "product_id": "s4_cricket_proof",
+      "price": 130.0,
+      "date": "21 Nov 2026",
+      "disposition": "approved-awaiting",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-c8f93f10f9b95eca72c2aed8",
+      "product_id": "s4_cricket_proof",
+      "price": 149.0,
+      "date": "27 Oct 2026",
+      "disposition": "old-history",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-72298aa3663d2f77b189b35e",
+      "product_id": "s4_cricket_proof",
+      "price": 149.1,
+      "date": "07 Oct 2026",
+      "disposition": "old-history",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-8dcd68ea49682b2c99efa4a1",
+      "product_id": "s4_cricket_proof",
+      "disposition": "pending-review",
+      "reason": "needs reviewer mapping"
+    },
+    {
+      "listing_id": "cricket-d792bb05dc111072957c799e",
+      "product_id": "s4_cricket_proof",
+      "price": 139.0,
+      "date": "07 Nov 2026",
+      "disposition": "approved-awaiting",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-3b81a4fe2182b939e3406de1",
+      "product_id": "s4_cricket_proof",
+      "price": 155.0,
+      "date": "08 Nov 2026",
+      "disposition": "approved-awaiting",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-7a2319ba6f270f5c6c0d1b2c",
+      "product_id": "s4_cricket_proof",
+      "disposition": "pending-review",
+      "reason": "needs reviewer mapping"
+    },
+    {
+      "listing_id": "cricket-c6dc86dc556612581a3d5f7b",
+      "product_id": "s4_cricket_proof",
+      "price": 160.0,
+      "date": "24 Nov 2026",
+      "disposition": "approved-awaiting",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-c9f39540bfdaa35a6d051720",
+      "product_id": "s4_cricket_unc",
+      "price": 16.5,
+      "date": "18 Nov 2026",
+      "disposition": "approved-awaiting",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-50044e9e4c13e73385bb9e5a",
+      "product_id": "s4_cricket_unc",
+      "price": 16.5,
+      "date": "19 Nov 2026",
+      "disposition": "approved-awaiting",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-2c3436463e9de9a5ee58b884",
+      "product_id": "s4_cricket_unc",
+      "price": 16.5,
+      "date": "18 Nov 2026",
+      "disposition": "approved-awaiting",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-f32ca8401fd2cd846d794e80",
+      "product_id": "s4_cricket_unc",
+      "price": 17.58,
+      "date": "22 Nov 2026",
+      "disposition": "approved-awaiting",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-7b1591036526960eb494b455",
+      "product_id": "s4_cricket_unc",
+      "price": 24.95,
+      "date": "15 Oct 2026",
+      "disposition": "approved-awaiting",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-f5ae5ae1208affd0d5584544",
+      "product_id": "s4_cricket_unc",
+      "price": 25.0,
+      "date": "01 Oct 2026",
+      "disposition": "old-history",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-c3f9fc703ad3c44f2f14c57f",
+      "product_id": "s4_cricket_unc",
+      "price": 25.0,
+      "date": "06 Oct 2026",
+      "disposition": "old-history",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-53174bf011b285b1d5fb4e44",
+      "product_id": "s4_cricket_unc",
+      "price": 25.0,
+      "date": "23 Nov 2026",
+      "disposition": "approved-awaiting",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "cricket-c06516e579fb28ae88b0515d",
+      "product_id": "s4_cricket_unc",
+      "price": 25.0,
+      "date": "14 Nov 2026",
+      "disposition": "approved-awaiting",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
