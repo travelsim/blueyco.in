@@ -40,6 +40,38 @@ class TestBuyOptions(unittest.TestCase):
             else:
                 self.assertFalse(seen_link_only, 'priced option after a link-only option')
 
+    def test_ebay_manual_item_override_is_honoured(self):
+        manual = {'76604959': {'ebay': {
+            'price': 191.53, 'checkedAt': time.time(),
+            'url': 'https://www.ebay.com.au/itm/820389839352',
+        }}}
+        retailer = next(r for r in legacy.RETAILERS if r['id'] == 'ebay')
+        option = buy_options._fallback(retailer, '2026 Bluey three coin PNC', '76604959', manual)[0]
+        self.assertEqual(option['price'], 191.53)
+        self.assertFalse(option['link_only'])
+        self.assertIn('itm/820389839352', option['url'])
+        self.assertEqual(option['price_type'], 'asking')
+
+    def test_ebay_manual_stale_price_falls_back_to_link_only(self):
+        manual = {'76604959': {'ebay': {
+            'price': 191.53, 'checkedAt': time.time() - 8 * 24 * 3600,
+            'url': 'https://www.ebay.com.au/itm/820389839352',
+        }}}
+        retailer = next(r for r in legacy.RETAILERS if r['id'] == 'ebay')
+        option = buy_options._fallback(retailer, '2026 Bluey three coin PNC', '76604959', manual)[0]
+        self.assertIsNone(option['price'])
+        self.assertTrue(option['link_only'])
+
+    def test_ebay_search_link_entry_is_not_used(self):
+        manual = {'s1_bluey': {'ebay': {
+            'price': None, 'available': True,
+            'url': 'https://www.ebay.com.au/sch/i.html?_nkw=x&LH_BIN=1',
+        }}}
+        retailer = next(r for r in legacy.RETAILERS if r['id'] == 'ebay')
+        option = buy_options._fallback(retailer, '2024 Bluey', 's1_bluey', manual)[0]
+        self.assertTrue(option['link_only'])
+        self.assertIn('sch/i.html', option['url'])
+
     def test_manual_override_takes_priority(self):
         manual = {'s1_bluey': {'coinxchange_buy': {
             'price': 42.0, 'checkedAt': time.time(),
