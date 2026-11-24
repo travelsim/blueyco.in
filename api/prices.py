@@ -728,6 +728,31 @@ def _reviewed_format_mismatch(title, coin):
     return any(disclaimer in text for disclaimer in _NON_COLOUR_DISCLAIMERS)
 
 
+_PUBLICATION_HOLDS = None
+
+
+def _get_publication_holds():
+    """IDs in publication_holds.json, held from every projection path."""
+    global _PUBLICATION_HOLDS
+    if _PUBLICATION_HOLDS is None:
+        holds = {}
+        for candidate in (
+            'publication_holds.json',
+            '/var/task/publication_holds.json',
+            os.path.join(os.path.dirname(__file__), '..', 'publication_holds.json'),
+        ):
+            try:
+                with open(candidate, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                raw = data.get('holds') if isinstance(data, dict) else None
+                holds = dict(raw) if isinstance(raw, dict) else {}
+                break
+            except Exception:
+                continue
+        _PUBLICATION_HOLDS = holds
+    return _PUBLICATION_HOLDS
+
+
 def _quality_filter_ebay(data, coin, now=None):
     """Keep older matched sales as history; use only recent sales for current stats."""
     if not isinstance(data, dict):
@@ -741,6 +766,13 @@ def _quality_filter_ebay(data, coin, now=None):
     seen = set()
     for product in inputs:
         if not isinstance(product, dict):
+            continue
+        # Publication holds outrank every projection path: a held row is
+        # excluded from products, medians and history alike. It stays in
+        # the committed file and Melbourne evidence as the durable record.
+        _hold_ids = _get_publication_holds()
+        _hold_key = str(product.get('listing_id') or product.get('item_id') or '')
+        if _hold_key and _hold_key in _hold_ids:
             continue
         # The CSV importer accepts only rows James has marked Retained and
         # keeps their explicit catalog ID. Preserve that reviewed mapping even
