@@ -4885,8 +4885,10 @@ function _allSoldRecords(entry) {
   const out = [];
   [ebay.products, ebay.historical_products].forEach(list => (list || []).forEach(p => out.push(_normSold(p, 'eBay AU'))));
   [cx.products, cx.historical_products].forEach(list => (list || []).forEach(p => out.push(_normSold(p, 'CoinXchange'))));
-  const valid = out.filter(_validSold).sort((a, b) => b.soldAt - a.soldAt);
-  return _filterClientSoldOutliers(valid, coin);
+  // Every verified published sale, regardless of outlier status (Recent
+  // Sales display). Market Value keeps outlier filtering via
+  // _currentSoldRecords.
+  return out.filter(_validSold).sort((a, b) => b.soldAt - a.soldAt);
 }
 
 // Sales from the last 90 days, from sources whose snapshot is itself fresh.
