@@ -14,7 +14,9 @@ Modes:
               listing_id/product/price/date; exit 1 on any mismatch
 
 The 2 held $5.43 rows in publication_holds.json are never emitted.
-No IQR logic is changed here. No DB writes, no seller or credential fields.
+No IQR logic is changed here. The only writes are reviewer decisions
+into the Melbourne review_decisions table; no listing, price, or evidence
+rows are mutated, and no seller or credential fields are emitted.
 """
 import argparse
 import json
