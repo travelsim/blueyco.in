@@ -823,7 +823,10 @@ def _quality_filter_ebay(data, coin, now=None):
     valid_historical, historical_outliers = _filter_price_outliers(historical_products, coin)
     def _delivered(p):
         return p.get('delivered_price') or round(float(p['sale_price']) + (float(p.get('shipping_price') or p.get('postage') or 0) or 0), 2)
-    prices = [_delivered(p) for p in valid_current]
+    # Reviewer recent-only rows stay visible in Recent Sales but never
+    # feed Market Value stats; only value-eligible sales set medians.
+    prices = [_delivered(p) for p in valid_current
+              if p.get('value_eligible', True) is not False]
     result = dict(data)
     result['products'] = valid_current
     result['outliers'] = current_outliers

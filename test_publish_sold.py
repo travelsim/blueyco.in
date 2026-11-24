@@ -231,3 +231,113 @@ class TestVerify(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def dmap(*pairs):
+    return {lid: {"decision": dec,
+                    "action": pub._reviews.disposition_for(dec)[0],
+                    "value_eligible": pub._reviews.disposition_for(dec)[1],
+                    "reason": pub._reviews.disposition_for(dec)[2]}
+            for lid, dec in pairs}
+
+
+class TestReviewDecisions(unittest.TestCase):
+    def _gen(self, rows, decisions, **kw):
+        args = dict(json_index=set(), json_newest=newest("p1", "2026-11-20"),
+                    holds={}, excluded_ids=set(), taxonomy_hold=None,
+                    strict_match=lambda r, p: False, decision_map=decisions)
+        args.update(kw)
+        return pub.generate(rows, args["json_index"], args["json_newest"],
+                            args["holds"], args["excluded_ids"],
+                            args["taxonomy_hold"], args["strict_match"],
+                            decision_map=args["decision_map"])
+
+    def test_not_valid_excluded_not_emitted(self):
+        rows = [mrow("p1", "Real Coin", 10.0, "2026-11-21", "a"),
+                mrow("p1", "Bad Coin", 11.0, "2026-11-21", "b")]
+        coins, manifest = self._gen(rows, dmap(("b", "not-valid")))
+        by_lid = {m["listing_id"]: m for m in manifest["rows"]}
+        self.assertEqual(by_lid["b"]["disposition"], "excluded")
+        self.assertNotIn("b", [r.get("listing_id")
+                                 for e in coins.values()
+                                 for r in e["products"]])
+        self.assertEqual(by_lid["a"]["disposition"], "pending-review")
+
+    def test_keep_held_hidden_and_keep_pending_queued(self):
+        rows = [mrow("p1", "A", 10.0, "2026-11-21", "a"),
+                mrow("p1", "B", 11.0, "2026-11-21", "b")]
+        coins, manifest = self._gen(
+            rows, dmap(("a", "keep-held"), ("b", "keep-pending")))
+        by_lid = {m["listing_id"]: m for m in manifest["rows"]}
+        self.assertEqual(by_lid["a"]["disposition"], "held")
+        self.assertEqual(by_lid["b"]["disposition"], "pending-review")
+        self.assertEqual(coins, {})
+
+    def test_recent_only_publishes_without_market_value(self):
+        rows = [mrow("p1", "Mapped Coin", 10.0, "2026-11-21", "a")]
+        coins, manifest = self._gen(rows, dmap(("a", "recent-only")))
+        by_lid = {m["listing_id"]: m for m in manifest["rows"]}
+        self.assertEqual(by_lid["a"]["disposition"], "published")
+        self.assertEqual(by_lid["a"]["review_decision"], "recent-only")
+        recs = [r for e in coins.values() for r in e["products"]]
+        self.assertEqual(len(recs), 1)
+        self.assertFalse(recs[0].get("value_eligible", True))
+
+    def test_also_in_value_publishes_with_market_value(self):
+        rows = [mrow("p1", "Mapped Coin", 10.0, "2026-11-21", "a")]
+        coins, manifest = self._gen(rows, dmap(("a", "also-in-value")))
+        recs = [r for e in coins.values() for r in e["products"]]
+        self.assertEqual(len(recs), 1)
+        self.assertNotIn("value_eligible", recs[0])
+
+    def test_unknown_decision_excluded_fail_closed(self):
+        rows = [mrow("p1", "A", 10.0, "2026-11-21", "a")]
+        coins, manifest = self._gen(rows, dmap(("a", "keep-out")))
+        by_lid = {m["listing_id"]: m for m in manifest["rows"]}
+        self.assertEqual(by_lid["a"]["disposition"], "excluded")
+        self.assertIn("fail closed", by_lid["a"]["reason"])
+        self.assertEqual(coins, {})
+
+    def test_publication_hold_outranks_reviewer_approval(self):
+        rows = [mrow("p1", "Held Thing", 5.43, "2026-11-22", "held1")]
+        coins, manifest = self._gen(
+            rows, dmap(("held1", "also-in-value")), holds={"held1": "x"})
+        by_lid = {m["listing_id"]: m for m in manifest["rows"]}
+        self.assertEqual(by_lid["held1"]["disposition"], "held")
+        self.assertEqual(coins, {})
+
+    def test_manifest_still_accounts_every_row(self):
+        rows = [mrow("p1", "A", 10.0, "2026-11-21", "a"),
+                mrow("p1", "B", 11.0, "2026-11-21", "b"),
+                mrow("p1", "C", 12.0, "2026-11-21", "c")]
+        coins, manifest = self._gen(
+            rows, dmap(("a", "not-valid"), ("b", "keep-pending"),
+                       ("c", "recent-only")))
+        self.assertEqual(manifest["total_input"], 3)
+        self.assertEqual(len(manifest["rows"]), 3)
+
+
+class TestCarryOverReviewerExclusions(unittest.TestCase):
+    def test_excluded_rows_purged_held_rows_kept(self):
+        import tempfile, os as _os
+        committed = {"coins": {"p1": {"products": [
+            {"coin_id": "p1", "title": "Held", "sale_price": 5.0,
+             "date_sold": "20 Nov 2026", "listing_id": "held1"},
+            {"coin_id": "p1", "title": "Bad", "sale_price": 6.0,
+             "date_sold": "20 Nov 2026", "listing_id": "bad1"},
+            {"coin_id": "p1", "title": "Legacy", "sale_price": 7.0,
+             "date_sold": "20 Nov 2026"},
+        ]}}}
+        with tempfile.TemporaryDirectory() as tmp:
+            path = _os.path.join(tmp, "manual_ebay_sales.json")
+            json.dump(committed, open(path, "w", encoding="utf-8"))
+            coins = {}
+            carried = pub.carry_over_committed(
+                coins, path, set(), dropped_ids={"bad1"})
+            kept = [r.get("listing_id") for e in coins.values()
+                    for r in e["products"]]
+            self.assertIn("held1", kept)
+            self.assertNotIn("bad1", kept)
+            # legacy row without an id is preserved verbatim
+            self.assertEqual(len(kept), 2)
+            self.assertEqual(carried, 2)

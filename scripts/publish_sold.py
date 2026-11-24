@@ -26,6 +26,7 @@ from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import melbourne_drift as drift
+import review_decisions as _reviews
 
 DISPLAY_FMT = "%d %b %Y"
 
@@ -69,7 +70,7 @@ def display_date(value):
     return day.strftime(DISPLAY_FMT)
 
 
-def build_record(row):
+def build_record(row, value_eligible=True):
     """One publication row, seller-free. Returns None when undisplayable."""
     price = drift.norm_price(row.get("price_aud"))
     day = display_date(row.get("date_sold"))
@@ -87,6 +88,8 @@ def build_record(row):
     }
     if row.get("source_url"):
         rec["link"] = row.get("source_url")
+    if value_eligible is False:
+        rec["value_eligible"] = False
     return rec
 
 
@@ -103,8 +106,13 @@ def assert_seller_free(obj, where):
 
 
 def generate(rows, json_index, json_newest, holds, excluded_ids,
-             taxonomy_hold, strict_match):
+             taxonomy_hold, strict_match, decision_map=None):
     """Returns (coins, manifest). Manifest rows sum to total input.
+
+    decision_map maps listing_id to a dict with decision/action/
+    value_eligible/reason (see review_decisions.disposition_for). Reviewer
+    gates never override publication holds, the taxonomy gate, or
+    excluded-evidence; they decide what happens to the remaining rows.
 
     Ordering mirrors the serving projection: holds outrank every other
     path, so a held row already in the committed file is never emitted
@@ -119,6 +127,9 @@ def generate(rows, json_index, json_newest, holds, excluded_ids,
         price = drift.norm_price(row.get("price_aud"))
         day = drift.parse_date(str(row.get("date_sold") or ""))
         base = {"listing_id": lid or None, "product_id": prod or None}
+        dec = decision_map.get(lid) if decision_map else None
+        if dec is not None:
+            base["review_decision"] = dec["decision"]
         if lid and lid in holds:
             manifest_rows.append(dict(base, disposition="held",
                                      reason="publication-hold"))
@@ -131,9 +142,29 @@ def generate(rows, json_index, json_newest, holds, excluded_ids,
             manifest_rows.append(dict(base, disposition="held",
                                       reason="excluded-evidence"))
             continue
+        if dec is not None and dec["action"] in ("held", "excluded", "pending-review"):
+            manifest_rows.append(dict(base, disposition=dec["action"],
+                                      reason=dec["reason"]))
+            continue
         if price is None or day is None or not prod:
             manifest_rows.append(dict(base, disposition="incomplete",
                                       reason="missing product/price/date"))
+            continue
+        if dec is not None and dec["action"] == "published":
+            if lid in seen_ids:
+                manifest_rows.append(dict(base, disposition="duplicate-suppressed",
+                                          reason="repeat listing_id in ledger feed"))
+                continue
+            rec = build_record(row, value_eligible=dec["value_eligible"])
+            if rec is None:
+                manifest_rows.append(dict(base, disposition="incomplete",
+                                          reason="undisplayable price/date"))
+                continue
+            seen_ids.add(lid)
+            included.append(rec)
+            manifest_rows.append(dict(base, price=rec["sale_price"],
+                                      date=rec["date_sold"],
+                                      disposition="published", reason=dec["reason"]))
             continue
         key = (prod, drift.norm_title(row.get("title")), price, day.isoformat())
         if key in json_index:
@@ -181,8 +212,14 @@ def generate(rows, json_index, json_newest, holds, excluded_ids,
     return coins, manifest
 
 
-def carry_over_committed(coins, committed_path, emitted_ids):
+def carry_over_committed(coins, committed_path, emitted_ids,
+                         dropped_ids=None):
     """Keep committed rows the fresh batch did not supersede, verbatim.
+
+    Reviewer-excluded listing_ids (dropped_ids) are purged, never
+    carried: not-valid and unmapped verdicts leave the feed file
+    entirely. Publication holds keep the opposite treatment: held rows
+    stay in the file verbatim and the live projection hides them.
 
     Rows superseded by a freshly emitted row (same listing_id) are
     skipped; everything else is carried verbatim, including rows held
@@ -198,6 +235,8 @@ def carry_over_committed(coins, committed_path, emitted_ids):
                 continue
             lid = str(row.get("listing_id") or row.get("item_id") or "")
             if lid and lid in emitted_ids:
+                continue
+            if dropped_ids and lid and lid in dropped_ids:
                 continue
             entry_out = coins.setdefault(cid, {"products": []})
             entry_out["products"].append(dict(row))
@@ -283,8 +322,22 @@ def main(argv=None):
     taxonomy_hold, strict_match, _ = _live_matchers()
     rows = fetch_confirmed_rows()
     excluded_ids = fetch_excluded_evidence_ids()
+    # Saved reviewer decisions are fetched and durably recorded in
+    # Melbourne before any publication step. fetch_and_record raises
+    # when no authenticated decisions source is configured, failing
+    # closed before anything is staged or written.
+    decided, decision_stats, recorded = _reviews.fetch_and_record()
+    decision_map = {lid: dict(decision=dec,
+                             action=_reviews.disposition_for(dec)[0],
+                             value_eligible=_reviews.disposition_for(dec)[1],
+                             reason=_reviews.disposition_for(dec)[2])
+                    for lid, (dec, _submitted) in decided.items()}
+    print("decisions: records=%d unique=%s recorded=%d by=%s" % (
+        decision_stats.get("records"), decision_stats.get("unique_listings"),
+        recorded, decision_stats.get("by_decision")))
     coins, manifest = generate(rows, json_index, json_newest, holds,
-                               excluded_ids, taxonomy_hold, strict_match)
+                               excluded_ids, taxonomy_hold, strict_match,
+                               decision_map=decision_map)
     assert_seller_free(coins, "generated feed")
     assert_seller_free(manifest, "manifest")
     accounted = len(manifest["rows"])
@@ -292,6 +345,7 @@ def main(argv=None):
         raise RuntimeError("manifest accounts %d of %d input rows"
                            % (accounted, manifest["total_input"]))
     melbourne_ids = {str(r.get("listing_id") or "") for r in rows}
+    manifest["review_decisions"] = dict(decision_stats, recorded=recorded)
     manifest["held_listing_ids"] = sorted(
         {m["listing_id"] for m in manifest["rows"]
          if m["disposition"] == "held" and m["listing_id"]})
@@ -309,7 +363,11 @@ def main(argv=None):
                        if m["disposition"] in ("published", "old-history",
                                               "approved-awaiting")
                        and m["listing_id"]}
-        carried = carry_over_committed(coins, committed_path, emitted_ids)
+        excluded_ids_now = {m["listing_id"] for m in manifest["rows"]
+                            if m["disposition"] == "excluded"
+                            and m["listing_id"]}
+        carried = carry_over_committed(coins, committed_path, emitted_ids,
+                                       dropped_ids=excluded_ids_now)
         manifest["carried_over_committed_only"] = carried
         json.dump({"coins": coins},
                   open(committed_path, "w", encoding="utf-8"),
