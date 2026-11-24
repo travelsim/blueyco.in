@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bluey outliers review</title>
+<style>
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;color:var(--color-text-primary,#111);background:var(--color-background-primary,#fff);margin:0;padding:14px;max-width:780px}
+  h1{font-size:15px;margin:4px 0 2px}
+  .sub{font-size:11px;opacity:.75;margin-bottom:10px}
+  .bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+  .bar button{font-size:11px;border:1px solid var(--color-border-primary,#ccc);background:transparent;color:inherit;border-radius:999px;padding:4px 10px;cursor:pointer}
+  .bar input{font-size:12px;padding:5px 8px;border:1px solid var(--color-border-primary,#ccc);border-radius:6px;flex:1;min-width:140px;background:transparent;color:inherit}
+  #submit{margin-left:auto;background:#1a73e8;color:#fff;border:none;font-weight:600}
+  .card{border:1px solid var(--color-border-primary,#ddd);border-radius:10px;padding:9px 11px;margin-bottom:8px}
+  .pill{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;border-radius:999px;padding:2px 8px;margin-right:6px}
+  .outlier{background:#fff3cd;color:#664d03}
+  .held{background:#f8d7da;color:#842029}
+  .pending{background:#cfe2ff;color:#084298}
+  .t{font-size:13px;margin-top:4px}
+  .m{font-size:11px;opacity:.8;margin-top:2px}
+  .row{display:flex;gap:8px;align-items:center;margin-top:7px;flex-wrap:wrap}
+  select{font-size:12px;padding:5px 6px;border-radius:6px;border:1px solid var(--color-border-primary,#ccc);background:transparent;color:inherit}
+  a{font-size:11px}
+  .foot{font-size:11px;opacity:.75;margin-top:10px}
+</style>
+</head>
+<body>
+<h1>Bluey review queue: 57 sales</h1>
+<div class="sub">Classify each sale, then Submit. Your choices go back to Bluey for publication.<br>
+<b>Outlier</b> = shown in Recent Sales, excluded from Market Value. <b>Held</b> = hidden everywhere today. <b>Pending</b> = awaiting review.</div>
+<div class="bar">
+  <button data-f="all">All 57</button>
+  <button data-f="outlier">Outliers 50</button>
+  <button data-f="held">Held 6</button>
+  <button data-f="pending">Pending 1</button>
+  <input id="q" type="search" placeholder="Filter by title, product, price...">
+  <button id="submit">Submit classifications</button>
+</div>
+<div id="list"></div>
+<div class="foot">Choices: <b>Recent only</b> shows the sale, keeps it out of Market Value. <b>Also in value</b> counts it in Market Value. <b>Keep held</b> leaves it hidden. <b>Not valid / wrong</b> flags it out.</div>
+<script>
+const DATA = [{"id": "147296508393", "kind": "outlier", "product": "s1_bluey", "title": "$1 Bluey Dollarbuck Complete 10-Coin Set 2024 Uncirculated With Tube And Folder", "price": 126.84, "date": "14 May 2026"}, {"id": "318246843016", "kind": "outlier", "product": "s1_bluey", "title": "$1 Bluey Dollarbuck Complete 10-Coin Set 2024 Uncirculated With folder", "price": 130.0, "date": "11 May 2026"}, {"id": "267655832117", "kind": "outlier", "product": "s1_bluey", "title": "$1 Bluey Dollarbuck Complete 10-Coin Set 2024 Uncirculated With Tube And Folder", "price": 110.0, "date": "08 May 2026"}, {"id": "257495155569", "kind": "outlier", "product": "s1_bluey", "title": "$1 Bluey Dollarbuck Complete 10-Coin Set 2024 Uncirculated With Tube And Folder", "price": 64.3, "date": "07 May 2026"}, {"id": "257493601129", "kind": "outlier", "product": "s1_bluey", "title": "$1 Bluey Dollarbuck Complete 10-Coin Set 2024 Uncirculated With Tube And Folder", "price": 64.3, "date": "06 May 2026"}, {"id": "306783817343", "kind": "outlier", "product": "s1_bluey", "title": "2024 Australian $1 Dollar Bluey Dollarbuck - Bingo - Cotton & Co 20 Coins Roll", "price": 110.0, "date": "05 Apr 2026"}, {"id": "227228449489", "kind": "outlier", "product": "s1_bluey", "title": "$1 Bluey Dollarbuck Complete 10-Coin Set 2024 Uncirculated With Tube And Folder", "price": 119.99, "date": "25 Feb 2026"}, {"id": "306771230620", "kind": "outlier", "product": "s1_bluey", "title": "2024 Australian $1 Dollar Bluey Dollarbuck - Bingo - Cotton & Co 20 Coins Roll", "price": 110.0, "date": "22 Feb 2026"}, {"id": "397683151768", "kind": "outlier", "product": "s1_bluey", "title": "BLUEY 2024 $1 New BLUEY DOLLARBUCK Bag Of 20 Coins Sealed Uncirculated ", "price": 49.45, "date": "11 Apr 2026"}, {"id": "137174296905", "kind": "outlier", "product": "s1_bluey", "title": "BLUEY 2024 $1 BLUEY DOLLARBUCK Bag Of 20 Coins Sealed Uncirculated", "price": 60.0, "date": "29 Mar 2026"}, {"id": "128028456739", "kind": "outlier", "product": "s2_xmas_unc", "title": "2025 $1 Buck bluey christmas coloured uncirculated coin", "price": 62.56, "date": "22 Sep 2026"}, {"id": "205796372739", "kind": "outlier", "product": "s2_xmas_unc", "title": "2025 $1 Bluey Christmas Coloured Uncirculated Coin ✅ IN HAND ✅", "price": 94.01, "date": "15 May 2026"}, {"id": "147076189557", "kind": "outlier", "product": "s2_xmas_unc", "title": "2x $1 Dollar Bluey Coin Set Coloured Christmas Coin + 2 x Bluey Coins And Bingo", "price": 104.72, "date": "14 May 2026"}, {"id": "286989931454", "kind": "outlier", "product": "s2_xmas_unc", "title": "2025 $1 Bluey Christmas Coloured Coin + $1 Aussie Big Things II Set OPENED Tube ", "price": 101.15, "date": "07 May 2026"}, {"id": "136715208661", "kind": "outlier", "product": "s2_xmas_unc", "title": "2025 Bluey - Christmas $1 Coloured Uncirculated Coin ✅SHIPS SAME DAY✅", "price": 94.88, "date": "22 Nov 2025"}, {"id": "297642662423", "kind": "outlier", "product": "s2_xmas_unc", "title": "2025 $1 Bluey Christmas Coloured Uncirculated Coin ✅ PRESALE ✅", "price": 94.01, "date": "13 Oct 2025"}, {"id": "manual-bada3248bd228d74", "kind": "outlier", "product": "s3_proof_silv", "title": "2026 $2 Bluey Silver & Coloured Proof & 7 Coin Tube Set & Folder Inc Till Change", "price": 449.99, "date": "24 Oct 2026"}, {"id": "397947411381", "kind": "outlier", "product": "s3_proof_silv", "title": "Bluey 2026 $2 Coloured 💙Proof Coin and $2 Fine Silver 💙Coloured Proof Coin", "price": 515.0, "date": "18 May 2026"}, {"id": "267666311798", "kind": "outlier", "product": "s3_proof_silv", "title": "2026 $2 Bluey Coloured Silver Proof Coin & 2026 $2 Coloured Proof Coin Bundle", "price": 515.0, "date": "18 May 2026"}, {"id": "227343881099", "kind": "outlier", "product": "s3_proof_silv", "title": "2026 $2 Bluey Silver & Albr Coloured Proof Coin", "price": 494.99, "date": "17 May 2026"}, {"id": "397942380497", "kind": "outlier", "product": "s3_proof_silv", "title": "2026 Bluey $2 COLOURED Fine Silver PROOF & Coloured COIN Set ✅ In Hand ✅", "price": 500.0, "date": "16 May 2026"}, {"id": "389996114431", "kind": "outlier", "product": "s3_proof_silv", "title": "2026 $2 ●(x1) Bluey Silver & ●(x1) Bronze Coloured Proof Coins ■Boxed With COA■", "price": 475.0, "date": "16 May 2026"}, {"id": "366407680869", "kind": "outlier", "product": "s3_proof_silv", "title": "2026 $2 Bluey Coloured Silver Proof Coin & Coloured Bronze Proof Coin Set", "price": 500.0, "date": "16 May 2026"}, {"id": "267663363205", "kind": "outlier", "product": "s3_proof_silv", "title": "2026 Bluey $2 Silver + Coloured AlBr Proof Coin Bluey Coins Limited In Hand", "price": 469.0, "date": "15 May 2026"}, {"id": "178129476163", "kind": "outlier", "product": "s3_proof_silv", "title": "2026 Bluey $2 Silver Proof Coin & Coloured AlBr Proof Coin ✅IN HAND-FAST SHIP", "price": 499.0, "date": "13 May 2026"}, {"id": "manual-87b121e4edb190d4", "kind": "outlier", "product": "s3_proof_silv", "title": "2026 Bluey Silver Proof $2 Coin & Bluey Coloured Proof $2 Coin", "price": 520.0, "date": "10 May 2026"}, {"id": "298290481848", "kind": "outlier", "product": "s3_proof_silv", "title": "2026 Bluey $2 COLOURED SILVER PROOF COIN ✅in Hand Same day postage ", "price": 445.9, "date": "06 May 2026"}, {"id": "manual-74c6a0fd66426b81", "kind": "outlier", "product": "s2_xmas_silv", "title": "2025 $1 Bluey Christmas Silver Coloured Proof Coin", "price": 350.0, "date": "05 Oct 2026"}, {"id": "manual-d07fa7d9f2ff3671", "kind": "outlier", "product": "s3_folder", "title": "2026 Bluey $2 Tube & Folder 7 Coin Set (Include 2 Coloured Till Change Coins)", "price": 20.25, "date": "08 Nov 2026"}, {"id": "manual-a5bdacd45be77d55", "kind": "outlier", "product": "s3_folder", "title": "2026 Bluey $2 Uncirculated Folder and seal-tube Set 7 COINS x5 SEALED NEW", "price": 191.45, "date": "27 Oct 2026"}, {"id": "manual-f84b9476498be3f8", "kind": "outlier", "product": "s3_folder", "title": "Bluey 2026 Folder and Tube Set + Two $2 Coloured Till Coins", "price": 26.53, "date": "29 Aug 2026"}, {"id": "manual-a3398fbb9406e540", "kind": "outlier", "product": "s3_folder", "title": "Bluey Folder 2026", "price": 15.0, "date": "14 Jun 2026"}, {"id": "318264054402", "kind": "outlier", "product": "s3_rain", "title": "2026 $2 Bluey Rain Baby Race Sleepytime Camping Privy Mark Uncirculated Coin Set", "price": 125.0, "date": "08 May 2026"}, {"id": "318264052772", "kind": "outlier", "product": "s3_rain", "title": "2026 $2 Bluey Rain Baby Race Sleepytime Camping Privy Mark Uncirculated Coin Set", "price": 122.5, "date": "08 May 2026"}, {"id": "manual-4242edbbad222612", "kind": "outlier", "product": "s1_coloured_insert_variant", "title": "2024 $1 Bluey Dollarbuck 10 Coin Set Uncirculated Tube & Folder Coloured Coin", "price": 375.0, "date": "03 Nov 2026"}, {"id": "manual-bcdac36fcce06044", "kind": "outlier", "product": "s4_cricket_proof", "title": "2027 $1 Coloured Silver Proof Coin - Bluey Cricket NEW RELEASE", "price": 299.0, "date": "26 Sep 2026"}, {"id": "manual-9cd3fb8e5e290fde", "kind": "outlier", "product": "s4_cricket_proof", "title": "2027 $1 BLUEY CRICKET COLOURED SILVER PROOF COIN", "price": 300.0, "date": "23 Sep 2026"}, {"id": "manual-54a5a47888b955da", "kind": "outlier", "product": "s4_cricket_proof", "title": "2027 Australia RAM Bluey Cricket $1 Coloured Fine Silver Proof Coin - In Stock", "price": 119.5, "date": "23 Sep 2026"}, {"id": "manual-fb5468b19d99899c", "kind": "outlier", "product": "s1_impressions_pnc_colour", "title": "Royal Australian Mint 2024 Bluey Bucks Limited Edition Coloured Coin $1 PNC", "price": 149.0, "date": "11 May 2026"}, {"id": "manual-992bbf7dcf33c1b4", "kind": "outlier", "product": "s1_impressions_pnc_2coin", "title": "Royal Australian Mint 2024 Bluey Limited Edition Coloured 2 Coin $1 PNC", "price": 140.0, "date": "06 May 2026"}, {"id": "manual-1622c2f5f4744e2f", "kind": "outlier", "product": "s1_10_coin_folder_set", "title": "Bluey Tube & Folder Full Set $1 Bluey 2025 Blue - Sealed New", "price": 127.9, "date": "29 Oct 2026"}, {"id": "manual-0003dbb0718fe3d0", "kind": "outlier", "product": "s1_coloured_bluey", "title": "Australia UNC Coin - 2024 $1 Coloured Bluey Dollar Buck (ex RAM Coin Tube)", "price": 324.95, "date": "04 Nov 2026"}, {"id": "manual-a9f68431c406d67d", "kind": "outlier", "product": "s1_impressions_pnc_3coin", "title": "2024 Bluey $1 Coin Limited 1, 2 & 3 Coin Set Postal Numismatic Cover (PNC) 3 Set", "price": 529.64, "date": "02 Oct 2026"}, {"id": "manual-6b321d3e5a85963c", "kind": "outlier", "product": "s3_pin_camping", "title": "Australia 2026 Bluey Bingo Stamp & Pin Cover - Camping", "price": 137.95, "date": "15 Aug 2026"}, {"id": "manual-dc54f3172b02a0e9", "kind": "outlier", "product": "s3_pin_granny", "title": "Bluey Pins 2026 Bluey Stamp and Pin Cover Granny x2 （ For Mfle8783)", "price": 65.0, "date": "02 Oct 2026"}, {"id": "manual-404beee7cda1d1e6", "kind": "outlier", "product": "s3_sleepytime_insert", "title": "2026 $2 Two Dollar Bluey Coloured UNC Coin - Sleepy Time Bingo Blue Original .", "price": 127.9, "date": "22 Aug 2026"}, {"id": "127855055460", "kind": "outlier", "product": "s3_sleepytime_insert", "title": "2026 $2 BLUEY Coin - Coloured Sleepytime - Uncirculated - in 2x2 - FREE TRACKED", "price": 264.99, "date": "25 Jul 2026"}, {"id": "manual-20f67d404bb0582c", "kind": "outlier", "product": "s3_sleepytime_privy", "title": "2026 BLUEY SLEEPY TIME $2 Privy Mark Carded RAM Coin", "price": 20.82, "date": "08 Oct 2026"}, {"id": "manual-d990adf59415fab6", "kind": "outlier", "product": "s3_till_bingo", "title": "2026 Bluey 10 x $2 UNC COLOURED TILL COINS (5 BLUEY & 5 BINGO)", "price": 25.0, "date": "27 Aug 2026"}, {"id": "manual-6664e97901e0b935", "kind": "outlier", "product": "s3_sleepytime", "title": "2026 BLUEY SLEEPY TIME $2 Privy Mark Carded RAM Coin", "price": 20.82, "date": "08 Oct 2026"}, {"id": "manual-e8b79837323098d0", "kind": "pending", "product": "s1_pnc_stripes", "title": "2024 Bluey Postal Numismatic Covers PNC $1 UNC Bluey Coins (Uncle & Aunt)", "price": 39.95, "date": "2026-10-02"}, {"id": "batch3-687fe0264b0a801cb0ea3647", "kind": "held", "product": "s3_camping", "title": "2026 BLUEY CAMPING $2 Coin. 1x AUSTRALIAN Two Dollar Non-Colour Coin", "price": 8.5, "date": "2026-11-23"}, {"id": "batch3-c1ffe1011eb54526a6558b0d", "kind": "held", "product": "s3_rain", "title": "2026 BLUEY RAINING $2 Coin. 1x AUSTRALIAN Two Dollar Non-Colour Coin", "price": 8.9, "date": "2026-11-23"}, {"id": "batch3-c13cea496f17e4b682f383e9", "kind": "held", "product": "s3_granny", "title": "2026 BLUEY Granny Mobile $2 Coin. 1x AUSTRALIAN Two Dollar Non-Colour Coin", "price": 8.39, "date": "2026-11-23"}, {"id": "batch3-6b5fbfcc3eafb120a99adf6a", "kind": "held", "product": "s3_babyrace", "title": "2026 BLUEY BABY RACE $2 Coin. 1x AUSTRALIAN Two Dollar Non-Colour Coin", "price": 8.5, "date": "2026-11-23"}, {"id": "batch3-77101ea0bf57cd1a25201588", "kind": "held", "product": "s3_till_bingo", "title": "Bingo Hooray 2026 Orange Two Dollar Bucks Bluey Coin Blue $2 Australia Color UNC", "price": 5.43, "date": "2026-11-23"}, {"id": "batch3-5bbf29c68989f35a5a347a23", "kind": "held", "product": "s3_till_bluey", "title": "Bluey For Real Life 2026 Two Dollar Bucks Coin Bingo Blue $2 Color Australia UNC", "price": 5.43, "date": "2026-11-23"}];
+const OPTS = {
+  outlier: ["recent-only","also-in-value","keep-out","not-valid"],
+  held: ["publish-recent","publish-value","keep-held","not-valid"],
+  pending: ["publish-recent","publish-value","keep-pending","not-valid"]
+};
+const LABELS = {"recent-only":"Recent only","also-in-value":"Also in Market Value","keep-out":"Keep out","not-valid":"Not valid / wrong","publish-recent":"Publish to Recent Sales","publish-value":"Publish incl. Market Value","keep-held":"Keep held","keep-pending":"Keep pending"};
+let filter="all";
+function ebay(id){ return "https://www.ebay.com.au/itm/"+encodeURIComponent(id); }
+function render(){
+  const q=(document.getElementById("q").value||"").toLowerCase();
+  const el=document.getElementById("list");
+  el.innerHTML="";
+  let n=0;
+  DATA.forEach((d,i)=>{
+    if(filter!=="all" && d.kind!==filter) return;
+    if(q && (d.title+" "+d.product+" "+d.price).toLowerCase().indexOf(q)<0) return;
+    n++;
+    const card=document.createElement("div"); card.className="card";
+    const pill=document.createElement("span"); pill.className="pill "+d.kind; pill.textContent=d.kind; card.appendChild(pill);
+    const t=document.createElement("div"); t.className="t"; t.textContent=d.title; card.appendChild(t);
+    const m=document.createElement("div"); m.className="m"; m.textContent="$"+d.price+" · "+d.date+" · "+d.product+" · "+d.id; card.appendChild(m);
+    const row=document.createElement("div"); row.className="row";
+    const sel=document.createElement("select"); sel.id="s"+i; sel.setAttribute("data-id", d.id);
+    OPTS[d.kind].forEach(o=>{ const op=document.createElement("option"); op.value=o; op.textContent=LABELS[o]; sel.appendChild(op); });
+    row.appendChild(sel);
+    const a=document.createElement("a"); a.href=ebay(d.id); a.target="_blank"; a.textContent="View listing"; row.appendChild(a);
+    card.appendChild(row);
+    el.appendChild(card);
+  });
+  if(!n){ el.textContent="No matches."; }
+}
+document.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{filter=b.getAttribute("data-f");render();});
+document.getElementById("q").oninput=render;
+document.getElementById("submit").onclick=async()=>{
+  const out=[];
+  document.querySelectorAll("select[data-id]").forEach(s=>{ if(s.selectedIndex>0) out.push(s.getAttribute("data-id")+"="+s.value); });
+  const msg="OUTLIER REVIEW\n"+(out.length?out.join("\n"):"No changes");
+  if(window.mausbot && mausbot.send) mausbot.send(msg);
+  else try{ await navigator.clipboard.writeText(msg); alert("Decisions copied. Paste them into your chat with Bluey."); }catch(e){ const a=document.createElement("a"); a.href="data:text/plain,"+encodeURIComponent(msg); a.download="review-decisions.txt"; a.click(); alert("Downloaded review-decisions.txt. Paste its contents into your chat with Bluey."); }
+};
+render();
+</script>
+</body>
+</html>
