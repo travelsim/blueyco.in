@@ -4392,6 +4392,19 @@
           "shipping_price": 12.0,
           "source_type": "user_pasted_search",
           "import_id": "may2026-sold-paste-2026-10-08"
+        },
+        {
+          "title": "Bluey 2024 Australia $1 Fine Silver 0.999 Colour Proof Coin #1151/2650",
+          "sale_price": 1102.7,
+          "currency": "AU",
+          "date_sold": "23 Nov 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0.0,
+          "source_type": "user_imported_csv",
+          "record_status": "Retained",
+          "coin_id": "s1_proof_silver",
+          "listing_id": "batch3-8e71e59e48c4fdf29ffd6365",
+          "batch_id": "sold-listings-batch3-2026-11-23"
         }
       ],
       "median_price": 1254.35,
@@ -6461,6 +6474,19 @@
           "import_source": "sold-listings-batch3-2026-11-23",
           "batch_id": "sold-listings-batch3-2026-11-23",
           "listing_id": "batch3-21a49344e66a8c5fc9416228"
+        },
+        {
+          "title": "2025 Australia coloured $1 Bluey Christmas dollar uncirculated",
+          "sale_price": 39.0,
+          "currency": "AU",
+          "date_sold": "24 Nov 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 2.95,
+          "source_type": "user_imported_csv",
+          "record_status": "Retained",
+          "coin_id": "s2_xmas_unc",
+          "listing_id": "batch4-061606748f5c5392fc1b034d",
+          "batch_id": "sold-listings-batch4-2026-11-24"
         }
       ],
       "median_price": 34.95,
@@ -8162,6 +8188,19 @@
           "best_offer": false,
           "record_status": "Retained",
           "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
+        },
+        {
+          "title": "2026 Bluey $2 Coloured AlBr Proof Coin Brand New",
+          "sale_price": 220.0,
+          "currency": "AU",
+          "date_sold": "23 Sep 2026",
+          "buying_format": "Buy It Now",
+          "shipping_price": 0.0,
+          "source_type": "user_imported_csv",
+          "record_status": "Retained",
+          "coin_id": "s3_proof_ab",
+          "listing_id": "batch3-8e40435c3c532dfec999d923",
+          "batch_id": "sold-listings-batch3-2026-11-23"
         }
       ],
       "median_price": 175.0,
