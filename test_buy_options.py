@@ -353,6 +353,50 @@ class TestQueryVariants(unittest.TestCase):
         for variant in ('Bingo 2-coin PNC', 'Bingo $1 $2 2 coin PNC'):
             self.assertIn(variant, legacy.QUERY_VARIANTS['76605600'])
 
+    def test_pair_titles_are_bundles_and_rejected(self):
+        # 'Pair - ... $2 Coin' is two separate $2 covers, not the $1+$2 2-coin
+        # PNC (76605600) even though quantity('pair') == quantity('2-coin').
+        title = 'Pair - 2026 Bluey & Bingo PNC $2 Coin Hooray For Real Life'
+        self.assertFalse(
+            legacy._coinxchange_title_matches(title, 'Bingo 2-coin PNC',
+                                              allow_coloured=True))
+
+    def test_year_less_variant_rejects_wrong_year_title(self):
+        # Seller variants omit the year ('Bluey 2-coin PNC'); a 2024 title
+        # must not land on a 2026 product. Titles without a year still pass.
+        wrong = 'Bluey 2024 Limited Edition 2-Coin Postal Numismatic Cover (PNC)'
+        right = '2026 Bluey $1 and $2 Limited-Edition 2-Coin Postal Numismatic Cover (PNC)'
+        noyear = 'Bluey Limited Edition 2-Coin Postal Numismatic Cover (PNC)'
+        self.assertFalse(
+            legacy._coinxchange_title_matches(wrong, 'Bluey 2-coin PNC',
+                                              allow_coloured=True,
+                                              expected_years={'2026'}))
+        self.assertTrue(
+            legacy._coinxchange_title_matches(right, 'Bluey 2-coin PNC',
+                                              allow_coloured=True,
+                                              expected_years={'2026'}))
+        self.assertTrue(
+            legacy._coinxchange_title_matches(noyear, 'Bluey 2-coin PNC',
+                                              allow_coloured=True,
+                                              expected_years={'2026'}))
+
+    def test_live_options_excludes_wrong_year_for_2026_product(self):
+        retailer = {r['id']: r for r in legacy.RETAILERS}['ebay']
+        listings = [
+            {'price': 199.99, 'postage': 0.0,
+             'title': 'Bluey 2024 Limited Edition 2-Coin Postal Numismatic Cover (PNC)',
+             'url': 'https://www.ebay.com.au/itm/wrongyear'},
+            {'price': 225.0, 'postage': 0.0,
+             'title': '2026 Bluey $1 and $2 Limited-Edition 2-Coin Postal Numismatic Cover (PNC)',
+             'url': 'https://www.ebay.com.au/itm/rightyear'},
+        ]
+        keywords = legacy.COIN_BY_ID['76604956']['search']
+        with mock.patch.object(legacy, '_ebay_browse_search', return_value=listings):
+            options = legacy._ebay_live_options(retailer, keywords, '76604956')
+        self.assertEqual(len(options), 1)
+        self.assertEqual(options[0]['price'], 225.0)
+        self.assertTrue(options[0]['url'].startswith('https://www.ebay.com.au/itm/rightyear'))
+
 
 class TestCatalogueParity(unittest.TestCase):
     def test_prices_catalogue_matches_legacy_server(self):

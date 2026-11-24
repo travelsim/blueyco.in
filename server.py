@@ -1034,7 +1034,7 @@ _JUNK_TITLE_TOKENS = {
     'replica', 'reproduction', 'fake', 'empty', 'sticker', 'stickers', 'poster',
     'plush', 'toy', 'lego', 'magnet', 'keyring', 'damaged',
 }
-_BUNDLE_TOKENS = {'set', 'sets', 'folder', 'folders', 'tube', 'tubes', 'bundle', 'bundles', 'collection', 'collections', 'bag', 'bags', 'roll', 'rolls', 'lot', 'lots', 'bulk', 'case', 'album', 'albums', 'pack', 'packs'}
+_BUNDLE_TOKENS = {'set', 'sets', 'folder', 'folders', 'tube', 'tubes', 'bundle', 'bundles', 'collection', 'collections', 'bag', 'bags', 'roll', 'rolls', 'lot', 'lots', 'bulk', 'case', 'album', 'albums', 'pack', 'packs', 'pair', 'pairs'}
 _NAMED_VARIANTS = (
     'bingo', 'muffin', 'muffinsocks', 'socks', 'stripe', 'stripes', 'trixie',
     'nana', 'rad', 'frisky', 'friend', 'friends', 'mum', 'dad', 'family',
@@ -1075,7 +1075,7 @@ def _ebay_query(keywords):
     return f"{keywords} -({','.join(negatives)})" if negatives else str(keywords)
 
 
-def _coinxchange_title_matches(title, keywords, allow_coloured=False):
+def _coinxchange_title_matches(title, keywords, allow_coloured=False, expected_years=None):
     title_tokens = set(re.findall(r'[a-z0-9]+', str(title or '').lower()))
     query_tokens = set(re.findall(r'[a-z0-9]+', str(keywords or '').lower()))
     if title_tokens & _JUNK_TITLE_TOKENS:
@@ -1093,6 +1093,12 @@ def _coinxchange_title_matches(title, keywords, allow_coloured=False):
     years = {token for token in query_tokens if re.fullmatch(r'20\d{2}', token)}
     if not title_tokens or (years and not years.issubset(title_tokens)):
         return False
+    # A year-less variant (e.g. 'Bluey 2-coin PNC') must not admit a title that
+    # explicitly states a different year. Titles that omit the year still pass.
+    if expected_years:
+        title_years = {token for token in title_tokens if re.fullmatch(r'20\d{2}', token)}
+        if title_years and not (title_years & expected_years):
+            return False
     unrequested = {'proof', 'silver', 'privy', 'privymark', 'envelope', 'postal', 'pnc', 'card', 'sealed', 'unopened', 'opened', 'special'}
     # Impressions coins are coloured; sellers write 'Coloured' on nearly every
     # listing, so when the query allows it the word is descriptive, not a variant.
@@ -1144,6 +1150,7 @@ def _coinxchange_buy_options(retailer, keywords, coin_id=None):
     # words sellers rarely use (as the eBay path does) before searching/matching.
     # The catalogue query is tried first, then seller-wording variants, until
     # enough matching asks are found.
+    expected_years = {t for t in re.findall(r'[a-z0-9]+', str(keywords or '').lower()) if re.fullmatch(r'20\d{2}', t)}
     queries = [keywords] + _query_variants(coin_id, MAX_ACTIVE_QUERIES - 1)
     page_url = None
     matched = []
@@ -1157,7 +1164,8 @@ def _coinxchange_buy_options(retailer, keywords, coin_id=None):
             page_url = retailer['search_url'].replace('{q}', urllib.parse.quote(kw))
         listings = _scrape_coinxchange(kw, sold_only=False) or []
         for listing in listings:
-            if not _coinxchange_title_matches(listing.get('title'), kw, allow_coloured):
+            if not _coinxchange_title_matches(listing.get('title'), kw, allow_coloured,
+                                                      expected_years=expected_years):
                 continue
             listing_tokens = set(re.findall(r'[a-z0-9]+', str(listing.get('title') or '').lower()))
             if not all(set(group) & listing_tokens for group in required):
@@ -1573,6 +1581,7 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
     real-time-ebay host; trying to reuse it there produced HTTP 404s. If
     Browse API credentials are unavailable, return an affiliate search link.
     """
+    expected_years = {t for t in re.findall(r'[a-z0-9]+', str(keywords or '').lower()) if re.fullmatch(r'20\d{2}', t)}
     # Impressions PNC titles usually omit the year, which the year gate would
     # reject; the stamp & pin exclusion below keeps the covers out instead.
     if coin_id in _IMPRESSIONS_COIN_IDS:
@@ -1594,7 +1603,8 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
         for it in _ebay_browse_search(browse_kw, limit=100):
             title = re.sub(r'(?i)(?<![a-z])dollarbuck(?![a-z])', 'Dollarbucks', it.get('title') or '')
             if not _coinxchange_title_matches(title, browse_kw,
-                                              allow_coloured=_allow_coloured(query, coin_id)):
+                                              allow_coloured=_allow_coloured(query, coin_id),
+                                              expected_years=expected_years):
                 continue
             title_tokens = set(re.findall(r'[a-z0-9]+', str(title).lower()))
             # 2026 Impressions coins: 'PNC' also matches the stamp & pin covers.

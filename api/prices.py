@@ -529,7 +529,7 @@ _NAME_FAMILIES = (
 _BUNDLE_TOKENS = {
     'set', 'sets', 'folder', 'folders', 'tube', 'tubes', 'bundle', 'bundles',
     'collection', 'collections', 'bag', 'bags', 'roll', 'rolls', 'lot', 'lots',
-    'bulk', 'case', 'album', 'albums', 'pack', 'packs',
+    'bulk', 'case', 'album', 'albums', 'pack', 'packs', 'pair', 'pairs',
 }
 
 
