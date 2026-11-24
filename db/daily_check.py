@@ -72,9 +72,10 @@ def main():
                      opt.get("price"), url),
                 )
                 seen_ids.add(lid)
+        # Only snapshot-observed rows may be inferred sold by absence (manual pastes are never re-observed).
         cur = conn.execute(
             "UPDATE listings SET status='likely_sold' "
-            "WHERE status='available' AND last_seen_at < date_trunc('day', now()) "
+            "WHERE status='available' AND last_seen_at < date_trunc('day', now()) AND source='browse_daily' "
             "RETURNING listing_id"
         )
         moved = cur.fetchall()
