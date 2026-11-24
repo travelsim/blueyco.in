@@ -16279,11 +16279,31 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "batch3-cf4ecf7548978ca7d6f06703"
+    },
+    {
+     "coin_id": "76604950",
+     "title": "Bluey: The Heelers Proof Limited Edition (PNC) /200 CONFIRMED PRESALE",
+     "sale_price": 260.0,
+     "currency": "AU",
+     "date_sold": "23 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "batch3-cb87d45a4f504c12a868f420"
     }
    ]
   },
   "76605600": {
    "products": [
+    {
+     "coin_id": "76605600",
+     "title": "2026 Bluey: Bingo $1 and $2 Limited-Edition 2-Coin Postal Numismatic Cover (PNC)",
+     "sale_price": 288.0,
+     "currency": "AU",
+     "date_sold": "23 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-5dd43cff2cc01012"
+    },
     {
      "coin_id": "76605600",
      "title": "2026 Bluey: Bingo $1 and $2 Limited-Edition 2-Coin PNC 150 ONLY",
@@ -16309,6 +16329,16 @@
   },
   "76604956": {
    "products": [
+    {
+     "coin_id": "76604956",
+     "title": "2026 Bluey $1 and $2 Limited-Edition 2-Coin Postal Numismatic Cover (PNC)",
+     "sale_price": 288.0,
+     "currency": "AU",
+     "date_sold": "23 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-951f4aee00b51c3f"
+    },
     {
      "coin_id": "76604956",
      "title": "2026 Bluey: Bluey $1 and $2 Limited-Edition 2-Coin PNC 150 ONLY",
@@ -16348,6 +16378,16 @@
   },
   "76604959": {
    "products": [
+    {
+     "coin_id": "76604959",
+     "title": "Bluey 2026 Limited-Edition 3-Coin Postal Numismatic Cover (PNC) Colour Pre-Order",
+     "sale_price": 212.7,
+     "currency": "AU",
+     "date_sold": "24 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-d7759f3ec9d337a1"
+    },
     {
      "coin_id": "76604959",
      "title": "Bluey 2026 Limited-Edition 3-Coin (PNC) Colour, PRESALE, mintage 1000",
