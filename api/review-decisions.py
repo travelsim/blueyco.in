@@ -1,3 +1,4 @@
+import hmac
 import json
 import os
 import re
@@ -14,6 +15,8 @@ Bluey Chief applies stored decisions in the next publication batch.
 """
 
 QUEUE_KEY = "bluey:review-decisions:queue"
+READ_TOKEN_ENV = "REVIEW_QUEUE_READ_TOKEN"
+READ_TOKEN_HEADER = "X-Review-Read-Token"
 DECISION_VALUES = {
     "recent-only",
     "also-in-value",
@@ -98,6 +101,66 @@ def deliver(record):
     return True, None
 
 
+def check_read_auth(presented):
+    """True only when a read token is configured and matches exactly.
+
+    Fail closed: missing configuration or any mismatch denies access.
+    """
+    expected = _rest_value(READ_TOKEN_ENV)
+    if not expected or not presented:
+        return False
+    return hmac.compare_digest(str(presented), expected)
+
+
+def read_queue():
+    """Return (records, skipped, error) for every saved review submission.
+
+    Records are returned oldest-first as stored. Malformed entries are
+    skipped and counted, never served. Transport or storage failures
+    return an error so callers fail closed.
+    """
+    url = _rest_value("KV_REST_API_URL") or _rest_value("UPSTASH_REDIS_REST_URL")
+    token = _rest_value("KV_REST_API_TOKEN") or _rest_value("UPSTASH_REDIS_REST_TOKEN")
+    if not url or not token:
+        return None, 0, "Decision storage is not configured."
+    body = json.dumps([["LRANGE", QUEUE_KEY, 0, -1]],
+                      separators=(",", ":")).encode()
+    req = urllib.request.Request(
+        url.rstrip("/") + "/pipeline",
+        data=body,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token,
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=FORWARD_TIMEOUT) as response:
+            data = json.load(response)
+    except Exception as exc:  # keep transport details out of the reply
+        print(f"outlier review read failed: {type(exc).__name__}")
+        return None, 0, "Decision storage is unavailable."
+    if not isinstance(data, list) or not data:
+        return None, 0, "Decision storage rejected the read."
+    result = data[0].get("result") if isinstance(data[0], dict) else None
+    if not isinstance(result, list):
+        return None, 0, "Decision storage rejected the read."
+    records = []
+    skipped = 0
+    for item in result:
+        try:
+            record = json.loads(item)
+        except (json.JSONDecodeError, ValueError, TypeError):
+            skipped += 1
+            continue
+        if (not isinstance(record, dict)
+                or record.get("kind") != "bluey-outlier-review"
+                or not isinstance(record.get("decisions"), list)):
+            skipped += 1
+            continue
+        records.append(record)
+    return records, skipped, None
+
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
         try:
@@ -125,7 +188,15 @@ class handler(BaseHTTPRequestHandler):
             self._json(502, {"stored": False, "error": detail})
 
     def do_GET(self):
-        self._json(405, {"stored": False, "error": "Use POST with a JSON body."})
+        if not check_read_auth(self.headers.get(READ_TOKEN_HEADER)):
+            self._json(401, {"records": [], "error": "Unauthorized."})
+            return
+        records, skipped, error = read_queue()
+        if error is not None:
+            self._json(502, {"records": [], "error": error})
+            return
+        self._json(200, {"records": records, "skipped": skipped,
+                        "count": len(records)})
 
     def _json(self, status, payload):
         data = json.dumps(payload).encode()

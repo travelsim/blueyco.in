@@ -1,6 +1,6 @@
 {
-  "batch_id": "ledger-publish-20261124-213546",
-  "generated_at": "2026-11-24T21:35:46",
+  "batch_id": "ledger-publish-20261124-220355",
+  "generated_at": "2026-11-24T22:03:55",
   "total_input": 1035,
   "rows": [
     {
@@ -14,18 +14,20 @@
     {
       "listing_id": "147296508393",
       "product_id": "s1_bluey",
+      "review_decision": "also-in-value",
       "price": 126.84,
       "date": "14 May 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "318246843016",
       "product_id": "s1_bluey",
+      "review_decision": "also-in-value",
       "price": 130.0,
       "date": "11 May 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "198341345494",
@@ -46,26 +48,27 @@
     {
       "listing_id": "267655832117",
       "product_id": "s1_bluey",
-      "price": 110.0,
-      "date": "08 May 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "not-valid",
+      "disposition": "excluded",
+      "reason": "reviewer not-valid"
     },
     {
       "listing_id": "257495155569",
       "product_id": "s1_bluey",
+      "review_decision": "also-in-value",
       "price": 64.3,
       "date": "07 May 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "257493601129",
       "product_id": "s1_bluey",
+      "review_decision": "also-in-value",
       "price": 64.3,
       "date": "06 May 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "156405949756",
@@ -86,10 +89,9 @@
     {
       "listing_id": "306783817343",
       "product_id": "s1_bluey",
-      "price": 110.0,
-      "date": "05 Apr 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "excluded",
+      "reason": "reviewer keep-out (unmapped, fail closed)"
     },
     {
       "listing_id": "137174296905",
@@ -110,10 +112,11 @@
     {
       "listing_id": "227228449489",
       "product_id": "s1_bluey",
+      "review_decision": "also-in-value",
       "price": 119.99,
       "date": "25 Feb 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "135662583476",
@@ -126,10 +129,9 @@
     {
       "listing_id": "306771230620",
       "product_id": "s1_bluey",
-      "price": 110.0,
-      "date": "22 Feb 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "excluded",
+      "reason": "reviewer keep-out (unmapped, fail closed)"
     },
     {
       "listing_id": "186754265188",
@@ -2318,8 +2320,9 @@
     {
       "listing_id": "manual-e8b79837323098d0",
       "product_id": "s1_pnc_stripes",
-      "disposition": "pending-review",
-      "reason": "needs reviewer mapping"
+      "review_decision": "not-valid",
+      "disposition": "excluded",
+      "reason": "reviewer not-valid"
     },
     {
       "listing_id": "manual-e45df982e16d38f6",
@@ -7844,12 +7847,14 @@
     {
       "listing_id": "batch3-77101ea0bf57cd1a25201588",
       "product_id": "s3_till_bingo",
+      "review_decision": "not-valid",
       "disposition": "held",
       "reason": "publication-hold"
     },
     {
       "listing_id": "batch3-5bbf29c68989f35a5a347a23",
       "product_id": "s3_till_bluey",
+      "review_decision": "not-valid",
       "disposition": "held",
       "reason": "publication-hold"
     },
@@ -7872,24 +7877,28 @@
     {
       "listing_id": "batch3-687fe0264b0a801cb0ea3647",
       "product_id": "s3_camping",
+      "review_decision": "not-valid",
       "disposition": "held",
       "reason": "taxonomy-gate"
     },
     {
       "listing_id": "batch3-c1ffe1011eb54526a6558b0d",
       "product_id": "s3_rain",
+      "review_decision": "not-valid",
       "disposition": "held",
       "reason": "taxonomy-gate"
     },
     {
       "listing_id": "batch3-c13cea496f17e4b682f383e9",
       "product_id": "s3_granny",
+      "review_decision": "not-valid",
       "disposition": "held",
       "reason": "taxonomy-gate"
     },
     {
       "listing_id": "batch3-6b5fbfcc3eafb120a99adf6a",
       "product_id": "s3_babyrace",
+      "review_decision": "not-valid",
       "disposition": "held",
       "reason": "taxonomy-gate"
     },
@@ -8020,7 +8029,7 @@
       "product_id": "s4_cricket_proof",
       "price": 109.95,
       "date": "23 Sep 2026",
-      "disposition": "old-history",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8036,7 +8045,7 @@
       "product_id": "s4_cricket_proof",
       "price": 130.0,
       "date": "18 Nov 2026",
-      "disposition": "approved-awaiting",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8044,7 +8053,7 @@
       "product_id": "s4_cricket_proof",
       "price": 139.0,
       "date": "16 Nov 2026",
-      "disposition": "approved-awaiting",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8052,7 +8061,7 @@
       "product_id": "s4_cricket_proof",
       "price": 139.99,
       "date": "17 Nov 2026",
-      "disposition": "approved-awaiting",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8060,7 +8069,7 @@
       "product_id": "s4_cricket_proof",
       "price": 135.0,
       "date": "18 Nov 2026",
-      "disposition": "approved-awaiting",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8068,7 +8077,7 @@
       "product_id": "s4_cricket_proof",
       "price": 130.0,
       "date": "21 Nov 2026",
-      "disposition": "approved-awaiting",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8076,7 +8085,7 @@
       "product_id": "s4_cricket_proof",
       "price": 149.0,
       "date": "27 Oct 2026",
-      "disposition": "old-history",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8084,21 +8093,23 @@
       "product_id": "s4_cricket_proof",
       "price": 149.1,
       "date": "07 Oct 2026",
-      "disposition": "old-history",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
       "listing_id": "cricket-8dcd68ea49682b2c99efa4a1",
       "product_id": "s4_cricket_proof",
-      "disposition": "pending-review",
-      "reason": "needs reviewer mapping"
+      "price": 143.8,
+      "date": "08 Nov 2026",
+      "disposition": "published",
+      "reason": "verified Melbourne confirmed_sold"
     },
     {
       "listing_id": "cricket-d792bb05dc111072957c799e",
       "product_id": "s4_cricket_proof",
       "price": 139.0,
       "date": "07 Nov 2026",
-      "disposition": "approved-awaiting",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8106,21 +8117,23 @@
       "product_id": "s4_cricket_proof",
       "price": 155.0,
       "date": "08 Nov 2026",
-      "disposition": "approved-awaiting",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
       "listing_id": "cricket-7a2319ba6f270f5c6c0d1b2c",
       "product_id": "s4_cricket_proof",
-      "disposition": "pending-review",
-      "reason": "needs reviewer mapping"
+      "price": 155.0,
+      "date": "11 Nov 2026",
+      "disposition": "published",
+      "reason": "verified Melbourne confirmed_sold"
     },
     {
       "listing_id": "cricket-c6dc86dc556612581a3d5f7b",
       "product_id": "s4_cricket_proof",
       "price": 160.0,
       "date": "24 Nov 2026",
-      "disposition": "approved-awaiting",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8128,7 +8141,7 @@
       "product_id": "s4_cricket_unc",
       "price": 16.5,
       "date": "18 Nov 2026",
-      "disposition": "approved-awaiting",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8136,7 +8149,7 @@
       "product_id": "s4_cricket_unc",
       "price": 16.5,
       "date": "19 Nov 2026",
-      "disposition": "approved-awaiting",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8144,7 +8157,7 @@
       "product_id": "s4_cricket_unc",
       "price": 16.5,
       "date": "18 Nov 2026",
-      "disposition": "approved-awaiting",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8152,7 +8165,7 @@
       "product_id": "s4_cricket_unc",
       "price": 17.58,
       "date": "22 Nov 2026",
-      "disposition": "approved-awaiting",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8160,7 +8173,7 @@
       "product_id": "s4_cricket_unc",
       "price": 24.95,
       "date": "15 Oct 2026",
-      "disposition": "approved-awaiting",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8168,7 +8181,7 @@
       "product_id": "s4_cricket_unc",
       "price": 25.0,
       "date": "01 Oct 2026",
-      "disposition": "old-history",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8176,7 +8189,7 @@
       "product_id": "s4_cricket_unc",
       "price": 25.0,
       "date": "06 Oct 2026",
-      "disposition": "old-history",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8184,7 +8197,7 @@
       "product_id": "s4_cricket_unc",
       "price": 25.0,
       "date": "23 Nov 2026",
-      "disposition": "approved-awaiting",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8192,7 +8205,7 @@
       "product_id": "s4_cricket_unc",
       "price": 25.0,
       "date": "14 Nov 2026",
-      "disposition": "approved-awaiting",
+      "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
     },
     {
@@ -8260,6 +8273,18 @@
       "reason": "verified Melbourne confirmed_sold"
     }
   ],
+  "review_decisions": {
+    "records": 6,
+    "duplicate_listings": 5,
+    "unique_listings": 16,
+    "by_decision": {
+      "recent-only": 1,
+      "not-valid": 8,
+      "also-in-value": 5,
+      "keep-out": 2
+    },
+    "recorded": 16
+  },
   "held_listing_ids": [
     "batch3-5bbf29c68989f35a5a347a23",
     "batch3-687fe0264b0a801cb0ea3647",
