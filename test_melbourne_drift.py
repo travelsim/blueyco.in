@@ -73,7 +73,8 @@ class TestDriftClassifier(unittest.TestCase):
         self.assertEqual(len(report["pending_review"]), 1)
         item = report["pending_review"][0]
         self.assertEqual(item["published_newest"], "2026-07-17")
-        self.assertFalse(item["would_project_unmapped"])
+        self.assertNotIn("would_project_unmapped", item)
+        self.assertEqual(len(report["approved_awaiting"]), 0)
 
     def test_older_row_is_old_history(self):
         report = drift.classify(
@@ -122,6 +123,81 @@ class TestProjectionHeldVisibility(unittest.TestCase):
                     "batch3-c1ffe1011eb54526a6558b0d"):
             self.assertIn(lid, by_id)
             self.assertEqual(by_id[lid]["reason"], "taxonomy-gate")
+
+
+class TestJsonFetchParsing(unittest.TestCase):
+    def test_pipe_and_newline_titles_parse_exactly(self):
+        blob = (
+            '{"product_id": "s3_rain", "title": "Rain | Pour | Coin",'
+            ' "price_aud": 8.9, "date_sold": "2026-11-23",'
+            ' "listing_id": "a|b", "source": "s"}\n'
+            '{"product_id": "s3_rain", "title": "Line1\\nLine2",'
+            ' "price_aud": 9.9, "date_sold": "2026-11-24",'
+            ' "listing_id": "c", "source": "s"}\n'
+            'not json\n'
+        )
+        rows, bad = drift.parse_json_lines(blob)
+        self.assertEqual(len(rows), 2)
+        self.assertEqual(bad, 1)
+        self.assertEqual(rows[0]["title"], "Rain | Pour | Coin")
+        self.assertEqual(rows[0]["listing_id"], "a|b")
+        self.assertIn("\n", rows[1]["title"])
+
+
+class TestClassifyAccounting(unittest.TestCase):
+    def test_every_input_row_is_counted(self):
+        rows = [
+            row("s3_rain", "2026 BLUEY RAINING $2 Coin", 8.9, "23 Nov 2026", "lid1"),
+            row("s3_rain", "No price here", None, "23 Nov 2026", "lid2"),
+            row("s3_rain", "Oldie", 5.0, "1 Jan 2020", "lid3"),
+            row("newprod", "Brand new thing", 9.0, "24 Nov 2026", "lid4"),
+            row("newprod", "Mappable thing", 10.0, "24 Nov 2026", "lid5"),
+        ]
+        index = {("s3_rain", "2026 bluey raining 2 coin", 8.9, "2026-11-23")}
+        report = drift.classify(
+            rows, index, {"s3_rain": "2026-11-23", "newprod": "2026-01-01"},
+            {}, strict_match=lambda r, p: r["listing_id"] == "lid5")
+        total = (report["published"] + len(report["held"])
+                 + len(report["pending_review"]) + len(report["approved_awaiting"])
+                 + report["old_history"] + len(report["incomplete"]))
+        self.assertEqual(report["total_input"], 5)
+        self.assertEqual(total, 5)
+        self.assertEqual(report["published"], 1)
+        self.assertEqual(len(report["incomplete"]), 1)
+        self.assertEqual(report["old_history"], 1)
+        self.assertEqual(len(report["approved_awaiting"]), 1)
+        self.assertEqual(report["approved_awaiting"][0]["row"]["listing_id"], "lid5")
+        self.assertEqual(len(report["pending_review"]), 1)
+        self.assertEqual(report["pending_review"][0]["row"]["listing_id"], "lid4")
+
+
+class TestReverseCheck(unittest.TestCase):
+    def test_unmatched_and_unverifiable(self):
+        committed = [
+            {"coin_id": "s3_rain", "row": {"listing_id": "in-mel", "title": "t"}},
+            {"coin_id": "s3_rain", "row": {"listing_id": "gone", "title": "t"}},
+            {"coin_id": "s3_rain", "row": {"title": "no id"}},
+        ]
+        out = drift.reverse_check(committed, {"in-mel"})
+        self.assertEqual(len(out["unmatched"]), 1)
+        self.assertEqual(out["unmatched"][0]["row"]["listing_id"], "gone")
+        self.assertEqual(len(out["unverifiable"]), 1)
+
+
+class TestCollectionGaps(unittest.TestCase):
+    def test_zero_sale_and_overdue(self):
+        prods = [
+            {"product_id": "a", "name": "A", "confirmed_count": 0,
+             "has_listings": False, "max_last_seen": None},
+            {"product_id": "b", "name": "B", "confirmed_count": 3,
+             "has_listings": True, "max_last_seen": "2020-01-01T00:00:00+00:00"},
+            {"product_id": "c", "name": "C", "confirmed_count": 3,
+             "has_listings": True,
+             "max_last_seen": drift.datetime.now().isoformat()},
+        ]
+        out = drift.collection_gaps(prods)
+        self.assertEqual([p["product_id"] for p in out["zero_sale"]], ["a"])
+        self.assertEqual([p["product_id"] for p in out["overdue"]], ["b"])
 
 
 if __name__ == "__main__":
