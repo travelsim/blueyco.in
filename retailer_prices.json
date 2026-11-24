@@ -253,15 +253,11 @@
   }
  },
  "s3_pnc_bluey": {
-  "auspost": {
-   "price": null,
-   "available": true,
-   "url": "https://auspost.com.au/shop/search?SearchTerm=Bluey+For+Real+Life+PNC"
-  },
   "ebay": {
-   "price": null,
+   "price": 35.68,
    "available": true,
-   "url": "https://www.ebay.com.au/sch/i.html?_nkw=2026+Bluey+For+Real+Life+PNC&LH_BIN=1&_sop=15"
+   "url": "https://www.ebay.com.au/itm/267844032803",
+   "checkedAt": 1795526807
   }
  },
  "s3_pnc_bingo": {
@@ -608,10 +604,10 @@
  },
  "76604957": {
   "ebay": {
-   "price": 450.0,
+   "price": 400.0,
    "available": true,
    "url": "https://www.ebay.com.au/itm/377668768205",
-   "status": "live presale, +$13.44 delivery (search card read 23 Nov 2026; item page not opened)"
+   "checkedAt": 1795526807
   }
  },
  "76604959": {
@@ -664,10 +660,66 @@
  },
  "76604950": {
   "ebay": {
-   "price": null,
+   "price": 250.0,
    "available": true,
-   "url": "https://www.ebay.com.au/sch/i.html?_nkw=Heelers+Proof+Limited+Edition+PNC+2026&LH_BIN=1&_sop=15",
-   "status": "search link, item URL pending"
+   "url": "https://www.ebay.com.au/itm/377669797571",
+   "checkedAt": 1795526807
+  }
+ },
+ "s3_stamp_pack": {
+  "ebay": {
+   "price": 34.95,
+   "available": true,
+   "url": "https://www.ebay.com.au/itm/277971783240",
+   "checkedAt": 1795526807
+  }
+ },
+ "s3_maxicard_pack": {
+  "ebay": {
+   "price": 29.85,
+   "available": true,
+   "url": "https://www.ebay.com.au/itm/407321225989",
+   "checkedAt": 1795526807
+  }
+ },
+ "s1_pnc_stripes": {
+  "ebay": {
+   "price": 34.95,
+   "available": true,
+   "url": "https://www.ebay.com.au/itm/267706334798",
+   "checkedAt": 1795526807
+  }
+ },
+ "s1_impressions_2coin_privy_minisheet_mumdad": {
+  "ebay": {
+   "price": 159.0,
+   "available": true,
+   "url": "https://www.ebay.com.au/itm/237124664414",
+   "checkedAt": 1795526807
+  }
+ },
+ "s1_impressions_2coin_privy_minisheet_stripes": {
+  "ebay": {
+   "price": 159.0,
+   "available": true,
+   "url": "https://www.ebay.com.au/itm/237124670783",
+   "checkedAt": 1795526807
+  }
+ },
+ "s1_impressions_2coin_privy_minisheet_blueyfriends": {
+  "ebay": {
+   "price": 199.99,
+   "available": true,
+   "url": "https://www.ebay.com.au/itm/335980959967",
+   "checkedAt": 1795526807
+  }
+ },
+ "s1_impressions_pnc_3coin": {
+  "ebay": {
+   "price": 530.65,
+   "available": true,
+   "url": "https://www.ebay.com.au/itm/257435001068",
+   "checkedAt": 1795526807
   }
  }
 }
