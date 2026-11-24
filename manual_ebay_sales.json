@@ -1811,6 +1811,21 @@
      "link": "https://www.ebay.com.au/itm/198403545959"
     },
     {
+     "title": "2026 BLUEY BABY RACE $2 Coin. 1x AUSTRALIAN Two Dollar Non-Colour Coin",
+     "sale_price": 8.5,
+     "currency": "AUD",
+     "date_sold": "23 Nov 2026",
+     "shipping_price": 1.85,
+     "buying_format": "Buy It Now",
+     "product_type": "2026 $2 Bluey Baby Race (non-colour)",
+     "coin_id": "s3_babyrace",
+     "source_type": "user_imported_csv",
+     "record_status": "Retained",
+     "import_source": "sold-listings-batch3-2026-11-23",
+     "batch_id": "sold-listings-batch3-2026-11-23",
+     "listing_id": "batch3-6b5fbfcc3eafb120a99adf6a"
+    },
+    {
      "coin_id": "s3_babyrace",
      "title": "Baby Race | 2026 Bluey Privy Mark UNC $2 Coin in Card Set | Brand New Sealed",
      "sale_price": 42.99,
@@ -6443,6 +6458,21 @@
      "link": "https://www.ebay.com.au/itm/406909535442"
     },
     {
+     "title": "2026 BLUEY Granny Mobile $2 Coin. 1x AUSTRALIAN Two Dollar Non-Colour Coin",
+     "sale_price": 8.39,
+     "currency": "AUD",
+     "date_sold": "23 Nov 2026",
+     "shipping_price": 1.85,
+     "buying_format": "Buy It Now",
+     "product_type": "2026 $2 Bluey Granny Mobile (non-colour)",
+     "coin_id": "s3_granny",
+     "source_type": "user_imported_csv",
+     "record_status": "Retained",
+     "import_source": "sold-listings-batch3-2026-11-23",
+     "batch_id": "sold-listings-batch3-2026-11-23",
+     "listing_id": "batch3-c13cea496f17e4b682f383e9"
+    },
+    {
      "coin_id": "s3_granny",
      "title": "⚪️UNC 2026 BLUEY GRANNYMOBILE-$2 TWO DOLLAR CARDED COIN UNCIRCULATED⭐️PRIVY MARK",
      "sale_price": 33.0,
@@ -7705,6 +7735,21 @@
   },
   "s3_rain": {
    "products": [
+    {
+     "title": "2026 BLUEY RAINING $2 Coin. 1x AUSTRALIAN Two Dollar Non-Colour Coin",
+     "sale_price": 8.9,
+     "currency": "AUD",
+     "date_sold": "23 Nov 2026",
+     "shipping_price": 1.85,
+     "buying_format": "Buy It Now",
+     "product_type": "2026 $2 Bluey Raining (non-colour)",
+     "coin_id": "s3_rain",
+     "source_type": "user_imported_csv",
+     "record_status": "Retained",
+     "import_source": "sold-listings-batch3-2026-11-23",
+     "batch_id": "sold-listings-batch3-2026-11-23",
+     "listing_id": "batch3-c1ffe1011eb54526a6558b0d"
+    },
     {
      "coin_id": "s3_rain",
      "title": "2026 Australian Bluey $2 Privy Mark Uncirculated Coin - Rain",
@@ -12975,6 +13020,21 @@
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "158223924024",
      "link": "https://www.ebay.com.au/itm/158223924024"
+    },
+    {
+     "title": "2026 BLUEY CAMPING $2 Coin. 1x AUSTRALIAN Two Dollar Non-Colour Coin",
+     "sale_price": 8.5,
+     "currency": "AUD",
+     "date_sold": "23 Nov 2026",
+     "shipping_price": 1.85,
+     "buying_format": "Buy It Now",
+     "product_type": "2026 $2 Bluey Camping (non-colour)",
+     "coin_id": "s3_camping",
+     "source_type": "user_imported_csv",
+     "record_status": "Retained",
+     "import_source": "sold-listings-batch3-2026-11-23",
+     "batch_id": "sold-listings-batch3-2026-11-23",
+     "listing_id": "batch3-687fe0264b0a801cb0ea3647"
     },
     {
      "coin_id": "s3_camping",

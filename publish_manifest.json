@@ -1,6 +1,6 @@
 {
-  "batch_id": "ledger-publish-20261124-150803",
-  "generated_at": "2026-11-24T15:08:03",
+  "batch_id": "ledger-publish-20261124-151537",
+  "generated_at": "2026-11-24T15:15:37",
   "total_input": 997,
   "rows": [
     {
@@ -7974,5 +7974,5 @@
     "batch3-c13cea496f17e4b682f383e9",
     "batch3-c1ffe1011eb54526a6558b0d"
   ],
-  "carried_over_committed_only": 440
+  "carried_over_committed_only": 444
 }

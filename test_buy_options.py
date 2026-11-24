@@ -478,21 +478,24 @@ class TestBargainLandedPrice(unittest.TestCase):
     def test_market_median_excludes_bundles_and_lots_for_s1_bluey(self):
         # Raw s1_bluey sample in ebay_cache.json has 24 products with mean ~$44.67
         # and median ~$12.95 because it contains 10-coin sets ($64-$130), rolls ($110),
-        # and bags of 20. Excluding those bundles leaves genuine single-coin sales
-        # ($8.90, $9.50, $9.99, $12.00) with an item-only median of $9.75,
-        # recomputed delivered median $10.20 (includes postage).
+        # and bags of 20. Excluding those bundles leaves genuine single-coin sales.
+        # With the 2026-11-24 verified ledger batch the file holds 25 s1_bluey rows;
+        # the surviving delivered sample is 5 singles ($8.45, $9.50, $9.99,
+        # $8.90+$1.50 postage, $12.00) with median $9.99. Bundles stay excluded
+        # by the $60 window and title matcher; the median moved down on a larger
+        # genuine sample, not up on bundle inflation.
         med = legacy._market_median('s1_bluey')
         self.assertIsNotNone(med)
-        self.assertEqual(med, 10.2)
+        self.assertEqual(med, 9.99)
         self.assertLess(med, 12.95)
 
     def test_bargain_detection_rejects_false_bargain_from_bundle_skew(self):
         # With the unpruned median ($12.95), an ask of $10.00 (landed $10.00)
         # would be falsely flagged as a bargain (10.00 <= 12.95 * 0.85 = 11.0075).
-        # Against the clean delivered median ($10.20), $10.00 is correctly rejected,
+        # Against the clean delivered median ($9.99), $10.00 is correctly rejected,
         # while a genuine bargain at $7.50 is recognized.
         clean_median = legacy._market_median('s1_bluey')
-        self.assertEqual(clean_median, 10.2)
+        self.assertEqual(clean_median, 9.99)
 
         false_bargain = legacy._deal_fields(10.0, 0.0, clean_median)
         self.assertFalse(false_bargain['is_bargain'])

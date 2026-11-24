@@ -158,6 +158,22 @@ class TestCarryOver(unittest.TestCase):
         self.assertEqual(carried, 1)
         self.assertEqual(coins["p1"]["products"][0]["title"], "Legacy")
 
+    def test_held_rows_carried_verbatim_not_dropped(self):
+        # emitted_ids mirrors main(): ids of freshly emitted rows only.
+        # held1 is held (never emitted) so its committed row must be kept.
+        coins = {"p1": {"products": [{"listing_id": "fresh9", "title": "New",
+                                      "sale_price": 1.0,
+                                      "date_sold": "20 Nov 2026"}]}}
+        committed = {"coins": {"p1": {"products": [
+            {"listing_id": "held1", "title": "Old", "sale_price": 5.43,
+             "date_sold": "23 Nov 2026"}]}}}
+        with mock.patch("builtins.open", mock.mock_open()):
+            with mock.patch("json.load", return_value=committed):
+                carried = pub.carry_over_committed(coins, "x", {"fresh9"})
+        self.assertEqual(carried, 1)
+        titles = [r["title"] for r in coins["p1"]["products"]]
+        self.assertIn("Old", titles)
+
     def test_superseded_rows_not_duplicated(self):
         coins = {"p1": {"products": [{"listing_id": "a", "title": "New",
                                       "sale_price": 1.0,

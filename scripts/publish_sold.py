@@ -181,8 +181,15 @@ def generate(rows, json_index, json_newest, holds, excluded_ids,
     return coins, manifest
 
 
-def carry_over_committed(coins, committed_path, melbourne_ids):
-    """Keep committed rows Melbourne cannot confirm, verbatim. Returns count."""
+def carry_over_committed(coins, committed_path, emitted_ids):
+    """Keep committed rows the fresh batch did not supersede, verbatim.
+
+    Rows superseded by a freshly emitted row (same listing_id) are
+    skipped; everything else is carried verbatim, including rows held
+    by publication-hold/taxonomy-gate/excluded-evidence (the serving
+    projection still excludes them from live, so carrying changes
+    nothing live) and rows Melbourne cannot confirm. Returns count.
+    """
     data = json.load(open(committed_path, encoding="utf-8"))
     carried = 0
     for cid, entry in (data.get("coins", data)).items():
@@ -190,7 +197,7 @@ def carry_over_committed(coins, committed_path, melbourne_ids):
             if not isinstance(row, dict):
                 continue
             lid = str(row.get("listing_id") or row.get("item_id") or "")
-            if lid and lid in melbourne_ids:
+            if lid and lid in emitted_ids:
                 continue
             entry_out = coins.setdefault(cid, {"products": []})
             entry_out["products"].append(dict(row))
@@ -298,9 +305,11 @@ def main(argv=None):
         print("staged: %s" % staging)
         print("manifest: %s" % manifest_path)
     if args.mode == "write":
-        carried = carry_over_committed(
-            coins, committed_path,
-            melbourne_ids | set(manifest["held_listing_ids"]))
+        emitted_ids = {m["listing_id"] for m in manifest["rows"]
+                       if m["disposition"] in ("published", "old-history",
+                                              "approved-awaiting")
+                       and m["listing_id"]}
+        carried = carry_over_committed(coins, committed_path, emitted_ids)
         manifest["carried_over_committed_only"] = carried
         json.dump({"coins": coins},
                   open(committed_path, "w", encoding="utf-8"),
