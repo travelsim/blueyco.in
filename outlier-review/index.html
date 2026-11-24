@@ -26,7 +26,7 @@
 </head>
 <body>
 <h1>Bluey review queue: 57 sales</h1>
-<div class="sub">Classify each sale, then Submit. Your choices go back to Bluey for publication.<br>
+<div class="sub">Classify each sale, then Save. Your choices save directly and Bluey applies them to the next publication batch.<br>
 <b>Outlier</b> = shown in Recent Sales, excluded from Market Value. <b>Held</b> = hidden everywhere today. <b>Pending</b> = awaiting review.</div>
 <div class="bar">
   <button data-f="all">All 57</button>
@@ -34,7 +34,7 @@
   <button data-f="held">Held 6</button>
   <button data-f="pending">Pending 1</button>
   <input id="q" type="search" placeholder="Filter by title, product, price...">
-  <button id="submit">Submit classifications</button>
+  <button id="submit">Save classifications</button>
 </div>
 <div id="list"></div>
 <div class="foot">Choices: <b>Recent only</b> shows the sale, keeps it out of Market Value. <b>Also in value</b> counts it in Market Value. <b>Keep held</b> leaves it hidden. <b>Not valid / wrong</b> flags it out.</div>
@@ -78,7 +78,14 @@ document.getElementById("submit").onclick=async()=>{
   document.querySelectorAll("select[data-id]").forEach(s=>{ if(s.selectedIndex>0) out.push(s.getAttribute("data-id")+"="+s.value); });
   const msg="OUTLIER REVIEW\n"+(out.length?out.join("\n"):"No changes");
   if(window.mausbot && mausbot.send) mausbot.send(msg);
-  else try{ await navigator.clipboard.writeText(msg); alert("Decisions copied. Paste them into your chat with Bluey."); }catch(e){ const a=document.createElement("a"); a.href="data:text/plain,"+encodeURIComponent(msg); a.download="review-decisions.txt"; a.click(); alert("Downloaded review-decisions.txt. Paste its contents into your chat with Bluey."); }
+  else try{
+    const decisions=[...document.querySelectorAll("select[data-id]")].filter(s=>s.selectedIndex>0).map(s=>({listing_id:s.getAttribute("data-id"),decision:s.value}));
+    const payload={kind:"bluey-outlier-review",source:"blueyco.in/outlier-review",submitted_at:new Date().toISOString(),decisions};
+    const resp=await fetch("/api/review-decisions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+    const data=await resp.json().catch(()=>({}));
+    if(!resp.ok||!data.stored) throw new Error(data.error||"Could not save classifications.");
+    alert("Saved "+data.count+" classifications. Bluey will apply them to the next publication batch.");
+  }catch(e){ alert("Could not save: "+(e&&e.message?e.message:e)); }
 };
 render();
 </script>
