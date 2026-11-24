@@ -780,9 +780,14 @@ def _quality_filter_ebay(data, coin, now=None):
         # product-name variant; the checks below still enforce date, currency,
         # positive price, duplicate and 90-day rules.
         reviewed_csv_match = (
-            product.get('source_type') in {'user_imported_csv', 'user_pasted_search'}
-            and product.get('record_status') == 'Retained'
-            and product.get('coin_id') == coin.get('id')
+            product.get('coin_id') == coin.get('id')
+            and (
+                (product.get('source_type')
+                 in {'user_imported_csv', 'user_pasted_search'}
+                 and product.get('record_status') == 'Retained')
+                or (product.get('source_type') == 'melbourne_confirmed_ledger'
+                    and product.get('record_status') == 'AutoApproved')
+            )
         )
         if reviewed_csv_match:
             sold_at = _sold_timestamp(product.get('date_sold'))

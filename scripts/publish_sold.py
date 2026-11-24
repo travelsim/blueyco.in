@@ -217,7 +217,8 @@ def verify_against_live(coins, base_url):
             continue
         for source in ("ebay", "coinxchange", "manual"):
             block = entry.get(source) or {}
-            for key in ("products", "historical_products"):
+            for key in ("products", "historical_products", "outliers",
+                        "historical_outliers"):
                 for row in block.get(key, []) or []:
                     lid = str((row or {}).get("listing_id") or "")
                     price = drift.norm_price((row or {}).get("sale_price"))
