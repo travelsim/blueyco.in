@@ -181,10 +181,12 @@ def get_buy_options(coin_id, keywords):
             except Exception as e:
                 print(f"buy-options error [{retailer['id']}]: {e}")
         manual_entry = (manual.get(coin_id) or {}).get(retailer['id']) or {}
-        if (results and manual_entry.get('useAsLinkOnly') is True and
-                all(option.get('link_only') or option.get('price') is None for option in results)):
-            # Preserve a deliberately supplied, coin-specific search URL when
-            # the live provider could only produce a generic link-only result.
+        # A verified live eBay item URL replaces a generic link-only result;
+        # useAsLinkOnly does the same for a coin-specific search URL.
+        manual_item = retailer.get('id') == 'ebay' and bool(
+            re.search(r'/itm/\d+', manual_entry.get('url') or ''))
+        if (results and all(option.get('link_only') or option.get('price') is None for option in results)
+                and (manual_item or manual_entry.get('useAsLinkOnly') is True)):
             results = _fallback(retailer, keywords, coin_id, manual)
         if not results:
             # Unfinished or failed scrape still yields an actionable link.
