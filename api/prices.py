@@ -754,7 +754,7 @@ def _get_publication_holds():
 
 
 def _quality_filter_ebay(data, coin, now=None):
-    """Keep older matched sales as history; use only recent sales for current stats."""
+    """Keep older matched sales as history; use only recent sales for current stats. Stats use delivered totals (sale_price + shipping)."""
     if not isinstance(data, dict):
         return data
     now = time.time() if now is None else now
@@ -806,14 +806,20 @@ def _quality_filter_ebay(data, coin, now=None):
             continue
         if sale_price <= 0:
             continue
-        normalized = {**product, 'sale_price': sale_price}
+        try:
+            _ship = float(str(product.get('shipping_price') or product.get('postage') or 0).replace('$', '').replace(',', '').strip())
+        except (TypeError, ValueError):
+            _ship = 0.0
+        normalized = {**product, 'sale_price': sale_price, 'delivered_price': round(sale_price + (_ship or 0), 2)}
         age = now - (_sold_timestamp(product.get('date_sold')) or now)
         (current_products if age <= 90 * 24 * 3600 else historical_products).append(normalized)
     current_products.sort(key=lambda p: _sold_timestamp(p.get('date_sold')) or 0, reverse=True)
     historical_products.sort(key=lambda p: _sold_timestamp(p.get('date_sold')) or 0, reverse=True)
     valid_current, current_outliers = _filter_price_outliers(current_products, coin)
     valid_historical, historical_outliers = _filter_price_outliers(historical_products, coin)
-    prices = [p['sale_price'] for p in valid_current]
+    def _delivered(p):
+        return p.get('delivered_price') or round(float(p['sale_price']) + (float(p.get('shipping_price') or p.get('postage') or 0) or 0), 2)
+    prices = [_delivered(p) for p in valid_current]
     result = dict(data)
     result['products'] = valid_current
     result['outliers'] = current_outliers
@@ -861,7 +867,7 @@ def _quality_filter_coinxchange(data, coin, now=None):
         })
     filtered = _quality_filter_ebay({'products': normalized}, coin, now=now)
     products = filtered['products']
-    prices = [p['sale_price'] for p in products]
+    prices = [p.get('delivered_price') or round(float(p['sale_price']) + (float(p.get('shipping_price') or p.get('postage') or 0) or 0), 2) for p in products]
     ordered = sorted(prices)
     mid = len(ordered) // 2
     median = ordered[mid] if len(ordered) % 2 else (
