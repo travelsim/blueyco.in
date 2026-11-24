@@ -700,6 +700,34 @@ def _filter_price_outliers(products, coin=None):
     return final_valid, outliers
 
 
+# Explicit ordinary-coin disclaimers seen in reviewed CSV titles. A row carrying
+# one of these is an uncoloured circulation coin, never a finish product.
+_NON_COLOUR_DISCLAIMERS = (
+    'non-colour', 'non-coloured', 'noncolor', 'non-colored',
+    'not coloured', 'not colored', 'uncoloured', 'uncolored',
+)
+
+# Product queries that describe a finish (privy/coloured/proof/silver/PNC)
+# rather than an ordinary circulation coin.
+_FINISH_FORMAT_TOKENS = ('privy', 'coloured', 'colored', 'proof', 'silver', 'pnc')
+
+
+def _reviewed_format_mismatch(title, coin):
+    """True when a reviewed row's title disclaims the product's finish.
+
+    Reviewed CSV rows keep the reviewer's catalog mapping without the strict
+    title matcher, so an explicit "Non-Colour" disclaimer in the title is the
+    only thing stopping an ordinary coin from entering a privy/coloured/proof
+    product median. Hold such rows deterministically instead of relying on the
+    IQR band to catch them by luck. The IQR filter itself is unchanged.
+    """
+    query = (coin.get('ebay_kw') or coin.get('search') or '').lower()
+    if not any(token in query for token in _FINISH_FORMAT_TOKENS):
+        return False
+    text = str(title or '').lower()
+    return any(disclaimer in text for disclaimer in _NON_COLOUR_DISCLAIMERS)
+
+
 def _quality_filter_ebay(data, coin, now=None):
     """Keep older matched sales as history; use only recent sales for current stats."""
     if not isinstance(data, dict):
@@ -727,6 +755,8 @@ def _quality_filter_ebay(data, coin, now=None):
         if reviewed_csv_match:
             sold_at = _sold_timestamp(product.get('date_sold'))
             if not product.get('title') or sold_at is None or sold_at > now:
+                continue
+            if _reviewed_format_mismatch(product.get('title'), coin):
                 continue
         elif not _product_matches_coin(product, coin, now=now, max_age_days=None):
             continue
