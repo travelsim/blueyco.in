@@ -1,4 +1,4 @@
-﻿import importlib.util
+import importlib.util
 import pathlib
 import unittest
 from unittest.mock import patch
@@ -74,3 +74,30 @@ class ImpressionsStampCoverExclusionTests(unittest.TestCase):
             out = server._ebay_live_options(retailer, '2026 Bluey Sleepytime PNC', coin_id='76604949')
         # Affiliate tracking parameters are appended to the item URL; compare the item itself.
         self.assertEqual([o['url'].split('?')[0] for o in out], ['https://www.ebay.com.au/itm/111000000002'])
+
+
+class PricesApiDeliveredMedianTests(unittest.TestCase):
+    def test_quality_filter_median_includes_postage(self):
+        # Directly exercise the api/prices delivered-median path with the
+        # 2026 AlBr proof example: $138.50 + $13.44 = $151.94 delivered.
+        import importlib.util as _ilu
+        spec = _ilu.spec_from_file_location('prices_api', pathlib.Path(__file__).parent / 'api' / 'prices.py')
+        mod = _ilu.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        _by_id = {c['id']: c for c in mod.COINS}
+        coin = _by_id.get('s3_proof_ab') or {'id': 's3_proof_ab', 'ebay_kw': '2026 $2 Bluey Coloured AlBr Proof'}
+        # Build three recent sales with distinct delivered totals so dedupe keeps all three.
+        now = mod.time.time()
+        def _dt(age_days):
+            import datetime
+            return (datetime.datetime.utcfromtimestamp(now - age_days*86400)).strftime('%d %b %Y')
+        data = {'products': [
+            {'title': 'Bluey 2026 $2 Coloured AlBr Proof Coin RAM', 'sale_price': 138.50, 'shipping_price': 13.44, 'currency': 'AUD', 'date_sold': _dt(1), 'source_type': 'user_imported_csv', 'record_status': 'Retained', 'coin_id': 's3_proof_ab'},
+            {'title': 'Bluey 2026 $2 Coloured AlBr Proof Coin RAM', 'sale_price': 140.00, 'shipping_price': 10.00, 'currency': 'AUD', 'date_sold': _dt(2), 'source_type': 'user_imported_csv', 'record_status': 'Retained', 'coin_id': 's3_proof_ab'},
+            {'title': 'Bluey 2026 $2 Coloured AlBr Proof Coin RAM', 'sale_price': 145.00, 'shipping_price': 5.00, 'currency': 'AUD', 'date_sold': _dt(3), 'source_type': 'user_imported_csv', 'record_status': 'Retained', 'coin_id': 's3_proof_ab'},
+        ], 'historical_products': [], 'total_results': 3}
+        with patch.object(mod, '_get_publication_holds', return_value={}):
+            out = mod._quality_filter_ebay(data, coin, now=now)
+        # delivered totals 151.94, 150.00, 150.00 -> median 150.00 (includes postage, not item-only 140)
+        self.assertEqual(out['median_price'], 150.00)
+        self.assertGreater(out['median_price'], 140.00)

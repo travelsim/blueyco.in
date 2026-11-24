@@ -90,7 +90,7 @@ class TestCoinXchangeSoldQuality(unittest.TestCase):
             {'products': raw, 'fetchedAt': now, 'search_url': 'https://cx.test/search'},
             coin, now=now)
         self.assertEqual(result['matched_results'], 1)
-        self.assertEqual(result['median_price'], 12.0)
+        self.assertEqual(result['median_price'], 17.0)  # delivered: 12.0 + 5.0 postage
         self.assertEqual(result['products'][0]['postage'], 5.0)
         self.assertEqual(result['products'][0]['currency'], 'AUD')
 
