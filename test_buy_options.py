@@ -435,20 +435,27 @@ class TestBargainLandedPrice(unittest.TestCase):
         self.assertIsNone(no_median['discount_pct'])
 
     def test_market_median_requires_a_real_sample(self):
+        # Median is recomputed from delivered totals (sale_price + shipping).
+        # Stored median_price is item-only and no longer returned directly.
+        _kw = '2027 $1 Bluey Cricket coloured uncirculated coin'
+        def _mk(products):
+            return {'median_price': 30.0, 'matched_results': len(products), 'products': [
+                {'title': _kw, 'sale_price': pr, 'shipping_price': sh} for pr, sh in products
+            ]}
         sales = {'coins': {
-            'thick': {'median_price': 30.0, 'matched_results': 5},
-            'thin':  {'median_price': 30.0, 'matched_results': 2},
-            'none':  {'median_price': None, 'matched_results': 9},
+            's4_cricket_unc': _mk([(28.0, 2.0), (29.0, 2.0), (30.0, 2.0)]),
+            's1_bluey': _mk([(28.0, 2.0), (29.0, 1.0)]),
         }}
         with tempfile.TemporaryDirectory() as d:
             path = os.path.join(d, 'sales.json')
             with open(path, 'w', encoding='utf-8') as f:
                 json.dump(sales, f)
             with mock.patch.object(legacy, 'MANUAL_EBAY_SALES_FILE', path):
-                self.assertEqual(legacy._market_median('thick'), 30.0)
-                self.assertIsNone(legacy._market_median('thin'))
-                self.assertIsNone(legacy._market_median('none'))
-                self.assertIsNone(legacy._market_median('missing'))
+                with mock.patch.object(legacy, '_cache', {}):
+                    with mock.patch.object(legacy, 'CACHE_FILE', '/tmp/nonexistent-cache.json'):
+                        self.assertEqual(legacy._market_median('s4_cricket_unc'), 31.0)
+                        self.assertIsNone(legacy._market_median('s1_bluey'))
+                        self.assertIsNone(legacy._market_median('missing'))
 
     def test_live_offer_carries_landed_price_and_bargain_flag(self):
         retailer = {r['id']: r for r in legacy.RETAILERS}['ebay']
@@ -472,19 +479,20 @@ class TestBargainLandedPrice(unittest.TestCase):
         # Raw s1_bluey sample in ebay_cache.json has 24 products with mean ~$44.67
         # and median ~$12.95 because it contains 10-coin sets ($64-$130), rolls ($110),
         # and bags of 20. Excluding those bundles leaves genuine single-coin sales
-        # ($8.90, $9.50, $9.99, $12.00) with a median of $9.75.
+        # ($8.90, $9.50, $9.99, $12.00) with an item-only median of $9.75,
+        # recomputed delivered median $10.20 (includes postage).
         med = legacy._market_median('s1_bluey')
         self.assertIsNotNone(med)
-        self.assertEqual(med, 9.75)
+        self.assertEqual(med, 10.2)
         self.assertLess(med, 12.95)
 
     def test_bargain_detection_rejects_false_bargain_from_bundle_skew(self):
         # With the unpruned median ($12.95), an ask of $10.00 (landed $10.00)
         # would be falsely flagged as a bargain (10.00 <= 12.95 * 0.85 = 11.0075).
-        # Against the clean median ($9.75), $10.00 is correctly rejected,
+        # Against the clean delivered median ($10.20), $10.00 is correctly rejected,
         # while a genuine bargain at $7.50 is recognized.
         clean_median = legacy._market_median('s1_bluey')
-        self.assertEqual(clean_median, 9.75)
+        self.assertEqual(clean_median, 10.2)
 
         false_bargain = legacy._deal_fields(10.0, 0.0, clean_median)
         self.assertFalse(false_bargain['is_bargain'])
