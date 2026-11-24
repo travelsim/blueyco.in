@@ -341,12 +341,11 @@ def _trim_and_strip_payload(payload):
         if isinstance(ebay, dict):
             ebay.pop('manual_import', None)
             ebay.pop('import_metadata', None)
-            ebay.pop('historical_outliers', None)
-            ebay.pop('outliers', None)
             ebay.pop('response_url', None)
-            hist = ebay.get('historical_products')
-            if isinstance(hist, list) and len(hist) > 25:
-                ebay['historical_products'] = hist[:25]
+            # Verified outlier sales stay in the payload: Recent Sales
+            # displays outliers/historical_outliers while Market Value
+            # medians are computed pre-trim from outlier-free sales only.
+            # No historical cap: every verified sale reaches the API.
     return stripped
 
 
