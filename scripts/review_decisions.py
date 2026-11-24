@@ -13,8 +13,9 @@ Disposition mapping (fail closed: unmapped values never publish):
   keep-held     -> held, hidden everywhere
   not-valid     -> excluded, hidden everywhere
   keep-pending  -> queued for reviewer mapping, never published
-  keep-out      -> excluded (unmapped legacy value; fail closed, reported)
-  unknown       -> excluded (fail closed, reported)
+  keep-out      -> queued hidden (offered 2026-11-24 with no legend
+                   definition; intent unsettled, fail closed)
+  unknown       -> queued hidden (fail closed, reported)
 """
 import json
 import os
@@ -35,7 +36,8 @@ DISPOSITIONS = {
     "keep-held": ("held", True, "reviewer keep-held"),
     "not-valid": ("excluded", True, "reviewer not-valid"),
     "keep-pending": ("pending-review", True, "reviewer keep-pending"),
-    "keep-out": ("excluded", True, "reviewer keep-out (unmapped, fail closed)"),
+    "keep-out": ("pending-review", True,
+                 "reviewer keep-out (unmapped at decision time; held pending, fail closed)"),
 }
 
 
@@ -151,8 +153,9 @@ def disposition_for(decision):
     """
     if decision in DISPOSITIONS:
         return DISPOSITIONS[decision]
-    return ("excluded", True,
-            "reviewer decision %r unmapped (fail closed)" % (decision,))
+    return ("pending-review", True,
+            "reviewer decision %r unmapped (held pending, fail closed)"
+            % (decision,))
 
 
 _DDL = """CREATE TABLE IF NOT EXISTS review_decisions (

@@ -55,10 +55,11 @@ class TestDispositionFor(unittest.TestCase):
         self.assertEqual(rd.disposition_for("not-valid")[0], "excluded")
         self.assertEqual(rd.disposition_for("keep-pending")[0], "pending-review")
 
-    def test_unmapped_values_excluded_fail_closed(self):
+    def test_unmapped_values_queued_hidden_fail_closed(self):
         for value in ("keep-out", "publish-value", "hide-everything", ""):
-            action, _, reason = rd.disposition_for(value)
-            self.assertEqual(action, "excluded")
+            action, value_ok, reason = rd.disposition_for(value)
+            self.assertEqual(action, "pending-review")
+            self.assertTrue(value_ok)
             self.assertIn("fail closed", reason)
 
 
