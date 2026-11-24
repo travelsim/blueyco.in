@@ -207,8 +207,7 @@ class TestQueryVariants(unittest.TestCase):
         import re
         queries = [legacy.COIN_BY_ID[coin_id]['search']] + legacy._query_variants(coin_id)
         for query in queries:
-            tokens = set(re.findall(r'[a-z0-9]+', query.lower()))
-            allow = 'till' in tokens and '2026' in tokens
+            allow = legacy._allow_coloured(query, coin_id)
             if legacy._coinxchange_title_matches(title, legacy._browse_keywords(query), allow):
                 return True
         return False
@@ -306,6 +305,53 @@ class TestQueryVariants(unittest.TestCase):
         self.assertEqual(len(rows), 2)  # primary 'x' plus the one variant for this coin id
         with mock.patch.object(prices, '_scrape_coinxchange', return_value=None):
             self.assertIsNone(prices._scrape_coinxchange_all(coin))
+
+    def test_impressions_pnc_titles_allow_coloured_proof_wording(self):
+        # Sellers write 'Coloured' on Impressions proof PNCs even though the
+        # catalogue query omits it. The proof and pnc groups still apply.
+        title = 'PRESALE 2026 Bluey The Heelers $2 Coloured Proof PNC Limited Edition /200'
+        self.assertTrue(
+            legacy._coinxchange_title_matches(title, 'Heelers Proof PNC',
+                                              allow_coloured=True))
+        self.assertTrue(
+            legacy._coinxchange_title_matches(title, 'Heelers Proof PNC coloured'))
+        self.assertFalse(
+            legacy._coinxchange_title_matches(title, 'Heelers Proof PNC'))
+
+    def test_variants_do_not_admit_silver_variant(self):
+        # 'Heelers Proof PNC' must not match the silver proof PNC.
+        title = 'Bluey: The Heelers Silver Proof Limited Edition PNC 700 ONLY'
+        self.assertFalse(
+            legacy._coinxchange_title_matches(title, 'Heelers Proof PNC',
+                                              allow_coloured=True))
+        self.assertFalse(
+            legacy._coinxchange_title_matches(title, 'Bluey Heelers Proof PNC',
+                                              allow_coloured=True))
+
+    def test_impressions_boxed_set_quantity(self):
+        boxed = 'Bluey 2026 $2 Coin Minisheet Collection Limited-Edition Boxed Set 5 Presale /500'
+        self.assertEqual(legacy._coinxchange_quantity(boxed), 5)
+        query = 'Bluey minisheet collection boxed set of 5'
+        self.assertEqual(legacy._coinxchange_quantity(query), 5)
+        self.assertTrue(
+            legacy._coinxchange_title_matches(boxed, query, allow_coloured=True))
+        self.assertFalse(
+            legacy._coinxchange_title_matches(
+                boxed, 'Heelers Proof PNC', allow_coloured=True))
+
+    def test_new_impressions_products_have_variants(self):
+        for variant in ('Heelers Proof PNC', 'Bluey Heelers Proof PNC'):
+            self.assertIn(variant, legacy.QUERY_VARIANTS['76604950'])
+        for variant in ('Bluey 2-coin PNC', 'Bluey $1 $2 2 coin PNC'):
+            self.assertIn(variant, legacy.QUERY_VARIANTS['76604956'])
+        for variant in ('Bluey boxed set of 5 minisheet collection',
+                        'Bluey minisheet collection boxed set of 5'):
+            self.assertIn(variant, legacy.QUERY_VARIANTS['76604957'])
+        for variant in ('Bluey three coin PNC', 'Bluey 3-coin PNC',
+                        'Bluey 3 coin PNC'):
+            self.assertIn(variant, legacy.QUERY_VARIANTS['76604959'])
+        for variant in ('Bingo 2-coin PNC', 'Bingo $1 $2 2 coin PNC'):
+            self.assertIn(variant, legacy.QUERY_VARIANTS['76605600'])
 
 
 class TestCatalogueParity(unittest.TestCase):

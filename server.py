@@ -958,6 +958,11 @@ QUERY_VARIANTS = {
                   '2026 Bluey 5 coin folder and tube set'],
     's3_sleepytime_insert': ['2026 Bluey Rare Coloured Sleepytime Coin Folder Tube'],
     's3_pnc_bingo': ['Bluey 2026 Bingo Hooray PNC'],
+    '76604950': ['Heelers Proof PNC', 'Bluey Heelers Proof PNC'],
+    '76604956': ['Bluey 2-coin PNC', 'Bluey $1 $2 2 coin PNC'],
+    '76604957': ['Bluey boxed set of 5 minisheet collection', 'Bluey minisheet collection boxed set of 5'],
+    '76604959': ['Bluey three coin PNC', 'Bluey 3-coin PNC', 'Bluey 3 coin PNC'],
+    '76605600': ['Bingo 2-coin PNC', 'Bingo $1 $2 2 coin PNC'],
 }
 
 
@@ -995,6 +1000,10 @@ def _coinxchange_quantity(text):
     if match:
         return int(match.group(1))
     match = re.search(r'\b(\d+)\s*[x\u00d7]\s*(?:\$?\d|one|two|three)\b', s)
+    if match:
+        return int(match.group(1))
+    # 'Boxed Set 5' / 'Boxed Set of 5' counts the coins inside, not the $2 face.
+    match = re.search(r'\b(?:boxed|box)\s+(?:set\s+)?(?:of\s+)?(\d+)\b', s)
     if match:
         return int(match.group(1))
     return 1
@@ -1085,7 +1094,11 @@ def _coinxchange_title_matches(title, keywords, allow_coloured=False):
     if not title_tokens or (years and not years.issubset(title_tokens)):
         return False
     unrequested = {'proof', 'silver', 'privy', 'privymark', 'envelope', 'postal', 'pnc', 'card', 'sealed', 'unopened', 'opened', 'special'}
-    if not allow_coloured:
+    # Impressions coins are coloured; sellers write 'Coloured' on nearly every
+    # listing, so when the query allows it the word is descriptive, not a variant.
+    if allow_coloured or 'coloured' in query_tokens or 'colored' in query_tokens:
+        unrequested -= {'coloured', 'colored'}
+    else:
         unrequested |= {'coloured', 'colored'}
     # PNC covers commonly mention the envelope privy mark even when the
     # query uses only PNC; those words identify the same product format.
@@ -1138,7 +1151,7 @@ def _coinxchange_buy_options(retailer, keywords, coin_id=None):
     for query in queries:
         orig_tokens = set(re.findall(r'[a-z0-9]+', str(query or '').lower()))
         # The 2026 till coins are the coloured ones; for other years 'coloured' is a different product.
-        allow_coloured = 'till' in orig_tokens and '2026' in orig_tokens
+        allow_coloured = _allow_coloured(query, coin_id)
         kw = _browse_keywords(query)
         if page_url is None:
             page_url = retailer['search_url'].replace('{q}', urllib.parse.quote(kw))
@@ -1285,8 +1298,7 @@ def _market_median(coin_id):
     candidates += list(cached_entry.get('historical_products') or [])
 
     kw = coin.get('ebay_kw') or coin.get('search') or ''
-    kw_tokens = set(re.findall(r'[a-z0-9]+', str(kw).lower()))
-    allow_coloured = 'till' in kw_tokens and '2026' in kw_tokens
+    allow_coloured = _allow_coloured(kw, coin_id)
 
     valid_prices = []
     seen = set()
@@ -1539,6 +1551,21 @@ _IMPRESSIONS_COIN_IDS = frozenset({
 })
 
 
+def _allow_coloured(keywords, coin_id=None):
+    """Whether 'coloured' is descriptive rather than a variant for this query.
+
+    The 2026 till coins are the coloured ones, and every Impressions coin is
+    coloured too. Sellers write 'Coloured' on nearly every listing, so a gate
+    that treats the word as an unrequested variant blocks real listings.
+    """
+    tokens = set(re.findall(r'[a-z0-9]+', str(keywords or '').lower()))
+    if 'till' in tokens and '2026' in tokens:
+        return True
+    if coin_id in _IMPRESSIONS_COIN_IDS:
+        return True
+    return 'coloured' in tokens or 'colored' in tokens
+
+
 def _ebay_live_options(retailer, keywords, coin_id=''):
     """
     Fetch active eBay AU Buy It Now listings from eBay's Browse API.
@@ -1566,7 +1593,8 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
         browse_kw = _browse_keywords(query)
         for it in _ebay_browse_search(browse_kw, limit=100):
             title = re.sub(r'(?i)(?<![a-z])dollarbuck(?![a-z])', 'Dollarbucks', it.get('title') or '')
-            if not _coinxchange_title_matches(title, browse_kw):
+            if not _coinxchange_title_matches(title, browse_kw,
+                                              allow_coloured=_allow_coloured(query, coin_id)):
                 continue
             title_tokens = set(re.findall(r'[a-z0-9]+', str(title).lower()))
             # 2026 Impressions coins: 'PNC' also matches the stamp & pin covers.
