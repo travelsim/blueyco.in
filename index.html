@@ -4154,9 +4154,9 @@ function getCoinCategory(coin) {
 function buildCard(coin) {
   const coinEntry = coinData[coin.id] || {};
   const ebay      = coinEntry.ebay      || null;
-  const currentSales = _currentSoldRecords(coinEntry, coin);
-  const hasEbay = currentSales.length > 0;
-  const median = _referenceFromEntry(coinEntry, coin);
+  const currentMedian = _referenceFromEntry(coinEntry, coin);
+  const historicalMedian = currentMedian == null ? _historicalSoldMedian(coinEntry, coin) : null;
+  const median = currentMedian ?? historicalMedian;
   const hasMedian = Number.isFinite(median) && median > 0;
   const guide = _guidePrice(coin);
   const refPrice = hasMedian ? median : guide;
@@ -4247,6 +4247,9 @@ function buildCard(coin) {
     priceCard.append(issueRow);
   }
   // Sold-result and Buy It Now footers (with match counts and check dates) are not shown on cards.
+  if (historicalMedian != null) {
+    priceCard.append(el('div', 'metric-footnote', 'Based on older sold listings'));
+  }
   if (!hasMedian && !asking && guide == null && coin.mintPrice != null) {
     priceCard.append(el('div', 'metric-footnote', 'Issue price baseline estimate'));
   }
@@ -4388,12 +4391,16 @@ function buildCard(coin) {
 
     const sources = Array.from(new Set(soldRecords.map(p => p.source)));
     salesList.append(el('div', 'sales-list-title', `Matched sold listings · ${sources.join(' + ')} · ${soldRecords.length} records`));
+    salesList.append(el('div', 'bp-note', 'Prices include stated postage. † Item price only, postage unknown.'));
     soldRecords.slice(0, 12).forEach(p => {
       const row      = el('div', 'sale-row');
       const raw      = safeText(p.title);
       const short    = raw.length > 42 ? raw.substring(0, 42) + '…' : raw;
+      const price = el('span', 'sale-price', formatAUD(p.valuePrice) + (p.postage === null ? '†' : ''));
+      price.title = p.postage === null ? 'Item price only. Postage unknown.'
+        : `${formatAUD(p.price)} item + ${formatAUD(p.postage)} postage`;
       row.append(
-        el('span', 'sale-price', formatAUD(p.price)),
+        price,
         el('span', 'sale-title', short),
         el('span', 'sale-source', p.source === 'CoinXchange' ? 'CX' : 'eBay'),
         el('span', 'sale-date',  safeText(p.date))
@@ -4762,8 +4769,15 @@ function _hasFreshEbaySales(ebay) {
 // sale_price/date_sold/link; CoinXchange rows use price/sold_date/url.
 function _normSold(p, source) {
   const date = p.date_sold || p.sold_date || '';
+  const price = parseFloat(p.sale_price != null ? p.sale_price : p.price);
+  const statedPostage = p.shipping_price ?? p.postage;
+  const postage = statedPostage == null || String(statedPostage).trim() === '' ? null : Number(statedPostage);
+  const postageKnown = Number.isFinite(postage) && postage >= 0;
   return {
-    price: parseFloat(p.sale_price != null ? p.sale_price : p.price),
+    price,
+    postage: postageKnown ? postage : null,
+    valuePrice: postageKnown ? Math.round((price + postage) * 100) / 100 : price,
+    valueEligible: p.value_eligible !== false,
     soldAt: Date.parse(date),
     title: p.title,
     source_type: p.source_type,
@@ -4904,7 +4918,7 @@ function _currentSoldRecords(entry) {
   const out = [];
   if (_sourceIsFresh(ebay)) (ebay.products || []).forEach(p => out.push(_normSold(p, 'eBay AU')));
   if (_sourceIsFresh(cx)) (cx.products || []).forEach(p => out.push(_normSold(p, 'CoinXchange')));
-  const current = out.filter(inWindow).sort((a, b) => b.soldAt - a.soldAt);
+  const current = out.filter(r => r.valueEligible !== false && inWindow(r)).sort((a, b) => b.soldAt - a.soldAt);
   return _filterClientSoldOutliers(current, coin);
 }
 
@@ -4914,14 +4928,27 @@ function _referenceFromEntry(entry) {
   const coin = arguments[1] || (entry && (entry.coin || (typeof COINS !== 'undefined' && COINS.find(c => (coinData[c.id] === entry)))));
   const ebay = (entry && entry.ebay) || {};
   const feedMedian = parseFloat(ebay.median_price);
-  const [minBound, maxBound] = _clientPriceBounds(coin);
-  const usableFeed = Number.isFinite(feedMedian) && feedMedian >= minBound && feedMedian <= maxBound;
+  const usableFeed = Number.isFinite(feedMedian) && feedMedian > 0;
   const current = _currentSoldRecords(entry, coin);
   // Blend CoinXchange evidence only when it actually has current sales;
   // otherwise the server median over the same window is authoritative.
   if (usableFeed && !current.some(r => r.source === 'CoinXchange')) return feedMedian;
   if (!current.length) return usableFeed ? feedMedian : null;
-  return _medianOfPrices(current.map(r => r.price));
+  return _medianOfPrices(current.map(r => r.valuePrice ?? r.price));
+}
+
+function _historicalSoldMedian(entry, coin) {
+  const now = Date.now();
+  const day = 24 * 60 * 60 * 1000;
+  // Use the same source for an older estimate and require at least three sales.
+  for (const [source, label] of [['ebay', 'eBay AU'], ['coinxchange', 'CoinXchange']]) {
+    const records = (entry[source]?.historical_products || [])
+      .map(p => _normSold(p, label))
+      .filter(r => r.valueEligible && _validSold(r) && now - r.soldAt > 90 * day && now - r.soldAt <= 365 * day);
+    const eligible = _filterClientSoldOutliers(records, coin);
+    if (eligible.length >= 3) return _medianOfPrices(eligible.map(r => r.valuePrice));
+  }
+  return null;
 }
 
 function _guidePrice(coin) {
@@ -4937,7 +4964,8 @@ function _guidePrice(coin) {
 
 // Price cards, collection sorting, and portfolio values all use the matched-sale median with guide fallback.
 function _referencePrice(coin) {
-  const live = _referenceFromEntry(coinData[coin.id] || {}, coin);
+  const entry = coinData[coin.id] || {};
+  const live = _referenceFromEntry(entry, coin) ?? _historicalSoldMedian(entry, coin);
   if (Number.isFinite(live) && live > 0) return live;
   return _guidePrice(coin);
 }

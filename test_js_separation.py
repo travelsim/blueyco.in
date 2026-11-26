@@ -25,9 +25,9 @@ WANTED = ("_clientPriceBounds", "_filterClientSoldOutliers",
           "_allSoldRecords", "_currentSoldRecords")
 
 
-def extract_functions(source):
+def extract_functions(source, names=WANTED):
     found = {}
-    for name in WANTED:
+    for name in names:
         marker = "function %s(" % name
         start = source.find(marker)
         if start < 0:
@@ -101,6 +101,38 @@ console.log(JSON.stringify({
 
 @unittest.skipIf(shutil.which("node") is None, "node not available")
 class TestRecentVsMarketSeparation(unittest.TestCase):
+    def test_estimate_uses_postage_and_respects_older_sale_boundary(self):
+        names = WANTED + ("_normSold", "_referenceFromEntry", "_historicalSoldMedian")
+        funcs = extract_functions(INDEX.read_text(encoding="utf-8"), names)
+        harness = """
+const _validSold = r => Number.isFinite(r.price) && Number.isFinite(r.soldAt);
+const _sourceIsFresh = () => true;
+const _isClientTitleMismatched = () => false;
+const _isSetCatalogItem = () => false;
+const _medianOfPrices = prices => [...prices].sort((a,b) => a-b)[Math.floor(prices.length/2)];
+const coin = {id: 'test'};
+const sale = (sale_price, postage, age, value_eligible = true) => ({
+  sale_price, postage, value_eligible, date_sold: new Date(Date.now() - age * 86400000)
+});
+const historical_products = [
+  sale(10, 5, 120), sale(11, 5, 130), sale(12, 5, 140),
+  sale(40, 2, 150, false), sale(100, 3, 400)
+];
+const ebay = {products: [sale(20, 2, 1), sale(90, 2, 2, false)], historical_products};
+const coinxchange = {products: [sale(30, 0, 1), sale(25, null, 2)]};
+console.log(JSON.stringify([
+  _referenceFromEntry({ebay, coinxchange}, coin),
+  _historicalSoldMedian({ebay}, coin),
+  _historicalSoldMedian({ebay: {historical_products: historical_products.slice(0, 2)}}, coin),
+  _normSold(sale(20, 0, 1), 'eBay AU').postage,
+  _normSold(sale(20, null, 1), 'eBay AU').postage
+]));
+"""
+        proc = subprocess.run(["node", "-"], input="\n".join(funcs.values()) + harness,
+                              capture_output=True, encoding="utf-8", timeout=15)
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertEqual(json.loads(proc.stdout), [25, 16, None, 0, None])
+
     def test_recent_shows_all_market_filters_outliers(self):
         source = INDEX.read_text(encoding="utf-8")
         funcs = extract_functions(source)

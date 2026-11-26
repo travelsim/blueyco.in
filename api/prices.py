@@ -773,6 +773,17 @@ def _published_ledger_row(product):
             and product.get('record_status') == 'AutoApproved')
 
 
+def _sold_postage(product):
+    for key in ('shipping_price', 'postage'):
+        try:
+            amount = float(str(product.get(key)).strip().removeprefix('A$').removeprefix('$').replace(',', ''))
+        except ValueError:
+            continue
+        if math.isfinite(amount) and amount >= 0:
+            return amount
+    return None
+
+
 def _quality_filter_ebay(data, coin, now=None, suppressed_ids=(), ledger_ids=()):
     """Keep older matched sales as history; use only recent sales for current stats. Stats use delivered totals (sale_price + shipping)."""
     if not isinstance(data, dict):
@@ -829,28 +840,25 @@ def _quality_filter_ebay(data, coin, now=None, suppressed_ids=(), ledger_ids=())
             sale_price = float(str(product.get('sale_price')).replace('$', '').replace(',', '').strip())
         except (TypeError, ValueError):
             continue
-        if sale_price <= 0:
+        if not math.isfinite(sale_price) or sale_price <= 0:
             continue
-        try:
-            _ship = float(str(product.get('shipping_price') or product.get('postage') or 0).replace('$', '').replace(',', '').strip())
-        except (TypeError, ValueError):
-            _ship = 0.0
-        normalized = {**product, 'sale_price': sale_price, 'delivered_price': round(sale_price + (_ship or 0), 2)}
+        postage = _sold_postage(product)
+        normalized = {**product, 'sale_price': sale_price, 'shipping_price': postage,
+                      'delivered_price': round(sale_price + postage, 2) if postage is not None else None}
         age = now - (_sold_timestamp(product.get('date_sold')) or now)
         (current_products if age <= 90 * 24 * 3600 else historical_products).append(normalized)
     current_products.sort(key=lambda p: _sold_timestamp(p.get('date_sold')) or 0, reverse=True)
     historical_products.sort(key=lambda p: _sold_timestamp(p.get('date_sold')) or 0, reverse=True)
     valid_current, current_outliers = _filter_price_outliers(current_products, coin)
     valid_historical, historical_outliers = _filter_price_outliers(historical_products, coin)
-    def _delivered(p):
-        return p.get('delivered_price') or round(float(p['sale_price']) + (float(p.get('shipping_price') or p.get('postage') or 0) or 0), 2)
     # Reviewer recent-only rows stay visible in Recent Sales but never
     # feed Market Value stats; only value-eligible sales set medians.
     market_products = [p for p in current_products if p.get('value_eligible', True) is not False]
     valid_market = valid_current
     if len(market_products) != len(current_products):
         valid_market, _ = _filter_price_outliers(market_products, coin)
-    prices = [_delivered(p) for p in valid_market]
+    prices = [p['delivered_price'] if p['delivered_price'] is not None else p['sale_price']
+              for p in valid_market]
     result = dict(data)
     result['products'] = valid_current
     result['outliers'] = current_outliers
@@ -898,7 +906,8 @@ def _quality_filter_coinxchange(data, coin, now=None):
         })
     filtered = _quality_filter_ebay({'products': normalized}, coin, now=now)
     products = filtered['products']
-    prices = [p.get('delivered_price') or round(float(p['sale_price']) + (float(p.get('shipping_price') or p.get('postage') or 0) or 0), 2) for p in products]
+    prices = [p['delivered_price'] if p['delivered_price'] is not None else p['sale_price']
+              for p in products]
     ordered = sorted(prices)
     mid = len(ordered) // 2
     median = ordered[mid] if len(ordered) % 2 else (
@@ -909,7 +918,8 @@ def _quality_filter_coinxchange(data, coin, now=None):
             'title': p.get('title'),
             'url': p.get('url'),
             'sold_date': p.get('date_sold'),
-            'postage': p.get('postage'),
+            'postage': p['shipping_price'],
+            'delivered_price': p['delivered_price'],
             'currency': 'AUD',
         }
     listings = [_row(p) for p in products]
