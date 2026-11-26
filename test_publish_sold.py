@@ -202,6 +202,16 @@ def _live(live):
 
 
 class TestVerify(unittest.TestCase):
+    def test_rejects_suppressed_sales_and_wrong_value_eligibility(self):
+        row = {"listing_id": "a", "sale_price": 10.0, "date_sold": "20 Nov 2026"}
+        coins = {"p1": {"products": [dict(row, value_eligible=False)]}}
+        live = _live_rows([row, dict(row, listing_id="hidden")])
+        uo_patch, load_patch = _live(live)
+        with uo_patch, load_patch:
+            result = pub.verify_against_live(coins, "https://x", {"hidden"})
+        self.assertEqual({e["problem"] for e in result["errors"]},
+                         {"suppressed-sale-visible", "value-eligibility-mismatch"})
+
     def test_mismatch_reported(self):
         coins = {"p1": {"products": [{"listing_id": "a", "title": "T",
                                       "sale_price": 10.0,

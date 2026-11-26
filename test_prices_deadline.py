@@ -11,6 +11,24 @@ class TestPricesDeadline(unittest.TestCase):
         prices._cache.clear()
         prices._last_fetch.clear()
 
+    def test_publication_decisions_apply_to_cached_ebay_copies(self):
+        coin = next(c for c in prices.COINS if c['id'] == 's1_bluey')
+        row = {'coin_id': coin['id'], 'title': 'Bluey dollarbuck',
+               'date_sold': '20 Nov 2026', 'currency': 'AU',
+               'record_status': 'AutoApproved',
+               'source_type': 'melbourne_confirmed_ledger'}
+        products = [
+            dict(row, sale_price=20, link='https://www.ebay.com.au/itm/hidden/123456789012'),
+            dict(row, sale_price=30, item_id='recent'),
+            dict(row, sale_price=10, item_id='market'),
+        ]
+        projected = prices._quality_filter_ebay(
+            {'products': products}, coin,
+            now=datetime(2026, 11, 26, tzinfo=timezone.utc).timestamp(),
+            suppressed_ids={'123456789012'}, recent_only_ids={'recent'})
+        self.assertEqual({p['item_id'] for p in projected['products']}, {'recent', 'market'})
+        self.assertEqual(projected['median_price'], 10)
+
     def test_slow_coins_return_partial_snapshot_before_deadline(self):
         coins = [{'id': f'c{i}', 'search': 'x', 'ebay_kw': 'x'} for i in range(40)]
 

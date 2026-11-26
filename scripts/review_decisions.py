@@ -151,6 +151,10 @@ def disposition_for(decision):
 
     Unknown values are excluded: fail closed, reported via the reason.
     """
+    decision = {
+        "publish-recent": "recent-only",
+        "publish-value": "also-in-value",
+    }.get(decision, decision)
     if decision in DISPOSITIONS:
         return DISPOSITIONS[decision]
     return ("pending-review", True,
