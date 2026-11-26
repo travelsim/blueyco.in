@@ -371,8 +371,7 @@ def main(argv):
 
 def projection_held_rows(root):
     """Committed rows the serving projection deterministically excludes."""
-    sys.path.insert(0, root + "/api")
-    import prices as api_prices
+    _, _, api_prices = _live_matchers()
     coins = {c["id"]: c for c in api_prices.COINS}
     data = json.load(open(root + "/manual_ebay_sales.json", encoding="utf-8"))
     holds = load_holds(root + "/publication_holds.json")
