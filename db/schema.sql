@@ -45,22 +45,6 @@ SELECT product_id,
        min(price_aud) AS low_aud, max(price_aud) AS high_aud,
        max(date_sold) AS last_sold
 FROM listings
-WHERE date_sold IS NOT NULL AND status = 'confirmed_sold'
-  -- Only reviewed sale evidence can opt a row out. Legacy/non-import rows
-  -- without matching evidence remain eligible (same default as API feeds).
-  AND NOT EXISTS (
-      SELECT 1
-      FROM sale_import_evidence e
-      WHERE e.listing_id = listings.listing_id
-        AND e.median_eligible = false
-  )
-  -- Review decisions are the canonical durable source for reviewer-only
-  -- exclusions. Unknown decisions remain fail-closed in the publisher.
-  AND NOT EXISTS (
-      SELECT 1
-      FROM review_decisions r
-      WHERE r.listing_id = listings.listing_id
-        AND r.decision IN ('recent-only', 'keep-held', 'not-valid', 'keep-pending', 'keep-out')
-  )
+WHERE date_sold IS NOT NULL AND status != 'excluded'
   AND date_sold >= current_date - INTERVAL '90 days'
 GROUP BY product_id;

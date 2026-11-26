@@ -15,16 +15,21 @@ class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         expected_token = os.environ.get("PREVIEW_DB_PROBE_TOKEN", "")
         supplied = self.headers.get("Authorization", "")
-        if not expected_token or not hmac.compare_digest(
-                supplied, "Bearer " + expected_token):
+        if (
+            os.environ.get("VERCEL_ENV") != "preview"
+            or not expected_token
+            or not hmac.compare_digest(supplied, "Bearer " + expected_token)
+        ):
             self.send_error(404)
             return
 
+        stage = "driver"
         try:
             import psycopg
-            conn = psycopg.connect(os.environ["DATABASE_URL"], connect_timeout=5,
-                                   options="-c default_transaction_read_only=on")
+            stage = "connect"
+            conn = psycopg.connect(os.environ["DATABASE_URL"], connect_timeout=5)
             try:
+                stage = "identity"
                 with conn.cursor() as cur:
                     cur.execute("SET TRANSACTION READ ONLY")
                     cur.execute("SELECT current_database(), "
@@ -36,7 +41,10 @@ class handler(BaseHTTPRequestHandler):
             # Branch identity is checked using the connection's Neon setting.
             # Keep database name only as a sanity check; neither value is returned.
             passed = database_name == "bluey" and branch_id == EXPECTED_BRANCH
-        except Exception:
+            if not passed:
+                self.log_error("Preview database identity did not match")
+        except Exception as exc:
+            self.log_error("Preview database check failed at %s (%s)", stage, type(exc).__name__)
             passed = False
 
         body = b'{"pass":true}' if passed else b'{"pass":false}'
