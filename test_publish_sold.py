@@ -202,6 +202,14 @@ def _live(live):
 
 
 class TestVerify(unittest.TestCase):
+    def test_checks_stated_postage_including_free(self):
+        row = {"listing_id": "a", "sale_price": 10.0, "date_sold": "20 Nov 2026"}
+        coins = {"p1": {"products": [dict(row, shipping_price=0)]}}
+        uo_patch, load_patch = _live(_live_rows([row]))
+        with uo_patch, load_patch:
+            result = pub.verify_against_live(coins, "https://x")
+        self.assertEqual(result["errors"], [{"listing_id": "a", "problem": "postage-mismatch"}])
+
     def test_rejects_suppressed_sales_and_wrong_value_eligibility(self):
         row = {"listing_id": "a", "sale_price": 10.0, "date_sold": "20 Nov 2026"}
         coins = {"p1": {"products": [dict(row, value_eligible=False)]}}
@@ -237,6 +245,17 @@ class TestVerify(unittest.TestCase):
         self.assertEqual(result["errors"], [])
         self.assertEqual(result["checked"], 1)
         self.assertEqual(result["live_rows_without_id"], 1)
+
+
+class TestVerifiedPostage(unittest.TestCase):
+    def test_keeps_free_and_requires_consistent_evidence(self):
+        free = {"item_price": "30", "postage": "0"}
+        paid = {"item_price": "30", "delivery": "4.50", "total": "34.50"}
+        self.assertEqual(pub.verified_postage("30", [free]), 0)
+        self.assertEqual(pub.verified_postage("30", [paid]), 4.50)
+        self.assertIsNone(pub.verified_postage("30", [free, paid]))
+        self.assertIsNone(pub.verified_postage("30", [dict(paid, total="31")]))
+        self.assertIsNone(pub.verified_postage("31", [paid]))
 
 
 if __name__ == "__main__":

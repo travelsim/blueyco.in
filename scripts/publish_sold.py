@@ -25,6 +25,7 @@ import sys
 import time
 import urllib.request
 from datetime import datetime
+from decimal import Decimal, InvalidOperation
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import melbourne_drift as drift
@@ -50,7 +51,72 @@ def fetch_confirmed_rows(read_rows):
         for key in ("price_aud", "date_sold"):
             if row.get(key) is not None:
                 row[key] = str(row[key])
+    evidence = {}
+    for row in read_rows(
+        "SELECT listing_id, raw_record->>'price_aud' AS item_price,"
+        " raw_record->>'postage_aud' AS postage, raw_record->>'delivery_aud' AS delivery,"
+        " raw_record->>'delivered_aud' AS total FROM sale_import_evidence"
+        " WHERE listing_id IS NOT NULL"
+    ):
+        evidence.setdefault(row["listing_id"], []).append(row)
+    for row in rows:
+        amount = verified_postage(row["price_aud"], evidence.get(row["listing_id"], []))
+        if amount is not None:
+            row["shipping_price"] = amount
     return rows
+
+
+def money_amount(value):
+    try:
+        amount = Decimal(str(value).strip().removeprefix("A$").removeprefix("$").replace(",", ""))
+    except InvalidOperation:
+        return None
+    return amount if amount.is_finite() and amount >= 0 else None
+
+
+def verified_postage(item_price, evidence):
+    item_price = money_amount(item_price)
+    if item_price is None:
+        return None
+    amounts = set()
+    for row in evidence:
+        if money_amount(row["item_price"]) != item_price:
+            continue
+        total = money_amount(row.get("total"))
+        for key in ("postage", "delivery"):
+            amount = money_amount(row.get(key))
+            if amount is not None and (total is None or total == item_price + amount):
+                amounts.add(amount)
+    if len(amounts) == 1:
+        return float(amounts.pop())
+
+
+def restore_cached_postage(rows, path, prices):
+    with open(path, encoding="utf-8") as cache_file:
+        cache = json.load(cache_file)
+    evidence = {}
+    for product_id, entry in cache.items():
+        ebay = entry.get("ebay") or {}
+        for section in ("products", "historical_products", "outliers", "historical_outliers"):
+            for sale in ebay.get(section) or []:
+                if str(sale.get("currency") or "").strip().upper() not in {"AU", "AUD", "A$"}:
+                    continue
+                day = drift.parse_date(sale.get("date_sold"))
+                if day is None:
+                    continue
+                for listing_id in prices._sale_ids(sale):
+                    evidence.setdefault((product_id, listing_id, day), []).append({
+                        "item_price": sale.get("sale_price"),
+                        "postage": sale.get("shipping_price"),
+                        "delivery": sale.get("postage"),
+                    })
+    for row in rows:
+        if "shipping_price" in row:
+            continue
+        key = (row["product_id"], row["listing_id"], drift.parse_date(row["date_sold"]))
+        amount = verified_postage(row["price_aud"], evidence.get(key, []))
+        if amount is not None:
+            row["shipping_price"] = amount
 
 
 def fetch_excluded_evidence_ids(read_rows):
@@ -146,6 +212,8 @@ def build_record(row, value_eligible=True):
     }
     if row.get("source_url"):
         rec["link"] = row.get("source_url")
+    if row.get("shipping_price") is not None:
+        rec["shipping_price"] = row["shipping_price"]
     if value_eligible is False:
         rec["value_eligible"] = False
     return rec
@@ -325,7 +393,8 @@ def verify_against_live(coins, base_url, suppressed_ids=()):
                         live_no_id += 1
                     for lid in ids:
                         live_index.setdefault(lid, set()).add(
-                            (cid, price, str(date), row.get("value_eligible", True)))
+                            (cid, price, str(date), row.get("value_eligible", True),
+                             prices._sold_postage(row)))
     errors = [{"listing_id": lid, "problem": "suppressed-sale-visible"}
               for lid in sorted(set(suppressed_ids) & live_index.keys())]
     checked = 0
@@ -354,6 +423,8 @@ def verify_against_live(coins, base_url, suppressed_ids=()):
             matches = live_index[lid]
             if any(actual[3] != value_eligible for actual in matches):
                 errors.append({"listing_id": lid, "problem": "value-eligibility-mismatch"})
+            if any(actual[4] != row.get("shipping_price") for actual in matches):
+                errors.append({"listing_id": lid, "problem": "postage-mismatch"})
             if {actual[:3] for actual in matches} != {(cid, row["sale_price"], day)}:
                 errors.append({"listing_id": lid, "problem": "field-mismatch",
                                "live": sorted(matches, key=str),
@@ -381,7 +452,7 @@ def main(argv=None):
     committed_path = os.path.join(args.root, "manual_ebay_sales.json")
     holds = drift.load_holds(os.path.join(args.root, "publication_holds.json"))
     json_index, json_newest = drift.load_json_products(committed_path)
-    taxonomy_hold, strict_match, _ = _live_matchers()
+    taxonomy_hold, strict_match, prices = _live_matchers()
     if args.ledger == "neon":
         rows, excluded_ids, decided, recorded = read_neon_ledger(
             args.mode, args.stored_reviews_only)
@@ -391,6 +462,7 @@ def main(argv=None):
         excluded_ids = fetch_excluded_evidence_ids(read_melbourne_rows)
         _, decision_stats, recorded = _reviews.fetch_and_record()
         decided = read_stored_decisions(read_melbourne_rows)
+    restore_cached_postage(rows, os.path.join(args.root, "ebay_cache.json"), prices)
     decision_map = decision_map_for(decided)
     print("decisions: unique=%d recorded=%d" % (len(decided), recorded))
     coins, manifest = generate(rows, json_index, json_newest, holds,
