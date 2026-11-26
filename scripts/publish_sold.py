@@ -1,7 +1,7 @@
-"""Seller-free publication generator: Melbourne ledger -> manual_ebay_sales.json.
+"""Seller-free publication generator: PostgreSQL ledger -> manual_ebay_sales.json.
 
-Reads confirmed_sold rows from the authoritative Melbourne Postgres ledger
-(read-only SELECTs over ssh), applies publication holds, the taxonomy gate
+Reads confirmed_sold rows from Melbourne over SSH or an explicitly selected
+Neon branch, applies publication holds, the taxonomy gate
 and the strict title matcher, and emits the committed publication shape with
 a listing_id on every generated row (the current committed file has none,
 which makes ID-based verification impossible).
@@ -40,14 +40,12 @@ def _live_matchers():
     return drift._live_matchers()
 
 
-def fetch_confirmed_rows():
-    sql = ("SELECT row_to_json(t) FROM (SELECT product_id, title, price_aud,"
+def fetch_confirmed_rows(read_rows):
+    sql = ("SELECT product_id, title, price_aud,"
            " date_sold, listing_id, source, source_url, currency, condition,"
            " buying_format FROM listings"
-           " WHERE status='confirmed_sold' AND date_sold IS NOT NULL) t;")
-    rows, bad = drift.parse_json_lines(drift._ssh_psql(sql))
-    if bad:
-        raise RuntimeError("unparseable ledger lines: %d" % bad)
+           " WHERE status='confirmed_sold' AND date_sold IS NOT NULL")
+    rows = read_rows(sql)
     for row in rows:
         for key in ("price_aud", "date_sold"):
             if row.get(key) is not None:
@@ -55,14 +53,72 @@ def fetch_confirmed_rows():
     return rows
 
 
-def fetch_excluded_evidence_ids():
-    sql = ("SELECT row_to_json(t) FROM (SELECT listing_id FROM"
-           " sale_import_evidence WHERE median_eligible = false"
-           " AND listing_id IS NOT NULL) t;")
-    rows, bad = drift.parse_json_lines(drift._ssh_psql(sql))
+def fetch_excluded_evidence_ids(read_rows):
+    sql = ("SELECT DISTINCT listing_id FROM sale_import_evidence"
+           " WHERE listing_id IS NOT NULL AND"
+           " (median_eligible IS NOT TRUE OR"
+           " raw_record -> 'median_eligible' = 'false'::jsonb)")
+    return {str(r["listing_id"]) for r in read_rows(sql)}
+
+
+def read_melbourne_rows(sql):
+    rows, bad = drift.parse_json_lines(
+        drift._ssh_psql("SELECT row_to_json(t) FROM (" + sql + ") t;"))
     if bad:
-        raise RuntimeError("unparseable evidence lines: %d" % bad)
-    return {str(r.get("listing_id")) for r in rows if r.get("listing_id")}
+        raise RuntimeError("unparseable ledger lines: %d" % bad)
+    return rows
+
+
+def read_stored_decisions(read_rows):
+    return {row["listing_id"]: (row["decision"], row["submitted_at"])
+            for row in read_rows("SELECT listing_id, decision, submitted_at FROM review_decisions")}
+
+
+def decision_map_for(decisions):
+    result = {}
+    for listing_id, (decision, _) in decisions.items():
+        action, eligible, reason = _reviews.disposition_for(decision)
+        result[listing_id] = dict(decision=decision, action=action,
+                                  value_eligible=eligible, reason=reason)
+    return result
+
+
+def read_neon_ledger(mode, stored_reviews_only):
+    import psycopg
+    from psycopg.rows import dict_row
+
+    url = os.environ.get("DATABASE_URL")
+    branch = os.environ.get("BLUEY_NEON_BRANCH_ID")
+    if not url or not branch:
+        raise RuntimeError("Neon requires DATABASE_URL and BLUEY_NEON_BRANCH_ID")
+    incoming = {} if stored_reviews_only else _reviews.collapse_records(_reviews.fetch_records())[0]
+    with psycopg.connect(url, connect_timeout=10, row_factory=dict_row) as conn:
+        conn.execute("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ" +
+                     (" READ ONLY" if mode != "write" else ""))
+        identity = conn.execute(
+            "SELECT current_database() AS db, current_setting('neon.branch_id', true) AS branch"
+        ).fetchone()
+        if identity != {"db": "bluey", "branch": branch}:
+            raise RuntimeError("Neon database or branch identity mismatch")
+        read_rows = lambda sql: conn.execute(sql).fetchall()
+        decided = read_stored_decisions(read_rows)
+        recorded = 0
+        for lid, (decision, submitted) in incoming.items():
+            if lid in decided and submitted < decided[lid][1]:
+                continue
+            if mode == "write":
+                recorded += conn.execute(
+                    "INSERT INTO review_decisions (listing_id, decision, submitted_at) "
+                    "VALUES (%s, %s, %s) ON CONFLICT (listing_id) DO UPDATE SET "
+                    "decision=excluded.decision, submitted_at=excluded.submitted_at, "
+                    "source=excluded.source, recorded_at=now() "
+                    "WHERE excluded.submitted_at >= review_decisions.submitted_at "
+                    "AND (excluded.decision, excluded.submitted_at) IS DISTINCT FROM "
+                    "(review_decisions.decision, review_decisions.submitted_at)",
+                    (lid, decision, submitted)).rowcount
+            decided[lid] = (decision, submitted)
+        return (fetch_confirmed_rows(read_rows), fetch_excluded_evidence_ids(read_rows),
+                decided, recorded)
 
 
 def display_date(value):
@@ -218,27 +274,18 @@ def carry_over_committed(coins, committed_path, emitted_ids,
                          dropped_ids=None):
     """Keep committed rows the fresh batch did not supersede, verbatim.
 
-    Reviewer-excluded listing_ids (dropped_ids) are purged, never
-    carried: not-valid and unmapped verdicts leave the feed file
-    entirely. Publication holds keep the opposite treatment: held rows
-    stay in the file verbatim and the live projection hides them.
-
-    Rows superseded by a freshly emitted row (same listing_id) are
-    skipped; everything else is carried verbatim, including rows held
-    by publication-hold/taxonomy-gate/excluded-evidence (the serving
-    projection still excludes them from live, so carrying changes
-    nothing live) and rows Melbourne cannot confirm. Returns count.
+    Explicitly suppressed IDs and IDs superseded by fresh rows are skipped.
+    Committed rows absent from the ledger are kept verbatim. Returns count.
     """
     data = json.load(open(committed_path, encoding="utf-8"))
+    _, _, prices = _live_matchers()
+    omitted_ids = set(emitted_ids) | set(dropped_ids or ())
     carried = 0
     for cid, entry in (data.get("coins", data)).items():
         for row in entry.get("products", []):
             if not isinstance(row, dict):
                 continue
-            lid = str(row.get("listing_id") or row.get("item_id") or "")
-            if lid and lid in emitted_ids:
-                continue
-            if dropped_ids and lid and lid in dropped_ids:
+            if prices._sale_ids(row) & omitted_ids:
                 continue
             entry_out = coins.setdefault(cid, {"products": []})
             entry_out["products"].append(dict(row))
@@ -250,13 +297,14 @@ def carry_over_committed(coins, committed_path, emitted_ids,
     return carried
 
 
-def verify_against_live(coins, base_url):
+def verify_against_live(coins, base_url, suppressed_ids=()):
     """Compare generated feed to live GET /api/prices. Returns error list."""
     request = urllib.request.Request(
         base_url.rstrip("/") + "/api/prices",
         headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
     with urllib.request.urlopen(request, timeout=60) as resp:
         live = json.load(resp)
+    _, _, prices = _live_matchers()
     live_index = {}
     live_no_id = 0
     live_coins = live.get("coins", live)
@@ -268,14 +316,18 @@ def verify_against_live(coins, base_url):
             for key in ("products", "historical_products", "outliers",
                         "historical_outliers"):
                 for row in block.get(key, []) or []:
-                    lid = str((row or {}).get("listing_id") or "")
-                    price = drift.norm_price((row or {}).get("sale_price"))
-                    date = str((row or {}).get("date_sold") or "")
-                    if not lid:
-                        live_no_id += 1
+                    if not isinstance(row, dict):
                         continue
-                    live_index[lid] = (cid, price, date)
-    errors = []
+                    ids = prices._sale_ids(row)
+                    price = drift.norm_price(row.get("sale_price"))
+                    date = drift.parse_date(str(row.get("date_sold") or ""))
+                    if not ids:
+                        live_no_id += 1
+                    for lid in ids:
+                        live_index.setdefault(lid, set()).add(
+                            (cid, price, str(date), row.get("value_eligible", True)))
+    errors = [{"listing_id": lid, "problem": "suppressed-sale-visible"}
+              for lid in sorted(set(suppressed_ids) & live_index.keys())]
     checked = 0
     gen_counts = {}
     live_counts = {}
@@ -297,11 +349,14 @@ def verify_against_live(coins, base_url):
             if lid not in live_index:
                 errors.append({"listing_id": lid, "problem": "absent-from-live"})
                 continue
-            live_cid, live_price, live_date = live_index[lid]
-            if live_cid != cid or live_price != row["sale_price"] or \
-                    live_date != row["date_sold"]:
+            value_eligible = row.get("value_eligible", True)
+            day = str(drift.parse_date(row["date_sold"]))
+            matches = live_index[lid]
+            if any(actual[3] != value_eligible for actual in matches):
+                errors.append({"listing_id": lid, "problem": "value-eligibility-mismatch"})
+            if {actual[:3] for actual in matches} != {(cid, row["sale_price"], day)}:
                 errors.append({"listing_id": lid, "problem": "field-mismatch",
-                               "live": [live_cid, live_price, live_date],
+                               "live": sorted(matches, key=str),
                                "generated": [cid, row["sale_price"],
                                              row["date_sold"]]})
     count_diff = {cid: (gen_counts.get(cid, 0), live_counts.get(cid, 0))
@@ -317,26 +372,27 @@ def main(argv=None):
     parser.add_argument("--mode", choices=("dry-run", "write", "verify"),
                         default="dry-run")
     parser.add_argument("--live-base", default="https://blueyco.in")
+    parser.add_argument("--ledger", choices=("melbourne", "neon"), default="melbourne")
+    parser.add_argument("--stored-reviews-only", action="store_true",
+                        help="run a read-only Neon dry run with reviews already in the ledger")
     args = parser.parse_args(argv)
+    if args.stored_reviews_only and (args.ledger != "neon" or args.mode != "dry-run"):
+        parser.error("--stored-reviews-only requires --ledger neon --mode dry-run")
     committed_path = os.path.join(args.root, "manual_ebay_sales.json")
     holds = drift.load_holds(os.path.join(args.root, "publication_holds.json"))
     json_index, json_newest = drift.load_json_products(committed_path)
     taxonomy_hold, strict_match, _ = _live_matchers()
-    rows = fetch_confirmed_rows()
-    excluded_ids = fetch_excluded_evidence_ids()
-    # Saved reviewer decisions are fetched and durably recorded in
-    # Melbourne before any publication step. fetch_and_record raises
-    # when no authenticated decisions source is configured, failing
-    # closed before anything is staged or written.
-    decided, decision_stats, recorded = _reviews.fetch_and_record()
-    decision_map = {lid: dict(decision=dec,
-                             action=_reviews.disposition_for(dec)[0],
-                             value_eligible=_reviews.disposition_for(dec)[1],
-                             reason=_reviews.disposition_for(dec)[2])
-                    for lid, (dec, _submitted) in decided.items()}
-    print("decisions: records=%d unique=%s recorded=%d by=%s" % (
-        decision_stats.get("records"), decision_stats.get("unique_listings"),
-        recorded, decision_stats.get("by_decision")))
+    if args.ledger == "neon":
+        rows, excluded_ids, decided, recorded = read_neon_ledger(
+            args.mode, args.stored_reviews_only)
+        decision_stats = {"records": None, "unique_listings": len(decided)}
+    else:
+        rows = fetch_confirmed_rows(read_melbourne_rows)
+        excluded_ids = fetch_excluded_evidence_ids(read_melbourne_rows)
+        _, decision_stats, recorded = _reviews.fetch_and_record()
+        decided = read_stored_decisions(read_melbourne_rows)
+    decision_map = decision_map_for(decided)
+    print("decisions: unique=%d recorded=%d" % (len(decided), recorded))
     coins, manifest = generate(rows, json_index, json_newest, holds,
                                excluded_ids, taxonomy_hold, strict_match,
                                decision_map=decision_map)
@@ -346,14 +402,21 @@ def main(argv=None):
     if accounted != manifest["total_input"]:
         raise RuntimeError("manifest accounts %d of %d input rows"
                            % (accounted, manifest["total_input"]))
-    melbourne_ids = {str(r.get("listing_id") or "") for r in rows}
     manifest["review_decisions"] = dict(decision_stats, recorded=recorded)
     manifest["held_listing_ids"] = sorted(
         {m["listing_id"] for m in manifest["rows"]
          if m["disposition"] == "held" and m["listing_id"]})
+    suppressed_ids = sorted({
+        m["listing_id"] for m in manifest["rows"]
+        if m["listing_id"] and (
+            m["disposition"] in ("held", "excluded") or
+            (m["disposition"] == "pending-review" and "review_decision" in m)
+        )
+    })
+    feed = {"coins": coins, "suppressed_listing_ids": suppressed_ids}
     if args.mode in ("dry-run", "write"):
         staging = os.path.join(args.root, "staging_manual_ebay_sales.json")
-        json.dump({"coins": coins}, open(staging, "w", encoding="utf-8"),
+        json.dump(feed, open(staging, "w", encoding="utf-8"),
                   indent=1, ensure_ascii=False)
         manifest_path = os.path.join(args.root, "publish_manifest.json")
         json.dump(manifest, open(manifest_path, "w", encoding="utf-8"),
@@ -365,13 +428,10 @@ def main(argv=None):
                        if m["disposition"] in ("published", "old-history",
                                               "approved-awaiting")
                        and m["listing_id"]}
-        excluded_ids_now = {m["listing_id"] for m in manifest["rows"]
-                            if m["disposition"] == "excluded"
-                            and m["listing_id"]}
         carried = carry_over_committed(coins, committed_path, emitted_ids,
-                                       dropped_ids=excluded_ids_now)
+                                       dropped_ids=set(suppressed_ids))
         manifest["carried_over_committed_only"] = carried
-        json.dump({"coins": coins},
+        json.dump(feed,
                   open(committed_path, "w", encoding="utf-8"),
                   indent=1, ensure_ascii=False)
         json.dump(manifest, open(os.path.join(args.root, "publish_manifest.json"),
@@ -385,8 +445,10 @@ def main(argv=None):
     if args.mode == "verify":
         staging = os.path.join(args.root, "staging_manual_ebay_sales.json")
         if os.path.exists(staging):
-            coins = json.load(open(staging, encoding="utf-8"))["coins"]
-        result = verify_against_live(coins, args.live_base)
+            with open(staging, encoding="utf-8") as staged:
+                feed = json.load(staged)
+        result = verify_against_live(feed["coins"], args.live_base,
+                                     feed.get("suppressed_listing_ids", []))
         print("verify: checked=%d live_rows_without_id=%d errors=%d"
               % (result["checked"], result["live_rows_without_id"],
                  len(result["errors"])))

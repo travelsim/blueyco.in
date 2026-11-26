@@ -51,12 +51,14 @@ class TestDispositionFor(unittest.TestCase):
         self.assertFalse(rd.disposition_for("recent-only")[1])
         self.assertEqual(rd.disposition_for("also-in-value")[0:2],
                         ("published", True))
+        self.assertEqual(rd.disposition_for("publish-recent")[0:2], ("published", False))
+        self.assertEqual(rd.disposition_for("publish-value")[0:2], ("published", True))
         self.assertEqual(rd.disposition_for("keep-held")[0], "held")
         self.assertEqual(rd.disposition_for("not-valid")[0], "excluded")
         self.assertEqual(rd.disposition_for("keep-pending")[0], "pending-review")
 
     def test_unmapped_values_queued_hidden_fail_closed(self):
-        for value in ("keep-out", "publish-value", "hide-everything", ""):
+        for value in ("keep-out", "hide-everything", ""):
             action, value_ok, reason = rd.disposition_for(value)
             self.assertEqual(action, "pending-review")
             self.assertTrue(value_ok)

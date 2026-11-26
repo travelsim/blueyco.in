@@ -72,7 +72,8 @@ def fetch_records():
 def _fetch_via_api(token):
     req = urllib.request.Request(
         REVIEW_API_BASE + "/api/review-decisions",
-        headers={"X-Review-Read-Token": token})
+        headers={"X-Review-Read-Token": token,
+                 "User-Agent": "BlueyCoinTrackerPublisher/1.0"})
     try:
         with urllib.request.urlopen(req, timeout=FETCH_TIMEOUT) as resp:
             data = json.load(resp)
@@ -151,6 +152,10 @@ def disposition_for(decision):
 
     Unknown values are excluded: fail closed, reported via the reason.
     """
+    decision = {
+        "publish-recent": "recent-only",
+        "publish-value": "also-in-value",
+    }.get(decision, decision)
     if decision in DISPOSITIONS:
         return DISPOSITIONS[decision]
     return ("pending-review", True,

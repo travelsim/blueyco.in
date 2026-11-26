@@ -6,6 +6,7 @@ no test touches the network or the database.
 """
 import importlib.util
 import json
+from tempfile import TemporaryDirectory
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -115,14 +116,16 @@ class TestPublicationHoldsFile(unittest.TestCase):
 
 class TestProjectionHeldVisibility(unittest.TestCase):
     def test_committed_but_excluded_rows_are_listed(self):
-        held = drift.projection_held_rows(str(ROOT))
-        by_id = {h.get("listing_id"): h for h in held}
-        for lid in ("batch3-687fe0264b0a801cb0ea3647",
-                    "batch3-6b5fbfcc3eafb120a99adf6a",
-                    "batch3-c13cea496f17e4b682f383e9",
-                    "batch3-c1ffe1011eb54526a6558b0d"):
-            self.assertIn(lid, by_id)
-            self.assertEqual(by_id[lid]["reason"], "taxonomy-gate")
+        with TemporaryDirectory() as folder:
+            publication = {"coins": {"s3_camping": {"products": [
+                {"listing_id": "non-colour", "title": "Bluey $2 Camping non-colour"},
+                {"listing_id": "privy", "title": "Bluey $2 Camping Privy Mark"},
+            ]}}}
+            (Path(folder) / "manual_ebay_sales.json").write_text(
+                json.dumps(publication), encoding="utf-8")
+            held = drift.projection_held_rows(folder)
+        self.assertEqual([(row["listing_id"], row["reason"]) for row in held],
+                         [("non-colour", "taxonomy-gate")])
 
 
 class TestJsonFetchParsing(unittest.TestCase):

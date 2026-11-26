@@ -1,6 +1,6 @@
 {
-  "batch_id": "ledger-publish-20261125-211623",
-  "generated_at": "2026-11-25T21:16:23",
+  "batch_id": "ledger-publish-20261127-005458",
+  "generated_at": "2026-11-27T00:54:58",
   "total_input": 1037,
   "rows": [
     {
@@ -14,20 +14,16 @@
     {
       "listing_id": "147296508393",
       "product_id": "s1_bluey",
-      "review_decision": "also-in-value",
-      "price": 126.84,
-      "date": "14 May 2026",
-      "disposition": "published",
-      "reason": "reviewer also-in-value"
+      "review_decision": "not-valid",
+      "disposition": "excluded",
+      "reason": "reviewer not-valid"
     },
     {
       "listing_id": "318246843016",
       "product_id": "s1_bluey",
-      "review_decision": "also-in-value",
-      "price": 130.0,
-      "date": "11 May 2026",
-      "disposition": "published",
-      "reason": "reviewer also-in-value"
+      "review_decision": "not-valid",
+      "disposition": "excluded",
+      "reason": "reviewer not-valid"
     },
     {
       "listing_id": "198341345494",
@@ -55,20 +51,16 @@
     {
       "listing_id": "257495155569",
       "product_id": "s1_bluey",
-      "review_decision": "also-in-value",
-      "price": 64.3,
-      "date": "07 May 2026",
-      "disposition": "published",
-      "reason": "reviewer also-in-value"
+      "review_decision": "not-valid",
+      "disposition": "excluded",
+      "reason": "reviewer not-valid"
     },
     {
       "listing_id": "257493601129",
       "product_id": "s1_bluey",
-      "review_decision": "also-in-value",
-      "price": 64.3,
-      "date": "06 May 2026",
-      "disposition": "published",
-      "reason": "reviewer also-in-value"
+      "review_decision": "not-valid",
+      "disposition": "excluded",
+      "reason": "reviewer not-valid"
     },
     {
       "listing_id": "156405949756",
@@ -81,10 +73,9 @@
     {
       "listing_id": "397683151768",
       "product_id": "s1_bluey",
-      "price": 49.45,
-      "date": "11 Apr 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "306783817343",
@@ -96,10 +87,9 @@
     {
       "listing_id": "137174296905",
       "product_id": "s1_bluey",
-      "price": 60.0,
-      "date": "29 Mar 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "296649074314",
@@ -112,11 +102,9 @@
     {
       "listing_id": "227228449489",
       "product_id": "s1_bluey",
-      "review_decision": "also-in-value",
-      "price": 119.99,
-      "date": "25 Feb 2026",
-      "disposition": "published",
-      "reason": "reviewer also-in-value"
+      "review_decision": "not-valid",
+      "disposition": "excluded",
+      "reason": "reviewer not-valid"
     },
     {
       "listing_id": "135662583476",
@@ -240,10 +228,9 @@
     {
       "listing_id": "205796372739",
       "product_id": "s2_xmas_unc",
-      "price": 94.01,
-      "date": "15 May 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "manual-f733ea2da1147a02",
@@ -288,10 +275,9 @@
     {
       "listing_id": "147076189557",
       "product_id": "s2_xmas_unc",
-      "price": 104.72,
-      "date": "14 May 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "127778608627",
@@ -496,10 +482,9 @@
     {
       "listing_id": "286989931454",
       "product_id": "s2_xmas_unc",
-      "price": 101.15,
-      "date": "07 May 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "389187533277",
@@ -520,10 +505,11 @@
     {
       "listing_id": "136715208661",
       "product_id": "s2_xmas_unc",
+      "review_decision": "also-in-value",
       "price": 94.88,
       "date": "22 Nov 2025",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "167901853797",
@@ -584,10 +570,11 @@
     {
       "listing_id": "297642662423",
       "product_id": "s2_xmas_unc",
+      "review_decision": "also-in-value",
       "price": 94.01,
       "date": "13 Oct 2025",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "397998851181",
@@ -1608,10 +1595,9 @@
     {
       "listing_id": "267666311798",
       "product_id": "s3_proof_silv",
-      "price": 515.0,
-      "date": "18 May 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "168372517646",
@@ -1640,10 +1626,9 @@
     {
       "listing_id": "178129476163",
       "product_id": "s3_proof_silv",
-      "price": 499.0,
-      "date": "13 May 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "147296952595",
@@ -1664,10 +1649,11 @@
     {
       "listing_id": "298290481848",
       "product_id": "s3_proof_silv",
+      "review_decision": "also-in-value",
       "price": 445.9,
       "date": "06 May 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "287337917159",
@@ -1720,10 +1706,9 @@
     {
       "listing_id": "397947411381",
       "product_id": "s3_proof_silv",
-      "price": 515.0,
-      "date": "18 May 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "336576317503",
@@ -1744,10 +1729,9 @@
     {
       "listing_id": "227343881099",
       "product_id": "s3_proof_silv",
-      "price": 494.99,
-      "date": "17 May 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "198334268497",
@@ -1840,10 +1824,9 @@
     {
       "listing_id": "389996114431",
       "product_id": "s3_proof_silv",
-      "price": 475.0,
-      "date": "16 May 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "198351535286",
@@ -1912,10 +1895,9 @@
     {
       "listing_id": "397942380497",
       "product_id": "s3_proof_silv",
-      "price": 500.0,
-      "date": "16 May 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "287327114953",
@@ -1952,10 +1934,9 @@
     {
       "listing_id": "366407680869",
       "product_id": "s3_proof_silv",
-      "price": 500.0,
-      "date": "16 May 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "318307319409",
@@ -2064,10 +2045,9 @@
     {
       "listing_id": "267663363205",
       "product_id": "s3_proof_silv",
-      "price": 469.0,
-      "date": "15 May 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "198354152093",
@@ -2224,18 +2204,16 @@
     {
       "listing_id": "318264054402",
       "product_id": "s3_rain",
-      "price": 125.0,
-      "date": "08 May 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "318264052772",
       "product_id": "s3_rain",
-      "price": 122.5,
-      "date": "08 May 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "117180785705",
@@ -2320,9 +2298,11 @@
     {
       "listing_id": "manual-e8b79837323098d0",
       "product_id": "s1_pnc_stripes",
-      "review_decision": "not-valid",
-      "disposition": "excluded",
-      "reason": "reviewer not-valid"
+      "review_decision": "also-in-value",
+      "price": 39.95,
+      "date": "02 Oct 2026",
+      "disposition": "published",
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "manual-e45df982e16d38f6",
@@ -2655,10 +2635,11 @@
     {
       "listing_id": "manual-54a5a47888b955da",
       "product_id": "s4_cricket_proof",
+      "review_decision": "also-in-value",
       "price": 119.5,
       "date": "23 Sep 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "manual-5ebe3887728755c0",
@@ -2791,10 +2772,11 @@
     {
       "listing_id": "manual-bcdac36fcce06044",
       "product_id": "s4_cricket_proof",
+      "review_decision": "also-in-value",
       "price": 299.0,
       "date": "26 Sep 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "manual-b855f4b445d26a46",
@@ -2847,10 +2829,11 @@
     {
       "listing_id": "manual-9cd3fb8e5e290fde",
       "product_id": "s4_cricket_proof",
+      "review_decision": "also-in-value",
       "price": 300.0,
       "date": "23 Sep 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "manual-076339e91e402a5d",
@@ -2903,10 +2886,11 @@
     {
       "listing_id": "manual-1622c2f5f4744e2f",
       "product_id": "s1_10_coin_folder_set",
+      "review_decision": "also-in-value",
       "price": 127.9,
       "date": "29 Oct 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "manual-7f9e813902fd67ab",
@@ -3391,10 +3375,11 @@
     {
       "listing_id": "manual-0003dbb0718fe3d0",
       "product_id": "s1_coloured_bluey",
+      "review_decision": "also-in-value",
       "price": 324.95,
       "date": "04 Nov 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "manual-6df34dca5cb24c0d",
@@ -3527,10 +3512,11 @@
     {
       "listing_id": "manual-992bbf7dcf33c1b4",
       "product_id": "s1_impressions_pnc_2coin",
+      "review_decision": "also-in-value",
       "price": 140.0,
       "date": "06 May 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "237082697066",
@@ -3615,10 +3601,9 @@
     {
       "listing_id": "manual-a9f68431c406d67d",
       "product_id": "s1_impressions_pnc_3coin",
-      "price": 529.64,
-      "date": "02 Oct 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "manual-c35a985f02862d9e",
@@ -3687,10 +3672,11 @@
     {
       "listing_id": "manual-fb5468b19d99899c",
       "product_id": "s1_impressions_pnc_colour",
+      "review_decision": "also-in-value",
       "price": 149.0,
       "date": "11 May 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "manual-8b133788d59216fe",
@@ -4431,10 +4417,11 @@
     {
       "listing_id": "manual-74c6a0fd66426b81",
       "product_id": "s2_xmas_silv",
+      "review_decision": "also-in-value",
       "price": 350.0,
       "date": "05 Oct 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "manual-d7ba6c1d3b8b1ad7",
@@ -4567,10 +4554,11 @@
     {
       "listing_id": "128028456739",
       "product_id": "s2_xmas_unc",
+      "review_decision": "also-in-value",
       "price": 62.56,
       "date": "22 Sep 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "128051805542",
@@ -5103,10 +5091,9 @@
     {
       "listing_id": "manual-6b321d3e5a85963c",
       "product_id": "s3_pin_camping",
-      "price": 137.95,
-      "date": "15 Aug 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "manual-392912171f4df898",
@@ -5167,10 +5154,9 @@
     {
       "listing_id": "manual-dc54f3172b02a0e9",
       "product_id": "s3_pin_granny",
-      "price": 65.0,
-      "date": "02 Oct 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "manual-c9257281b27ac76f",
@@ -5855,10 +5841,11 @@
     {
       "listing_id": "manual-87b121e4edb190d4",
       "product_id": "s3_proof_silv",
+      "review_decision": "also-in-value",
       "price": 520.0,
       "date": "10 May 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "manual-4fb957dfada7efb8",
@@ -5895,10 +5882,9 @@
     {
       "listing_id": "manual-bada3248bd228d74",
       "product_id": "s3_proof_silv",
-      "price": 449.99,
-      "date": "24 Oct 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "206257929905",
@@ -5991,10 +5977,11 @@
     {
       "listing_id": "manual-404beee7cda1d1e6",
       "product_id": "s3_sleepytime_insert",
+      "review_decision": "also-in-value",
       "price": 127.9,
       "date": "22 Aug 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "manual-1c0959ed81937ffd",
@@ -6039,10 +6026,11 @@
     {
       "listing_id": "manual-20f67d404bb0582c",
       "product_id": "s3_sleepytime_privy",
+      "review_decision": "also-in-value",
       "price": 20.82,
       "date": "08 Oct 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "manual-f50527c38af0a349",
@@ -6183,10 +6171,9 @@
     {
       "listing_id": "manual-d990adf59415fab6",
       "product_id": "s3_till_bingo",
-      "price": 25.0,
-      "date": "27 Aug 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "manual-57f4badfe1c42704",
@@ -6295,10 +6282,11 @@
     {
       "listing_id": "127855055460",
       "product_id": "s3_sleepytime_insert",
+      "review_decision": "also-in-value",
       "price": 264.99,
       "date": "25 Jul 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "manual-a6c454218f9ea002",
@@ -6743,10 +6731,11 @@
     {
       "listing_id": "manual-d07fa7d9f2ff3671",
       "product_id": "s3_folder",
+      "review_decision": "also-in-value",
       "price": 20.25,
       "date": "08 Nov 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "manual-e4f0127907c2faa2",
@@ -6759,10 +6748,11 @@
     {
       "listing_id": "manual-a5bdacd45be77d55",
       "product_id": "s3_folder",
+      "review_decision": "also-in-value",
       "price": 191.45,
       "date": "27 Oct 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "manual-5ef4f75d85585a82",
@@ -7023,10 +7013,9 @@
     {
       "listing_id": "manual-a3398fbb9406e540",
       "product_id": "s3_folder",
-      "price": 15.0,
-      "date": "14 Jun 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "manual-adfa96eb558b02ca",
@@ -7143,10 +7132,9 @@
     {
       "listing_id": "manual-f84b9476498be3f8",
       "product_id": "s3_folder",
-      "price": 26.53,
-      "date": "29 Aug 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "review_decision": "keep-out",
+      "disposition": "pending-review",
+      "reason": "reviewer keep-out (unmapped at decision time; held pending, fail closed)"
     },
     {
       "listing_id": "manual-86fac9eed22c72fe",
@@ -7223,10 +7211,11 @@
     {
       "listing_id": "manual-6664e97901e0b935",
       "product_id": "s3_sleepytime",
+      "review_decision": "also-in-value",
       "price": 20.82,
       "date": "08 Oct 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "manual-5218c854e02fcd3d",
@@ -7351,10 +7340,11 @@
     {
       "listing_id": "manual-4242edbbad222612",
       "product_id": "s1_coloured_insert_variant",
+      "review_decision": "also-in-value",
       "price": 375.0,
       "date": "03 Nov 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "manual-33495514bff27f41",
@@ -7847,14 +7837,14 @@
     {
       "listing_id": "batch3-77101ea0bf57cd1a25201588",
       "product_id": "s3_till_bingo",
-      "review_decision": "not-valid",
+      "review_decision": "also-in-value",
       "disposition": "held",
       "reason": "publication-hold"
     },
     {
       "listing_id": "batch3-5bbf29c68989f35a5a347a23",
       "product_id": "s3_till_bluey",
-      "review_decision": "not-valid",
+      "review_decision": "also-in-value",
       "disposition": "held",
       "reason": "publication-hold"
     },
@@ -7877,62 +7867,54 @@
     {
       "listing_id": "batch3-687fe0264b0a801cb0ea3647",
       "product_id": "s3_camping",
-      "review_decision": "not-valid",
+      "review_decision": "also-in-value",
       "disposition": "held",
       "reason": "taxonomy-gate"
     },
     {
       "listing_id": "batch3-c1ffe1011eb54526a6558b0d",
       "product_id": "s3_rain",
-      "review_decision": "not-valid",
+      "review_decision": "also-in-value",
       "disposition": "held",
       "reason": "taxonomy-gate"
     },
     {
       "listing_id": "batch3-c13cea496f17e4b682f383e9",
       "product_id": "s3_granny",
-      "review_decision": "not-valid",
+      "review_decision": "also-in-value",
       "disposition": "held",
       "reason": "taxonomy-gate"
     },
     {
       "listing_id": "batch3-6b5fbfcc3eafb120a99adf6a",
       "product_id": "s3_babyrace",
-      "review_decision": "not-valid",
+      "review_decision": "also-in-value",
       "disposition": "held",
       "reason": "taxonomy-gate"
     },
     {
       "listing_id": "batch3-cf4ecf7548978ca7d6f06703",
       "product_id": "76604950",
-      "price": 223.3,
-      "date": "23 Nov 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "disposition": "held",
+      "reason": "excluded-evidence"
     },
     {
       "listing_id": "batch3-cb87d45a4f504c12a868f420",
       "product_id": "76604950",
-      "price": 260.0,
-      "date": "23 Nov 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "disposition": "held",
+      "reason": "excluded-evidence"
     },
     {
       "listing_id": "batch3-68de6ae5c7989f41fc9ea494",
       "product_id": "76605600",
-      "price": 199.95,
-      "date": "23 Nov 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "disposition": "held",
+      "reason": "excluded-evidence"
     },
     {
       "listing_id": "batch3-303bc206271e952af024bcc9",
       "product_id": "76604956",
-      "price": 239.95,
-      "date": "23 Nov 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "disposition": "held",
+      "reason": "excluded-evidence"
     },
     {
       "listing_id": "batch4-061606748f5c5392fc1b034d",
@@ -7945,10 +7927,8 @@
     {
       "listing_id": "batch4-d1fe9e8f8570bcda8046e574",
       "product_id": "76604950",
-      "price": 210.0,
-      "date": "24 Nov 2026",
-      "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "disposition": "held",
+      "reason": "excluded-evidence"
     },
     {
       "listing_id": "manual-db6159532d100612",
@@ -8290,23 +8270,22 @@
     }
   ],
   "review_decisions": {
-    "records": 6,
-    "duplicate_listings": 5,
-    "unique_listings": 15,
-    "by_decision": {
-      "also-in-value": 5,
-      "not-valid": 8,
-      "keep-out": 2
-    },
-    "recorded": 15
+    "records": null,
+    "unique_listings": 58,
+    "recorded": 0
   },
   "held_listing_ids": [
+    "batch3-303bc206271e952af024bcc9",
     "batch3-5bbf29c68989f35a5a347a23",
     "batch3-687fe0264b0a801cb0ea3647",
+    "batch3-68de6ae5c7989f41fc9ea494",
     "batch3-6b5fbfcc3eafb120a99adf6a",
     "batch3-77101ea0bf57cd1a25201588",
     "batch3-c13cea496f17e4b682f383e9",
-    "batch3-c1ffe1011eb54526a6558b0d"
+    "batch3-c1ffe1011eb54526a6558b0d",
+    "batch3-cb87d45a4f504c12a868f420",
+    "batch3-cf4ecf7548978ca7d6f06703",
+    "batch4-d1fe9e8f8570bcda8046e574"
   ],
-  "carried_over_committed_only": 442
+  "carried_over_committed_only": 438
 }
