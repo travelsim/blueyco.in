@@ -122,7 +122,16 @@ def _fallback(retailer, keywords, coin_id, manual):
         except (TypeError, ValueError):
             checked_at = 0
         age = time.time() - checked_at
-        fresh_manual_price = checked_at > 0 and 0 <= age <= 7 * 24 * 3600
+        max_age = entry.get('maxAgeSeconds', 7 * 24 * 3600)
+        try:
+            max_age = max(0, int(max_age))
+        except (TypeError, ValueError):
+            max_age = 7 * 24 * 3600
+        fresh_manual_price = checked_at > 0 and 0 <= age <= max_age
+        # A stale pinned eBay URL may point to an ended item. Stop linking to
+        # it and fall back to the product search instead.
+        if ebay_item and not fresh_manual_price:
+            return legacy._link_only_option(retailer, keywords, coin_id=coin_id)
         price = entry.get('price') if fresh_manual_price else None
         return [{
             'retailer_id': retailer['id'],
@@ -131,6 +140,8 @@ def _fallback(retailer, keywords, coin_id, manual):
             'available': entry.get('available', True) if price is not None else None,
             'price_type': 'asking' if price is not None else None,
             'checkedAt': checked_at if price is not None else None,
+            'postage': entry.get('postage') if price is not None else None,
+            'seller': entry.get('seller') if price is not None else None,
             'url': legacy.affiliate_url(
                 entry.get('url') or retailer['search_url'].replace('{q}', q),
                 coin_id=coin_id, source='ebay_search'),

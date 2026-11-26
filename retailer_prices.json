@@ -582,11 +582,14 @@
  },
  "s1_impressions_pnc_silver": {
   "ebay": {
-   "price": 2999.95,
+   "price": 2995.5,
    "available": true,
-   "title": "2024 $1 Bluey Silver Coloured Proof Coin PNC Limited Edition 150",
-   "checkedAt": 1792508219,
-   "url": "https://www.ebay.com.au/itm/167801072749?mkrid=705-53470-19255-0&siteid=15&campid=5339153744&customid=5339153744&toolid=10001&mkevt=1"
+   "title": "2024 $1 Bluey Silver Coloured Proof Impressions PNC Limited Edition 80/150",
+   "seller": "lorikeets2013",
+   "postage": 0,
+   "checkedAt": 1795703820,
+   "maxAgeSeconds": 21600,
+   "url": "https://www.ebay.com.au/itm/327477494302"
   }
  },
  "s4_cricket_proof": {

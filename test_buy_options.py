@@ -43,6 +43,7 @@ class TestBuyOptions(unittest.TestCase):
     def test_ebay_manual_item_override_is_honoured(self):
         manual = {'76604959': {'ebay': {
             'price': 191.53, 'checkedAt': time.time(),
+            'postage': 0, 'seller': 'verified-seller',
             'url': 'https://www.ebay.com.au/itm/820389839352',
         }}}
         retailer = next(r for r in legacy.RETAILERS if r['id'] == 'ebay')
@@ -51,6 +52,9 @@ class TestBuyOptions(unittest.TestCase):
         self.assertFalse(option['link_only'])
         self.assertIn('itm/820389839352', option['url'])
         self.assertEqual(option['price_type'], 'asking')
+        self.assertEqual(option['postage'], 0)
+        self.assertEqual(option['seller'], 'verified-seller')
+        self.assertIn('campid=', option['url'])
 
     def test_ebay_manual_stale_price_falls_back_to_link_only(self):
         manual = {'76604959': {'ebay': {
@@ -61,6 +65,47 @@ class TestBuyOptions(unittest.TestCase):
         option = buy_options._fallback(retailer, '2026 Bluey three coin PNC', '76604959', manual)[0]
         self.assertIsNone(option['price'])
         self.assertTrue(option['link_only'])
+        self.assertNotIn('/itm/820389839352', option['url'])
+
+    def test_verified_bluey_silver_pnc_offer_and_freshness(self):
+        with open(os.path.join(_ROOT, 'retailer_prices.json'), encoding='utf-8') as f:
+            manual = json.load(f)
+        retailer = next(r for r in legacy.RETAILERS if r['id'] == 'ebay')
+        entry = manual['s1_impressions_pnc_silver']['ebay']
+        entry['checkedAt'] = time.time()
+        active = buy_options._fallback(
+            retailer, legacy.COIN_BY_ID['s1_impressions_pnc_silver']['search'],
+            's1_impressions_pnc_silver', manual)[0]
+        self.assertEqual(active['price'], 2995.5)
+        self.assertEqual(active['postage'], 0)
+        self.assertEqual(active['seller'], 'lorikeets2013')
+        self.assertIn('/itm/327477494302', active['url'])
+        entry['checkedAt'] = time.time() - entry['maxAgeSeconds'] - 1
+        stale = buy_options._fallback(
+            retailer, legacy.COIN_BY_ID['s1_impressions_pnc_silver']['search'],
+            's1_impressions_pnc_silver', manual)[0]
+        self.assertTrue(stale['link_only'])
+        self.assertIsNone(stale['price'])
+        self.assertNotIn('/itm/327477494302', stale['url'])
+
+    def test_verified_offer_replaces_link_only_ebay_result(self):
+        def scrape(retailer, keywords, coin_id):
+            if retailer['id'] == 'ebay':
+                return [{'retailer_id': 'ebay', 'name': 'eBay Australia',
+                         'price': None, 'link_only': True,
+                         'url': 'https://www.ebay.com.au/sch/i.html?_nkw=old'}]
+            return []
+
+        with mock.patch.object(buy_options, '_scrape', side_effect=scrape):
+            options, complete = buy_options.get_buy_options(
+                's1_impressions_pnc_silver',
+                legacy.COIN_BY_ID['s1_impressions_pnc_silver']['search'])
+        self.assertTrue(complete)
+        item = next(o for o in options if o['retailer_id'] == 'ebay')
+        self.assertEqual(item['price'], 2995.5)
+        self.assertEqual(item['postage'], 0)
+        self.assertEqual(item['seller'], 'lorikeets2013')
+        self.assertIn('/itm/327477494302', item['url'])
 
     def test_ebay_search_link_entry_is_not_used(self):
         manual = {'s1_bluey': {'ebay': {
