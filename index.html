@@ -1938,7 +1938,7 @@
 <section id="all-coins" class="section">
   <div class="all-coins-intro">
     <h2 class="section-title">Bluey coin price guide</h2>
-    <p class="page-sub">Recent sold records inform current prices. Older matched eBay sales remain visible as history, not current value. Compare them with active dealer asking listings in Where to Buy.</p>
+    <p class="page-sub">Estimated values use matching sales from the past 90 days where available, including stated postage. Estimates based on older sales are labelled.</p>
   </div>
 
   <div class="collector-guide-strip" aria-label="Kid-friendly guide to collecting Bluey coins">
@@ -5073,7 +5073,7 @@ function buildTrendChart(coin, records) {
   );
   if (showIssue) legend.append(el('span', 'trend-key trend-key-issue', 'Issue price'));
   wrap.append(legend);
-  wrap.append(el('p', 'trend-note', 'Sold prices matched to this exact product. Older sales appear here but only the last 90 days feed the estimated value.'));
+  wrap.append(el('p', 'trend-note', 'The chart shows item prices from matching sales.'));
   return wrap;
 }
 
