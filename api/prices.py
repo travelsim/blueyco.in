@@ -758,7 +758,22 @@ def _get_publication_holds():
     return _PUBLICATION_HOLDS
 
 
-def _quality_filter_ebay(data, coin, now=None, suppressed_ids=(), recent_only_ids=()):
+def _sale_ids(product):
+    link = product.get('link') or product.get('url') or ''
+    ebay_id = re.search(r'/itm/(?:[^/?#]+/)?([0-9]{12})(?:[/?#]|$)', str(link))
+    ids = {str(product.get('listing_id') or ''), str(product.get('item_id') or '')}
+    if ebay_id:
+        ids.add(ebay_id.group(1))
+    ids.discard('')
+    return ids
+
+
+def _published_ledger_row(product):
+    return (product.get('source_type') == 'melbourne_confirmed_ledger'
+            and product.get('record_status') == 'AutoApproved')
+
+
+def _quality_filter_ebay(data, coin, now=None, suppressed_ids=(), ledger_ids=()):
     """Keep older matched sales as history; use only recent sales for current stats. Stats use delivered totals (sale_price + shipping)."""
     if not isinstance(data, dict):
         return data
@@ -775,13 +790,10 @@ def _quality_filter_ebay(data, coin, now=None, suppressed_ids=(), recent_only_id
         # Publication holds outrank every projection path: a held row is
         # excluded from products, medians and history alike. It stays in
         # the committed file and Melbourne evidence as the durable record.
-        link = product.get('link') or product.get('url') or ''
-        ebay_id = re.search(r'/itm/(?:[^/?#]+/)?([0-9]{12})(?:[/?#]|$)', str(link))
-        ids = {str(product.get('listing_id') or ''), str(product.get('item_id') or '')}
-        if ebay_id:
-            ids.add(ebay_id.group(1))
-        ids.discard('')
+        ids = _sale_ids(product)
         if ids.intersection(_get_publication_holds()) or ids.intersection(suppressed_ids):
+            continue
+        if ids.intersection(ledger_ids) and not _published_ledger_row(product):
             continue
         # The CSV importer accepts only rows James has marked Retained and
         # keeps their explicit catalog ID. Preserve that reviewed mapping even
@@ -794,8 +806,7 @@ def _quality_filter_ebay(data, coin, now=None, suppressed_ids=(), recent_only_id
                 (product.get('source_type')
                  in {'user_imported_csv', 'user_pasted_search'}
                  and product.get('record_status') == 'Retained')
-                or (product.get('source_type') == 'melbourne_confirmed_ledger'
-                    and product.get('record_status') == 'AutoApproved')
+                or _published_ledger_row(product)
             )
         )
         if reviewed_csv_match:
@@ -825,8 +836,6 @@ def _quality_filter_ebay(data, coin, now=None, suppressed_ids=(), recent_only_id
         except (TypeError, ValueError):
             _ship = 0.0
         normalized = {**product, 'sale_price': sale_price, 'delivered_price': round(sale_price + (_ship or 0), 2)}
-        if ids.intersection(recent_only_ids):
-            normalized['value_eligible'] = False
         age = now - (_sold_timestamp(product.get('date_sold')) or now)
         (current_products if age <= 90 * 24 * 3600 else historical_products).append(normalized)
     current_products.sort(key=lambda p: _sold_timestamp(p.get('date_sold')) or 0, reverse=True)
@@ -941,7 +950,7 @@ def _tag_manual_ebay(manual_entry, coin_id):
     return tagged
 
 
-def _apply_fetched(result, fetched, coin, suppressed_ids=(), recent_only_ids=()):
+def _apply_fetched(result, fetched, coin, suppressed_ids=(), ledger_ids=()):
     """Merge only usable upstream data, preserving a durable fallback."""
     if not isinstance(fetched, dict):
         return
@@ -954,7 +963,7 @@ def _apply_fetched(result, fetched, coin, suppressed_ids=(), recent_only_ids=())
         # RapidAPI completed-sale observations that remain useful as history.
         ebay['historical_products'] = list(previous.get('historical_products') or []) + list(previous.get('products') or [])
         result['ebay'] = _quality_filter_ebay(
-            ebay, coin, suppressed_ids=suppressed_ids, recent_only_ids=recent_only_ids)
+            ebay, coin, suppressed_ids=suppressed_ids, ledger_ids=ledger_ids)
     coinxchange = _quality_filter_coinxchange(fetched.get('coinxchange'), coin)
     if _usable_coinxchange(coinxchange):
         if not coinxchange.get('fetchedAt'):
@@ -963,7 +972,7 @@ def _apply_fetched(result, fetched, coin, suppressed_ids=(), recent_only_ids=())
 
 
 def _cached_snapshot(coins, base_cache, manual, manual_ebay_sales=None,
-                     suppressed_ids=(), recent_only_ids=()):
+                     suppressed_ids=(), ledger_ids=()):
     snapshot = {}
     manual_ebay_sales = manual_ebay_sales or {}
     for coin in coins:
@@ -1002,7 +1011,7 @@ def _cached_snapshot(coins, base_cache, manual, manual_ebay_sales=None,
         else:
             ebay = cached_ebay
         ebay = _quality_filter_ebay(
-            ebay, coin, suppressed_ids=suppressed_ids, recent_only_ids=recent_only_ids)
+            ebay, coin, suppressed_ids=suppressed_ids, ledger_ids=ledger_ids)
         coinxchange = _quality_filter_coinxchange(cached.get('coinxchange'), coin)
         manual_entry = manual.get(cid)
         if not isinstance(manual_entry, dict):
@@ -1089,14 +1098,13 @@ def _build_payload(coins=None, fetch_coin=None, deadline=None):
     publication = _load_sold_publication()
     manual_ebay_sales = _load_manual_ebay_sales(publication)
     suppressed_ids = frozenset(publication.get('suppressed_listing_ids', ()))
-    recent_only_ids = frozenset(str(row['listing_id'])
-                                for entry in manual_ebay_sales.values()
-                                if isinstance(entry, dict)
-                                for row in entry.get('products') or ()
-                                if isinstance(row, dict) and row.get('listing_id')
-                                and row.get('value_eligible') is False)
+    ledger_ids = {lid for entry in manual_ebay_sales.values()
+                  if isinstance(entry, dict)
+                  for row in entry.get('products') or ()
+                  if isinstance(row, dict) and _published_ledger_row(row)
+                  for lid in _sale_ids(row)}
     snapshot = _cached_snapshot(coins, base_cache, manual, manual_ebay_sales,
-                                suppressed_ids, recent_only_ids)
+                                suppressed_ids, ledger_ids)
     if fetch_coin is None:
         refresh_ids = _rapidapi_refresh_ids(coins)
         complete = True
@@ -1130,7 +1138,7 @@ def _build_payload(coins=None, fetch_coin=None, deadline=None):
                             ebay_data['manual_import'] = previous['manual_import']
                         snapshot[coin['id']]['ebay'] = _tag_ebay_urls(
                             _quality_filter_ebay(ebay_data, coin, suppressed_ids=suppressed_ids,
-                                                 recent_only_ids=recent_only_ids), coin['id'])
+                                                 ledger_ids=ledger_ids), coin['id'])
                 except Exception as e:
                     print(f"eBay refresh failed for {coin['id']}: {type(e).__name__}")
             if attempted < len(refresh_ids):
@@ -1155,7 +1163,7 @@ def _build_payload(coins=None, fetch_coin=None, deadline=None):
         if future in done:
             try:
                 fetched = future.result()
-                _apply_fetched(result, fetched, coin, suppressed_ids, recent_only_ids)
+                _apply_fetched(result, fetched, coin, suppressed_ids, ledger_ids)
             except Exception as e:
                 print(f"fetch failed for {cid}: {type(e).__name__}")
 

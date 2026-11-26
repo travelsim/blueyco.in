@@ -19,13 +19,14 @@ class TestPricesDeadline(unittest.TestCase):
                'source_type': 'melbourne_confirmed_ledger'}
         products = [
             dict(row, sale_price=20, link='https://www.ebay.com.au/itm/hidden/123456789012'),
-            dict(row, sale_price=30, item_id='recent'),
+            dict(row, sale_price=30, item_id='recent', value_eligible=False),
+            dict(row, sale_price=50, item_id='recent', source_type='ebay_cache'),
             dict(row, sale_price=10, item_id='market'),
         ]
         projected = prices._quality_filter_ebay(
             {'products': products}, coin,
             now=datetime(2026, 11, 26, tzinfo=timezone.utc).timestamp(),
-            suppressed_ids={'123456789012'}, recent_only_ids={'recent'})
+            suppressed_ids={'123456789012'}, ledger_ids={'recent'})
         self.assertEqual({p['item_id'] for p in projected['products']}, {'recent', 'market'})
         self.assertEqual(projected['median_price'], 10)
 

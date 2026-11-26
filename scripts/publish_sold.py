@@ -278,15 +278,14 @@ def carry_over_committed(coins, committed_path, emitted_ids,
     Committed rows absent from the ledger are kept verbatim. Returns count.
     """
     data = json.load(open(committed_path, encoding="utf-8"))
+    _, _, prices = _live_matchers()
+    omitted_ids = set(emitted_ids) | set(dropped_ids or ())
     carried = 0
     for cid, entry in (data.get("coins", data)).items():
         for row in entry.get("products", []):
             if not isinstance(row, dict):
                 continue
-            lid = str(row.get("listing_id") or row.get("item_id") or "")
-            if lid and lid in emitted_ids:
-                continue
-            if dropped_ids and lid and lid in dropped_ids:
+            if prices._sale_ids(row) & omitted_ids:
                 continue
             entry_out = coins.setdefault(cid, {"products": []})
             entry_out["products"].append(dict(row))
@@ -305,6 +304,7 @@ def verify_against_live(coins, base_url, suppressed_ids=()):
         headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
     with urllib.request.urlopen(request, timeout=60) as resp:
         live = json.load(resp)
+    _, _, prices = _live_matchers()
     live_index = {}
     live_no_id = 0
     live_coins = live.get("coins", live)
@@ -316,13 +316,16 @@ def verify_against_live(coins, base_url, suppressed_ids=()):
             for key in ("products", "historical_products", "outliers",
                         "historical_outliers"):
                 for row in block.get(key, []) or []:
-                    lid = str((row or {}).get("listing_id") or (row or {}).get("item_id") or "")
-                    price = drift.norm_price((row or {}).get("sale_price"))
-                    date = str((row or {}).get("date_sold") or "")
-                    if not lid:
-                        live_no_id += 1
+                    if not isinstance(row, dict):
                         continue
-                    live_index[lid] = (cid, price, date, row.get("value_eligible", True))
+                    ids = prices._sale_ids(row)
+                    price = drift.norm_price(row.get("sale_price"))
+                    date = drift.parse_date(str(row.get("date_sold") or ""))
+                    if not ids:
+                        live_no_id += 1
+                    for lid in ids:
+                        live_index.setdefault(lid, set()).add(
+                            (cid, price, str(date), row.get("value_eligible", True)))
     errors = [{"listing_id": lid, "problem": "suppressed-sale-visible"}
               for lid in sorted(set(suppressed_ids) & live_index.keys())]
     checked = 0
@@ -346,13 +349,14 @@ def verify_against_live(coins, base_url, suppressed_ids=()):
             if lid not in live_index:
                 errors.append({"listing_id": lid, "problem": "absent-from-live"})
                 continue
-            live_cid, live_price, live_date, live_eligible = live_index[lid]
-            if live_eligible != row.get("value_eligible", True):
+            value_eligible = row.get("value_eligible", True)
+            day = str(drift.parse_date(row["date_sold"]))
+            matches = live_index[lid]
+            if any(actual[3] != value_eligible for actual in matches):
                 errors.append({"listing_id": lid, "problem": "value-eligibility-mismatch"})
-            if live_cid != cid or live_price != row["sale_price"] or \
-                    live_date != row["date_sold"]:
+            if {actual[:3] for actual in matches} != {(cid, row["sale_price"], day)}:
                 errors.append({"listing_id": lid, "problem": "field-mismatch",
-                               "live": [live_cid, live_price, live_date],
+                               "live": sorted(matches, key=str),
                                "generated": [cid, row["sale_price"],
                                              row["date_sold"]]})
     count_diff = {cid: (gen_counts.get(cid, 0), live_counts.get(cid, 0))
