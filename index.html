@@ -1734,11 +1734,11 @@
 
 <!-- View tabs: the page is split into a collection view and a price view -->
 <nav class="view-tabs" role="tablist" aria-label="Choose a view">
-  <button class="view-tab on" type="button" role="tab" id="tab-collection" data-view="collection" aria-controls="view-collection" aria-selected="true">My collection</button>
-  <button class="view-tab" type="button" role="tab" id="tab-prices" data-view="prices" aria-controls="view-prices" aria-selected="false" tabindex="-1">Coin prices</button>
+  <button class="view-tab" type="button" role="tab" id="tab-collection" data-view="collection" aria-controls="view-collection" aria-selected="false" tabindex="-1">My collection</button>
+  <button class="view-tab on" type="button" role="tab" id="tab-prices" data-view="prices" aria-controls="view-prices" aria-selected="true">Coin prices</button>
 </nav>
 
-<div class="view-panel" id="view-collection" role="tabpanel" aria-labelledby="tab-collection">
+<div class="view-panel" id="view-collection" role="tabpanel" aria-labelledby="tab-collection" hidden>
 <!-- Interactive Dashboard (Hero Feature) -->
 <section id="dashboard" class="dashboard-section">
   <div class="dashboard-card">
@@ -1895,7 +1895,7 @@
 
 </div>
 
-<div class="view-panel" id="view-prices" role="tabpanel" aria-labelledby="tab-prices" hidden>
+<div class="view-panel" id="view-prices" role="tabpanel" aria-labelledby="tab-prices">
 <!-- Answer Engine Optimization (AEO) Collector Summary Capsule -->
 <section class="section" style="padding-top: 0; padding-bottom: 0;" aria-label="Bluey Coin Collector Quick Summary">
   <div class="aeo-summary-capsule">
@@ -5314,7 +5314,7 @@ document.addEventListener('click', (e) => {
   }));
 
   window.addEventListener('hashchange', routeFromHash);
-  showView(viewForId(decodeURIComponent(location.hash.slice(1))) || 'collection');
+  showView(viewForId(decodeURIComponent(location.hash.slice(1))) || 'prices');
   routeFromHash();
 })();
 </script>
