@@ -1374,71 +1374,84 @@ def _deal_fields(item_price, postage, market_median):
     return fields
 
 
+def _ebay_browse_search_page(keywords, limit=200, offset=0, sort='price'):
+    """Return one Browse API page, its total, and whether it parsed safely."""
+    if not (EBAY_CLIENT_ID and EBAY_CLIENT_SECRET):
+        return [], None, False
+
+    try:
+        token = _get_ebay_token()
+    except Exception as e:
+        print(f'eBay OAuth token error: {type(e).__name__}')
+        return [], None, False
+
+    params = urllib.parse.urlencode({
+        'q': keywords,
+        'limit': str(limit),
+        'offset': str(offset),
+        'filter': 'buyingOptions:{FIXED_PRICE}',
+        'sort': sort,
+    })
+    req = urllib.request.Request(f'{EBAY_BROWSE_URL}?{params}', headers={
+        'Authorization': f'Bearer {token}',
+        'X-EBAY-C-MARKETPLACE-ID': EBAY_MARKETPLACE,
+        'Accept': 'application/json',
+    })
+    try:
+        with urllib.request.urlopen(req, timeout=12) as response:
+            data = json.loads(response.read())
+    except urllib.error.HTTPError as e:
+        if e.code == 401:
+            with _ebay_token_lock:
+                _ebay_token['value'] = None
+        print(f'eBay Browse API error: {e.code}')
+        return [], None, False
+    except Exception as e:
+        print(f'eBay Browse API error: {type(e).__name__}')
+        return [], None, False
+
+    if not isinstance(data, dict) or not isinstance(data.get('itemSummaries'), list):
+        return [], None, False
+    try:
+        total = int(data['total'])
+    except (KeyError, TypeError, ValueError):
+        return [], None, False
+    summaries = data['itemSummaries']
+    if total < 0 or offset > total or (not summaries and offset < total):
+        return [], total, False
+
+    items = []
+    for it in summaries:
+        if not isinstance(it, dict):
+            return [], total, False
+        price = _parse_price((it.get('price') or {}).get('value'))
+        if price is None:
+            return [], total, False
+        condition = it.get('condition') or ''
+        items.append({
+            'price': price,
+            'postage': _ebay_postage(it),
+            'title': it.get('title') or '',
+            'url': it.get('itemWebUrl'),
+            'subtitle': condition[:40] if condition else None,
+        })
+    return items, total, True
+
+
 def _ebay_browse_search(keywords, limit=5):
     """
     Query eBay's own Browse API for active Buy It Now listings.
     Returns list of {'price', 'title', 'url', 'subtitle'}. Requires
     EBAY_CLIENT_ID/EBAY_CLIENT_SECRET; returns [] if unset or on any error.
     """
-    if not (EBAY_CLIENT_ID and EBAY_CLIENT_SECRET):
+    items, total, ok = _ebay_browse_search_page(keywords, limit, 0)
+    if not ok:
         return []
-
-    try:
-        token = _get_ebay_token()
-    except urllib.error.HTTPError as e:
-        print(f'eBay OAuth token error: {_ebay_oauth_http_error_summary(e)}')
-        return []
-    except Exception as e:
-        print(f'eBay OAuth token error: {type(e).__name__}')
-        return []
-
-    params = urllib.parse.urlencode({
-        'q':      keywords,
-        'limit':  str(limit),
-        'filter': 'buyingOptions:{FIXED_PRICE}',
-        'sort':   'price',
-    })
-    req = urllib.request.Request(f'{EBAY_BROWSE_URL}?{params}', headers={
-        'Authorization':           f'Bearer {token}',
-        'X-EBAY-C-MARKETPLACE-ID': EBAY_MARKETPLACE,
-        'Accept':                  'application/json',
-    })
-    try:
-        with urllib.request.urlopen(req, timeout=12) as r:
-            data = json.loads(r.read())
-    except urllib.error.HTTPError as e:
-        if e.code == 401:
-            # Token expired/revoked mid-lifetime — drop it so the next call remints.
-            with _ebay_token_lock:
-                _ebay_token['value'] = None
-        print(f'eBay Browse API error: {e}')
-        return []
-    except Exception as e:
-        print(f'eBay Browse API error: {e}')
-        return []
-
-    summaries = data.get('itemSummaries', [])
-    try:
-        total = int(data.get('total') or len(summaries))
-    except (TypeError, ValueError):
-        total = len(summaries)
     # Browse returns at most `limit` rows. A full page (or an explicit larger
     # total) cannot prove that the listing search was exhaustive.
-    search_truncated = len(summaries) >= limit or total > len(summaries)
-    items = []
-    for it in summaries:
-        price = _parse_price((it.get('price') or {}).get('value'))
-        if not price:
-            continue
-        condition = it.get('condition') or ''
-        items.append({
-            'price':    price,
-            'postage':  _ebay_postage(it),
-            'title':    it.get('title') or '',
-            'url':      it.get('itemWebUrl'),
-            'subtitle': condition[:40] if condition else None,
-            '_search_truncated': search_truncated,
-        })
+    search_truncated = len(items) >= limit or total > len(items)
+    for item in items:
+        item['_search_truncated'] = search_truncated
     return items
 
 
@@ -1658,6 +1671,95 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
         })
 
     return sorted(out, key=_buy_total_sort_key)[:10]
+
+
+def _ebay_live_tracking_options(retailer, keywords, coin_id=''):
+    """Fetch all paginated, product-matched eBay results for durable tracking.
+
+    Returns (items, complete). Any failed page or Browse API's 10,000-result
+    ceiling marks the snapshot incomplete. An empty complete result is valid.
+    """
+    expected_years = {t for t in re.findall(r'[a-z0-9]+', str(keywords or '').lower())
+                      if re.fullmatch(r'20\d{2}', t)}
+    if coin_id in _IMPRESSIONS_COIN_IDS:
+        keywords = re.sub(r'20\d{2}', ' ', keywords).strip()
+    required = _required_format_groups(keywords)
+    found = {}
+    complete = True
+    for query in [keywords] + _query_variants(coin_id, MAX_ACTIVE_QUERIES - 1):
+        browse_kw = _browse_keywords(query)
+        offset = 0
+        total = None
+        query_seen = set()
+        while total is None or offset < total:
+            page, page_total, ok = _ebay_browse_search_page(
+                browse_kw, limit=200, offset=offset, sort='newlyListed')
+            if not ok or (total is not None and page_total != total):
+                complete = False
+                break
+            total = page_total
+            if total > 10000:
+                complete = False
+                break
+            if offset + len(page) < total and len(page) != 200:
+                complete = False
+                break
+            for it in page:
+                title = re.sub(r'(?i)(?<![a-z])dollarbuck(?![a-z])',
+                               'Dollarbucks', it.get('title') or '')
+                if not _coinxchange_title_matches(
+                        title, browse_kw,
+                        allow_coloured=_allow_coloured(query, coin_id),
+                        expected_years=expected_years):
+                    continue
+                title_tokens = set(re.findall(r'[a-z0-9]+', title.lower()))
+                if coin_id in _IMPRESSIONS_COIN_IDS and title_tokens & {'stamp', 'pin'}:
+                    continue
+                if not all(set(group) & title_tokens for group in required):
+                    continue
+                item_url = str(it.get('url') or '')
+                parsed = urllib.parse.urlsplit(item_url)
+                host = (parsed.hostname or '').lower()
+                if (host not in {'ebay.com.au', 'www.ebay.com.au'}
+                        or not re.fullmatch(r'/itm/(?:[^/]+/)?[0-9]{5,20}/?', parsed.path)
+                        or not title.strip() or it.get('price') is None):
+                    complete = False
+                    break
+                key = _listing_key({'retailer_id': retailer['id'], 'url': it.get('url')})
+                if not key:
+                    complete = False
+                    continue
+                if key in query_seen:
+                    # A duplicate across pages means the result set shifted
+                    # during pagination; do not infer absences from that run.
+                    complete = False
+                    break
+                query_seen.add(key)
+                option = {
+                    'retailer_id': retailer['id'],
+                    'name': retailer['name'],
+                    'price': it['price'],
+                    'price_type': 'asking',
+                    'available': True,
+                    'url': item_url,
+                    'link_only': False,
+                    'title': it.get('title') or '',
+                    'subtitle': it.get('subtitle'),
+                }
+                previous = found.get(key)
+                if previous and (previous['title'] != option['title']
+                                 or previous['price'] != option['price']):
+                    complete = False
+                    break
+                found[key] = option
+            if not complete:
+                break
+            if total == 0 or offset + len(page) >= total:
+                break
+            offset += 200
+        if not complete:
+            break
+    return sorted(found.values(), key=_buy_total_sort_key), complete
 
 
 def _link_only_option(retailer, keywords, coin_id=''):

@@ -194,6 +194,52 @@ class TestBuyOptions(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertEqual(cached, second)
 
+    def test_tracking_response_uses_paginated_ebay_only_path(self):
+        options = [{
+            'retailer_id': 'ebay', 'name': 'eBay', 'price': 12.5,
+            'title': '2024 Bluey Dollarbuck coin',
+            'url': 'https://www.ebay.com.au/itm/123456',
+        }]
+        with mock.patch.object(legacy, '_ebay_live_tracking_options',
+                               return_value=(options, False)) as tracker:
+            options, complete = buy_options.get_buy_options(
+                's1_bluey', '2024 Bluey Dollarbuck coin', tracking=True)
+        self.assertFalse(complete)
+        self.assertEqual(len(options), 1)
+        self.assertEqual(options[0]['retailer_id'], 'ebay')
+        self.assertEqual(options[0]['url'], 'https://www.ebay.com.au/itm/123456')
+        tracker.assert_called_once()
+
+    def test_tracking_discovery_paginates_and_accepts_complete_empty_variants(self):
+        retailer = next(r for r in legacy.RETAILERS if r['id'] == 'ebay')
+        first = [
+            {'price': 5 + i / 100, 'title': '2024 Bluey $1 Dollarbucks Uncirculated Coin',
+             'url': f'https://www.ebay.com.au/itm/{100000 + i}', 'subtitle': 'Uncirculated'}
+            for i in range(200)
+        ]
+        last = [{'price': 9.0, 'title': '2024 Bluey $1 Dollarbucks Uncirculated Coin',
+                 'url': 'https://www.ebay.com.au/itm/100200', 'subtitle': 'Uncirculated'}]
+
+        def page(query, limit=200, offset=0, sort='price'):
+            if query != '2024 $1 Bluey Dollarbucks uncirculated':
+                return [], 0, True
+            return (first, 201, True) if offset == 0 else (last, 201, True)
+
+        with mock.patch.object(legacy, '_ebay_browse_search_page', side_effect=page):
+            options, complete = legacy._ebay_live_tracking_options(
+                retailer, '2024 $1 Bluey Dollarbuck coin uncirculated', 's1_bluey')
+        self.assertTrue(complete)
+        self.assertEqual(len(options), 201)
+        self.assertEqual(options[-1]['url'], 'https://www.ebay.com.au/itm/100200')
+
+    def test_tracking_discovery_fails_closed_on_a_failed_page(self):
+        retailer = next(r for r in legacy.RETAILERS if r['id'] == 'ebay')
+        with mock.patch.object(legacy, '_ebay_browse_search_page', return_value=([], None, False)):
+            options, complete = legacy._ebay_live_tracking_options(
+                retailer, '2024 $1 Bluey Dollarbuck coin uncirculated', 's1_bluey')
+        self.assertEqual(options, [])
+        self.assertFalse(complete)
+
     def test_unknown_coin_is_rejected(self):
         self.assertNotIn('does_not_exist', legacy.COIN_BY_ID)
 

@@ -34,35 +34,23 @@ class TestDailyListingSnapshot(unittest.TestCase):
         items, invalid = daily_check.ebay_items(options)
         self.assertEqual(invalid, 1)
 
-    def test_combined_ten_result_cap_is_rejected_even_with_fewer_ebay_rows(self):
-        options = [dict(self.options[0], url=f"https://retailer{i}.example/item", price=25)
-                   for i in range(9)] + [self.options[0]]
-        items, invalid = daily_check.ebay_items(options)
-        self.assertFalse(daily_check.snapshot_is_usable(True, True, options, items, invalid))
-
-    def test_five_items_are_not_the_endpoint_cap(self):
+    def test_complete_tracking_snapshot_accepts_more_than_shopper_cap(self):
         options = [
             {"url": f"https://www.ebay.com.au/itm/{12345 + i}",
              "title": "2024 $1 Bluey Dollarbuck coin", "price": 25}
-            for i in range(5)
+            for i in range(12)
         ]
         items, invalid = daily_check.ebay_items(options)
         self.assertTrue(daily_check.snapshot_is_usable(True, True, options, items, invalid))
 
-    def test_full_ten_item_ebay_cap_is_rejected(self):
-        options = [
-            {"url": f"https://www.ebay.com.au/itm/{12345 + i}",
-             "title": "2024 $1 Bluey Dollarbuck coin", "price": 25}
-            for i in range(10)
-        ]
-        items, invalid = daily_check.ebay_items(options)
-        self.assertFalse(daily_check.snapshot_is_usable(True, True, options, items, invalid))
+    def test_complete_empty_snapshot_is_valid_but_failed_empty_is_not(self):
+        self.assertTrue(daily_check.snapshot_is_usable(True, True, [], {}))
+        self.assertFalse(daily_check.snapshot_is_usable(True, False, [], {}))
 
     def test_partial_empty_and_mismatched_snapshots_preserve_state(self):
         items, invalid = daily_check.ebay_items(self.options)
         self.assertFalse(daily_check.snapshot_is_usable(False, True, self.options, items))
         self.assertFalse(daily_check.snapshot_is_usable(True, False, self.options, items))
-        self.assertFalse(daily_check.snapshot_is_usable(True, True, [], {}))
         self.assertFalse(daily_check.snapshot_is_usable(True, True, self.options, items,
                                                          mismatched_items=1))
 

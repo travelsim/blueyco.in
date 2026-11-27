@@ -159,9 +159,15 @@ def _scrape(retailer, keywords, coin_id):
 
 
 def get_buy_options(coin_id, keywords, tracking=False):
+    if tracking:
+        retailer = next((r for r in legacy.RETAILERS if r.get('id') == 'ebay'), None)
+        if retailer is None:
+            return [], False
+        return legacy._ebay_live_tracking_options(retailer, keywords, coin_id)
+
     now = time.time()
     hit = _cache.get(coin_id)
-    if not tracking and hit and now - hit['fetchedAt'] < CACHE_TTL:
+    if hit and now - hit['fetchedAt'] < CACHE_TTL:
         return hit['options'], True
 
     manual = _manual()
@@ -180,16 +186,6 @@ def get_buy_options(coin_id, keywords, tracking=False):
                 results = future.result() or []
             except Exception as e:
                 print(f"buy-options error [{retailer['id']}]: {e}")
-        if retailer.get('id') == 'ebay':
-            # The upstream result cap makes absence unsafe for listing tracking.
-            truncated = False
-            for option in results:
-                if isinstance(option, dict):
-                    truncated = bool(option.pop('_search_truncated', False)) or truncated
-            if truncated or not any(
-                    isinstance(option, dict) and option.get('price') is not None
-                    and not option.get('link_only') for option in results):
-                complete = False
         manual_entry = (manual.get(coin_id) or {}).get(retailer['id']) or {}
         # A verified live eBay item URL replaces a generic link-only result;
         # useAsLinkOnly does the same for a coin-specific search URL.
@@ -198,10 +194,6 @@ def get_buy_options(coin_id, keywords, tracking=False):
         if (results and all(option.get('link_only') or option.get('price') is None for option in results)
                 and (manual_item or manual_entry.get('useAsLinkOnly') is True)):
             results = _fallback(retailer, keywords, coin_id, manual)
-            if retailer.get('id') == 'ebay':
-                # A pinned/manual link is useful to shoppers but is not an
-                # exhaustive search snapshot.
-                complete = False
         if not results:
             # Unfinished or failed scrape still yields an actionable link.
             options.extend(_fallback(retailer, keywords, coin_id, manual))
@@ -210,20 +202,6 @@ def get_buy_options(coin_id, keywords, tracking=False):
             if option.get('price') is not None:
                 option.setdefault('price_type', 'asking')
         options.extend(results)
-
-    if tracking:
-        # The daily tracker needs the complete eBay subset, not the shopper
-        # list trimmed across all retailers. eBay's own result cap is reported
-        # above, so an exactly-full set remains explicitly incomplete.
-        ebay = [o for o in options if o.get('retailer_id') == 'ebay'
-                and not o.get('link_only') and o.get('price') is not None]
-        ebay = legacy._dedupe_listings(ebay)
-        if len(ebay) >= 10:
-            complete = False
-        for option in ebay:
-            option['url'] = option.pop('_tracking_url', option.get('url'))
-            option.pop('_search_truncated', None)
-        return ebay, complete
 
     priced = sorted(
         legacy._dedupe_listings([o for o in options if not o.get('link_only') and o.get('price') is not None]),

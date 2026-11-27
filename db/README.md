@@ -10,13 +10,14 @@ obtains the current production connection through Vercel's environment and
 supplies the expected Neon branch identity. It does not print credentials.
 Python needs `psycopg` from the repository's pinned requirements.
 
-The checker first reads complete product and buy-options snapshots from
-`https://blueyco.in`, then validates every product before writing. It uses the
-site's product matcher and accepts only canonical eBay item URLs with an item
-ID, title and price. It skips state changes on partial/empty results, title
-mismatch, duplicate ambiguity, a full ten-item eBay page, or ten combined
-priced retailer results. It never confirms a sale. A disappeared observed
-listing becomes `likely_sold` for human evidence review; a reappearing listing
+The checker reads complete product snapshots from `https://blueyco.in`, then
+uses a tracking-only route backed by eBay Browse API pagination (200 rows per
+page, up to eBay's 10,000-result query ceiling). It validates every product
+with the site's title matcher and accepts only canonical eBay item URLs with
+an item ID, title and price. Any failed page, changing result total, malformed
+row, title mismatch or duplicate ambiguity preserves that product's state. A
+successful empty snapshot is valid and moves disappeared observed listings to
+`likely_sold` for human review. It never confirms a sale. A reappearing listing
 returns to `available`. Manually supplied historical sales are not treated as
 observed active listings.
 

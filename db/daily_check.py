@@ -97,15 +97,12 @@ def matches_product(title, product_id, now=None):
 
 def snapshot_is_usable(prices_complete, options_complete, options, items,
                        invalid_items=0, mismatched_items=0):
-    """Reject partial, empty, ambiguous, or potentially truncated snapshots."""
+    """Accept only complete, unambiguous product snapshots (including empty)."""
     if not prices_complete or not options_complete or not isinstance(options, list):
         return False
-    # eBay itself is queried with ten matching-item cap; any full page cannot
-    # prove that an absent listing disappeared. The endpoint also caps all
-    # combined priced retailer results at ten.
-    priced = [o for o in options if isinstance(o, dict)
-              and o.get("price") is not None and not o.get("link_only")]
-    if len(items) >= 10 or len(priced) >= 10 or invalid_items or mismatched_items or not items:
+    # The tracking-only API paginates each product query; an empty response is
+    # valid only when the endpoint independently reports every query complete.
+    if invalid_items or mismatched_items:
         return False
     return True
 
