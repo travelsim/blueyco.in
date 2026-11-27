@@ -12773,6 +12773,30 @@
     },
     {
      "coin_id": "s1_proof_coloured",
+     "title": "2024 Bluey RAM $1 Coloured Proof Coin",
+     "sale_price": 530.7,
+     "currency": "AU",
+     "date_sold": "26 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-e80ac1311285141a",
+     "shipping_price": 0.0,
+     "best_offer": true,
+     "review_flag": "Same displayed price as the 12 Sep 2026 record (257525494681, different seller); separate row, re-list review"
+    },
+    {
+     "coin_id": "s1_proof_coloured",
+     "title": "2024 Bluey $1 AlBr Coloured Proof Coin 0723/5000",
+     "sale_price": 582.7,
+     "currency": "AU",
+     "date_sold": "24 Sep 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-28034a6401b3ea5d",
+     "shipping_price": 14.0
+    },
+    {
+     "coin_id": "s1_proof_coloured",
      "title": "2024 Royal Australian Mint Bluey $1 Coloured Proof Coin 0245/5000",
      "sale_price": 525.0,
      "currency": "AU",
@@ -12781,6 +12805,28 @@
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "257743878947",
      "link": "https://www.ebay.com.au/itm/257743878947"
+    },
+    {
+     "coin_id": "s1_proof_coloured",
+     "title": "2024 Bluey $1 AlBr Coloured Proof Coin 1372/5000",
+     "sale_price": 498.9,
+     "currency": "AU",
+     "date_sold": "18 Oct 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-e02719fc0018a666",
+     "shipping_price": 12.55
+    },
+    {
+     "coin_id": "s1_proof_coloured",
+     "title": "2024 Bluey $1 AlBr Coloured Proof Coin 0386/5000",
+     "sale_price": 335.3,
+     "currency": "AU",
+     "date_sold": "13 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-7ad59c81856865ee",
+     "shipping_price": 6.63
     },
     {
      "coin_id": "s1_proof_coloured",
@@ -12825,6 +12871,28 @@
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "158008457116",
      "link": "https://www.ebay.com.au/itm/158008457116"
+    },
+    {
+     "coin_id": "s1_proof_coloured",
+     "title": "2024 Bluey $1 Dollar Bucks Coloured Proof Coin 1224/5000",
+     "sale_price": 549.99,
+     "currency": "AU",
+     "date_sold": "03 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-5ab937a375db43de",
+     "shipping_price": 0.0
+    },
+    {
+     "coin_id": "s1_proof_coloured",
+     "title": "2024 Bluey $1 AlBr Coloured Proof Coin 0792/5000",
+     "sale_price": 599.95,
+     "currency": "AU",
+     "date_sold": "01 Oct 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-6ab98a2fbd2ef3b1",
+     "shipping_price": 15.0
     }
    ]
   },
