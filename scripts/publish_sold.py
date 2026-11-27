@@ -55,14 +55,29 @@ def fetch_confirmed_rows(read_rows):
     for row in read_rows(
         "SELECT listing_id, raw_record->>'price_aud' AS item_price,"
         " raw_record->>'postage_aud' AS postage, raw_record->>'delivery_aud' AS delivery,"
-        " raw_record->>'delivered_aud' AS total FROM sale_import_evidence"
+        " raw_record->>'delivered_aud' AS total, raw_record->>'bundle' AS bundle,"
+        " raw_record->>'best_offer' AS best_offer,"
+        " raw_record->>'price_basis' AS price_basis,"
+        " raw_record->>'review_flag' AS review_flag FROM sale_import_evidence"
         " WHERE listing_id IS NOT NULL"
     ):
         evidence.setdefault(row["listing_id"], []).append(row)
     for row in rows:
-        amount = verified_postage(row["price_aud"], evidence.get(row["listing_id"], []))
+        matching_evidence = [item for item in evidence.get(row["listing_id"], [])
+                             if money_amount(item.get("item_price")) ==
+                             money_amount(row["price_aud"])]
+        amount = verified_postage(row["price_aud"], matching_evidence)
         if amount is not None:
             row["shipping_price"] = amount
+        for key in ("bundle", "best_offer", "price_basis", "review_flag"):
+            values = {item.get(key) for item in matching_evidence
+                      if item.get(key) not in (None, "")}
+            if len(values) == 1:
+                value = values.pop()
+                if key in ("bundle", "best_offer"):
+                    row[key] = value.lower() == "true"
+                else:
+                    row[key] = value
     return rows
 
 
@@ -160,7 +175,7 @@ def read_neon_ledger(mode, stored_reviews_only):
     incoming = {} if stored_reviews_only else _reviews.collapse_records(_reviews.fetch_records())[0]
     with psycopg.connect(url, connect_timeout=10, row_factory=dict_row) as conn:
         conn.execute("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ" +
-                     (" READ ONLY" if mode != "write" else ""))
+                     (" READ ONLY" if mode != "write" or stored_reviews_only else ""))
         identity = conn.execute(
             "SELECT current_database() AS db, current_setting('neon.branch_id', true) AS branch"
         ).fetchone()
@@ -214,6 +229,9 @@ def build_record(row, value_eligible=True):
         rec["link"] = row.get("source_url")
     if row.get("shipping_price") is not None:
         rec["shipping_price"] = row["shipping_price"]
+    for key in ("bundle", "best_offer", "price_basis", "review_flag"):
+        if row.get(key) not in (None, False, ""):
+            rec[key] = row[key]
     if value_eligible is False:
         rec["value_eligible"] = False
     return rec
@@ -445,10 +463,10 @@ def main(argv=None):
     parser.add_argument("--live-base", default="https://blueyco.in")
     parser.add_argument("--ledger", choices=("melbourne", "neon"), default="melbourne")
     parser.add_argument("--stored-reviews-only", action="store_true",
-                        help="run a read-only Neon dry run with reviews already in the ledger")
+                        help="use stored Neon decisions only; do not fetch or write reviewer decisions")
     args = parser.parse_args(argv)
-    if args.stored_reviews_only and (args.ledger != "neon" or args.mode != "dry-run"):
-        parser.error("--stored-reviews-only requires --ledger neon --mode dry-run")
+    if args.stored_reviews_only and args.ledger != "neon":
+        parser.error("--stored-reviews-only requires --ledger neon")
     committed_path = os.path.join(args.root, "manual_ebay_sales.json")
     holds = drift.load_holds(os.path.join(args.root, "publication_holds.json"))
     json_index, json_newest = drift.load_json_products(committed_path)

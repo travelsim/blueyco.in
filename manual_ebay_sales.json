@@ -447,7 +447,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "batch4-061606748f5c5392fc1b034d",
-     "shipping_price": 2.95
+     "shipping_price": 2.95,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s2_xmas_unc",
@@ -503,7 +504,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "batch3-21a49344e66a8c5fc9416228",
-     "shipping_price": 10.0
+     "shipping_price": 10.0,
+     "price_basis": "auction (4 bids)"
     },
     {
      "coin_id": "s2_xmas_unc",
@@ -6470,7 +6472,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "batch3-8e40435c3c532dfec999d923",
-     "shipping_price": 0.0
+     "shipping_price": 0.0,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s3_proof_ab",
@@ -9030,7 +9033,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-c8f93f10f9b95eca72c2aed8",
-     "shipping_price": 0.0
+     "shipping_price": 0.0,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_proof",
@@ -9329,7 +9333,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-c6dc86dc556612581a3d5f7b",
-     "shipping_price": 0.0
+     "shipping_price": 0.0,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_proof",
@@ -9400,7 +9405,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-e0c4228ab6981acb0ad5b77e",
-     "shipping_price": 12.0
+     "shipping_price": 12.0,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_proof",
@@ -9411,7 +9417,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-90c77760fa2f5e2a05da8e76",
-     "shipping_price": 0.0
+     "shipping_price": 0.0,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_proof",
@@ -9527,7 +9534,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-38770ec5d828c7a64768be5c",
-     "shipping_price": 14.5
+     "shipping_price": 14.5,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_proof",
@@ -9575,7 +9583,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-b16f2fde140b164c4c7f0db7",
-     "shipping_price": 6.63
+     "shipping_price": 6.63,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_proof",
@@ -9586,7 +9595,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-86402221b8eec8dee8db5df8",
-     "shipping_price": 7.95
+     "shipping_price": 7.95,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_proof",
@@ -9597,7 +9607,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-41e15bb48a0ad83ae0174f68",
-     "shipping_price": 0.0
+     "shipping_price": 0.0,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_proof",
@@ -9631,7 +9642,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-4a47b3e2aa158b4995e8763b",
-     "shipping_price": 0.0
+     "shipping_price": 0.0,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_proof",
@@ -9665,7 +9677,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-7a2319ba6f270f5c6c0d1b2c",
-     "shipping_price": 0.0
+     "shipping_price": 0.0,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_proof",
@@ -9714,7 +9727,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-8dcd68ea49682b2c99efa4a1",
-     "shipping_price": 7.61
+     "shipping_price": 7.61,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_proof",
@@ -9725,7 +9739,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-3b81a4fe2182b939e3406de1",
-     "shipping_price": 0.0
+     "shipping_price": 0.0,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_proof",
@@ -9736,7 +9751,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-72298aa3663d2f77b189b35e",
-     "shipping_price": 0.0
+     "shipping_price": 0.0,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_proof",
@@ -9747,7 +9763,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-d792bb05dc111072957c799e",
-     "shipping_price": 15.19
+     "shipping_price": 15.19,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_proof",
@@ -10661,7 +10678,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-53174bf011b285b1d5fb4e44",
-     "shipping_price": 0.0
+     "shipping_price": 0.0,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_unc",
@@ -10691,7 +10709,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-f32ca8401fd2cd846d794e80",
-     "shipping_price": 6.63
+     "shipping_price": 6.63,
+     "price_basis": "Buy It Now"
     },
     {
      "title": "Australia 2027 Bluey Cricket. Coloured Uncirculated Coin .",
@@ -10711,7 +10730,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-50044e9e4c13e73385bb9e5a",
-     "shipping_price": 6.63
+     "shipping_price": 6.63,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_unc",
@@ -10722,7 +10742,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-c9f39540bfdaa35a6d051720",
-     "shipping_price": 0.0
+     "shipping_price": 0.0,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_unc",
@@ -10733,7 +10754,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-2c3436463e9de9a5ee58b884",
-     "shipping_price": 7.0
+     "shipping_price": 7.0,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_unc",
@@ -10744,7 +10766,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-7b1591036526960eb494b455",
-     "shipping_price": 0.0
+     "shipping_price": 0.0,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_unc",
@@ -10755,7 +10778,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-c06516e579fb28ae88b0515d",
-     "shipping_price": 0.0
+     "shipping_price": 0.0,
+     "price_basis": "Buy It Now"
     },
     {
      "title": "AUSTRALIA 2027 COLOURED $1 BLUEY CRICKET DOLLAR UNCIRCULATED COIN -TRACKING POST",
@@ -10785,7 +10809,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-c3f9fc703ad3c44f2f14c57f",
-     "shipping_price": 0.0
+     "shipping_price": 0.0,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s4_cricket_unc",
@@ -10856,7 +10881,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "cricket-f5ae5ae1208affd0d5584544",
-     "shipping_price": 0.0
+     "shipping_price": 0.0,
+     "price_basis": "Buy It Now"
     }
    ]
   },
@@ -12835,7 +12861,8 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "batch3-8e71e59e48c4fdf29ffd6365",
-     "shipping_price": 0.0
+     "shipping_price": 0.0,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s1_proof_silver",
@@ -16365,6 +16392,59 @@
      "listing_id": "117536821495"
     }
    ]
+  },
+  "76604949": {
+   "products": [
+    {
+     "coin_id": "76604949",
+     "title": "2026 $2 Bluey Sleepytime PNC IN HAND + 2 till coins",
+     "sale_price": 106.7,
+     "currency": "AU",
+     "date_sold": "26 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "840166097677",
+     "link": "https://www.ebay.com.au/itm/840166097677",
+     "shipping_price": 0.0,
+     "bundle": true,
+     "best_offer": true,
+     "price_basis": "Displayed amount; Best Offer was shown and accepted amount is unknown",
+     "review_flag": "bundle",
+     "value_eligible": false
+    },
+    {
+     "coin_id": "76604949",
+     "title": "2026 impressions pnc Bluey Sleepytime Colour Coin in Card Aluminium Bronze RB",
+     "sale_price": 133.2,
+     "currency": "AU",
+     "date_sold": "26 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "267854963661",
+     "link": "https://www.ebay.com.au/itm/267854963661",
+     "shipping_price": 6.63,
+     "best_offer": true,
+     "price_basis": "Displayed amount; Best Offer was shown and accepted amount is unknown",
+     "review_flag": "price-unconfirmed",
+     "value_eligible": false
+    },
+    {
+     "coin_id": "76604949",
+     "title": "Bluey: Sleepytime Limited-Edition Postal Numismatic Cover (PNC) Coloured $2 Coin",
+     "sale_price": 139.0,
+     "currency": "AU",
+     "date_sold": "24 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "227626858395",
+     "link": "https://www.ebay.com.au/itm/227626858395",
+     "shipping_price": 9.0,
+     "best_offer": true,
+     "price_basis": "Displayed amount; Best Offer was shown and accepted amount is unknown",
+     "review_flag": "price-unconfirmed",
+     "value_eligible": false
+    }
+   ]
   }
  },
  "suppressed_listing_ids": [
@@ -16402,6 +16482,7 @@
   "batch3-cb87d45a4f504c12a868f420",
   "batch3-cf4ecf7548978ca7d6f06703",
   "batch4-d1fe9e8f8570bcda8046e574",
+  "manual-42623aa4173f553e",
   "manual-6b321d3e5a85963c",
   "manual-a3398fbb9406e540",
   "manual-a9f68431c406d67d",

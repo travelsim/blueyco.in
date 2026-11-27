@@ -257,6 +257,29 @@ class TestVerifiedPostage(unittest.TestCase):
         self.assertIsNone(pub.verified_postage("30", [dict(paid, total="31")]))
         self.assertIsNone(pub.verified_postage("31", [paid]))
 
+    def test_publication_preserves_bundle_and_price_review_flags(self):
+        row = {
+            "product_id": "76604949",
+            "title": "Sleepytime PNC + 2 till coins",
+            "price_aud": "106.70",
+            "date_sold": "2026-11-26",
+            "listing_id": "840166097677",
+            "source_url": "https://www.ebay.com.au/itm/840166097677",
+            "shipping_price": 0,
+            "bundle": True,
+            "best_offer": True,
+            "price_basis": "displayed amount; accepted amount unknown",
+            "review_flag": "bundle",
+        }
+        record = pub.build_record(row, value_eligible=False)
+        self.assertTrue(record["bundle"])
+        self.assertTrue(record["best_offer"])
+        self.assertEqual(record["review_flag"], "bundle")
+        self.assertEqual(record["price_basis"],
+                         "displayed amount; accepted amount unknown")
+        self.assertFalse(record["value_eligible"])
+        self.assertEqual(record["shipping_price"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()
