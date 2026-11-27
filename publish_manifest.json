@@ -1,7 +1,7 @@
 {
-  "batch_id": "ledger-publish-20261127-011639",
-  "generated_at": "2026-11-27T01:16:39",
-  "total_input": 1037,
+  "batch_id": "ledger-publish-20261127-210234",
+  "generated_at": "2026-11-27T21:02:34",
+  "total_input": 1040,
   "rows": [
     {
       "listing_id": "198341345495",
@@ -7939,12 +7939,6 @@
       "reason": "verified Melbourne confirmed_sold"
     },
     {
-      "listing_id": "manual-42623aa4173f553e",
-      "product_id": "76604949",
-      "disposition": "pending-review",
-      "reason": "needs reviewer mapping"
-    },
-    {
       "listing_id": "manual-cd597ad8b466a744",
       "product_id": "76604959",
       "price": 200.0,
@@ -7963,8 +7957,10 @@
     {
       "listing_id": "manual-7ae0e02cc24c5c07",
       "product_id": "76604958",
-      "disposition": "pending-review",
-      "reason": "needs reviewer mapping"
+      "price": 425.0,
+      "date": "24 Nov 2026",
+      "disposition": "old-history",
+      "reason": "verified Melbourne confirmed_sold"
     },
     {
       "listing_id": "manual-d7759f3ec9d337a1",
@@ -8205,12 +8201,40 @@
       "reason": "verified Melbourne confirmed_sold"
     },
     {
-      "listing_id": "167655058993",
-      "product_id": "s1_bluey",
-      "price": 8.45,
-      "date": "23 Mar 2026",
+      "listing_id": "267854963661",
+      "product_id": "76604949",
+      "review_decision": "recent-only",
+      "price": 133.2,
+      "date": "26 Nov 2026",
       "disposition": "published",
-      "reason": "verified Melbourne confirmed_sold"
+      "reason": "reviewer recent-only"
+    },
+    {
+      "listing_id": "840166097677",
+      "product_id": "76604949",
+      "review_decision": "recent-only",
+      "price": 106.7,
+      "date": "26 Nov 2026",
+      "disposition": "published",
+      "reason": "reviewer recent-only"
+    },
+    {
+      "listing_id": "227626858395",
+      "product_id": "76604949",
+      "review_decision": "recent-only",
+      "price": 139.0,
+      "date": "24 Nov 2026",
+      "disposition": "published",
+      "reason": "reviewer recent-only"
+    },
+    {
+      "listing_id": "377668778653",
+      "product_id": "76604949",
+      "review_decision": "also-in-value",
+      "price": 120.0,
+      "date": "23 Nov 2026",
+      "disposition": "published",
+      "reason": "reviewer also-in-value"
     },
     {
       "listing_id": "235762857634",
@@ -8267,11 +8291,19 @@
       "date": "24 Aug 2026",
       "disposition": "published",
       "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "167655058993",
+      "product_id": "s1_bluey",
+      "price": 8.45,
+      "date": "23 Mar 2026",
+      "disposition": "published",
+      "reason": "verified Melbourne confirmed_sold"
     }
   ],
   "review_decisions": {
     "records": null,
-    "unique_listings": 58,
+    "unique_listings": 62,
     "recorded": 0
   },
   "held_listing_ids": [
@@ -8287,5 +8319,5 @@
     "batch3-cf4ecf7548978ca7d6f06703",
     "batch4-d1fe9e8f8570bcda8046e574"
   ],
-  "carried_over_committed_only": 438
+  "carried_over_committed_only": 444
 }
