@@ -68,5 +68,54 @@ class RefreshEbayTests(unittest.TestCase):
         self.assertEqual(self.read_cache(), before)
 
 
+class SleepytimeRefreshGateTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.cache_path = os.path.join(self.temp.name, 'ebay_cache.json')
+        self.old_root = refresh_ebay.ROOT
+        refresh_ebay.ROOT = self.temp.name
+        with open(self.cache_path, 'w', encoding='utf-8') as stream:
+            json.dump({}, stream)
+        self.old_coins = refresh_ebay.prices.COINS
+        self.real_coin = next(c for c in refresh_ebay.prices.COINS
+                              if c['id'] == '76604949')
+        refresh_ebay.prices.COINS = [self.real_coin]
+
+    def tearDown(self):
+        refresh_ebay.ROOT = self.old_root
+        refresh_ebay.prices.COINS = self.old_coins
+        self.temp.cleanup()
+
+    def test_bundle_observation_is_marked_ineligible_upstream(self):
+        product = {'title': '2026 $2 Bluey Sleepytime PNC IN HAND + 2 till coins',
+                   'sale_price': 106.7, 'currency': 'AU',
+                   'date_sold': datetime.now(timezone.utc).strftime('%d %b %Y'),
+                   'item_id': '840166097677'}
+        with patch.object(refresh_ebay.prices, 'RAPIDAPI_KEY', 'configured'), \
+                patch.object(refresh_ebay.prices, '_fetch_ebay',
+                             return_value={'products': [product],
+                                           'total_results': 1}):
+            refresh_ebay.refresh()
+        with open(self.cache_path, encoding='utf-8') as stream:
+            sale = json.load(stream)['76604949']['ebay']['products'][0]
+        self.assertIs(sale['value_eligible'], False)
+        self.assertEqual(sale['review_flag'], 'bundle')
+
+    def test_clean_observation_keeps_its_price(self):
+        product = {'title': '2026 Bluey Sleepytime Limited-Edition PNC coloured $2',
+                   'sale_price': 126.84, 'currency': 'AU',
+                   'date_sold': datetime.now(timezone.utc).strftime('%d %b %Y'),
+                   'item_id': '860179205712'}
+        with patch.object(refresh_ebay.prices, 'RAPIDAPI_KEY', 'configured'), \
+                patch.object(refresh_ebay.prices, '_fetch_ebay',
+                             return_value={'products': [product],
+                                           'total_results': 1}):
+            refresh_ebay.refresh()
+        with open(self.cache_path, encoding='utf-8') as stream:
+            sale = json.load(stream)['76604949']['ebay']['products'][0]
+        self.assertNotIn('value_eligible', sale)
+        self.assertEqual(sale['sale_price'], 126.84)
+
+
 if __name__ == '__main__':
     unittest.main()

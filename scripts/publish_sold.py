@@ -31,6 +31,7 @@ from decimal import Decimal, InvalidOperation
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import melbourne_drift as drift
 import review_decisions as _reviews
+import sleepytime_sold_replay as sleepytime_gate
 
 DISPLAY_FMT = "%d %b %Y"
 
@@ -254,6 +255,18 @@ def build_record(row, value_eligible=True):
     return rec
 
 
+def gated_row(row, gate):
+    """Apply the product gate's review flag when the row has none."""
+    if gate is None or row.get("review_flag") or not gate["review_flag"]:
+        return row
+    return {**row, "review_flag": gate["review_flag"]}
+
+
+def gate_eligible(gate, fallback=True):
+    """Final value eligibility: the gate can only ever narrow it."""
+    return fallback and gate["value_eligible"] if gate is not None else fallback
+
+
 def assert_seller_free(obj, where):
     if isinstance(obj, dict):
         for key, value in obj.items():
@@ -289,8 +302,11 @@ def generate(rows, json_index, json_newest, holds, excluded_ids,
         day = drift.parse_date(str(row.get("date_sold") or ""))
         base = {"listing_id": lid or None, "product_id": prod or None}
         dec = decision_map.get(lid) if decision_map else None
+        gate = sleepytime_gate.publication_gate(row)
         if dec is not None:
             base["review_decision"] = dec["decision"]
+        if gate is not None and not gate["value_eligible"]:
+            base["gate"] = gate["reason"]
         if lid and lid in holds:
             manifest_rows.append(dict(base, disposition="held",
                                      reason="publication-hold"))
@@ -316,16 +332,20 @@ def generate(rows, json_index, json_newest, holds, excluded_ids,
                 manifest_rows.append(dict(base, disposition="duplicate-suppressed",
                                           reason="repeat listing_id in ledger feed"))
                 continue
-            rec = build_record(row, value_eligible=dec["value_eligible"])
+            rec = build_record(gated_row(row, gate),
+                               value_eligible=gate_eligible(
+                                   gate, dec["value_eligible"]))
             if rec is None:
                 manifest_rows.append(dict(base, disposition="incomplete",
                                           reason="undisplayable price/date"))
                 continue
             seen_ids.add(lid)
             included.append(rec)
-            manifest_rows.append(dict(base, price=rec["sale_price"],
-                                      date=rec["date_sold"],
-                                      disposition="published", reason=dec["reason"]))
+            manifest_rows.append(dict(
+                base, price=rec["sale_price"], date=rec["date_sold"],
+                disposition="published",
+                reason=dec["reason"] + (
+                    "; " + gate["reason"] if gate is not None else "")))
             continue
         key = (prod, drift.norm_title(row.get("title")), price, day.isoformat())
         if key in json_index:
@@ -347,7 +367,8 @@ def generate(rows, json_index, json_newest, holds, excluded_ids,
             manifest_rows.append(dict(base, disposition="duplicate-suppressed",
                                       reason="repeat listing_id in ledger feed"))
             continue
-        rec = build_record(row)
+        rec = build_record(gated_row(row, gate),
+                           value_eligible=gate_eligible(gate, True))
         if rec is None:
             manifest_rows.append(dict(base, disposition="incomplete",
                                       reason="undisplayable price/date"))

@@ -12,10 +12,13 @@ import tempfile
 import time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if ROOT not in sys.path:
-    sys.path.insert(0, ROOT)
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+for _path in (ROOT, SCRIPT_DIR):
+    if _path not in sys.path:
+        sys.path.insert(0, _path)
 
 from api import prices  # noqa: E402
+import sleepytime_sold_replay as sold_gate  # noqa: E402
 
 
 MAX_BATCH_SIZE = 5
@@ -62,7 +65,8 @@ def refresh(offset=0, limit=MAX_BATCH_SIZE):
             + list(previous.get('products') or []),
         }
         filtered = prices._quality_filter_ebay(merged, coin)
-        updates[coin['id']] = prices._tag_ebay_urls(filtered, coin['id'])
+        updates[coin['id']] = prices._tag_ebay_urls(
+            sold_gate.gate_ebay_payload(filtered, coin['id']), coin['id'])
         print(f"{index}/{len(prices.COINS)} {coin['id']}: "
               f"{len(filtered.get('products') or [])} current, "
               f"{len(filtered.get('historical_products') or [])} historical matched sales")
