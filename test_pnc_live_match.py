@@ -19,3 +19,16 @@ class PncListingMatchingTests(unittest.TestCase):
         self.assertFalse(self.matches('s1_pnc_bingo', '2024 Australia Bluey $1 Coin Privy Mark PNC Stamp & Coin Cover Bluey,Bingo Fr'))
         self.assertFalse(self.matches('s1_pnc_bingo', '2024 Bluey Bingo PNC and card set'))
         self.assertFalse(self.matches('s1_pnc_mumdad', '2024 Bluey Bingo PNC'))
+
+class SleepytimeInsertVariantTests(unittest.TestCase):
+    def test_folder_tube_is_not_insert_variant(self):
+        self.assertFalse(server._coinxchange_title_matches(
+            '2026 Bluey Rare Coloured Sleepytime Coin Folder Tube',
+            server._browse_keywords(server.COIN_BY_ID['s3_sleepytime_insert']['search']),
+            allow_coloured=True))
+
+    def test_insert_wording_matches(self):
+        self.assertTrue(server._coinxchange_title_matches(
+            '2026 Bluey Rare Coloured Sleepytime Coin',
+            server._browse_keywords(server.COIN_BY_ID['s3_sleepytime_insert']['search']),
+            allow_coloured=True))
