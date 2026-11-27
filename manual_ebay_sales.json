@@ -16443,6 +16443,20 @@
      "price_basis": "Displayed amount; Best Offer was shown and accepted amount is unknown",
      "review_flag": "price-unconfirmed",
      "value_eligible": false
+    },
+    {
+     "coin_id": "76604949",
+     "title": "Bluey: Sleepytime Limited-Edition (PNC) Coloured $2 Coin, PRESALE, 3500 mintage",
+     "sale_price": 120.0,
+     "currency": "AU",
+     "date_sold": "23 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "377668778653",
+     "link": "https://www.ebay.com.au/itm/377668778653",
+     "shipping_price": 8.26,
+     "price_basis": "Buy It Now; displayed sale price and postage confirmed",
+     "review_flag": "price-confirmed"
     }
    ]
   }
@@ -16482,7 +16496,6 @@
   "batch3-cb87d45a4f504c12a868f420",
   "batch3-cf4ecf7548978ca7d6f06703",
   "batch4-d1fe9e8f8570bcda8046e574",
-  "manual-42623aa4173f553e",
   "manual-6b321d3e5a85963c",
   "manual-a3398fbb9406e540",
   "manual-a9f68431c406d67d",
