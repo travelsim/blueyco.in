@@ -119,7 +119,9 @@ class TestMedianPricing(unittest.TestCase):
         self.assertIn('function buildTrendChart(coin, records)', INDEX)
 
     def test_card_and_sort_use_the_reference_price(self):
-        self.assertIn('const premium = hasMedian ? calcPremium(median, coin.mintPrice) : null;', INDEX)
+        self.assertIn('const estimateBasis = askingPrimary ? asking.lowest : (hasMedian ? median : null);', INDEX)
+        self.assertIn('const premium = estimateBasis != null ? calcPremium(estimateBasis, coin.mintPrice) : null;', INDEX)
+        self.assertIn("if (coin.estimateSource === 'asking' && asking && Number(asking.lowest) > 0) return Number(asking.lowest);", INDEX)
         self.assertIn('(_referencePrice(b) || 0) - (_referencePrice(a) || 0)', INDEX)
         self.assertIn('(_referencePrice(a) || Infinity) - (_referencePrice(b) || Infinity)', INDEX)
 

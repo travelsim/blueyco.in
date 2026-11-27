@@ -118,6 +118,15 @@ class TestCatalogIntegrity(unittest.TestCase):
         self.assertIn("function _guidePrice(coin)", INDEX)
         self.assertIn("return _guidePrice(coin);", INDEX)
 
+    def test_silver_pnc_estimate_uses_live_ask_over_older_sales(self):
+        # The 2024 Impressions silver proof PNC sets its estimate from the
+        # lowest live Buy It Now even though older sales exist.
+        raw = get_coins_raw()
+        line = next(l for l in raw.split('\n') if "id: 's1_impressions_pnc_silver'" in l)
+        self.assertIn("estimateSource: 'asking'", line)
+        self.assertRegex(line, r"askingEstimate:\s*\{\s*lowest:\s*2799\.98")
+        self.assertIn('askingPrimary ? asking.lowest', INDEX)
+
     def test_collector_guide_strip_present(self):
         self.assertIn('collector-guide-strip', INDEX)
         self.assertIn('Pocket Change Hunt', INDEX)
