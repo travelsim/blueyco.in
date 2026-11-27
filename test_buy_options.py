@@ -240,6 +240,21 @@ class TestBuyOptions(unittest.TestCase):
         self.assertEqual(options, [])
         self.assertFalse(complete)
 
+    def test_tracking_discovery_rejects_wrong_quantity_and_mixed_variants(self):
+        retailer = next(r for r in legacy.RETAILERS if r['id'] == 'ebay')
+        valid = {'price': 12.0, 'title': '2024 Bluey $1 Dollarbucks Uncirculated Coin',
+                 'url': 'https://www.ebay.com.au/itm/100001'}
+        bundle = {'price': 20.0, 'title': '2 x 2024 Bluey $1 Dollarbucks Coins',
+                  'url': 'https://www.ebay.com.au/itm/100002'}
+        mixed = {'price': 30.0, 'title': '2024 and 2026 Bluey Bingo mixed coin lot',
+                 'url': 'https://www.ebay.com.au/itm/100003'}
+        with mock.patch.object(legacy, '_ebay_browse_search_page',
+                               return_value=([valid, bundle, mixed], 3, True)):
+            options, complete = legacy._ebay_live_tracking_options(
+                retailer, '2024 $1 Bluey Dollarbucks coin', 's1_bluey')
+        self.assertTrue(complete)
+        self.assertEqual([o['url'] for o in options], [valid['url']])
+
     def test_unknown_coin_is_rejected(self):
         self.assertNotIn('does_not_exist', legacy.COIN_BY_ID)
 
