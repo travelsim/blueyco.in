@@ -171,5 +171,79 @@ class TestSleepytimeCatalogueAliases(unittest.TestCase):
             self.assertRegex(variant.lower(), r"pnc|postal")
 
 
+class TestRuntimeGate(unittest.TestCase):
+    PRODUCT = "76604949"
+
+    def test_scope_is_the_one_product_and_alias(self):
+        self.assertTrue(replay_mod.in_scope("76604949"))
+        self.assertTrue(replay_mod.in_scope("s3_impressions_pnc_sleepytime"))
+        for other in ("76604950", "", None, "s3_sleepytime"):
+            self.assertFalse(replay_mod.in_scope(other))
+
+    def test_clean_standalone_row_is_value_eligible(self):
+        gate = replay_mod.listing_gate(
+            self.PRODUCT, "2026 Bluey Sleepytime Limited-Edition PNC coloured $2")
+        self.assertEqual(gate["class"], "standalone")
+        self.assertTrue(gate["value_eligible"])
+        self.assertFalse(gate["hold"])
+
+    def test_bundle_and_other_config_are_value_ineligible(self):
+        bundle = replay_mod.listing_gate(
+            self.PRODUCT, "2026 $2 Bluey Sleepytime PNC IN HAND + 2 till coins")
+        self.assertEqual(bundle["class"], "bundle")
+        self.assertFalse(bundle["value_eligible"])
+        self.assertEqual(bundle["review_flag"], "bundle")
+        carded = replay_mod.listing_gate(
+            self.PRODUCT,
+            "2026 impressions pnc Bluey Sleepytime Colour Coin in Card")
+        self.assertEqual(carded["class"], "other_configuration")
+        self.assertFalse(carded["value_eligible"])
+
+    def test_bundle_flag_alone_is_enough(self):
+        gate = replay_mod.listing_gate(
+            self.PRODUCT, "Bluey Sleepytime PNC", bundle=True)
+        self.assertEqual(gate["class"], "bundle")
+        self.assertFalse(gate["value_eligible"])
+
+    def test_undisclosed_best_offer_is_quarantined(self):
+        gate = replay_mod.listing_gate(
+            self.PRODUCT, "Bluey Sleepytime Limited-Edition PNC",
+            best_offer=True, review_flag="price-unconfirmed")
+        self.assertFalse(gate["value_eligible"])
+        self.assertEqual(gate["review_flag"], "price-unconfirmed")
+        confirmed = replay_mod.listing_gate(
+            self.PRODUCT, "Bluey Sleepytime Limited-Edition PNC",
+            best_offer=True, review_flag="price-confirmed")
+        self.assertTrue(confirmed["value_eligible"])
+
+    def test_out_of_scope_rows_are_untouched(self):
+        self.assertIsNone(replay_mod.listing_gate("76604950", "bundle job lot"))
+        payload = {"products": [{"title": "bundle lot", "item_id": "x"}]}
+        self.assertIs(replay_mod.gate_ebay_payload(payload, "76604950"), payload)
+
+    def test_refresh_payload_gate_is_scoped_and_idempotent(self):
+        payload = {
+            "products": [
+                {"title": "Bluey Sleepytime PNC + 2 extra coins",
+                 "item_id": "a"},
+                {"title": "Bluey Sleepytime PNC coloured",
+                 "item_id": "b"},
+            ],
+            "historical_products": [],
+        }
+        once = replay_mod.gate_ebay_payload(payload, self.PRODUCT)
+        self.assertFalse(once["products"][0]["value_eligible"])
+        self.assertEqual(once["products"][0]["review_flag"], "bundle")
+        self.assertNotIn("value_eligible", once["products"][1])
+        twice = replay_mod.gate_ebay_payload(once, self.PRODUCT)
+        self.assertEqual(once, twice)
+
+    def test_other_products_keep_their_payload_in_place(self):
+        payload = {"products": [{"title": "job lot", "item_id": "a"}]}
+        gated = replay_mod.gate_ebay_payload(payload, "76604950")
+        self.assertEqual(gated, payload)
+        self.assertNotIn("value_eligible", gated["products"][0])
+
+
 if __name__ == "__main__":
     unittest.main()

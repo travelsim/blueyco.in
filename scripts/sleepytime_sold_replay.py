@@ -28,6 +28,10 @@ DEFAULT_FIXTURE = (Path(__file__).resolve().parent.parent
 
 CLASSES = ("standalone", "bundle", "other_configuration", "privy", "uncertain")
 
+# Only this product is gated. Every other product keeps its existing path.
+PRODUCT_ID = "76604949"
+PRODUCT_ALIASES = frozenset({"s3_impressions_pnc_sleepytime"})
+
 _BUNDLE_PATTERNS = (
     (r"\b(?:bundle|job\s+lot|lot\s+of|bulk)\b", "bundle wording"),
     (r"\b(?:plus|with|and)\s+\d+\s+(?:extra\s+|till\s+)?coins?\b", "extra coins named"),
@@ -125,6 +129,104 @@ def classify(observation):
     return "standalone", [
         "title matches one Sleepytime PNC with no extra coins or packaging"
     ]
+
+
+def in_scope(product_id):
+    """True only for the Sleepytime PNC's numeric id or its catalogue alias."""
+    key = str(product_id or "").strip()
+    return key == PRODUCT_ID or key in PRODUCT_ALIASES
+
+
+def listing_gate(product_id, title, *, bundle=None, best_offer=None,
+                 review_flag=None):
+    """Runtime gate for one ledger/cache row. None when out of scope.
+
+    Deterministic and title-only: no price is inferred, no row is dropped.
+    A non-standalone configuration, or an accepted Best Offer whose amount
+    is not disclosed, is marked value-ineligible so it can never enter a
+    confirmed standalone sale price or a Market Value median.
+    """
+    if not in_scope(product_id):
+        return None
+    item_class, class_reason = classify({
+        "title": title,
+        "sold_evidence": {"explicit": True},
+    })
+    if bundle and item_class == "standalone":
+        item_class, class_reason = "bundle", "bundle flag set in ledger evidence"
+
+    flag = str(review_flag or "").strip()
+    if item_class != "standalone":
+        reason = f"sleepytime-gate: {class_reason}"
+        return {
+            "class": item_class,
+            "value_eligible": False,
+            "review_flag": flag or ("bundle" if item_class == "bundle"
+                                    else "price-unconfirmed"),
+            "hold": False,
+            "reason": reason,
+        }
+
+    # Best Offer accepted with no confirmed basis: the displayed amount is
+    # not the accepted amount, so the row stays visible but never valued.
+    if best_offer and flag != "price-confirmed":
+        return {
+            "class": "standalone",
+            "value_eligible": False,
+            "review_flag": "price-unconfirmed",
+            "hold": False,
+            "reason": ("sleepytime-gate: Best Offer amount undisclosed; "
+                       "displayed price is not a confirmed sale price"),
+        }
+
+    return {
+        "class": "standalone",
+        "value_eligible": True,
+        "review_flag": flag or None,
+        "hold": False,
+        "reason": "sleepytime-gate: standalone PNC with a confirmed price",
+    }
+
+
+def gate_ebay_payload(payload, product_id):
+    """Annotate a refresh snapshot for the gated product only.
+
+    Runs upstream of the quality filter, before any median is computed.
+    Idempotent: classified rows keep the same flags on a re-run.
+    """
+    if not in_scope(product_id) or not isinstance(payload, dict):
+        return payload
+    gated = dict(payload)
+    for key in ("products", "historical_products", "outliers",
+                "historical_outliers"):
+        if key not in payload:
+            continue
+        rows = []
+        for sale in payload.get(key) or []:
+            if isinstance(sale, dict):
+                decision = listing_gate(
+                    product_id, sale.get("title"),
+                    bundle=sale.get("bundle"),
+                    best_offer=sale.get("best_offer"),
+                    review_flag=sale.get("review_flag"))
+                if decision is not None and not decision["value_eligible"]:
+                    sale = {**sale, "value_eligible": False,
+                            "review_flag": decision["review_flag"]}
+                elif decision is not None and decision["review_flag"] \
+                        and not sale.get("review_flag"):
+                    sale = {**sale, "review_flag": decision["review_flag"]}
+            rows.append(sale)
+        gated[key] = rows
+    return gated
+
+
+def publication_gate(row):
+    """Gate one confirmed_sold ledger row before it is published."""
+    return listing_gate(
+        (row or {}).get("product_id"), (row or {}).get("title"),
+        bundle=(row or {}).get("bundle"),
+        best_offer=(row or {}).get("best_offer"),
+        review_flag=(row or {}).get("review_flag"))
 
 
 def _number(value):

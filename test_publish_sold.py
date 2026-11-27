@@ -434,6 +434,67 @@ class TestReviewDecisions(unittest.TestCase):
         self.assertEqual(len(manifest["rows"]), 3)
 
 
+class TestSleepytimePublicationGate(unittest.TestCase):
+    PID = "76604949"
+
+    def _gen(self, rows, decisions):
+        return pub.generate(
+            rows, set(), {self.PID: "2026-11-20"}, {}, set(),
+            taxonomy_hold=None, strict_match=lambda r, p: True,
+            decision_map=decisions)
+
+    def _row(self, lid, title, price, date, **extra):
+        row = mrow(self.PID, title, price, date, lid)
+        row.update(extra)
+        return row
+
+    def test_reviewer_cannot_value_a_bundle(self):
+        rows = [self._row("b1", "Bluey Sleepytime PNC + 2 till coins",
+                          106.7, "2026-11-26", bundle=True, best_offer=True,
+                          review_flag="bundle")]
+        coins, manifest = self._gen(rows, dmap(("b1", "also-in-value")))
+        rec = coins[self.PID]["products"][0]
+        self.assertIs(rec["value_eligible"], False)
+        self.assertEqual(rec["review_flag"], "bundle")
+        self.assertIn("sleepytime-gate", manifest["rows"][0]["reason"])
+
+    def test_undisclosed_best_offer_is_value_ineligible(self):
+        rows = [self._row("o1", "Bluey Sleepytime Limited-Edition PNC",
+                          139.0, "2026-11-24", best_offer=True,
+                          review_flag="price-unconfirmed")]
+        coins, _ = self._gen(rows, dmap(("o1", "also-in-value")))
+        rec = coins[self.PID]["products"][0]
+        self.assertIs(rec["value_eligible"], False)
+        self.assertEqual(rec["review_flag"], "price-unconfirmed")
+
+    def test_confirmed_standalone_sale_stays_value_eligible(self):
+        rows = [self._row("n1", "Bluey Sleepytime Limited-Edition PNC",
+                          126.84, "2026-11-27", best_offer=False,
+                          review_flag="price-confirmed")]
+        coins, _ = self._gen(rows, dmap(("n1", "also-in-value")))
+        rec = coins[self.PID]["products"][0]
+        self.assertNotIn("value_eligible", rec)
+        self.assertEqual(rec["review_flag"], "price-confirmed")
+
+    def test_gate_applies_without_a_review_decision(self):
+        rows = [self._row("c1", "Bluey Sleepytime Colour Coin in Card",
+                          133.2, "2026-11-26")]
+        coins, _ = self._gen(rows, {})
+        rec = coins[self.PID]["products"][0]
+        self.assertIs(rec["value_eligible"], False)
+
+    def test_other_products_are_not_gated(self):
+        rows = [mrow("76604950", "job lot bundle", 50.0,
+                     "2026-11-26", "x1")]
+        coins, _ = pub.generate(
+            rows, set(), {"76604950": "2026-11-20"}, {}, set(),
+            taxonomy_hold=None, strict_match=lambda r, p: True,
+            decision_map=dmap(("x1", "also-in-value")))
+        rec = coins["76604950"]["products"][0]
+        self.assertNotIn("value_eligible", rec)
+        self.assertNotIn("review_flag", rec)
+
+
 class TestCarryOverReviewerExclusions(unittest.TestCase):
     def test_excluded_rows_purged_held_rows_kept(self):
         import tempfile, os as _os
