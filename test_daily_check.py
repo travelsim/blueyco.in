@@ -43,8 +43,8 @@ class TestDailyListingSnapshot(unittest.TestCase):
         items, invalid = daily_check.ebay_items(options)
         self.assertTrue(daily_check.snapshot_is_usable(True, True, options, items, invalid))
 
-    def test_complete_empty_snapshot_is_valid_but_failed_empty_is_not(self):
-        self.assertTrue(daily_check.snapshot_is_usable(True, True, [], {}))
+    def test_empty_snapshot_preserves_existing_state(self):
+        self.assertFalse(daily_check.snapshot_is_usable(True, True, [], {}))
         self.assertFalse(daily_check.snapshot_is_usable(True, False, [], {}))
 
     def test_old_shopper_endpoint_cannot_masquerade_as_empty_tracking_snapshot(self):
@@ -66,6 +66,16 @@ class TestDailyListingSnapshot(unittest.TestCase):
     def test_strict_product_match_rejects_nearby_variant(self):
         self.assertTrue(daily_check.matches_product("2024 $1 Bluey Dollarbuck coin", "s1_bluey"))
         self.assertFalse(daily_check.matches_product("2024 $1 Bingo Dollarbuck coin", "s1_bluey"))
+
+    def test_sleepytime_packaging_distinctions(self):
+        self.assertFalse(daily_check.matches_product(
+            "2026 Bluey Sleepytime stamp and pin cover", "s3_sleepytime_insert"))
+        self.assertFalse(daily_check.matches_product(
+            "2026 Bluey Sleepytime maxicard", "s3_sleepytime_insert"))
+        self.assertTrue(daily_check.matches_product(
+            "2026 Bluey Sleepytime limited edition PNC", "76604949"))
+        self.assertFalse(daily_check.matches_product(
+            "2026 Bluey Sleepytime stamp and pin cover", "76604949"))
 
     def test_live_match_normalizes_seller_wording_and_rejects_quantity_lots(self):
         self.assertTrue(daily_check.matches_product(

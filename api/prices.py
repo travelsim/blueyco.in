@@ -644,6 +644,11 @@ def _product_matches_live_listing(title, coin, now=None):
             return False
     tokens = _title_tokens(title)
     query_tokens = _title_tokens(query)
+    # Stamp-and-pin covers and maxicards are distinct from loose coins and PNCs.
+    if 'pin' in tokens and 'pin' not in query_tokens:
+        return False
+    if 'maxicard' in tokens and 'maxicard' not in query_tokens:
+        return False
     if (tokens & {'graded', 'pcgs', 'ngc', 'pmg'}) - query_tokens:
         return False
     # A Bluey and Bingo lot cannot be attached to either single-coin product.

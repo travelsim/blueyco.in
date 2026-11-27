@@ -99,12 +99,12 @@ def matches_product(title, product_id, now=None):
 
 def snapshot_is_usable(prices_complete, options_complete, options, items,
                        invalid_items=0, mismatched_items=0):
-    """Accept only complete, unambiguous product snapshots (including empty)."""
+    """Accept only nonempty, complete, unambiguous product snapshots."""
     if not prices_complete or not options_complete or not isinstance(options, list):
         return False
-    # The tracking-only API paginates each product query; an empty response is
-    # valid only when the endpoint independently reports every query complete.
-    if invalid_items or mismatched_items:
+    # Even a complete empty search can reflect weak queries or upstream filtering;
+    # preserve prior state until a nonempty snapshot corroborates the search.
+    if not items or invalid_items or mismatched_items:
         return False
     return True
 
