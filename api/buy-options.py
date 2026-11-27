@@ -169,6 +169,16 @@ def _scrape(retailer, keywords, coin_id):
         return []
 
 
+def postage_reference():
+    """Delivery location every eBay postage figure is calculated for.
+
+    Postage is destination dependent, so the response names the reference
+    postcode instead of letting the UI present it as a national rate.
+    """
+    return {'country': legacy._ebay_reference_country(),
+            'postcode': legacy._ebay_reference_postcode()}
+
+
 def get_buy_options(coin_id, keywords, tracking=False):
     if tracking:
         retailer = next((r for r in legacy.RETAILERS if r.get('id') == 'ebay'), None)
@@ -282,7 +292,10 @@ class handler(BaseHTTPRequestHandler):
             self._json(500, {'error': 'Could not load retailer prices.'})
             return
 
-        payload = {'options': options}
+        reference = postage_reference()
+        payload = {'options': options,
+                   'postage_reference': reference,
+                   'postage_reference_postcode': reference['postcode']}
         projection = _projection.get(coin_id)
         if projection and not tracking:
             payload['projection'] = projection
