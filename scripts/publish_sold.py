@@ -21,6 +21,7 @@ rows are mutated, and no seller or credential fields are emitted.
 import argparse
 import json
 import os
+import re
 import sys
 import time
 import urllib.request
@@ -67,6 +68,15 @@ def fetch_confirmed_rows(read_rows):
                              if money_amount(item.get("item_price")) ==
                              money_amount(row["price_aud"])]
         amount = verified_postage(row["price_aud"], matching_evidence)
+        if amount is None:
+            # Older imports kept an explicit delivery amount in listings.condition
+            # when no item-id evidence row was available. Preserve only a clear,
+            # currency-marked delivery/postage amount; never infer from free text.
+            match = re.fullmatch(
+                r"\s*\+?\s*(?:AU\s*)?\$([\d,]+(?:\.\d{1,2})?)\s+(?:delivery|postage)\s*",
+                str(row.get("condition") or ""), re.IGNORECASE)
+            if match:
+                amount = float(Decimal(match.group(1).replace(",", "")))
         if amount is not None:
             row["shipping_price"] = amount
         for key in ("bundle", "best_offer", "price_basis", "review_flag"):

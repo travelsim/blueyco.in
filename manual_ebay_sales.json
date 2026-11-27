@@ -16306,7 +16306,8 @@
      "date_sold": "24 Nov 2026",
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-db6159532d100612"
+     "listing_id": "manual-db6159532d100612",
+     "shipping_price": 15.0
     }
    ]
   },

@@ -248,6 +248,33 @@ class TestVerify(unittest.TestCase):
 
 
 class TestVerifiedPostage(unittest.TestCase):
+    def test_publisher_reads_explicit_delivery_from_legacy_condition(self):
+        expected = {
+            "product_id": "76604951",
+            "title": "Bluey The Heelers Silver Proof PNC 2026 Limited Edition Mintage 700 PRESALE",
+            "price_aud": "244.90",
+            "date_sold": "2026-11-24",
+            "listing_id": "manual-db6159532d100612",
+            "source": "manual_upload",
+            "source_url": None,
+            "currency": "AUD",
+            "condition": "+AU $15.00 delivery",
+            "buying_format": "Buy It Now (presale)",
+        }
+
+        def read_rows(sql):
+            if "FROM listings" in sql:
+                return [dict(expected)]
+            return []
+
+        rows = pub.fetch_confirmed_rows(read_rows)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["listing_id"], "manual-db6159532d100612")
+        self.assertEqual(rows[0]["shipping_price"], 15.0)
+        record = pub.build_record(rows[0])
+        self.assertEqual(record["sale_price"], 244.9)
+        self.assertEqual(record["shipping_price"], 15.0)
+
     def test_keeps_free_and_requires_consistent_evidence(self):
         free = {"item_price": "30", "postage": "0"}
         paid = {"item_price": "30", "delivery": "4.50", "total": "34.50"}
