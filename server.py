@@ -956,7 +956,7 @@ QUERY_VARIANTS = {
     's3_folder': ['2026 Bluey $2 UNC Collector Folder tube',
                   '2026 Bluey Tube Folder Set',
                   '2026 Bluey 5 coin folder and tube set'],
-    's3_sleepytime_insert': ['2026 Bluey Rare Coloured Sleepytime Coin Folder Tube'],
+    's3_sleepytime_insert': ['2026 Bluey Rare Coloured Sleepytime Coin'],
     's3_pnc_bingo': ['Bluey 2026 Bingo Hooray PNC'],
     '76604949': ['Bluey Sleepytime Limited Edition PNC',
                  '2026 Bluey Sleepytime postal numismatic cover',
