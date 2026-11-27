@@ -88,15 +88,11 @@ def ebay_items(options):
 
 
 def matches_product(title, product_id, now=None):
-    """Reuse the site's strict sale matcher for year, variant and quantity."""
+    """Use the same normalized live-listing gate as production discovery."""
     coin = PRODUCTS.get(str(product_id))
     if not coin:
         return False
-    now = time.time() if now is None else now
-    as_of = datetime.fromtimestamp(now, timezone.utc).strftime("%Y-%m-%d")
-    return PRICE_API._product_matches_coin(
-        {"title": title, "date_sold": as_of}, coin,
-        now=now, max_age_days=None)
+    return PRICE_API._product_matches_live_listing(title, coin, now=now)
 
 
 def snapshot_is_usable(prices_complete, options_complete, options, items,

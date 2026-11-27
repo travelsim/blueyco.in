@@ -67,6 +67,28 @@ class TestDailyListingSnapshot(unittest.TestCase):
         self.assertTrue(daily_check.matches_product("2024 $1 Bluey Dollarbuck coin", "s1_bluey"))
         self.assertFalse(daily_check.matches_product("2024 $1 Bingo Dollarbuck coin", "s1_bluey"))
 
+    def test_live_match_normalizes_seller_wording_and_rejects_quantity_lots(self):
+        self.assertTrue(daily_check.matches_product(
+            "2024 $1 Bluey Dollarbucks Uncirculated One Dollar Coin Bucks", "s1_bluey"))
+        self.assertFalse(daily_check.matches_product(
+            "2024 Bluey Dollarbucks Coins In Cards, 3 Individual coins", "s1_bluey"))
+        self.assertFalse(daily_check.matches_product(
+            "2024 Bluey Dollarbucks Colorized MS69 PCGS", "s1_bluey"))
+        self.assertFalse(daily_check.matches_product(
+            "2024 Dollarbucks $1 Bluey + Bingo Coins Uncirculated One Dollar Coin", "s1_bingo"))
+
+    def test_live_discovery_and_checker_share_exact_same_gate(self):
+        from api import prices
+        for pid, title in [
+            ("s1_bluey", "2024 $1 Bluey Dollarbucks Uncirculated One Dollar Coin Bucks"),
+            ("s1_bluey", "2024 Bluey Dollarbucks Coins In Cards, 3 Individual coins"),
+            ("s1_bingo", "2024 $1 BLUEY DOLLARBUCKS BINGO COIN CIRCULATED."),
+            ("s1_bingo", "2024 Dollarbucks $1 Bluey + Bingo Coins Uncirculated One Dollar Coin"),
+        ]:
+            self.assertEqual(daily_check.matches_product(title, pid),
+                             prices._product_matches_live_listing(
+                                 title, daily_check.PRODUCTS[pid]))
+
 
 if __name__ == "__main__":
     unittest.main()
