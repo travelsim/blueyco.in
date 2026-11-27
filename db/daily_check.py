@@ -45,6 +45,10 @@ def complete_header(headers, name):
     return str(headers.get(name, "")).strip().lower() == "true"
 
 
+def tracking_mode_header(headers):
+    return str(headers.get("X-Buy-Options-Mode", "")).strip().lower() == "tracking-v1"
+
+
 def ebay_item_id(url):
     """Extract an item ID only from a real eBay host and item path."""
     try:
@@ -185,6 +189,11 @@ def main(argv=None):
             unresolved += 1
             continue
         options = payload.get("options") if isinstance(payload, dict) else None
+        if not tracking_mode_header(headers):
+            print(f"skip {pid}: production endpoint lacks tracking-v1 response marker; state preserved")
+            skipped += 1
+            unresolved += 1
+            continue
         items, invalid = ebay_items(options) if isinstance(options, list) else ({}, 0)
         mismatched = sum(not matches_product(
             option.get("title") or option.get("name") or "", pid)

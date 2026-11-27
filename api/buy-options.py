@@ -248,17 +248,19 @@ class handler(BaseHTTPRequestHandler):
             self._json(500, {'error': 'Could not load retailer prices.'})
             return
 
-        self._json(200, {'options': options}, complete=complete)
+        self._json(200, {'options': options}, complete=complete, tracking=tracking)
 
     def do_GET(self):
         self._json(405, {'error': 'Use POST with a JSON body containing coinId.'})
 
-    def _json(self, status, payload, complete=True):
+    def _json(self, status, payload, complete=True, tracking=False):
         data = json.dumps(payload).encode()
         self.send_response(status)
         self.send_header('Content-Type', 'application/json')
         self.send_header('Content-Length', str(len(data)))
         self.send_header('Cache-Control', 'no-store')
         self.send_header('X-Buy-Options-Complete', 'true' if complete else 'false')
+        if tracking:
+            self.send_header('X-Buy-Options-Mode', 'tracking-v1')
         self.end_headers()
         self.wfile.write(data)

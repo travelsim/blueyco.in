@@ -47,6 +47,15 @@ class TestDailyListingSnapshot(unittest.TestCase):
         self.assertTrue(daily_check.snapshot_is_usable(True, True, [], {}))
         self.assertFalse(daily_check.snapshot_is_usable(True, False, [], {}))
 
+    def test_old_shopper_endpoint_cannot_masquerade_as_empty_tracking_snapshot(self):
+        self.assertFalse(daily_check.tracking_mode_header({
+            "X-Buy-Options-Complete": "true",
+        }))
+        self.assertTrue(daily_check.tracking_mode_header({
+            "X-Buy-Options-Complete": "true",
+            "X-Buy-Options-Mode": "tracking-v1",
+        }))
+
     def test_partial_empty_and_mismatched_snapshots_preserve_state(self):
         items, invalid = daily_check.ebay_items(self.options)
         self.assertFalse(daily_check.snapshot_is_usable(False, True, self.options, items))
