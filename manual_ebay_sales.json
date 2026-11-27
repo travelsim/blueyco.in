@@ -16434,6 +16434,40 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "117536837515"
+    },
+    {
+     "coin_id": "76604956",
+     "title": "2026 Bluey $1 and $2 Limited-Edition 2-Coin Postal Numismatic Cover (PNC)",
+     "sale_price": 250.0,
+     "currency": "AU",
+     "date_sold": "26 Nov 2026",
+     "shipping_price": 13.44,
+     "source_type": "user_pasted_search",
+     "import_source": "user-sold-paste-2026-11-27",
+     "import_id": "bluey-2coin-pnc-paste-2026-11-27",
+     "record_status": "Retained",
+     "record_reason": "User-pasted dated eBay Sold result; catalogue Bluey $1 and $2 2-Coin PNC product 76604956; Buy It Now; no listing ID or URL in source.",
+     "best_offer": false,
+     "price_basis": "Buy It Now; displayed sale price and postage from dated Sold result",
+     "review_flag": "price-confirmed",
+     "source_row": 2
+    },
+    {
+     "coin_id": "76604956",
+     "title": "2026 Bluey $1 and $2 Limited-Edition 2-Coin Postal Numismatic Cover (PNC) 💯",
+     "sale_price": 225.0,
+     "currency": "AU",
+     "date_sold": "25 Nov 2026",
+     "shipping_price": 0.0,
+     "source_type": "user_pasted_search",
+     "import_source": "user-sold-paste-2026-11-27",
+     "import_id": "bluey-2coin-pnc-paste-2026-11-27",
+     "record_status": "Retained",
+     "record_reason": "User-pasted dated eBay Sold result; catalogue Bluey $1 and $2 2-Coin PNC product 76604956; Buy It Now; no listing ID or URL in source.",
+     "best_offer": false,
+     "price_basis": "Buy It Now; displayed sale price and postage from dated Sold result",
+     "review_flag": "price-confirmed",
+     "source_row": 3
     }
    ]
   },
