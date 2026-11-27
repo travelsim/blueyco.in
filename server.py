@@ -1417,8 +1417,16 @@ def _ebay_browse_search(keywords, limit=5):
         print(f'eBay Browse API error: {e}')
         return []
 
+    summaries = data.get('itemSummaries', [])
+    try:
+        total = int(data.get('total') or len(summaries))
+    except (TypeError, ValueError):
+        total = len(summaries)
+    # Browse returns at most `limit` rows. A full page (or an explicit larger
+    # total) cannot prove that the listing search was exhaustive.
+    search_truncated = len(summaries) >= limit or total > len(summaries)
     items = []
-    for it in data.get('itemSummaries', []):
+    for it in summaries:
         price = _parse_price((it.get('price') or {}).get('value'))
         if not price:
             continue
@@ -1429,6 +1437,7 @@ def _ebay_browse_search(keywords, limit=5):
             'title':    it.get('title') or '',
             'url':      it.get('itemWebUrl'),
             'subtitle': condition[:40] if condition else None,
+            '_search_truncated': search_truncated,
         })
     return items
 
@@ -1464,6 +1473,7 @@ def _ebay_rapidapi_search(keywords):
         []
     )
 
+    search_truncated = len(results) >= 5
     items = []
     for p in results[:5]:
         # Price may be nested {"value": "32.50"} or a plain string/number
@@ -1482,6 +1492,7 @@ def _ebay_rapidapi_search(keywords):
             'title':    str(p.get('title') or ''),
             'url':      link,
             'subtitle': condition[:40] if condition else None,
+            '_search_truncated': search_truncated,
         })
     return items
 
@@ -1626,6 +1637,8 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
     q = urllib.parse.quote(keywords)
     market_median = _market_median(coin_id)
     out = []
+    search_truncated = len(items) >= 10 or any(
+        bool(it.get('_search_truncated')) for it in items)
     for it in items:
         url = it.get('url')
         safe_link = url if url and str(url).startswith('http') else retailer['search_url'].replace('{q}', q)
@@ -1639,6 +1652,8 @@ def _ebay_live_options(retailer, keywords, coin_id=''):
             'link_only':   False,
             'title':       it.get('title') or '',
             'subtitle':    it.get('subtitle'),
+            '_search_truncated': search_truncated,
+            '_tracking_url': safe_link,
             **_deal_fields(it['price'], it.get('postage'), market_median),
         })
 
