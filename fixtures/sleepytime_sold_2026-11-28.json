@@ -1,0 +1,139 @@
+{
+  "fixture": "sleepytime-pnc-sold-observations",
+  "fixture_date": "2026-11-28",
+  "product": {
+    "catalog_id": "76604949",
+    "canonical_alias": "s3_impressions_pnc_sleepytime",
+    "title": "2026 Bluey Sleepytime Limited-Edition PNC",
+    "scope": "Standalone 2026 Bluey Sleepytime postal numismatic cover (PNC), one coin in cover."
+  },
+  "source": {
+    "kind": "eBay AU sold results page",
+    "query": "2026 bluey sleepytime pnc",
+    "filters": "LH_Sold=1&LH_Complete=1&_ipg=240",
+    "observed_at": "2026-11-28T01:51:00+11:00",
+    "evidence_file": "C:/Users/James Love/.openmausbot/workspaces/searchify/sleepytime-evidence-2026-11-28.md",
+    "coverage_note": "One page read before a reCAPTCHA stopped further navigation. Not comprehensive historical coverage."
+  },
+  "observations": [
+    {
+      "item_id": "860179205712",
+      "sold_date": "2026-11-27",
+      "title": "Bluey Sleepytime Limited-Edition PNC coloured $2, presale, 3500 mintage",
+      "item_price_aud": 126.84,
+      "postage_aud": 6.63,
+      "displayed_total_aud": 133.47,
+      "currency": "AUD",
+      "link": "https://www.ebay.com.au/itm/860179205712",
+      "link_verified": true,
+      "buying_format": "presale",
+      "presale": true,
+      "sold_evidence": {
+        "explicit": true,
+        "kind": "sold_filter_card",
+        "note": "Exact-query eBay card explicitly said sold. Prior live status unknown."
+      },
+      "best_offer": {
+        "wording_present": false,
+        "accepted_amount_disclosed": false
+      },
+      "evidence_note": "Likely standalone target; presale."
+    },
+    {
+      "item_id": "267854963661",
+      "sold_date": "2026-11-26",
+      "title": "2026 impressions pnc Bluey Sleepytime Colour Coin in Card Aluminium Bronze RB",
+      "item_price_aud": 133.20,
+      "postage_aud": 6.63,
+      "displayed_total_aud": 139.83,
+      "currency": "AUD",
+      "link": "https://www.ebay.com.au/itm/267854963661",
+      "link_verified": false,
+      "buying_format": "unknown",
+      "presale": false,
+      "sold_evidence": {
+        "explicit": true,
+        "kind": "sold_filter_card",
+        "note": "Exact-query eBay card explicitly sold. ID was associated with this row in the 27 Nov public-feed report; the present results-page extraction did not independently capture its link."
+      },
+      "best_offer": {
+        "wording_present": true,
+        "accepted_wording": false,
+        "accepted_amount_disclosed": false
+      },
+      "evidence_note": "Title says coin in card: hold product configuration for review."
+    },
+    {
+      "item_id": "840166097677",
+      "sold_date": "2026-11-26",
+      "title": "2026 $2 Bluey Sleepytime PNC IN HAND + 2 till coins",
+      "item_price_aud": 106.70,
+      "postage_aud": 0.0,
+      "displayed_total_aud": 106.70,
+      "currency": "AUD",
+      "link": "https://www.ebay.com.au/itm/840166097677",
+      "link_verified": false,
+      "buying_format": "unknown",
+      "presale": false,
+      "sold_evidence": {
+        "explicit": true,
+        "kind": "sold_filter_card",
+        "note": "Exact-query card explicitly sold. ID associated in the 27 Nov public-feed report; current results-page extraction did not independently capture its link."
+      },
+      "best_offer": {
+        "wording_present": true,
+        "accepted_wording": false,
+        "accepted_amount_disclosed": false
+      },
+      "evidence_note": "Bundle: segregate from standalone valuation."
+    },
+    {
+      "item_id": "227626858395",
+      "sold_date": "2026-11-24",
+      "title": "Bluey Sleepytime Limited-Edition Postal Numismatic Cover coloured $2 coin",
+      "item_price_aud": 139.00,
+      "postage_aud": 9.00,
+      "displayed_total_aud": 148.00,
+      "currency": "AUD",
+      "link": "https://www.ebay.com.au/itm/227626858395",
+      "link_verified": true,
+      "buying_format": "best_offer",
+      "presale": false,
+      "sold_evidence": {
+        "explicit": true,
+        "kind": "sold_filter_card",
+        "note": "Exact-query card explicitly sold and said Best Offer accepted. Prior 27 Nov direct item-page check confirmed sold status."
+      },
+      "best_offer": {
+        "wording_present": true,
+        "accepted_wording": true,
+        "accepted_amount_disclosed": false,
+        "coupon_note": "A$129 coupon shown separately."
+      },
+      "evidence_note": "Displayed Best Offer amount recorded as shown; actual accepted amount is not independently disclosed."
+    },
+    {
+      "item_id": "377668778653",
+      "sold_date": "2026-11-23",
+      "title": "Bluey Sleepytime Limited-Edition PNC coloured $2 presale",
+      "item_price_aud": 120.00,
+      "postage_aud": 8.26,
+      "displayed_total_aud": 128.26,
+      "currency": "AUD",
+      "link": "https://www.ebay.com.au/itm/377668778653",
+      "link_verified": true,
+      "buying_format": "buy_it_now",
+      "presale": true,
+      "sold_evidence": {
+        "explicit": true,
+        "kind": "sold_filter_card",
+        "note": "Exact-query card explicitly sold, Buy It Now; prior 27 Nov direct item check."
+      },
+      "best_offer": {
+        "wording_present": false,
+        "accepted_amount_disclosed": false
+      },
+      "evidence_note": "Presale; prior-live status unknown."
+    }
+  ]
+}
