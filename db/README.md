@@ -5,10 +5,15 @@ the retired OCI database instructions or run schema creation against production.
 
 ## Daily observation
 
-Run `scripts/run_neon_daily_check.ps1` from the repository root. The wrapper
-obtains the current production connection through Vercel's environment and
-supplies the expected Neon branch identity. It does not print credentials.
-Python needs `psycopg` from the repository's pinned requirements.
+The sweep runs automatically from `.github/workflows/active-listing-sweep.yml`
+(daily at 19:00 UTC, 06:00 AEDT) and can be started manually from the Actions
+tab with an optional `product_ids` list. It uses the `DATABASE_URL` repository
+secret and pins the expected Neon branch in the workflow.
+
+To run it locally, run `scripts/run_neon_daily_check.ps1` from the repository
+root. The wrapper obtains the current production connection through Vercel's
+environment and supplies the expected Neon branch identity. It does not print
+credentials. Python needs `psycopg` from the repository's pinned requirements.
 
 The checker reads complete product snapshots from `https://blueyco.in`, then
 uses a tracking-only route backed by eBay Browse API pagination (200 rows per

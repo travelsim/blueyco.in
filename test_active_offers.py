@@ -1,11 +1,23 @@
 import importlib.util
 import os
+import sys
 import unittest
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-SPEC = importlib.util.spec_from_file_location("active_offers", os.path.join(ROOT, "api", "active-offers.py"))
+SPEC = importlib.util.spec_from_file_location("active_offers", os.path.join(ROOT, "api", "active_offers.py"))
 active = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(active)
+
+
+class ActiveOffersImportTests(unittest.TestCase):
+    def test_package_import_used_by_buy_options_resolves(self):
+        """buy-options.py does `from api import active_offers`; a hyphenated
+        filename raises ModuleNotFoundError and silently drops the projection."""
+        if ROOT not in sys.path:
+            sys.path.insert(0, ROOT)
+        from api import active_offers
+        self.assertTrue(callable(active_offers.persist_snapshot))
+        self.assertTrue(callable(active_offers.current_offers))
 
 
 class FakeTransaction:

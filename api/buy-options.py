@@ -41,6 +41,10 @@ CACHE_TTL = 30 * 60
 MAX_BODY_BYTES = 4096
 
 _cache = {}
+# Which source built the most recent panel for a coin: the Neon current-offer
+# projection or the live scraper. Exposed in the response so the read path can
+# be verified in production instead of inferred.
+_projection = {}
 
 # Audit 2026-11-13: eBay listings that belong to a different product (or cannot
 # be tied to one). Keyed by coin id, value is the eBay item ids to drop.
@@ -226,18 +230,22 @@ def get_buy_options(coin_id, keywords, tracking=False):
             from api import active_offers
             with active_offers.connect() as conn:
                 stored = active_offers.current_offers(conn, coin_id, 'ebay')
+            _projection[coin_id] = {'source': 'active_offers', 'stored': len(stored)}
             for lid, title, price, postage, url, source in stored:
                 option = {'retailer_id': 'ebay', 'name': 'eBay', 'title': title,
                           'price': float(price), 'postage': float(postage) if postage is not None else None,
                           'available': True, 'price_type': 'asking', 'url': url,
-                          'link_only': False}
+                          'link_only': False, 'offer_source': 'active_offers'}
                 if not _excluded(coin_id, option) and not any(
                         re.search(r'/itm/(\d+)', o.get('url') or '') and
                         re.search(r'/itm/(\d+)', o.get('url') or '').group(1) == str(lid)
                         for o in final):
                     final.insert(0, option)
         except Exception as exc:
+            _projection[coin_id] = {'source': 'scraper', 'error': type(exc).__name__}
             print(f"active offer read unavailable: {type(exc).__name__}")
+    else:
+        _projection[coin_id] = {'source': 'scraper', 'error': 'projection_disabled'}
     if complete:
         _cache[coin_id] = {'options': final, 'fetchedAt': now}
     return final, complete
@@ -274,7 +282,11 @@ class handler(BaseHTTPRequestHandler):
             self._json(500, {'error': 'Could not load retailer prices.'})
             return
 
-        self._json(200, {'options': options}, complete=complete, tracking=tracking)
+        payload = {'options': options}
+        projection = _projection.get(coin_id)
+        if projection and not tracking:
+            payload['projection'] = projection
+        self._json(200, payload, complete=complete, tracking=tracking)
 
     def do_GET(self):
         self._json(405, {'error': 'Use POST with a JSON body containing coinId.'})
