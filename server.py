@@ -1684,6 +1684,23 @@ def _ebay_live_tracking_options(retailer, keywords, coin_id=''):
     if coin_id in _IMPRESSIONS_COIN_IDS:
         keywords = re.sub(r'20\d{2}', ' ', keywords).strip()
     required = _required_format_groups(keywords)
+    # Tracking writes durable product associations, so use the same strict
+    # catalogue matcher as sold-history ingestion after the broad search gate.
+    # Import lazily: api.prices imports server in serverless deployments.
+    try:
+        from api import prices as api_prices
+        product = next((p for p in api_prices.COINS if p.get('id') == coin_id), None)
+    except Exception:
+        product = None
+        api_prices = None
+    if not product:
+        return [], False
+    # eBay sellers often omit catalogue terms like "till" and use the plural
+    # Dollarbucks spelling. Normalize those wording differences while retaining
+    # year, character, variant, packaging and quantity checks.
+    tracking_product = dict(product)
+    tracking_product['ebay_kw'] = re.sub(r'\btill\b', '', product.get('ebay_kw') or '').strip()
+    reference_time = api_prices._sold_timestamp('2020-01-02')
     found = {}
     complete = True
     for query in [keywords] + _query_variants(coin_id, MAX_ACTIVE_QUERIES - 1):
@@ -1716,6 +1733,18 @@ def _ebay_live_tracking_options(retailer, keywords, coin_id=''):
                 if coin_id in _IMPRESSIONS_COIN_IDS and title_tokens & {'stamp', 'pin'}:
                     continue
                 if not all(set(group) & title_tokens for group in required):
+                    continue
+                # The generic product matcher predates live tracking and misses
+                # spaced multipliers such as "2 x 2024". Reject them explicitly.
+                quantity_match = re.search(r'(?i)^\s*(\d+)\s*[x×]\s*', title)
+                if quantity_match and int(quantity_match.group(1)) != 1:
+                    continue
+                if re.search(r'(?i)\b(?:mixed|bundle|lot)\b', title):
+                    continue
+                if not api_prices._product_matches_coin(
+                        {'title': re.sub(r'(?i)\bdollarbucks\b', 'Dollarbuck', title),
+                         'date_sold': '2020-01-01'}, tracking_product,
+                        now=reference_time, max_age_days=None):
                     continue
                 item_url = str(it.get('url') or '')
                 parsed = urllib.parse.urlsplit(item_url)
