@@ -16610,7 +16610,8 @@
      "date_sold": "23 Nov 2026",
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-5dd43cff2cc01012"
+     "listing_id": "manual-5dd43cff2cc01012",
+     "shipping_price": 10.0
     },
     {
      "coin_id": "76605600",
