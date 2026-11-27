@@ -29,7 +29,7 @@ PRICE_API = load_project_module("bluey_prices_for_daily_check",
 BUY_OPTIONS_API = load_project_module("bluey_buy_options_for_daily_check",
                                       os.path.join(ROOT, "api", "buy-options.py"))
 ACTIVE_OFFERS_API = load_project_module("bluey_active_offers_for_daily_check",
-                                       os.path.join(ROOT, "api", "active-offers.py"))
+                                       os.path.join(ROOT, "api", "active_offers.py"))
 PRODUCTS = {str(coin.get("id")): coin for coin in PRICE_API.COINS}
 
 
