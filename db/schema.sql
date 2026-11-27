@@ -28,6 +28,22 @@ CREATE INDEX IF NOT EXISTS idx_listings_product ON listings (product_id);
 CREATE INDEX IF NOT EXISTS idx_listings_status ON listings (status);
 CREATE INDEX IF NOT EXISTS idx_listings_last_seen ON listings (last_seen_at DESC);
 
+-- Current marketplace asks are volatile and must never replace sale history.
+CREATE TABLE IF NOT EXISTS active_offers (
+    product_id TEXT NOT NULL REFERENCES products(product_id),
+    source TEXT NOT NULL,
+    listing_id TEXT NOT NULL,
+    title TEXT NOT NULL,
+    price_aud NUMERIC NOT NULL CHECK (price_aud > 0),
+    postage_aud NUMERIC CHECK (postage_aud >= 0),
+    source_url TEXT NOT NULL,
+    first_seen_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    last_seen_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    expires_at TIMESTAMPTZ NOT NULL,
+    PRIMARY KEY (product_id, source, listing_id)
+);
+CREATE INDEX IF NOT EXISTS idx_active_offers_expiry ON active_offers(expires_at);
+
 -- Queue for the human: previously available, now gone, with link to verify.
 CREATE OR REPLACE VIEW likely_sold_queue AS
 SELECT l.listing_id, l.product_id, p.name AS product_name, l.title,
