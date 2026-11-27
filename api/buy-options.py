@@ -219,6 +219,25 @@ def get_buy_options(coin_id, keywords, tracking=False):
     priced = [o for o in priced if not _excluded(coin_id, o)]
     link_only = [o for o in link_only if not _excluded(coin_id, o)]
     final = priced[:10] + link_only
+    # Blend the independent, expiring current-offer projection into the live
+    # panel. It is separate from the historical sales ledger.
+    if os.environ.get('DATABASE_URL') and not tracking:
+        try:
+            from api import active_offers
+            with active_offers.connect() as conn:
+                stored = active_offers.current_offers(conn, coin_id, 'ebay')
+            for lid, title, price, postage, url, source in stored:
+                option = {'retailer_id': 'ebay', 'name': 'eBay', 'title': title,
+                          'price': float(price), 'postage': float(postage) if postage is not None else None,
+                          'available': True, 'price_type': 'asking', 'url': url,
+                          'link_only': False}
+                if not _excluded(coin_id, option) and not any(
+                        re.search(r'/itm/(\d+)', o.get('url') or '') and
+                        re.search(r'/itm/(\d+)', o.get('url') or '').group(1) == str(lid)
+                        for o in final):
+                    final.insert(0, option)
+        except Exception as exc:
+            print(f"active offer read unavailable: {type(exc).__name__}")
     if complete:
         _cache[coin_id] = {'options': final, 'fetchedAt': now}
     return final, complete

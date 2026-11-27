@@ -28,6 +28,8 @@ PRICE_API = load_project_module("bluey_prices_for_daily_check",
                                 os.path.join(ROOT, "api", "prices.py"))
 BUY_OPTIONS_API = load_project_module("bluey_buy_options_for_daily_check",
                                       os.path.join(ROOT, "api", "buy-options.py"))
+ACTIVE_OFFERS_API = load_project_module("bluey_active_offers_for_daily_check",
+                                       os.path.join(ROOT, "api", "active-offers.py"))
 PRODUCTS = {str(coin.get("id")): coin for coin in PRICE_API.COINS}
 
 
@@ -267,6 +269,11 @@ def main(argv=None):
                                  option.get("price"), option.get("url") or ""))
                             if result.fetchone() is None:
                                 raise RuntimeError("item ID belongs to a different product")
+                        ACTIVE_OFFERS_API.persist_snapshot(
+                            conn, pid, "ebay",
+                            [{**option, "url": option.get("url")} for option in items.values()],
+                            complete=True,
+                            excluded_ids=BUY_OPTIONS_API.EXCLUDED_EBAY_ITEMS.get(pid, ()))
                         cur = conn.execute(
                             "UPDATE listings SET status='likely_sold' "
                             "WHERE product_id=%s AND status='available' "
