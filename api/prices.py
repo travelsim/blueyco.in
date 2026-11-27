@@ -628,6 +628,38 @@ def _product_matches_coin(product, coin, now=None, max_age_days=90):
     return True
 
 
+def _product_matches_live_listing(title, coin, now=None):
+    """Strict live tracker gate shared by discovery and the ledger checker."""
+    title = str(title or '')
+    if not title or not isinstance(coin, dict):
+        return False
+    query = str(coin.get('ebay_kw') or '')
+    expected = _expected_quantity(query)
+    for pattern in (
+        r'(?i)\b(\d+)\s*[x×]',
+        r'(?i)\b(\d+)\s*(?:individual\s+)?coins?\b',
+    ):
+        match = re.search(pattern, title)
+        if match and int(match.group(1)) != expected:
+            return False
+    tokens = _title_tokens(title)
+    query_tokens = _title_tokens(query)
+    if (tokens & {'graded', 'pcgs', 'ngc', 'pmg'}) - query_tokens:
+        return False
+    # A Bluey and Bingo lot cannot be attached to either single-coin product.
+    if ({'bluey', 'bingo'} <= tokens and
+            re.search(r'(?i)\b(?:bluey\s*(?:\+|&|and)\s*bingo|bingo\s*(?:\+|&|and)\s*bluey)\b', title)):
+        return False
+    live_coin = dict(coin)
+    live_coin['ebay_kw'] = re.sub(r'(?i)\btill\b', '', query).strip()
+    normalized_title = re.sub(r'(?i)\bdollarbucks\b', 'Dollarbuck', title)
+    now = time.time() if now is None else now
+    as_of = datetime.fromtimestamp(now, timezone.utc).strftime('%Y-%m-%d')
+    return _product_matches_coin(
+        {'title': normalized_title, 'date_sold': as_of}, live_coin,
+        now=now, max_age_days=None)
+
+
 def _price_domain_bounds(coin):
     """Permissible market price envelope (min_aud, max_aud) for coin type."""
     if not isinstance(coin, dict):
