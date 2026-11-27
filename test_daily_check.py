@@ -77,6 +77,14 @@ class TestDailyListingSnapshot(unittest.TestCase):
         self.assertFalse(daily_check.matches_product(
             "2026 Bluey Sleepytime stamp and pin cover", "76604949"))
 
+    def test_ambiguous_title_does_not_enter_snapshot(self):
+        self.assertFalse(daily_check.uniquely_matches_product(
+            "2026 $2 Bluey Sleepytime coloured coin", "s3_sleepytime_insert"))
+        self.assertFalse(daily_check.uniquely_matches_product(
+            "2024 $1 Bluey Dollarbuck coin", "s1_bluey"))
+        self.assertTrue(daily_check.uniquely_matches_product(
+            "2026 Bluey Sleepytime limited edition PNC", "76604949"))
+
     def test_live_match_normalizes_seller_wording_and_rejects_quantity_lots(self):
         self.assertTrue(daily_check.matches_product(
             "2024 $1 Bluey Dollarbucks Uncirculated One Dollar Coin Bucks", "s1_bluey"))
