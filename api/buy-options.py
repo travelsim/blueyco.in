@@ -158,7 +158,13 @@ def _scrape(retailer, keywords, coin_id):
         return []
 
 
-def get_buy_options(coin_id, keywords):
+def get_buy_options(coin_id, keywords, tracking=False):
+    if tracking:
+        retailer = next((r for r in legacy.RETAILERS if r.get('id') == 'ebay'), None)
+        if retailer is None:
+            return [], False
+        return legacy._ebay_live_tracking_options(retailer, keywords, coin_id)
+
     now = time.time()
     hit = _cache.get(coin_id)
     if hit and now - hit['fetchedAt'] < CACHE_TTL:
@@ -233,9 +239,10 @@ class handler(BaseHTTPRequestHandler):
             return
         coin_id = MERGED_INTO.get(coin_id, coin_id)
         coin = legacy.COIN_BY_ID[coin_id]
+        tracking = body.get('tracking') is True
 
         try:
-            options, complete = get_buy_options(coin_id, coin['search'])
+            options, complete = get_buy_options(coin_id, coin['search'], tracking=tracking)
         except Exception as e:
             print(f"buy-options handler error: {e}")
             self._json(500, {'error': 'Could not load retailer prices.'})
