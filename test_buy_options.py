@@ -31,6 +31,26 @@ class TestBuyOptions(unittest.TestCase):
         self.assertTrue(all(o.get('url') for o in options))
         self.assertTrue(complete)
 
+    def test_neon_projection_is_merged_and_reported(self):
+        from api import active_offers
+
+        class Conn:
+            def __enter__(self): return self
+            def __exit__(self, *args): return False
+
+        stored_row = ('999999999999', 'Stored Bluey listing', 42.5, 6.5,
+                      'https://www.ebay.com.au/itm/999999999999', 'ebay')
+        with mock.patch.dict(os.environ, {'DATABASE_URL': 'postgresql://example/bluey'}), \
+                mock.patch.object(active_offers, 'connect', return_value=Conn()), \
+                mock.patch.object(active_offers, 'current_offers', return_value=[stored_row]):
+            options, _ = buy_options.get_buy_options('s1_bluey', '2024 Bluey Dollarbuck Bluey')
+        merged = [o for o in options if o.get('offer_source') == 'active_offers']
+        self.assertEqual(len(merged), 1)
+        self.assertEqual(merged[0]['price'], 42.5)
+        self.assertEqual(merged[0]['url'], stored_row[4])
+        self.assertEqual(buy_options._projection['s1_bluey'],
+                         {'source': 'active_offers', 'stored': 1})
+
     def test_priced_options_sort_before_link_only(self):
         options, _ = buy_options.get_buy_options('s1_bluey', '2024 Bluey Dollarbuck Bluey')
         seen_link_only = False
