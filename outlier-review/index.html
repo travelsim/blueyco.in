@@ -33,6 +33,8 @@
   <button data-f="outlier">Outliers 50</button>
   <button data-f="held">Held 6</button>
   <button data-f="pending">Pending 1</button>
+  <button data-f="bundle">Bundles <span id="bundle-count">0</span></button>
+  <span id="bundle-status" role="status" aria-live="polite"></span>
   <input id="q" type="search" placeholder="Filter by title, product, price...">
   <button id="submit">Save classifications</button>
 </div>
@@ -43,35 +45,47 @@ const DATA = [{"id": "147296508393", "kind": "outlier", "product": "s1_bluey", "
 const OPTS = {
   outlier: ["recent-only","also-in-value","keep-out","not-valid"],
   held: ["publish-recent","publish-value","keep-held","not-valid"],
-  pending: ["publish-recent","publish-value","keep-pending","not-valid"]
+  pending: ["publish-recent","publish-value","keep-pending","not-valid"],
+  bundle: ["recent-only","keep-held","not-valid"]
 };
 const LABELS = {"recent-only":"Recent only","also-in-value":"Also in Market Value","keep-out":"Keep out","not-valid":"Not valid / wrong","publish-recent":"Publish to Recent Sales","publish-value":"Publish incl. Market Value","keep-held":"Keep held","keep-pending":"Keep pending"};
 let filter="all";
+const BUNDLES=[];
+const money=n=>"$"+Number(n||0).toFixed(2);
+function collectBundles(payload){
+  const seen=new Set(DATA.map(x=>String(x.id)));
+  const rows=[];
+  const visit=(product,section)=>{if(!Array.isArray(section))return;section.forEach(x=>{if(!x||x.bundle!==true)return;const id=String(x.listing_id||x.item_id||x.id||"");if(!id||seen.has(id))return;seen.add(id);rows.push({id,kind:"bundle",product:String(x.coin_id||x.product_id||product||""),title:String(x.title||x.name||"Bundle listing"),price:Number(x.sale_price??x.price??x.sold_price??0),shipping:Number(x.shipping_price??x.postage??0),date:String(x.date_sold||x.sold_date||x.date||"Date unavailable"),link:String(x.url||x.link||""),basis:String(x.price_basis||""),delivered:Number(x.delivered_price??((Number(x.sale_price??x.price??x.sold_price??0))+Number(x.shipping_price??x.postage??0))),bundle:true});});};
+  Object.entries(payload||{}).forEach(([key,value])=>{if(!value||typeof value!=="object")return;const ebay=value.ebay||{};["products","historical_products","outliers","historical_outliers"].forEach(k=>visit(key,ebay[k]));});
+  return rows;
+}
 function ebay(id){ return "https://www.ebay.com.au/itm/"+encodeURIComponent(id); }
 function render(){
   const q=(document.getElementById("q").value||"").toLowerCase();
   const el=document.getElementById("list");
   el.innerHTML="";
   let n=0;
-  DATA.forEach((d,i)=>{
+  const rows=DATA.concat(BUNDLES);
+  rows.forEach((d,i)=>{
     if(filter!=="all" && d.kind!==filter) return;
     if(q && (d.title+" "+d.product+" "+d.price).toLowerCase().indexOf(q)<0) return;
     n++;
     const card=document.createElement("div"); card.className="card";
-    const pill=document.createElement("span"); pill.className="pill "+d.kind; pill.textContent=d.kind; card.appendChild(pill);
+    const pill=document.createElement("span"); pill.className="pill "+d.kind; pill.textContent=d.bundle?"BUNDLE (excluded from Market Value)":d.kind; card.appendChild(pill);
     const t=document.createElement("div"); t.className="t"; t.textContent=d.title; card.appendChild(t);
-    const m=document.createElement("div"); m.className="m"; m.textContent="$"+d.price+" · "+d.date+" · "+d.product+" · "+d.id; card.appendChild(m);
+    const m=document.createElement("div"); m.className="m"; m.textContent=d.bundle?(money(d.price)+" + "+money(d.shipping)+" postage; delivered "+money(d.delivered)+"; full bundle amount retained for Recent Sales only; "+d.date+" / "+d.product+" / "+d.id+(d.basis?" / "+d.basis:"")):money(d.price)+" / "+d.date+" / "+d.product+" / "+d.id; card.appendChild(m);
     const row=document.createElement("div"); row.className="row";
     const sel=document.createElement("select"); sel.id="s"+i; sel.setAttribute("data-id", d.id);
     OPTS[d.kind].forEach(o=>{ const op=document.createElement("option"); op.value=o; op.textContent=LABELS[o]; sel.appendChild(op); });
     row.appendChild(sel);
-    const a=document.createElement("a"); a.href=ebay(d.id); a.target="_blank"; a.textContent="View listing"; row.appendChild(a);
+    const a=document.createElement("a"); a.href=d.link||ebay(d.id); a.target="_blank"; a.rel="noopener"; a.textContent="View listing"; row.appendChild(a);
     card.appendChild(row);
     el.appendChild(card);
   });
   if(!n){ el.textContent="No matches."; }
 }
 document.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{filter=b.getAttribute("data-f");render();});
+async function loadBundles(){const status=document.getElementById("bundle-status");try{const r=await fetch("/api/prices",{headers:{Accept:"application/json"}});if(!r.ok)throw new Error("HTTP "+r.status);const payload=await r.json();BUNDLES.push(...collectBundles(payload));document.getElementById("bundle-count").textContent=String(BUNDLES.length);status.textContent=BUNDLES.length?"Live bundles loaded: "+BUNDLES.length:"No bundle sales in the live feed.";render();}catch(e){status.textContent="Live bundle rows could not be loaded; static review rows remain available.";}}
 document.getElementById("q").oninput=render;
 document.getElementById("submit").onclick=async()=>{
   const out=[];
@@ -79,7 +93,7 @@ document.getElementById("submit").onclick=async()=>{
   const msg="OUTLIER REVIEW\n"+(out.length?out.join("\n"):"No changes");
   if(window.mausbot && mausbot.send) mausbot.send(msg);
   else try{
-    const decisions=[...document.querySelectorAll("select[data-id]")].filter(s=>s.selectedIndex>0).map(s=>({listing_id:s.getAttribute("data-id"),decision:s.value}));
+    const decisions=[...document.querySelectorAll("select[data-id]")].filter(s=>s.selectedIndex>0).map(s=>{const d=DATA.concat(BUNDLES).find(x=>String(x.id)===s.getAttribute("data-id"));return {listing_id:s.getAttribute("data-id"),decision:s.value,product:d?.product||"",bundle:d?.bundle===true};});
     const payload={kind:"bluey-outlier-review",source:"blueyco.in/outlier-review",submitted_at:new Date().toISOString(),decisions};
     const resp=await fetch("/api/review-decisions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
     const data=await resp.json().catch(()=>({}));
@@ -88,6 +102,7 @@ document.getElementById("submit").onclick=async()=>{
   }catch(e){ alert("Could not save: "+(e&&e.message?e.message:e)); }
 };
 render();
+loadBundles();
 </script>
 </body>
 </html>
