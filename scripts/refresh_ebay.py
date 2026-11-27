@@ -64,9 +64,9 @@ def refresh(offset=0, limit=MAX_BATCH_SIZE):
             'historical_products': list(previous.get('historical_products') or [])
             + list(previous.get('products') or []),
         }
-        filtered = prices._quality_filter_ebay(merged, coin)
-        updates[coin['id']] = prices._tag_ebay_urls(
-            sold_gate.gate_ebay_payload(filtered, coin['id']), coin['id'])
+        gated = sold_gate.gate_ebay_payload(merged, coin['id'])
+        filtered = prices._quality_filter_ebay(gated, coin)
+        updates[coin['id']] = prices._tag_ebay_urls(filtered, coin['id'])
         print(f"{index}/{len(prices.COINS)} {coin['id']}: "
               f"{len(filtered.get('products') or [])} current, "
               f"{len(filtered.get('historical_products') or [])} historical matched sales")
