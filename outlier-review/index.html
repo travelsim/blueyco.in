@@ -4,32 +4,26 @@
 <meta charset="utf-8">
 <title>Bluey outliers review</title>
 <style>
-  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;color:var(--color-text-primary,#111);background:var(--color-background-primary,#fff);margin:0;padding:14px;max-width:780px}
-  h1{font-size:15px;margin:4px 0 2px}
-  .sub{font-size:11px;opacity:.75;margin-bottom:10px}
-  .bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
-  .bar button{font-size:11px;border:1px solid var(--color-border-primary,#ccc);background:transparent;color:inherit;border-radius:999px;padding:4px 10px;cursor:pointer}
-  .bar input{font-size:12px;padding:5px 8px;border:1px solid var(--color-border-primary,#ccc);border-radius:6px;flex:1;min-width:140px;background:transparent;color:inherit}
-  #submit{margin-left:auto;background:#1a73e8;color:#fff;border:none;font-weight:600}
-  .card{border:1px solid var(--color-border-primary,#ddd);border-radius:10px;padding:9px 11px;margin-bottom:8px}
-  .pill{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;border-radius:999px;padding:2px 8px;margin-right:6px}
-  .outlier{background:#fff3cd;color:#664d03}
-  .held{background:#f8d7da;color:#842029}
-  .pending{background:#cfe2ff;color:#084298}
-  .t{font-size:13px;margin-top:4px}
-  .m{font-size:11px;opacity:.8;margin-top:2px}
-  .row{display:flex;gap:8px;align-items:center;margin-top:7px;flex-wrap:wrap}
-  select{font-size:12px;padding:5px 6px;border-radius:6px;border:1px solid var(--color-border-primary,#ccc);background:transparent;color:inherit}
-  a{font-size:11px}
-  .foot{font-size:11px;opacity:.75;margin-top:10px}
+  :root{color-scheme:light dark;--ink:#182321;--muted:#61706b;--line:#dce6df;--surface:#fff;--wash:#f4f8f4;--accent:#16764b;--accent-soft:#e5f4e9}
+  *{box-sizing:border-box}body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;color:var(--color-text-primary,var(--ink));background:var(--color-background-primary,var(--wash));margin:0 auto;padding:clamp(16px,4vw,36px);max-width:1120px;line-height:1.5}
+  h1{font-size:clamp(23px,4vw,32px);letter-spacing:-.035em;line-height:1.15;margin:0 0 8px;font-weight:750}.sub{font-size:14px;color:var(--color-text-secondary,var(--muted));max-width:780px;margin:0 0 22px}.sub b{color:inherit}
+  .bar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px;align-items:center;padding:14px;background:var(--color-background-secondary,var(--surface));border:1px solid var(--color-border-primary,var(--line));border-radius:16px;box-shadow:0 5px 18px #1b39200b}
+  .bar button{font:600 13px system-ui,sans-serif;border:1px solid var(--color-border-primary,var(--line));background:transparent;color:inherit;border-radius:10px;padding:8px 12px;cursor:pointer;min-height:38px;transition:background .15s,border-color .15s}.bar button:hover{border-color:#94b6a0;background:var(--accent-soft)}.bar button[data-f].active{background:var(--accent-soft);border-color:#73ac88;color:#155c3b}
+  .bar input{font:14px system-ui,sans-serif;padding:9px 12px;border:1px solid var(--color-border-primary,var(--line));border-radius:10px;flex:1;min-width:190px;min-height:40px;background:transparent;color:inherit}.bar input:focus,select:focus,button:focus-visible,a:focus-visible{outline:3px solid #48a77666;outline-offset:2px}
+  #submit{margin-left:auto;background:var(--accent);color:white;border:0;font-weight:700;padding-inline:16px}#submit:hover{background:#105f3b}
+  #bundle-status{font-size:12px;color:var(--muted);flex-basis:100%;order:2;padding:0 3px}#bundle-count{display:inline-grid;place-items:center;min-width:20px;height:20px;margin-left:4px;padding:0 5px;border-radius:99px;background:var(--accent-soft);color:#155c3b}
+  #list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:12px;align-items:start}.card{background:var(--color-background-secondary,var(--surface));border:1px solid var(--color-border-primary,var(--line));border-radius:14px;padding:16px;min-width:0;box-shadow:0 3px 12px #1b392008;transition:box-shadow .15s,transform .15s}.card:hover{box-shadow:0 7px 20px #1b392014;transform:translateY(-1px)}
+  .pill{display:inline-flex;font-size:10px;font-weight:750;text-transform:uppercase;letter-spacing:.06em;border-radius:999px;padding:4px 9px;margin:0 0 8px;background:#f6eecf;color:#735a0a}.held{background:#fde9e8;color:#9f332d}.pending{background:#e8f0ff;color:#315c9d}.bundle{background:#fce9d8;color:#8a4515}
+  .t{font-size:15px;font-weight:650;line-height:1.35;margin:0 0 6px;overflow-wrap:anywhere}.m{font-size:12px;color:var(--color-text-secondary,var(--muted));overflow-wrap:anywhere}.row{display:flex;gap:12px;align-items:center;margin-top:14px;flex-wrap:wrap}select{font:600 13px system-ui,sans-serif;padding:8px 10px;border-radius:9px;border:1px solid var(--color-border-primary,var(--line));background:var(--color-background-primary,var(--surface));color:inherit;min-height:38px;max-width:100%}a{font-size:13px;color:var(--accent);font-weight:600;text-underline-offset:3px}.foot{font-size:13px;color:var(--color-text-secondary,var(--muted));margin-top:18px;padding:14px 16px;border-top:1px solid var(--color-border-primary,var(--line))}
+  @media(max-width:560px){body{padding:16px 12px}.bar{padding:11px;gap:7px}.bar button{padding:7px 9px}.bar input{order:3;flex-basis:100%;min-width:0}#submit{margin-left:0;flex:1}.card{padding:14px}.row{align-items:stretch}.row select{flex:1}}
 </style>
 </head>
 <body>
-<h1>Bluey review queue: 57 sales</h1>
-<div class="sub">Classify each sale, then Save. Your choices save directly and Bluey applies them to the next publication batch.<br>
+<h1>Sales review</h1>
+<div class="sub">57 listings need a decision. Classify a sale, then save your choices for the next publication batch.<br>
 <b>Outlier</b> = shown in Recent Sales, excluded from Market Value. <b>Held</b> = hidden everywhere today. <b>Pending</b> = awaiting review.</div>
 <div class="bar">
-  <button data-f="all">All 57</button>
+  <button data-f="all" class="active" aria-pressed="true">All 57</button>
   <button data-f="outlier">Outliers 50</button>
   <button data-f="held">Held 6</button>
   <button data-f="pending">Pending 1</button>
@@ -84,7 +78,7 @@ function render(){
   });
   if(!n){ el.textContent="No matches."; }
 }
-document.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{filter=b.getAttribute("data-f");render();});
+document.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{filter=b.getAttribute("data-f");document.querySelectorAll("[data-f]").forEach(x=>{const active=x===b;x.classList.toggle("active",active);x.setAttribute("aria-pressed",String(active));});render();});
 async function loadBundles(){const status=document.getElementById("bundle-status");try{const r=await fetch("/api/prices",{headers:{Accept:"application/json"}});if(!r.ok)throw new Error("HTTP "+r.status);const payload=await r.json();BUNDLES.push(...collectBundles(payload));document.getElementById("bundle-count").textContent=String(BUNDLES.length);status.textContent=BUNDLES.length?"Live bundles loaded: "+BUNDLES.length:"No bundle sales in the live feed.";render();}catch(e){status.textContent="Live bundle rows could not be loaded; static review rows remain available.";}}
 document.getElementById("q").oninput=render;
 document.getElementById("submit").onclick=async()=>{
