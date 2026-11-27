@@ -54,9 +54,12 @@ def fetch_confirmed_rows(read_rows):
                 row[key] = str(row[key])
     evidence = {}
     for row in read_rows(
-        "SELECT listing_id, raw_record->>'price_aud' AS item_price,"
-        " raw_record->>'postage_aud' AS postage, raw_record->>'delivery_aud' AS delivery,"
-        " raw_record->>'delivered_aud' AS total, raw_record->>'bundle' AS bundle,"
+        "SELECT listing_id,"
+        " COALESCE(raw_record->>'price_aud', raw_record->>'item_price_aud') AS item_price,"
+        " COALESCE(raw_record->>'postage_aud', raw_record->>'postage') AS postage,"
+        " raw_record->>'delivery_aud' AS delivery,"
+        " COALESCE(raw_record->>'delivered_aud', raw_record->>'total_aud',"
+        " raw_record->>'total') AS total, raw_record->>'bundle' AS bundle,"
         " raw_record->>'best_offer' AS best_offer,"
         " raw_record->>'price_basis' AS price_basis,"
         " raw_record->>'review_flag' AS review_flag FROM sale_import_evidence"
@@ -77,6 +80,10 @@ def fetch_confirmed_rows(read_rows):
                 str(row.get("condition") or ""), re.IGNORECASE)
             if match:
                 amount = float(Decimal(match.group(1).replace(",", "")))
+            elif re.fullmatch(
+                r"\s*free\s+(?:delivery|postage)\s*",
+                str(row.get("condition") or ""), re.IGNORECASE):
+                amount = 0.0
         if amount is not None:
             row["shipping_price"] = amount
         for key in ("bundle", "best_offer", "price_basis", "review_flag"):

@@ -307,6 +307,41 @@ class TestVerifiedPostage(unittest.TestCase):
         self.assertFalse(record["value_eligible"])
         self.assertEqual(record["shipping_price"], 0)
 
+    def test_publisher_reads_free_delivery_from_legacy_condition(self):
+        expected = {
+            "product_id": "76604957",
+            "title": "Bluey 2026 $2 Coin Minisheet Collection Boxed Set 5 PRESALE 500 Mintage",
+            "price_aud": "400.00",
+            "date_sold": "2026-11-24",
+            "listing_id": "manual-e7653c3ccde18bac",
+            "source": "manual_upload",
+            "source_url": None,
+            "currency": "AUD",
+            "condition": "Free delivery",
+            "buying_format": "Buy It Now (presale)",
+        }
+
+        def read_rows(sql):
+            if "FROM listings" in sql:
+                return [dict(expected)]
+            return []
+
+        rows = pub.fetch_confirmed_rows(read_rows)
+        self.assertEqual(rows[0]["shipping_price"], 0.0)
+        self.assertEqual(pub.build_record(rows[0])["shipping_price"], 0.0)
+
+    def test_evidence_query_reads_manual_import_price_keys(self):
+        captured = []
+
+        def read_rows(sql):
+            captured.append(sql)
+            return []
+
+        pub.fetch_confirmed_rows(read_rows)
+        evidence_sql = next(sql for sql in captured if "sale_import_evidence" in sql)
+        self.assertIn("item_price_aud", evidence_sql)
+        self.assertIn("total_aud", evidence_sql)
+
 
 if __name__ == "__main__":
     unittest.main()
