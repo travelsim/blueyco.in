@@ -16283,16 +16283,6 @@
    "products": [
     {
      "coin_id": "76604951",
-     "title": "Bluey The Heelers Silver Proof PNC 2026 Limited Edition Mintage 700 PRESALE",
-     "sale_price": 244.9,
-     "currency": "AU",
-     "date_sold": "24 Nov 2026",
-     "record_status": "AutoApproved",
-     "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-db6159532d100612"
-    },
-    {
-     "coin_id": "76604951",
      "title": "Heelers Silver $2 Proof Limited-Edition Postal Numismatic Cover (PNC) ✅",
      "sale_price": 199.0,
      "currency": "AU",
@@ -16307,6 +16297,16 @@
      "price_basis": "Buy It Now; displayed sale price and postage from dated Sold result",
      "review_flag": "price-confirmed",
      "source_row": 17
+    },
+    {
+     "coin_id": "76604951",
+     "title": "Bluey The Heelers Silver Proof PNC 2026 Limited Edition Mintage 700 PRESALE",
+     "sale_price": 244.9,
+     "currency": "AU",
+     "date_sold": "24 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-db6159532d100612"
     }
    ]
   },
@@ -16336,6 +16336,23 @@
   },
   "76604950": {
    "products": [
+    {
+     "coin_id": "76604950",
+     "title": "✅Confirmed Presale✅ Heelers Proof Limited-Edition Postal Numismatic Cover (PNC)",
+     "sale_price": 199.0,
+     "currency": "AU",
+     "date_sold": "25 Nov 2026",
+     "shipping_price": 0.0,
+     "source_type": "user_pasted_search",
+     "import_source": "user-sold-paste-2026-11-27",
+     "import_id": "impressions-sold-paste-2026-11-27",
+     "record_status": "Retained",
+     "record_reason": "Paste row 18: dated eBay AU Sold result mapped to the official 2026 Impressions catalogue product; pasted sale mode was Buy It Now. Marketplace item ID and link were not present in the source paste.",
+     "best_offer": false,
+     "price_basis": "Buy It Now; displayed sale price and postage from dated Sold result",
+     "review_flag": "price-confirmed",
+     "source_row": 18
+    },
     {
      "coin_id": "76604950",
      "title": "PRESALE 2026 Bluey The Heelers $2 Coloured Proof PNC Limited Edition /200",
@@ -16379,23 +16396,54 @@
      "price_basis": "Buy It Now; displayed sale price and postage from dated Sold result",
      "review_flag": "price-confirmed",
      "source_row": 16
-    },
+    }
+   ]
+  },
+  "76604958": {
+   "products": [
     {
-     "coin_id": "76604950",
-     "title": "✅Confirmed Presale✅ Heelers Proof Limited-Edition Postal Numismatic Cover (PNC)",
-     "sale_price": 199.0,
+     "coin_id": "76604958",
+     "title": "CONFIRMED PRESALE 2026 Bluey The Heelers $2 Proof 2-Coin Minisheet Limited Set",
+     "sale_price": 440.6,
      "currency": "AU",
-     "date_sold": "25 Nov 2026",
-     "shipping_price": 0.0,
+     "date_sold": "26 Nov 2026",
+     "shipping_price": 8.26,
      "source_type": "user_pasted_search",
      "import_source": "user-sold-paste-2026-11-27",
      "import_id": "impressions-sold-paste-2026-11-27",
      "record_status": "Retained",
-     "record_reason": "Paste row 18: dated eBay AU Sold result mapped to the official 2026 Impressions catalogue product; pasted sale mode was Buy It Now. Marketplace item ID and link were not present in the source paste.",
+     "record_reason": "Paste row 4: dated eBay AU Sold result mapped to the official 2026 Impressions catalogue product; pasted sale mode was Buy It Now. Marketplace item ID and link were not present in the source paste.",
      "best_offer": false,
      "price_basis": "Buy It Now; displayed sale price and postage from dated Sold result",
      "review_flag": "price-confirmed",
-     "source_row": 18
+     "source_row": 4
+    },
+    {
+     "coin_id": "76604958",
+     "title": "PRE ORDER 2026 Bluey: $2 The Heelers Proof 2-Coin Limited-Edition PNC, 500 ONLY",
+     "sale_price": 425.0,
+     "currency": "AU",
+     "date_sold": "24 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-7ae0e02cc24c5c07"
+    },
+    {
+     "coin_id": "76604958",
+     "title": "Bluey The Heelers Proof 2-Coin Minisheet Collection 2026 Mintage 500 PRESALE",
+     "sale_price": 391.53,
+     "currency": "AU",
+     "date_sold": "24 Nov 2026",
+     "shipping_price": 15.0,
+     "source_type": "user_pasted_search",
+     "import_source": "user-sold-paste-2026-11-27",
+     "import_id": "impressions-sold-paste-2026-11-27",
+     "record_status": "Retained",
+     "record_reason": "Paste row 3: dated eBay AU Sold result mapped to the official 2026 Impressions catalogue product; pasted sale mode was Buy It Now. Marketplace item ID and link were not present in the source paste.",
+     "best_offer": false,
+     "price_basis": "Buy It Now; displayed sale price and postage from dated Sold result",
+     "review_flag": "price-confirmed",
+     "source_row": 3
     }
    ]
   },
@@ -16576,44 +16624,6 @@
      "shipping_price": 8.26,
      "price_basis": "Buy It Now; displayed sale price and postage confirmed",
      "review_flag": "price-confirmed"
-    }
-   ]
-  },
-  "76604958": {
-   "products": [
-    {
-     "coin_id": "76604958",
-     "title": "Bluey The Heelers Proof 2-Coin Minisheet Collection 2026 Mintage 500 PRESALE",
-     "sale_price": 391.53,
-     "currency": "AU",
-     "date_sold": "24 Nov 2026",
-     "shipping_price": 15.0,
-     "source_type": "user_pasted_search",
-     "import_source": "user-sold-paste-2026-11-27",
-     "import_id": "impressions-sold-paste-2026-11-27",
-     "record_status": "Retained",
-     "record_reason": "Paste row 3: dated eBay AU Sold result mapped to the official 2026 Impressions catalogue product; pasted sale mode was Buy It Now. Marketplace item ID and link were not present in the source paste.",
-     "best_offer": false,
-     "price_basis": "Buy It Now; displayed sale price and postage from dated Sold result",
-     "review_flag": "price-confirmed",
-     "source_row": 3
-    },
-    {
-     "coin_id": "76604958",
-     "title": "CONFIRMED PRESALE 2026 Bluey The Heelers $2 Proof 2-Coin Minisheet Limited Set",
-     "sale_price": 440.6,
-     "currency": "AU",
-     "date_sold": "26 Nov 2026",
-     "shipping_price": 8.26,
-     "source_type": "user_pasted_search",
-     "import_source": "user-sold-paste-2026-11-27",
-     "import_id": "impressions-sold-paste-2026-11-27",
-     "record_status": "Retained",
-     "record_reason": "Paste row 4: dated eBay AU Sold result mapped to the official 2026 Impressions catalogue product; pasted sale mode was Buy It Now. Marketplace item ID and link were not present in the source paste.",
-     "best_offer": false,
-     "price_basis": "Buy It Now; displayed sale price and postage from dated Sold result",
-     "review_flag": "price-confirmed",
-     "source_row": 4
     }
    ]
   }
