@@ -159,6 +159,14 @@ class TestHonestCopy(unittest.TestCase):
 
 
 class TestClutterReduction(unittest.TestCase):
+    def test_price_guide_is_the_landing_view_and_dashboard_hash_still_routes(self):
+        self.assertIn('id="tab-collection" data-view="collection" aria-controls="view-collection" aria-selected="false" tabindex="-1">My collection', INDEX)
+        self.assertIn('id="tab-prices" data-view="prices" aria-controls="view-prices" aria-selected="true">Coin prices', INDEX)
+        self.assertIn('id="view-collection" role="tabpanel" aria-labelledby="tab-collection" hidden>', INDEX)
+        self.assertIn('id="view-prices" role="tabpanel" aria-labelledby="tab-prices">', INDEX)
+        self.assertIn("showView(viewForId(decodeURIComponent(location.hash.slice(1))) || 'prices')", INDEX)
+        self.assertIn("const defaultHash = { collection: '#dashboard', prices: '#all-coins' }", INDEX)
+
     def test_navigation_has_one_frames_destination(self):
         nav = INDEX.split('<header class="nav" id="site-header">')[1].split('</header>')[0]
         self.assertEqual(nav.count('href="#shop"'), 1)
