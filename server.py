@@ -1843,13 +1843,19 @@ def get_buy_options(coin_id, keywords):
                     and _manual_price_is_fresh(manual[coin_id][rid])):
                 m = manual[coin_id][rid]
                 q = urllib.parse.quote(keywords)
+                try:
+                    postage = float(m['postage']) if m.get('postage') is not None else None
+                except (TypeError, ValueError):
+                    postage = None
                 options.append({
                     'retailer_id': rid,
                     'name':        r['name'],
                     'price':       m.get('price'),
+                    'postage':     postage,
                     'available':   m.get('available', True),
                     'price_type':  'asking' if m.get('price') is not None else None,
                     'checkedAt':   m.get('checkedAt'),
+                    'subtitle':    m.get('subtitle'),
                     'url':         affiliate_url(
                         m.get('url') or r['search_url'].replace('{q}', q),
                         coin_id=coin_id, source='ebay_search'),

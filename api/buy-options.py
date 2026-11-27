@@ -124,13 +124,20 @@ def _fallback(retailer, keywords, coin_id, manual):
         age = time.time() - checked_at
         fresh_manual_price = checked_at > 0 and 0 <= age <= 7 * 24 * 3600
         price = entry.get('price') if fresh_manual_price else None
+        postage = entry.get('postage') if price is not None else None
+        try:
+            postage = float(postage) if postage is not None else None
+        except (TypeError, ValueError):
+            postage = None
         return [{
             'retailer_id': retailer['id'],
             'name': retailer['name'],
             'price': price,
+            'postage': postage,
             'available': entry.get('available', True) if price is not None else None,
             'price_type': 'asking' if price is not None else None,
             'checkedAt': checked_at if price is not None else None,
+            'subtitle': entry.get('subtitle') if price is not None else None,
             'url': legacy.affiliate_url(
                 entry.get('url') or retailer['search_url'].replace('{q}', q),
                 coin_id=coin_id, source='ebay_search'),

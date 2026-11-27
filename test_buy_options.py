@@ -62,6 +62,21 @@ class TestBuyOptions(unittest.TestCase):
         self.assertIsNone(option['price'])
         self.assertTrue(option['link_only'])
 
+    def test_manual_asking_row_carries_subtitle_and_free_postage(self):
+        # A live Buy It Now row keeps its own label and a real delivered total.
+        manual = {'s1_impressions_pnc_silver': {'ebay': {
+            'price': 2799.98, 'postage': 0, 'checkedAt': time.time(),
+            'subtitle': 'Live Buy It Now · checked 2026-11-27',
+            'url': 'https://www.ebay.com.au/itm/167880929655',
+        }}}
+        retailer = next(r for r in legacy.RETAILERS if r['id'] == 'ebay')
+        option = buy_options._fallback(retailer, '2024 Bluey silver proof PNC', 's1_impressions_pnc_silver', manual)[0]
+        self.assertEqual(option['price'], 2799.98)
+        self.assertEqual(option['postage'], 0.0)
+        self.assertEqual(option['subtitle'], 'Live Buy It Now · checked 2026-11-27')
+        self.assertFalse(option['link_only'])
+        self.assertIn('itm/167880929655', option['url'])
+
     def test_ebay_search_link_entry_is_not_used(self):
         manual = {'s1_bluey': {'ebay': {
             'price': None, 'available': True,
