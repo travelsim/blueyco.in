@@ -1,7 +1,7 @@
 {
-  "batch_id": "ledger-publish-20261127-233039",
-  "generated_at": "2026-11-27T23:30:39",
-  "total_input": 1120,
+  "batch_id": "ledger-publish-20261128-150903",
+  "generated_at": "2026-11-28T15:09:03",
+  "total_input": 1131,
   "rows": [
     {
       "listing_id": "198341345495",
@@ -8913,6 +8913,94 @@
       "product_id": "s2_xmas_unc",
       "disposition": "held",
       "reason": "excluded-evidence"
+    },
+    {
+      "listing_id": "manual-752de383b2d059f0",
+      "product_id": "s2_xmas_silv",
+      "price": 252.65,
+      "date": "25 Nov 2026",
+      "disposition": "published",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "manual-03cb2ea4add4cdcf",
+      "product_id": "s2_xmas_silv",
+      "price": 265.0,
+      "date": "25 Nov 2026",
+      "disposition": "published",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "manual-78b191f0af049649",
+      "product_id": "s2_xmas_silv",
+      "price": 295.0,
+      "date": "24 Nov 2026",
+      "disposition": "published",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "manual-a23929a0320b4109",
+      "product_id": "s2_xmas_silv",
+      "price": 260.0,
+      "date": "24 Nov 2026",
+      "disposition": "published",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "manual-fab7a185765b7cf5",
+      "product_id": "s2_xmas_silv",
+      "price": 280.0,
+      "date": "23 Nov 2026",
+      "disposition": "published",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "manual-7b43e27a272bf46c",
+      "product_id": "s2_xmas_silv",
+      "price": 260.0,
+      "date": "23 Nov 2026",
+      "disposition": "published",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "manual-b0cb99aa9803d9f7",
+      "product_id": "s2_xmas_silv",
+      "price": 271.0,
+      "date": "22 Nov 2026",
+      "disposition": "published",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "manual-860619e1cecf862d",
+      "product_id": "s2_xmas_silv",
+      "price": 292.2,
+      "date": "22 Nov 2026",
+      "disposition": "published",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "manual-e28095a8eb871296",
+      "product_id": "s2_xmas_silv",
+      "price": 225.0,
+      "date": "21 Nov 2026",
+      "disposition": "published",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "manual-12d3e833b2d728ea",
+      "product_id": "s2_xmas_silv",
+      "price": 202.75,
+      "date": "21 Nov 2026",
+      "disposition": "published",
+      "reason": "verified Melbourne confirmed_sold"
+    },
+    {
+      "listing_id": "manual-0425c2c471206092",
+      "product_id": "s2_xmas_silv",
+      "price": 220.0,
+      "date": "18 Nov 2026",
+      "disposition": "published",
+      "reason": "verified Melbourne confirmed_sold"
     }
   ],
   "review_decisions": {
