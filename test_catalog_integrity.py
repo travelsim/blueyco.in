@@ -113,7 +113,7 @@ class TestCatalogIntegrity(unittest.TestCase):
             self.assertRegex(by_id[cid], r'mintPrice:\s*29(?![\d.])', f'{cid} missing $29 issue price')
 
     def test_value_kicker_marks_christmas_stamp_without_sold_data(self):
-        self.assertIn("coin.id === 's2_xmas_stamp_pack' && !hasMedian", INDEX)
+        self.assertIn("coin.id === 's1_xmas_stamp_pack_2024' && !hasMedian", INDEX)
         self.assertIn("'No sold price yet' : 'Estimated value'", INDEX)
         self.assertIn("function _guidePrice(coin)", INDEX)
         self.assertIn("return _guidePrice(coin);", INDEX)
