@@ -354,6 +354,11 @@ def get_buy_options(coin_id, keywords, tracking=False):
     blocked = _blocked_listing_ids()
     if blocked:
         final = [o for o in final if not _ledger_blocked(o, blocked)]
+    # Stored offers are blended in above, so order the whole panel again:
+    # cheapest delivered total first, unknown postage after, links last.
+    priced_final = sorted((o for o in final if not o.get('link_only') and o.get('price') is not None),
+                          key=legacy._buy_total_sort_key)
+    final = priced_final + [o for o in final if o.get('link_only') or o.get('price') is None]
     if complete:
         _cache[coin_id] = {'options': final, 'fetchedAt': now}
     return final, complete

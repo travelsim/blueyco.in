@@ -1704,6 +1704,43 @@
   .coin-page-static dt { font-weight: 700; color: var(--navy); }
   .coin-page-static dd { margin: 0; }
   @media (min-width: 720px) { .coin-page { max-width: 640px; padding-top: 24px; } }
+  /* Coin tree: one card per release, coins in a swipeable row, packaging folded below. */
+  .coin-tree-section { padding-top: 22px; }
+  .coin-tree { display: grid; gap: 14px; }
+  .tree-release { background: var(--white); border: 1px solid var(--border); border-radius: 18px; padding: 14px 0 10px; box-shadow: var(--shadow); }
+  .tree-release-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 0 14px 8px; }
+  .tree-release-title { font-family: 'Fredoka', sans-serif; font-size: 1.12rem; margin: 0; color: #1e3152; }
+  .tree-release-count { font-size: .76rem; color: var(--slate); white-space: nowrap; }
+  .tree-row { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 14px 10px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+  .tree-node { flex: 0 0 136px; scroll-snap-align: start; display: flex; flex-direction: column; gap: 3px; padding: 8px; border-radius: 14px; border: 1px solid var(--border); background: var(--card); color: var(--text); text-decoration: none; position: relative; }
+  .tree-node:active { transform: translateY(1px); }
+  .tree-node:focus-visible, .tree-node:hover { border-color: var(--navy); }
+  .tree-media { display: flex; align-items: center; justify-content: center; height: 92px; border-radius: 10px; background: #fff; overflow: hidden; }
+  .tree-media img { max-width: 100%; max-height: 92px; object-fit: contain; }
+  .tree-tier { align-self: flex-start; font-size: .66rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; background: #eef1f8; color: var(--navy); margin-top: 4px; }
+  .tier-privy .tree-tier { background: #f3eefc; }
+  .tier-coloured .tree-tier { background: #e5f5f3; color: #2b7b74; }
+  .tier-chase .tree-tier { background: #fff1d6; color: #9a5b00; }
+  .tier-albr-proof .tree-tier { background: #fbe9dc; color: #a2532a; }
+  .tier-silver-proof .tree-tier { background: #e9edf2; color: #45556b; }
+  .tree-name { font-size: .78rem; font-weight: 700; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.5em; }
+  .tree-value { font-family: 'Fredoka', sans-serif; font-weight: 800; font-size: 1rem; color: #1e3152; }
+  .tree-supply { font-size: .7rem; color: var(--slate); }
+  .tree-packaging { margin: 2px 14px 0; border-top: 1px dashed var(--border); padding-top: 8px; }
+  .tree-packaging > summary { cursor: pointer; font-size: .85rem; font-weight: 700; color: var(--navy); padding: 6px 0; min-height: 36px; }
+  .tree-packaging .tree-row { padding-left: 0; padding-right: 0; }
+  .tree-row-small .tree-node { flex-basis: 120px; }
+  .tree-row-small .tree-media { height: 70px; }
+  .tree-row-small .tree-media img { max-height: 70px; }
+  .more-links { list-style: none; padding: 0; margin: 8px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; }
+  .more-links a { display: block; padding: 12px 14px; border-radius: 12px; background: var(--white); border: 1px solid var(--border); color: var(--navy); font-weight: 700; text-decoration: none; }
+  .mobile-dock-btn[aria-current="page"] { color: var(--orange); }
+  @media (max-width: 720px) {
+    .view-tabs { display: none; }
+    .hero { padding: 26px 18px 30px; }
+    .nav-toggle { display: none; }
+  }
+  @media (min-width: 900px) { .coin-tree { gap: 18px; } .tree-node { flex-basis: 150px; } }
 </style>
     <!-- Agentic Discovery & Catalogs -->
     <link rel="api-catalog" type="application/linkset+json" href="/.well-known/api-catalog">
@@ -1713,7 +1750,7 @@
 <body>
 
 <!-- New Blueycoin Navigation -->
-<a class="skip-link" href="#dashboard">Skip to collection</a>
+<a class="skip-link" href="#coin-tree">Skip to the coins</a>
 <header class="nav" id="site-header">
   <div class="nav-inner">
     <a href="/" class="logo">Blueycoin</a>
@@ -1727,15 +1764,11 @@
       </button>
     </div>
     <nav class="nav-links" id="site-nav" aria-label="Primary">
-      <a href="#dashboard">Collection</a>
-      <a href="#all-coins">Price Guide</a>
-      <a href="#shop">Frames</a>
-      <a href="#stories">Collector stories</a>
-      <a href="#events">Community & Events</a>
-      <a href="#faq">FAQ</a>
-      <a href="/ballot/">Ballot guide</a>
-      <a href="/distributors/">Distributors</a>
-      <a href="/blog/">Blog</a>
+      <a href="/#coin-tree">Coin tree</a>
+      <a href="/#all-coins">Prices</a>
+      <a href="/#dashboard">My collection</a>
+      <a href="/#shop">Frames</a>
+      <a href="/#more">More</a>
     </nav>
   </div>
 </header>
@@ -1744,13 +1777,11 @@
 <main id="main-content">
 <section class="hero">
   <div style="max-width: 720px; margin: 0 auto;">
-      <h1>Track every Bluey collectible in one place</h1>
-    <p>Tick off what you own, check what coins have actually sold for, and display your set in a handmade frame.</p>
+      <h1>Every Bluey coin, and what it's worth</h1>
+    <p>Follow each release from the plain coin to the silver proof: how many were made, and what each one sells for now.</p>
     <div class="hero-actions">
-      <a href="#dashboard" class="btn-primary">
-        Start your collection
-      </a>
-      <a href="#shop" class="btn-hero-secondary">Shop display frames</a>
+      <a href="#coin-tree" class="btn-primary">Explore the coin tree</a>
+      <a href="#all-coins" class="btn-hero-secondary">Search prices</a>
     </div>
     <div class="hero-meta">
       <span data-catalogue-count>Bluey</span> tracked products · official mintages and product images
@@ -1760,8 +1791,8 @@
 
 <!-- View tabs: the page is split into a collection view and a price view -->
 <nav class="view-tabs" role="tablist" aria-label="Choose a view">
+  <button class="view-tab on" type="button" role="tab" id="tab-prices" data-view="prices" aria-controls="view-prices" aria-selected="true">Coins &amp; prices</button>
   <button class="view-tab" type="button" role="tab" id="tab-collection" data-view="collection" aria-controls="view-collection" aria-selected="false" tabindex="-1">My collection</button>
-  <button class="view-tab on" type="button" role="tab" id="tab-prices" data-view="prices" aria-controls="view-prices" aria-selected="true">Coin prices</button>
 </nav>
 
 <div class="view-panel" id="view-collection" role="tabpanel" aria-labelledby="tab-collection" hidden>
@@ -1922,6 +1953,11 @@
 </div>
 
 <div class="view-panel" id="view-prices" role="tabpanel" aria-labelledby="tab-prices">
+<section id="coin-tree" class="section coin-tree-section" aria-labelledby="coin-tree-heading">
+  <h2 id="coin-tree-heading" class="section-title">The Bluey coin tree</h2>
+  <p class="page-sub">Each release coin by coin: the plain coin, then the privy, coloured and chase coins, then the AlBr and silver proofs. Every coin that is not silver is aluminium bronze (AlBr). Tap a coin for its value, recent sales and where to buy.</p>
+  <div id="coin-tree-body" class="coin-tree"></div>
+</section>
 <!-- Answer Engine Optimization (AEO) Collector Summary Capsule -->
 <section class="section" style="padding-top: 0; padding-bottom: 0;" aria-label="Bluey Coin Collector Quick Summary">
   <div class="aeo-summary-capsule">
@@ -3386,6 +3422,19 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 
+<div class="view-panel" id="view-more" role="region" aria-labelledby="more-heading" hidden>
+<section id="more" class="section more-section">
+  <h2 id="more-heading" class="section-title">More from Blueycoin</h2>
+  <ul class="more-links">
+    <li><a href="#shop">Display frames</a></li>
+    <li><a href="#stories">Collector stories</a></li>
+    <li><a href="#events">Community &amp; events</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="/ballot/">Ballot guide</a></li>
+    <li><a href="/distributors/">Distributors</a></li>
+    <li><a href="/blog/">Blog</a></li>
+  </ul>
+</section>
 <section id="stories" class="section collector-stories" aria-labelledby="stories-heading">
   <h2 id="stories-heading" class="section-title">Collector stories</h2>
   <p class="page-sub">Release notes and collecting details, checked against Royal Australian Mint and Australia Post publications.</p>
@@ -3527,6 +3576,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
   </div>
 </section>
+</div>
 </main>
 
 <footer id="site-footer">
@@ -3734,6 +3784,7 @@ async function loadPrices() {
     renderGrid();
     if (typeof renderDashboard === 'function') renderDashboard();   // dashboard values depend on prices
     if (coinPageId) renderCoinPage();                                // product page card uses the same prices
+    else renderCoinTree();                                           // coin tree values
   } catch (e) {
     console.warn('Could not load prices:', e.message);
   }
@@ -4314,8 +4365,9 @@ function buildCard(coin) {
 
     const sources = Array.from(new Set(soldRecords.map(p => p.source)));
     salesList.append(el('div', 'sales-list-title', `Matched sold listings · ${sources.join(' + ')} · ${soldRecords.length} records`));
-    salesList.append(el('div', 'bp-note', 'Prices include stated postage. † Item price only, postage unknown.'));
-    soldRecords.slice(0, 12).forEach(p => {
+    salesList.append(el('div', 'bp-note', 'Lowest to highest. Prices include stated postage. † Item price only, postage unknown.'));
+    // Lowest to highest sale price, so the spread of what this has sold for reads at a glance.
+    soldRecords.slice().sort((x, y) => x.valuePrice - y.valuePrice).slice(0, 20).forEach(p => {
       const row      = el('div', 'sale-row');
       const raw      = safeText(p.title);
       const short    = raw.length > 42 ? raw.substring(0, 42) + '…' : raw;
@@ -4532,6 +4584,15 @@ function renderBuyOptions(panel, options, meta) {
     panel.append(el('div', 'bp-note', 'No buying options found.'));
     return;
   }
+
+  // Cheapest delivered total first; unknown postage after known; links last.
+  const _buyKey = opt => {
+    if (opt.link_only || opt.price == null || !Number.isFinite(Number(opt.price))) return [2, Infinity];
+    const post = Number(opt.postage);
+    if (opt.postage == null || !Number.isFinite(post) || post < 0) return [1, Number(opt.price)];
+    return [0, Number(opt.price) + post];
+  };
+  options = options.slice().sort((x, y) => { const a = _buyKey(x), b = _buyKey(y); return a[0] - b[0] || a[1] - b[1]; });
 
   options.forEach(opt => {
     const row  = el('div', 'retailer-row');
@@ -5468,10 +5529,95 @@ function initCoinPage() {
 }
 
 // ────────────────────────────────────────────────
+// COIN TREE: each release as a family. The coins come first, in the order
+// plain/till, privy, coloured, chase, AlBr proof, silver proof; the sets,
+// PNCs, minisheets and stamps they are sold in follow as packaging.
+// ────────────────────────────────────────────────
+function coinTreeTier(coin) {
+  const rank = coinPageRank(coin);
+  const hay = (coin.id + ' ' + coin.name).toLowerCase();
+  if (rank === 1) return /\btill\b/.test(hay) ? 'Till coin' : 'Uncirculated';
+  if (rank === 2) return 'Privy';
+  if (rank === 3) return getCoinCategory(coin).type === 'lucky' ? 'Chase' : 'Coloured';
+  if (rank === 4) return 'AlBr proof';
+  if (rank === 5) return 'Silver proof';
+  return null;
+}
+
+function coinTreeSupply(coin) {
+  if (coin.mintage != null && Number.isFinite(Number(coin.mintage))) return `${Number(coin.mintage).toLocaleString('en-AU')} minted`;
+  if (coin.issueQuantity != null) return `${Number(coin.issueQuantity).toLocaleString('en-AU')} made`;
+  return 'Total not published';
+}
+
+function _coinTreeNode(coin, tier) {
+  const a = el('a', 'tree-node' + (tier ? ' tier-' + tier.toLowerCase().replace(/[^a-z]+/g, '-') : ''));
+  a.href = coinPageUrl(coin);
+  const img = COIN_PRODUCT_IMAGES[coin.id];
+  const media = el('span', 'tree-media');
+  if (img && img.src) {
+    const pic = document.createElement('img');
+    pic.src = img.src;
+    pic.alt = '';
+    pic.loading = 'lazy';
+    pic.decoding = 'async';
+    media.append(pic);
+  }
+  a.append(media);
+  if (tier) a.append(el('span', 'tree-tier', tier));
+  a.append(el('span', 'tree-name', coin.name.replace(/^20\d\d\s+/, '')));
+  const value = _referencePrice(coin);
+  a.append(el('span', 'tree-value', value ? formatAUD(value) : 'No price yet'));
+  a.append(el('span', 'tree-supply', coinTreeSupply(coin)));
+  return a;
+}
+
+function renderCoinTree() {
+  const host = document.getElementById('coin-tree-body');
+  if (!host || coinPageId) return;
+  while (host.firstChild) host.removeChild(host.firstChild);
+  const order = coinPageOrder();
+  const seriesSeen = [];
+  order.forEach(c => { if (!seriesSeen.includes(c.series)) seriesSeen.push(c.series); });
+  seriesSeen.forEach(series => {
+    const items = order.filter(c => c.series === series);
+    const coins = items.filter(c => coinTreeTier(c));
+    const packaging = items.filter(c => !coinTreeTier(c));
+    const release = el('article', 'tree-release');
+    const head = el('header', 'tree-release-head');
+    const year = items.map(c => c.year).filter(Boolean).sort()[0];
+    head.append(el('h3', 'tree-release-title', SERIES_LABELS[series] || (items.length === 1 ? items[0].name : String(year || 'Bluey'))),
+      el('span', 'tree-release-count', `${coins.length} coin${coins.length === 1 ? '' : 's'} · ${packaging.length} packaged`));
+    release.append(head);
+    if (coins.length) {
+      const row = el('div', 'tree-row');
+      row.setAttribute('role', 'list');
+      coins.forEach(coin => {
+        const node = _coinTreeNode(coin, coinTreeTier(coin));
+        node.setAttribute('role', 'listitem');
+        row.append(node);
+      });
+      release.append(row);
+    }
+    if (packaging.length) {
+      const box = el('details', 'tree-packaging');
+      if (!coins.length) box.open = true;
+      box.append(el('summary', '', coins.length ? `Sets, PNCs and stamps (${packaging.length})` : `PNCs, sets and minisheets (${packaging.length})`));
+      const row = el('div', 'tree-row tree-row-small');
+      packaging.forEach(coin => row.append(_coinTreeNode(coin, null)));
+      box.append(row);
+      release.append(box);
+    }
+    host.append(release);
+  });
+}
+
+// ────────────────────────────────────────────────
 // INIT
 // ────────────────────────────────────────────────
 buildAttrFilters();                        // attribute pills before first paint
 initCoinPage();                            // /coin/<slug>: single product page
+renderCoinTree();                          // the coin tree, filled with values once prices load
 renderGrid();                              // show skeleton immediately
 loadPrices();                              // populate from backend cache
 setInterval(loadPrices, 5 * 60 * 1000);   // re-poll every 5 min
@@ -5487,27 +5633,23 @@ document.addEventListener('click', (e) => {
 
 </script>
 <!-- Mobile-First Sticky Action Dock -->
-<nav class="mobile-action-dock" aria-label="Mobile quick actions">
-  <a href="#dashboard" class="mobile-dock-btn" aria-label="My collection">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M14.8 9A2 2 0 0 0 13 8h-2a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4h-2a2 2 0 0 1-1.8-1"></path><path d="M12 6v2m0 8v2"></path></svg>
-    <span>Collection</span>
+<nav class="mobile-action-dock" aria-label="Main navigation">
+  <a href="/#coin-tree" class="mobile-dock-btn" data-dock="coin-tree">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="2.5"></circle><circle cx="5" cy="19" r="2.5"></circle><circle cx="19" cy="19" r="2.5"></circle><path d="M12 7.5v4M12 11.5l-6 5M12 11.5l6 5"></path></svg>
+    <span>Coins</span>
   </a>
-  <a href="#all-coins" class="mobile-dock-btn" aria-label="Bluey coin prices">
-    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>
+  <a href="/#all-coins" class="mobile-dock-btn" data-dock="all-coins">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
     <span>Prices</span>
   </a>
-  <a href="#shop" class="mobile-dock-btn" aria-label="Display frames store">
-    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
-    <span>Frames</span>
+  <a href="/#dashboard" class="mobile-dock-btn" data-dock="dashboard">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"></path></svg>
+    <span>Collection</span>
   </a>
-  <a href="#faq" class="mobile-dock-btn" aria-label="Frequently asked questions">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>
-    <span>FAQ</span>
+  <a href="/#more" class="mobile-dock-btn" data-dock="more">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="19" cy="12" r="1.5"></circle></svg>
+    <span>More</span>
   </a>
-  <button type="button" class="mobile-dock-btn" onclick="showCart()" aria-label="View cart">
-    <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-    <span>Cart</span>
-  </button>
 </nav>
 <script>
 // Two views: the collection and the coin prices. Each has its own tab; links to a section in
@@ -5516,9 +5658,10 @@ document.addEventListener('click', (e) => {
   const tabs = Array.from(document.querySelectorAll('.view-tab'));
   const panels = {
     collection: document.getElementById('view-collection'),
-    prices: document.getElementById('view-prices')
+    prices: document.getElementById('view-prices'),
+    more: document.getElementById('view-more')
   };
-  const defaultHash = { collection: '#dashboard', prices: '#all-coins' };
+  const defaultHash = { collection: '#dashboard', prices: '#all-coins', more: '#more' };
 
   function showView(name) {
     tabs.forEach(tab => {
@@ -5528,6 +5671,20 @@ document.addEventListener('click', (e) => {
       tab.tabIndex = on ? 0 : -1;
     });
     Object.keys(panels).forEach(key => { panels[key].hidden = key !== name; });
+    markDock();
+  }
+
+  // The bottom button for the part of the site in view is highlighted.
+  function markDock() {
+    const id = decodeURIComponent(location.hash.slice(1));
+    const view = Object.keys(panels).find(key => !panels[key].hidden);
+    let current = id && document.querySelector(`.mobile-dock-btn[data-dock="${CSS.escape(id)}"]`) ? id : null;
+    if (!current) current = view === 'collection' ? 'dashboard' : view === 'more' ? 'more' : 'coin-tree';
+    if (document.body.classList.contains('product-mode')) current = 'coin-tree';
+    document.querySelectorAll('.mobile-dock-btn').forEach(btn => {
+      if (btn.dataset.dock === current) btn.setAttribute('aria-current', 'page');
+      else btn.removeAttribute('aria-current');
+    });
   }
 
   function viewForId(id) {
@@ -5535,6 +5692,7 @@ document.addEventListener('click', (e) => {
     if (!target) return null;
     if (panels.prices.contains(target)) return 'prices';
     if (panels.collection.contains(target)) return 'collection';
+    if (panels.more && panels.more.contains(target)) return 'more';
     return null;
   }
 

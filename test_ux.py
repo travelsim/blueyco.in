@@ -160,18 +160,24 @@ class TestHonestCopy(unittest.TestCase):
 
 class TestClutterReduction(unittest.TestCase):
     def test_price_guide_is_the_landing_view_and_dashboard_hash_still_routes(self):
-        self.assertIn('id="tab-collection" data-view="collection" aria-controls="view-collection" aria-selected="false" tabindex="-1">My collection', INDEX)
-        self.assertIn('id="tab-prices" data-view="prices" aria-controls="view-prices" aria-selected="true">Coin prices', INDEX)
+        # Coins and prices come first; the collection is the second tab.
+        prices_tab = INDEX.index('id="tab-prices" data-view="prices" aria-controls="view-prices" aria-selected="true">Coins &amp; prices')
+        collection_tab = INDEX.index('id="tab-collection" data-view="collection" aria-controls="view-collection" aria-selected="false" tabindex="-1">My collection')
+        self.assertLess(prices_tab, collection_tab)
         self.assertIn('id="view-collection" role="tabpanel" aria-labelledby="tab-collection" hidden>', INDEX)
         self.assertIn('id="view-prices" role="tabpanel" aria-labelledby="tab-prices">', INDEX)
         self.assertIn("showView(viewForId(decodeURIComponent(location.hash.slice(1))) || 'prices')", INDEX)
-        self.assertIn("const defaultHash = { collection: '#dashboard', prices: '#all-coins' }", INDEX)
+        self.assertIn("const defaultHash = { collection: '#dashboard', prices: '#all-coins', more: '#more' }", INDEX)
 
     def test_navigation_has_one_frames_destination(self):
         nav = INDEX.split('<header class="nav" id="site-header">')[1].split('</header>')[0]
-        self.assertEqual(nav.count('href="#shop"'), 1)
-        self.assertIn('>Collection<', nav)
-        self.assertIn('>Price Guide<', nav)
+        self.assertEqual(nav.count('href="/#shop"'), 1)
+        self.assertIn('>Coin tree<', nav)
+        self.assertIn('>Prices<', nav)
+        self.assertIn('>My collection<', nav)
+        # Stories, events, FAQ and the guides sit in the More panel, not the header.
+        for extra in ('Collector stories', 'FAQ', 'Ballot guide', 'Distributors', 'Blog'):
+            self.assertNotIn(extra, nav)
 
     def test_collection_list_is_grouped_filterable_and_searchable(self):
         self.assertIn('id="dash-search"', INDEX)
@@ -220,8 +226,7 @@ class TestMobileHeaderNoOverlap(unittest.TestCase):
         self.assertIn('.nav-inner { flex-wrap: wrap;', INDEX)
 
     def test_skip_link_exists(self):
-        self.assertIn('class="skip-link"', INDEX)
-        self.assertIn('href="#dashboard"', INDEX)
+        self.assertIn('class="skip-link" href="#coin-tree"', INDEX)
 
     def test_cart_drawer_fits_small_phones(self):
         self.assertIn('width: min(380px, 100vw)', INDEX)
@@ -270,7 +275,10 @@ class TestSeoAeo(unittest.TestCase):
 
     def test_mobile_action_dock_present_and_accessible(self):
         self.assertIn('class="mobile-action-dock"', INDEX)
-        self.assertIn('aria-label="Mobile quick actions"', INDEX)
+        self.assertIn('aria-label="Main navigation"', INDEX)
+        dock = INDEX.split('<nav class="mobile-action-dock"')[1].split('</nav>')[0]
+        for target in ('/#coin-tree', '/#all-coins', '/#dashboard', '/#more'):
+            self.assertIn(f'href="{target}"', dock)
         self.assertIn('.mobile-action-dock', INDEX)
 
 
