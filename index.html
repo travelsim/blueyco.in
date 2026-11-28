@@ -4583,7 +4583,7 @@ async function handleBuyNow(coinId, keywords) {
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    renderBuyOptions(panel, data.options || []);
+    renderBuyOptions(panel, data.options || [], data);
   } catch (err) {
     while (panel.childNodes.length > 1) panel.removeChild(panel.lastChild);
     panel.append(el('div', 'bp-note', 'Could not load buying options. Try again later.'));
@@ -4598,9 +4598,16 @@ async function handleBuyNow(coinId, keywords) {
 // ────────────────────────────────────────────────
 // RENDER BUY OPTIONS
 // ────────────────────────────────────────────────
-function renderBuyOptions(panel, options) {
+function renderBuyOptions(panel, options, meta) {
   // Remove everything after the title
   while (panel.childNodes.length > 1) panel.removeChild(panel.lastChild);
+
+  // eBay postage is calculated for delivery to one declared reference postcode
+  // (see the buy-options response); it is not a national rate, so every eBay
+  // row that now has a postage figure says which postcode it is for.
+  const reference = (meta && (meta.postage_reference || {})) || {};
+  const refPostcode = String(reference.postcode || (meta && meta.postage_reference_postcode) || '');
+  const labelPostcode = refPostcode ? `postcode ${safeText(refPostcode)}` : 'the reference postcode';
 
   if (!options || options.length === 0) {
     panel.append(el('div', 'bp-note', 'No buying options found.'));
@@ -4625,6 +4632,12 @@ function renderBuyOptions(panel, options) {
       const checked = new Date(Number(opt.checkedAt) * 1000).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
       subtitles.push(`Asking price checked ${checked}`);
     }
+    // Name the postcode the postage applies to instead of implying a national rate.
+    if (hasPrice && shippingKnown && opt.retailer_id === 'ebay') {
+      subtitles.push(Number(postage) === 0
+        ? `Free postage to ${labelPostcode}`
+        : `Includes ${formatAUD(Number(postage))} postage to ${labelPostcode}`);
+    }
     if (subtitles.length) {
       const sub = el('div', 'ret-sub', subtitles.join(' · '));
       name.append(sub);
@@ -4636,11 +4649,11 @@ function renderBuyOptions(panel, options) {
       if (shippingKnown) {
         priceEl = el('span', 'ret-price', formatAUD(total));
         priceEl.title = Number(postage) === 0
-          ? 'Item price with free postage'
-          : `${formatAUD(Number(opt.price))} item plus ${formatAUD(Number(postage))} postage`;
+          ? `Item price with free postage to ${labelPostcode}`
+          : `${formatAUD(Number(opt.price))} item plus ${formatAUD(Number(postage))} postage to ${labelPostcode}`;
       } else {
         priceEl = el('span', 'ret-price', `${formatAUD(Number(opt.price))}†`);
-        priceEl.title = 'Item price only; the seller did not state postage';
+        priceEl.title = 'Item price only; postage was not stated';
       }
     } else {
       priceEl = el('span', 'ret-price link-only', opt.retailer_id === 'ebay' ? 'Live listings' : 'Listings');
@@ -4677,7 +4690,9 @@ function renderBuyOptions(panel, options) {
     }
   });
 
-  panel.append(el('div', 'bp-note', 'Prices are delivered totals: the item plus the seller\'s stated postage. † means postage was not stated, so the item price is shown. Up to 10 listings, lowest total first.'));
+  panel.append(el('div', 'bp-note',
+    'Prices are delivered totals: the item plus the seller\'s stated postage. † means postage was not stated, so the item price is shown. Up to 10 listings, lowest total first.'
+    + (refPostcode ? ` eBay postage is calculated for delivery to ${labelPostcode}, not a national rate.` : '')));
 }
 
 // ────────────────────────────────────────────────

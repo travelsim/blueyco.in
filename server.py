@@ -71,6 +71,32 @@ EBAY_OAUTH_URL     = 'https://api.ebay.com/identity/v1/oauth2/token'
 EBAY_OAUTH_SCOPE   = 'https://api.ebay.com/oauth/api_scope'
 EBAY_BROWSE_URL    = 'https://api.ebay.com/buy/browse/v1/item_summary/search'
 EBAY_MARKETPLACE   = 'EBAY_AU'
+# eBay only returns a CALCULATED shipping cost when the request says where the
+# item would be delivered. Without it a listing comes back with only
+# SELLER_ARRANGED_LOCAL_PICKUP and no cost, which is indistinguishable from
+# free postage. Every Browse call therefore declares one reference delivery
+# location (overridable per deployment). The figure is postage to that
+# postcode, never a national rate: the same item quotes differently elsewhere.
+DEFAULT_EBAY_REFERENCE_COUNTRY  = 'AU'
+DEFAULT_EBAY_REFERENCE_POSTCODE = '3000'
+
+
+def _ebay_reference_country():
+    """Two-letter country for the reference delivery location."""
+    value = re.sub(r'[^A-Za-z]', '', os.environ.get('EBAY_REFERENCE_COUNTRY') or '')
+    return value.upper()[:2] or DEFAULT_EBAY_REFERENCE_COUNTRY
+
+
+def _ebay_reference_postcode():
+    """Postcode for the reference delivery location (digits only)."""
+    value = re.sub(r'[^0-9]', '', os.environ.get('EBAY_REFERENCE_POSTCODE') or '')
+    return value[:10] or DEFAULT_EBAY_REFERENCE_POSTCODE
+
+
+def _ebay_enduserctx_headers():
+    """Browse API contextual-location header for the reference delivery postcode."""
+    location = f'country={_ebay_reference_country()},zip={_ebay_reference_postcode()}'
+    return {'X-EBAY-C-ENDUSERCTX': f'contextualLocation={urllib.parse.quote(location, safe="")}'}
 
 CACHE_FILE         = 'ebay_cache.json'
 MANUAL_PRICES_FILE = 'retailer_prices.json'
@@ -1399,6 +1425,7 @@ def _ebay_browse_search_page(keywords, limit=200, offset=0, sort='price'):
         'Authorization': f'Bearer {token}',
         'X-EBAY-C-MARKETPLACE-ID': EBAY_MARKETPLACE,
         'Accept': 'application/json',
+        **_ebay_enduserctx_headers(),
     })
     try:
         with urllib.request.urlopen(req, timeout=12) as response:
@@ -1755,6 +1782,9 @@ def _ebay_live_tracking_options(retailer, keywords, coin_id=''):
                     'retailer_id': retailer['id'],
                     'name': retailer['name'],
                     'price': it['price'],
+                    # Carried into the active-offer projection: a tracking
+                    # snapshot without postage would publish a bare item price.
+                    'postage': it.get('postage'),
                     'price_type': 'asking',
                     'available': True,
                     'url': item_url,
