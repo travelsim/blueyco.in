@@ -8,6 +8,22 @@ import psycopg
 
 TTL = timedelta(hours=24)
 BLOCKING_STATUSES = ('confirmed_sold', 'excluded')
+LISTING_URL_PATTERNS = {
+    'ebay': re.compile(r'/itm/(\d+)'),
+    'etsy': re.compile(r'/listing/(\d+)'),
+}
+
+
+def _listing_id(source, url):
+    """Marketplace listing ID from a canonical item URL, or None.
+
+    Each marketplace owns its ID namespace: an eBay item is `/itm/<id>` and an
+    Etsy listing is `/listing/<id>`. The source is explicit so an eBay ID can
+    never be accepted as an Etsy listing, or the reverse.
+    """
+    pattern = LISTING_URL_PATTERNS.get(source)
+    match = pattern.search(url) if pattern else None
+    return match.group(1) if match else None
 
 
 def _blocked_ids(conn, product_id, listing_ids):
@@ -43,12 +59,11 @@ def persist_snapshot(conn, product_id, source, options, complete, excluded_ids=(
     valid = {}
     for item in options:
         url = str(item.get('url') or item.get('_tracking_url') or '')
-        m = re.search(r'/itm/(\d+)', url)
+        lid = _listing_id(source, url)
         price = item.get('price')
         title = str(item.get('title') or '').strip()
-        if not m or m.group(1) in excluded or not title or not isinstance(price, (int, float)):
+        if not lid or lid in excluded or not title or not isinstance(price, (int, float)):
             continue
-        lid = m.group(1)
         valid[lid] = (title, price, item.get('postage'), url)
     now = datetime.now(timezone.utc)
     with conn.transaction():
