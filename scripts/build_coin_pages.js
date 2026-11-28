@@ -63,7 +63,7 @@ function load() {
     'const COIN_PAGE_SERIES_ORDER = ' + grabConst(html, 'const COIN_PAGE_SERIES_ORDER = [', '[', ']') + ';',
     'const ATTRIBUTES = ' + grabConst(html, 'const ATTRIBUTES = [', '[', ']') + ';',
     ...['getCoinCategory', 'coinAttributes', 'coinSlug', 'coinPageUrl', 'coinPageRank', 'coinPageOrder',
-      'coinMintageText', 'coinPageTitle', 'coinPageDescription'].map(name => grabFunction(html, name)),
+      'coinMintageText', '_firstThatFits', 'coinPageTitle', 'coinPageDescription'].map(name => grabFunction(html, name)),
     'module.exports = { COINS, SERIES_LABELS, COIN_PRODUCT_IMAGES, coinAttributes, coinSlug, coinPageUrl, coinPageOrder, coinMintageText, coinPageTitle, coinPageDescription };',
   ].join('\n');
   const sandbox = { module: { exports: {} } };

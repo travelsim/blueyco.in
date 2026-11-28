@@ -5255,17 +5255,36 @@ function coinMintageText(coin) {
   return coin.mintageLabel || coin.derivedScarcityLabel || '';
 }
 
+// Search results show about 60 characters of a title and 155 of a description,
+// so take the fullest wording that fits.
+function _firstThatFits(options, limit) {
+  return options.find(text => text.length <= limit) || options[options.length - 1];
+}
+
 function coinPageTitle(coin) {
-  return `${coin.name}: Value, Mintage & Sold Prices | Blueycoin`;
+  return _firstThatFits([
+    `${coin.name} Value & Sold Prices | Blueycoin`,
+    `${coin.name} Value | Blueycoin`,
+    `${coin.name} | Blueycoin`,
+    coin.name,
+  ], 65);
 }
 
 function coinPageDescription(coin) {
   const series = SERIES_LABELS[coin.series] || '';
-  const parts = [`${coin.name}${series ? ` (${series})` : ''}.`];
+  const named = `${coin.name}${series ? ` (${series})` : ''}.`;
   const mint = coinMintageText(coin);
-  if (mint) parts.push(mint.charAt(0).toUpperCase() + mint.slice(1) + '.');
-  parts.push('Recent eBay sold prices, live asking prices and where to buy, updated daily.');
-  return parts.join(' ');
+  const mintText = mint ? ` ${mint.charAt(0).toUpperCase() + mint.slice(1)}.` : '';
+  const tail = ' Sold prices, live asking prices and where to buy, updated daily.';
+  const shortTail = ' Sold prices and where to buy.';
+  const text = _firstThatFits([
+    named + mintText + tail,
+    `${coin.name}.` + mintText + tail,
+    `${coin.name}.` + mintText + shortTail,
+    `${coin.name}.` + tail,
+    `${coin.name}.` + shortTail,
+  ], 160);
+  return text.length <= 160 ? text : text.slice(0, 157).replace(/\s+\S*$/, '') + '...';
 }
 
 function coinFromPath(pathname) {
