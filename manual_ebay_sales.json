@@ -182,63 +182,6 @@
     }
    ]
   },
-  "s3_pnc_bingo": {
-   "products": [
-    {
-     "coin_id": "s3_pnc_bingo",
-     "title": "⚪️UNC 2026 BLUEY ⭐️HOORAY $2 TWO DOLLAR COLOURED COIN UNCIRCULATED⭐️PNC",
-     "sale_price": 38.0,
-     "currency": "AU",
-     "date_sold": "31 Aug 2026",
-     "record_status": "AutoApproved",
-     "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "198339369143",
-     "link": "https://www.ebay.com.au/itm/198339369143"
-    },
-    {
-     "coin_id": "s3_pnc_bingo",
-     "title": "Bluey 2026 - Bingo - Hooray PNC",
-     "sale_price": 40.0,
-     "currency": "AU",
-     "date_sold": "25 May 2026",
-     "record_status": "AutoApproved",
-     "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-f733ea2da1147a02"
-    },
-    {
-     "title": "Bluey 2026 - Bingo - Hooray PNC",
-     "sale_price": 40.0,
-     "currency": "AU",
-     "date_sold": "25 May 2026",
-     "shipping_price": 12.5,
-     "source_type": "user_pasted_search",
-     "import_id": "may2026-sold-paste-2026-10-08"
-    },
-    {
-     "coin_id": "s3_pnc_bingo",
-     "title": "2026 Bluey PNC Release - Bluey & Bingo $2 Coloured Coin & Stamp",
-     "sale_price": 80.0,
-     "currency": "AU",
-     "date_sold": "15 May 2026",
-     "record_status": "AutoApproved",
-     "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-87606cf9ad40c353"
-    },
-    {
-     "coin_id": "s3_pnc_bingo",
-     "title": "2026 Bluey PNC Release - Bluey & Bingo $2 Coloured Coin & Stamp",
-     "sale_price": 80.0,
-     "currency": "AU",
-     "date_sold": "15 May 2026",
-     "shipping_price": 0.0,
-     "source_type": "user_pasted_search",
-     "import_source": "user-sold-paste-2026-11-08",
-     "best_offer": false,
-     "record_status": "Retained",
-     "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
-    }
-   ]
-  },
   "s2_xmas_unc": {
    "products": [
     {
@@ -734,6 +677,18 @@
      "best_offer": false,
      "record_status": "Retained",
      "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
+    },
+    {
+     "coin_id": "s2_xmas_unc",
+     "title": "UNC 2025 BLUEY CHRISTMAS- $1 ONE DOLLAR COLOURED COIN RARE ONLY 125K MINTED",
+     "sale_price": 32.5,
+     "currency": "AU",
+     "date_sold": "23 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "batch5-50ff684b7629bb660f6f93ef",
+     "shipping_price": 0.0,
+     "price_basis": "Buy It Now"
     },
     {
      "coin_id": "s2_xmas_unc",
@@ -1585,6 +1540,18 @@
     },
     {
      "coin_id": "s2_xmas_unc",
+     "title": "UNC 2025 BLUEY CHRISTMAS- $1 ONE DOLLAR COLOURED COIN RARE ONLY 125K MINTED",
+     "sale_price": 37.8,
+     "currency": "AU",
+     "date_sold": "10 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "batch5-b6ae4f14a7f2c46d138d9099",
+     "shipping_price": 0.0,
+     "price_basis": "Buy It Now"
+    },
+    {
+     "coin_id": "s2_xmas_unc",
      "title": "BLUEY XMAS 2025 $1 R.A.M  COLOURED UNCIRCULATED COIN IN HAND FREE POSTAGE VALUE",
      "sale_price": 44.68,
      "currency": "AU",
@@ -2121,6 +2088,63 @@
     }
    ]
   },
+  "s3_pnc_bingo": {
+   "products": [
+    {
+     "coin_id": "s3_pnc_bingo",
+     "title": "⚪️UNC 2026 BLUEY ⭐️HOORAY $2 TWO DOLLAR COLOURED COIN UNCIRCULATED⭐️PNC",
+     "sale_price": 38.0,
+     "currency": "AU",
+     "date_sold": "31 Aug 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "198339369143",
+     "link": "https://www.ebay.com.au/itm/198339369143"
+    },
+    {
+     "coin_id": "s3_pnc_bingo",
+     "title": "Bluey 2026 - Bingo - Hooray PNC",
+     "sale_price": 40.0,
+     "currency": "AU",
+     "date_sold": "25 May 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-f733ea2da1147a02"
+    },
+    {
+     "title": "Bluey 2026 - Bingo - Hooray PNC",
+     "sale_price": 40.0,
+     "currency": "AU",
+     "date_sold": "25 May 2026",
+     "shipping_price": 12.5,
+     "source_type": "user_pasted_search",
+     "import_id": "may2026-sold-paste-2026-10-08"
+    },
+    {
+     "coin_id": "s3_pnc_bingo",
+     "title": "2026 Bluey PNC Release - Bluey & Bingo $2 Coloured Coin & Stamp",
+     "sale_price": 80.0,
+     "currency": "AU",
+     "date_sold": "15 May 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-87606cf9ad40c353"
+    },
+    {
+     "coin_id": "s3_pnc_bingo",
+     "title": "2026 Bluey PNC Release - Bluey & Bingo $2 Coloured Coin & Stamp",
+     "sale_price": 80.0,
+     "currency": "AU",
+     "date_sold": "15 May 2026",
+     "shipping_price": 0.0,
+     "source_type": "user_pasted_search",
+     "import_source": "user-sold-paste-2026-11-08",
+     "best_offer": false,
+     "record_status": "Retained",
+     "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
+    }
+   ]
+  },
   "s3_babyrace": {
    "products": [
     {
@@ -2180,7 +2204,7 @@
     {
      "coin_id": "s3_babyrace",
      "title": "2026 Australian Bluey $2 Privy Mark Uncirculated Coin - Baby Race",
-     "sale_price": 29.95,
+     "sale_price": 23.96,
      "currency": "AU",
      "date_sold": "05 Sep 2026",
      "record_status": "AutoApproved",
@@ -4180,6 +4204,56 @@
     },
     {
      "coin_id": "s2_xmas_silv",
+     "title": "2025 RAM Bluey Christmas $1 Coloured Fine Silver Proof Coin - READY TO SHIP***",
+     "sale_price": 252.65,
+     "currency": "AU",
+     "date_sold": "25 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-e8ab9c1e47432a18",
+     "shipping_price": 15.0,
+     "price_basis": "10 bids"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "2025 Bluey Christmas $1 Coloured Fine Silver Proof Coin Limited Mintage COA 1232",
+     "sale_price": 265.0,
+     "currency": "AU",
+     "date_sold": "25 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-d77496209b63ce17",
+     "shipping_price": 13.0,
+     "price_basis": "18 bids"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "2025 RAM Bluey Christmas $1 Coloured Fine Silver Proof Coin - READY TO SHIP***",
+     "sale_price": 252.65,
+     "currency": "AU",
+     "date_sold": "25 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-752de383b2d059f0",
+     "shipping_price": 15.0,
+     "price_basis": "10 bids",
+     "import_source": "user-pasted-sold-2026-11-27-christmas"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "2025 Bluey Christmas $1 Coloured Fine Silver Proof Coin Limited Mintage COA 1232",
+     "sale_price": 265.0,
+     "currency": "AU",
+     "date_sold": "25 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-03cb2ea4add4cdcf",
+     "shipping_price": 13.0,
+     "price_basis": "18 bids",
+     "import_source": "user-pasted-sold-2026-11-27-christmas"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
      "title": "2025 Bluey Christmas $1 Coloured Fine Silver Proof Coin Cheapest On Ebay!",
      "sale_price": 299.0,
      "currency": "AU",
@@ -4200,6 +4274,56 @@
      "listing_id": "286994324773",
      "link": "https://www.ebay.com.au/itm/286994324773?_skw=2025+%241+Bluey+Christmas+silver+proof+coin&itmmeta=01KRXHFEK3NPD6FFKTV83VFS9A&hash=item42d231dd25:g:kKsAAeSwkohpXPd4&itmprp=enc%3AAQALAAAA4GfYFPkwiKCW4ZNSs2u11xAYKicxPjtlzMhcE%2BG17%2FsENGuMt9sjD0o20KHPMsQuj9I30COb1avidORMxhuvtTr%2FuyzjRSdPDNeco2kBtAvxJChOTCa0eGbFYaR2pvvAHjPmS7ARndKXBo81Adr2UEnw1rc%2BWH1EO4XoPod2BZvRpnJRR7m2b4SVQ%2Fadm%2BxdWKghBu9vVeUgIBryLgn2MSJ0CKzcybEuOgI4%2BZR0CPtHZ86OTY5WmmnM%2Bqex3zy7gsMiH7f98Tl890Mc5lKBhQBXz5h7b06xW3ptNaeGQXQo%7Ctkp%3ABk9SR4zqvbHHZw",
      "shipping_price": 36.82
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "Bluey 2025 Christmas $1 Coloured  Coin Fine Silver Proof +COA",
+     "sale_price": 260.0,
+     "currency": "AU",
+     "date_sold": "24 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-a23929a0320b4109",
+     "shipping_price": 8.26,
+     "price_basis": "Buy It Now",
+     "import_source": "user-pasted-sold-2026-11-27-christmas"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "2025 Bluey Christmas $1 Coloured  Silver Proof UNC Coin in Bauble",
+     "sale_price": 295.0,
+     "currency": "AU",
+     "date_sold": "24 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-78b191f0af049649",
+     "shipping_price": 4.9,
+     "price_basis": "Best Offer accepted",
+     "import_source": "user-pasted-sold-2026-11-27-christmas"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "Bluey 2025 Christmas $1 Coloured Coin Fine Silver Proof +COA",
+     "sale_price": 260.0,
+     "currency": "AU",
+     "date_sold": "24 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-74c3b5902aecf772",
+     "shipping_price": 8.26,
+     "price_basis": "Buy It Now"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "2025 Bluey Christmas $1 Coloured Silver Proof UNC Coin in Bauble",
+     "sale_price": 295.0,
+     "currency": "AU",
+     "date_sold": "24 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-524da9922b74767c",
+     "shipping_price": 4.9,
+     "price_basis": "Best Offer accepted"
     },
     {
      "coin_id": "s2_xmas_silv",
@@ -4257,8 +4381,45 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "398368040525",
-     "link": "https://www.ebay.com.au/itm/398368040525",
-     "shipping_price": 11.5
+     "link": "https://www.ebay.com.au/itm/398368040525"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "Royal Australian Mint 2025 Bluey Christmas $1 Proof 0.999 Silver Coin",
+     "sale_price": 280.0,
+     "currency": "AU",
+     "date_sold": "23 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-fab7a185765b7cf5",
+     "shipping_price": 8.26,
+     "price_basis": "Best Offer accepted",
+     "import_source": "user-pasted-sold-2026-11-27-christmas"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "2025 $1 BLUEY CHRISTMAS COLOURED FINE SILVER PROOF COIN ✅",
+     "sale_price": 260.0,
+     "currency": "AU",
+     "date_sold": "23 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-7b43e27a272bf46c",
+     "shipping_price": 13.0,
+     "price_basis": "Best Offer accepted",
+     "import_source": "user-pasted-sold-2026-11-27-christmas"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "2025 $1 BLUEY CHRISTMAS COLOURED FINE SILVER PROOF COIN ✅",
+     "sale_price": 260.0,
+     "currency": "AU",
+     "date_sold": "23 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-2042930fa694dc03",
+     "shipping_price": 13.0,
+     "price_basis": "Best Offer accepted"
     },
     {
      "coin_id": "s2_xmas_silv",
@@ -4280,8 +4441,57 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "389202254599",
-     "link": "https://www.ebay.com.au/itm/389202254599",
-     "shipping_price": 0.0
+     "link": "https://www.ebay.com.au/itm/389202254599"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "2025 Bluey Christmas $1 Coloured Fine Silver Proof Coin Limited Mintage COA 1232",
+     "sale_price": 271.0,
+     "currency": "AU",
+     "date_sold": "22 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-b0cb99aa9803d9f7",
+     "shipping_price": 13.0,
+     "price_basis": "29 bids",
+     "import_source": "user-pasted-sold-2026-11-27-christmas"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "2025 Bluey Christmas $1 Coloured Fine Silver Proof Coin Limited Mintage COA 1232",
+     "sale_price": 271.0,
+     "currency": "AU",
+     "date_sold": "22 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-aec7d67bb6a884cb",
+     "shipping_price": 13.0,
+     "price_basis": "29 bids"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "2025 Bluey Christmas Bauble $1 Coloured Fine Silver Proof Coin",
+     "sale_price": 292.2,
+     "currency": "AU",
+     "date_sold": "22 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-860619e1cecf862d",
+     "shipping_price": 0.0,
+     "price_basis": "Best Offer accepted",
+     "import_source": "user-pasted-sold-2026-11-27-christmas"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "2025 Bluey Christmas Bauble $1 Coloured Fine Silver Proof Coin",
+     "sale_price": 292.2,
+     "currency": "AU",
+     "date_sold": "22 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-3af8a143de310d81",
+     "shipping_price": 0.0,
+     "price_basis": "Best Offer accepted"
     },
     {
      "coin_id": "s2_xmas_silv",
@@ -4316,8 +4526,57 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "168695645597",
-     "link": "https://www.ebay.com.au/itm/168695645597",
-     "shipping_price": 0.0
+     "link": "https://www.ebay.com.au/itm/168695645597"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "2025 RAM Bluey Christmas $1 Coloured Fine Silver Proof Coin - READY TO SHIP***",
+     "sale_price": 202.75,
+     "currency": "AU",
+     "date_sold": "21 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-f0241a421d8ae5bc",
+     "shipping_price": 15.0,
+     "price_basis": "11 bids"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "Bluey 2025 Christmas $1 Coloured Coin Fine Silver Proof +COA",
+     "sale_price": 225.0,
+     "currency": "AU",
+     "date_sold": "21 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-e28095a8eb871296",
+     "shipping_price": 10.2,
+     "price_basis": "or Best Offer",
+     "import_source": "user-pasted-sold-2026-11-27-christmas"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "Bluey 2025 Christmas $1 Coloured Coin Fine Silver Proof +COA",
+     "sale_price": 225.0,
+     "currency": "AU",
+     "date_sold": "21 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-4e44b4dbebb675ad",
+     "shipping_price": 10.2,
+     "price_basis": "or Best Offer"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "2025 RAM Bluey Christmas $1 Coloured Fine Silver Proof Coin - READY TO SHIP***",
+     "sale_price": 202.75,
+     "currency": "AU",
+     "date_sold": "21 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-12d3e833b2d728ea",
+     "shipping_price": 15.0,
+     "price_basis": "11 bids",
+     "import_source": "user-pasted-sold-2026-11-27-christmas"
     },
     {
      "coin_id": "s2_xmas_silv",
@@ -4374,6 +4633,31 @@
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "236432506364",
      "link": "https://www.ebay.com.au/itm/236432506364"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "2025 RAM Bluey Christmas $1 Coloured Fine Silver Proof Coin - READY TO SHIP***",
+     "sale_price": 220.0,
+     "currency": "AU",
+     "date_sold": "18 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-137b962f2a2db7be",
+     "shipping_price": 15.0,
+     "price_basis": "11 bids"
+    },
+    {
+     "coin_id": "s2_xmas_silv",
+     "title": "2025 RAM Bluey Christmas $1 Coloured Fine Silver Proof Coin - READY TO SHIP***",
+     "sale_price": 220.0,
+     "currency": "AU",
+     "date_sold": "18 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-0425c2c471206092",
+     "shipping_price": 15.0,
+     "price_basis": "11 bids",
+     "import_source": "user-pasted-sold-2026-11-27-christmas"
     },
     {
      "coin_id": "s2_xmas_silv",
@@ -4659,8 +4943,7 @@
      "record_status": "AutoApproved",
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "327029498140",
-     "link": "https://www.ebay.com.au/itm/327029498140",
-     "shipping_price": 0.0
+     "link": "https://www.ebay.com.au/itm/327029498140"
     },
     {
      "coin_id": "s2_xmas_silv",
@@ -4721,149 +5004,6 @@
      "listing_id": "manual-3d5385f79afefb43",
      "shipping_price": 11.7,
      "price_basis": "Buy It Now"
-    },
-    {
-     "coin_id": "s2_xmas_silv",
-     "title": "2025 RAM Bluey Christmas $1 Coloured Fine Silver Proof Coin - READY TO SHIP***",
-     "sale_price": 252.65,
-     "currency": "AU",
-     "date_sold": "25 Nov 2026",
-     "record_status": "AutoApproved",
-     "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-752de383b2d059f0",
-     "shipping_price": 15.0,
-     "price_basis": "10 bids",
-     "import_source": "user-pasted-sold-2026-11-27-christmas"
-    },
-    {
-     "coin_id": "s2_xmas_silv",
-     "title": "2025 Bluey Christmas $1 Coloured Fine Silver Proof Coin Limited Mintage COA 1232",
-     "sale_price": 265.0,
-     "currency": "AU",
-     "date_sold": "25 Nov 2026",
-     "record_status": "AutoApproved",
-     "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-03cb2ea4add4cdcf",
-     "shipping_price": 13.0,
-     "price_basis": "18 bids",
-     "import_source": "user-pasted-sold-2026-11-27-christmas"
-    },
-    {
-     "coin_id": "s2_xmas_silv",
-     "title": "2025 Bluey Christmas $1 Coloured  Silver Proof UNC Coin in Bauble",
-     "sale_price": 295.0,
-     "currency": "AU",
-     "date_sold": "24 Nov 2026",
-     "record_status": "AutoApproved",
-     "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-78b191f0af049649",
-     "shipping_price": 4.9,
-     "price_basis": "Best Offer accepted",
-     "import_source": "user-pasted-sold-2026-11-27-christmas"
-    },
-    {
-     "coin_id": "s2_xmas_silv",
-     "title": "Bluey 2025 Christmas $1 Coloured  Coin Fine Silver Proof +COA",
-     "sale_price": 260.0,
-     "currency": "AU",
-     "date_sold": "24 Nov 2026",
-     "record_status": "AutoApproved",
-     "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-a23929a0320b4109",
-     "shipping_price": 8.26,
-     "price_basis": "Buy It Now",
-     "import_source": "user-pasted-sold-2026-11-27-christmas"
-    },
-    {
-     "coin_id": "s2_xmas_silv",
-     "title": "Royal Australian Mint 2025 Bluey Christmas $1 Proof 0.999 Silver Coin",
-     "sale_price": 280.0,
-     "currency": "AU",
-     "date_sold": "23 Nov 2026",
-     "record_status": "AutoApproved",
-     "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-fab7a185765b7cf5",
-     "shipping_price": 8.26,
-     "price_basis": "Best Offer accepted",
-     "import_source": "user-pasted-sold-2026-11-27-christmas"
-    },
-    {
-     "coin_id": "s2_xmas_silv",
-     "title": "2025 $1 BLUEY CHRISTMAS COLOURED FINE SILVER PROOF COIN ✅",
-     "sale_price": 260.0,
-     "currency": "AU",
-     "date_sold": "23 Nov 2026",
-     "record_status": "AutoApproved",
-     "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-7b43e27a272bf46c",
-     "shipping_price": 13.0,
-     "price_basis": "Best Offer accepted",
-     "import_source": "user-pasted-sold-2026-11-27-christmas"
-    },
-    {
-     "coin_id": "s2_xmas_silv",
-     "title": "2025 Bluey Christmas $1 Coloured Fine Silver Proof Coin Limited Mintage COA 1232",
-     "sale_price": 271.0,
-     "currency": "AU",
-     "date_sold": "22 Nov 2026",
-     "record_status": "AutoApproved",
-     "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-b0cb99aa9803d9f7",
-     "shipping_price": 13.0,
-     "price_basis": "29 bids",
-     "import_source": "user-pasted-sold-2026-11-27-christmas"
-    },
-    {
-     "coin_id": "s2_xmas_silv",
-     "title": "2025 Bluey Christmas Bauble $1 Coloured Fine Silver Proof Coin",
-     "sale_price": 292.2,
-     "currency": "AU",
-     "date_sold": "22 Nov 2026",
-     "record_status": "AutoApproved",
-     "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-860619e1cecf862d",
-     "shipping_price": 0.0,
-     "price_basis": "Best Offer accepted",
-     "import_source": "user-pasted-sold-2026-11-27-christmas"
-    },
-    {
-     "coin_id": "s2_xmas_silv",
-     "title": "Bluey 2025 Christmas $1 Coloured Coin Fine Silver Proof +COA",
-     "sale_price": 225.0,
-     "currency": "AU",
-     "date_sold": "21 Nov 2026",
-     "record_status": "AutoApproved",
-     "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-e28095a8eb871296",
-     "shipping_price": 10.2,
-     "price_basis": "or Best Offer",
-     "import_source": "user-pasted-sold-2026-11-27-christmas"
-    },
-    {
-     "coin_id": "s2_xmas_silv",
-     "title": "2025 RAM Bluey Christmas $1 Coloured Fine Silver Proof Coin - READY TO SHIP***",
-     "sale_price": 202.75,
-     "currency": "AU",
-     "date_sold": "21 Nov 2026",
-     "record_status": "AutoApproved",
-     "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-12d3e833b2d728ea",
-     "shipping_price": 15.0,
-     "price_basis": "11 bids",
-     "import_source": "user-pasted-sold-2026-11-27-christmas"
-    },
-    {
-     "coin_id": "s2_xmas_silv",
-     "title": "2025 RAM Bluey Christmas $1 Coloured Fine Silver Proof Coin - READY TO SHIP***",
-     "sale_price": 220.0,
-     "currency": "AU",
-     "date_sold": "18 Nov 2026",
-     "record_status": "AutoApproved",
-     "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-0425c2c471206092",
-     "shipping_price": 15.0,
-     "price_basis": "11 bids",
-     "import_source": "user-pasted-sold-2026-11-27-christmas"
     }
    ]
   },
@@ -8735,6 +8875,16 @@
     },
     {
      "coin_id": "s1_coloured_insert_variant",
+     "title": "Australia UNC Coin - 2024 $1 Coloured Bluey Dollar Buck (ex RAM Coin Tube)",
+     "sale_price": 324.95,
+     "currency": "AU",
+     "date_sold": "04 Nov 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-0003dbb0718fe3d0"
+    },
+    {
+     "coin_id": "s1_coloured_insert_variant",
      "title": "2024 $1 Bluey Dollarbuck 10 Coin Set Uncirculated Tube & Folder Coloured Coin",
      "sale_price": 375.0,
      "currency": "AU",
@@ -9419,6 +9569,16 @@
      "best_offer": false,
      "record_status": "Retained",
      "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
+    },
+    {
+     "coin_id": "s1_10_coin_folder_opened",
+     "title": "2024 Bluey Coloured Coin and Folder Open Tube + Chrissy Colour Coin + 2 Coins",
+     "sale_price": 196.0,
+     "currency": "AU",
+     "date_sold": "13 Sep 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-6df34dca5cb24c0d"
     },
     {
      "coin_id": "s1_10_coin_folder_opened",
@@ -12453,6 +12613,16 @@
     },
     {
      "coin_id": "s1_three_coin_set",
+     "title": "2024 $1 Coloured Bluey Three-Coin Collection",
+     "sale_price": 250.0,
+     "currency": "AU",
+     "date_sold": "05 Jul 2026",
+     "record_status": "AutoApproved",
+     "source_type": "melbourne_confirmed_ledger",
+     "listing_id": "manual-c5d3bf488c09224e"
+    },
+    {
+     "coin_id": "s1_three_coin_set",
      "title": "Limited 2024 Bluey Dollarbucks $1 Uncirculated Three Coin Set",
      "sale_price": 250.0,
      "currency": "AU",
@@ -12958,66 +13128,6 @@
    "products": [
     {
      "coin_id": "s1_coloured_bluey",
-     "title": "2024 BLUEY COiN SET With $1 COLOURED BLUEY COiN All in Capsules Folder+Tube",
-     "sale_price": 230.72,
-     "currency": "AU",
-     "date_sold": "7 Oct 2026",
-     "shipping_price": 0.0,
-     "source_type": "user_pasted_search",
-     "import_source": "user-sold-paste-2026-11-08",
-     "best_offer": false,
-     "record_status": "Retained",
-     "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
-    },
-    {
-     "coin_id": "s1_coloured_bluey",
-     "title": "2024 $1 Coloured Bluey Three-Coin Collection",
-     "sale_price": 250.0,
-     "currency": "AU",
-     "date_sold": "5 Jul 2026",
-     "shipping_price": 10.0,
-     "source_type": "user_pasted_search",
-     "import_source": "user-sold-paste-2026-11-08",
-     "best_offer": false,
-     "record_status": "Retained",
-     "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
-    },
-    {
-     "title": "Australia UNC Coin - 2024 $1 Coloured Bluey Dollar Buck (ex RAM Coin Tube)",
-     "sale_price": 324.95,
-     "currency": "AU",
-     "date_sold": "4 Nov 2026",
-     "buying_format": "Buy It Now",
-     "shipping_price": 9.95,
-     "source_type": "user_pasted_search",
-     "coin_id": "s1_coloured_bluey",
-     "record_status": "Retained"
-    },
-    {
-     "coin_id": "s1_coloured_bluey",
-     "title": "2024 Bluey Coloured Coin and Folder Open Tube + Chrissy Colour Coin + 2 Coins",
-     "sale_price": 196.0,
-     "currency": "AU",
-     "date_sold": "13 Sep 2026",
-     "record_status": "AutoApproved",
-     "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-6df34dca5cb24c0d"
-    },
-    {
-     "coin_id": "s1_coloured_bluey",
-     "title": "2024 Bluey Coloured Coin and Folder Open Tube + Chrissy Colour Coin + 2 Coins",
-     "sale_price": 196.0,
-     "currency": "AU",
-     "date_sold": "13 Sep 2026",
-     "shipping_price": 12.95,
-     "source_type": "user_pasted_search",
-     "import_source": "user-sold-paste-2026-11-08",
-     "best_offer": false,
-     "record_status": "Retained",
-     "record_reason": "Dated eBay AU Sold result matched to the catalogue product; item price excludes postage"
-    },
-    {
-     "coin_id": "s1_coloured_bluey",
      "title": "2024 Bluey Dollarbucks Coloured Coin - Bluey uncirculated",
      "sale_price": 120.0,
      "currency": "AU",
@@ -13029,16 +13139,6 @@
     },
     {
      "coin_id": "s1_coloured_bluey",
-     "title": "2024 BLUEY COiN SET With $1 COLOURED BLUEY COiN All in Capsules Folder+Tube",
-     "sale_price": 230.72,
-     "currency": "AU",
-     "date_sold": "07 Oct 2026",
-     "record_status": "AutoApproved",
-     "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-a6a78045854dafc5"
-    },
-    {
-     "coin_id": "s1_coloured_bluey",
      "title": "Royal Australian Mint 2024 Bluey $1 Coloured UNC Coin in Card Dollarbucks",
      "sale_price": 120.0,
      "currency": "AU",
@@ -13047,26 +13147,6 @@
      "source_type": "melbourne_confirmed_ledger",
      "listing_id": "287614019374",
      "link": "https://www.ebay.com.au/itm/287614019374"
-    },
-    {
-     "coin_id": "s1_coloured_bluey",
-     "title": "2024 $1 Coloured Bluey Three-Coin Collection",
-     "sale_price": 250.0,
-     "currency": "AU",
-     "date_sold": "05 Jul 2026",
-     "record_status": "AutoApproved",
-     "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-c5d3bf488c09224e"
-    },
-    {
-     "coin_id": "s1_coloured_bluey",
-     "title": "Australia UNC Coin - 2024 $1 Coloured Bluey Dollar Buck (ex RAM Coin Tube)",
-     "sale_price": 324.95,
-     "currency": "AU",
-     "date_sold": "04 Nov 2026",
-     "record_status": "AutoApproved",
-     "source_type": "melbourne_confirmed_ledger",
-     "listing_id": "manual-0003dbb0718fe3d0"
     },
     {
      "coin_id": "s1_coloured_bluey",
@@ -14001,7 +14081,7 @@
     {
      "coin_id": "s3_camping",
      "title": "⚪️UNC 2026 BLUEY CAMPING -$2 TWO DOLLAR CARDED COIN UNCIRCULATED⭐️PRIVY MARK",
-     "sale_price": 33.0,
+     "sale_price": 29.7,
      "currency": "AU",
      "date_sold": "31 Aug 2026",
      "record_status": "AutoApproved",
