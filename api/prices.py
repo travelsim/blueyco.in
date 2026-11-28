@@ -540,6 +540,14 @@ _BUNDLE_TOKENS = {
     'collection', 'collections', 'bag', 'bags', 'roll', 'rolls', 'lot', 'lots',
     'bulk', 'case', 'album', 'albums', 'pack', 'packs', 'pair', 'pairs',
 }
+# All spellings of the colour finish mean the same coin, so they are matched as
+# one family: a US-spelled title is neither rejected as an unrequested variant
+# nor required to repeat the exact spelling used by the query.
+_COLOUR_TOKENS = frozenset({'coloured', 'colored', 'colour', 'color'})
+# A colour query that also names a metal or a postal/proof packaging already
+# constrains the product; those titles routinely omit "coloured", so the finish
+# is not required to be repeated there.
+_COLOUR_IMPLIED_TOKENS = frozenset({'silver', 'proof', 'pnc', 'postal', 'privy'})
 
 
 def _sold_timestamp(value):
@@ -582,8 +590,13 @@ def _product_quantity(title):
     return 1
 
 
-def _product_matches_coin(product, coin, now=None, max_age_days=90):
-    """Conservative sold-record gate: date, identity tokens and product quantity."""
+def _product_matches_coin(product, coin, now=None, max_age_days=90, require_colour=False):
+    """Conservative sold-record gate: date, identity tokens and product quantity.
+
+    ``require_colour`` is set only by the live-listing gate. Sold records keep
+    their existing matching so a deployed change cannot silently move a
+    published median; tightening the sold side is a separate, measured change.
+    """
     now = time.time() if now is None else now
     title = str(product.get('title') or '')
     sold_at = _sold_timestamp(product.get('date_sold'))
@@ -604,13 +617,31 @@ def _product_matches_coin(product, coin, now=None, max_age_days=90):
     if (title_tokens & _BUNDLE_TOKENS) - query_tokens:
         return False
 
-    for variant in {'proof', 'silver', 'coloured', 'colored', 'privy', 'postal', 'pnc', 'card', 'sealed', 'unopened', 'opened', 'special'}:
+    for variant in {'proof', 'silver', 'privy', 'postal', 'pnc', 'card', 'sealed', 'unopened', 'opened', 'special'}:
         if variant in title_tokens and variant not in query_tokens:
             return False
+    if require_colour:
+        # Colour is a distinguishing finish, not a decoration: a plain coin's
+        # title may not claim it...
+        if title_tokens & _COLOUR_TOKENS and not query_tokens & _COLOUR_TOKENS:
+            return False
+    else:
+        # Sold records keep the exact pre-existing gate, so this change cannot
+        # move a published median by itself.
+        for variant in ('coloured', 'colored'):
+            if variant in title_tokens and variant not in query_tokens:
+                return False
     # ...and the formats the query asks for must be present in the title.
     for group in (('proof',), ('silver',), ('privy', 'privymark'), ('pnc', 'postal'), ('maxicard',), ('sealed', 'unopened'), ('special',)):
         if set(group) & query_tokens and not set(group) & title_tokens:
             return False
+    # A coloured product must be matched by a title that actually says so.
+    # Without this a plain "Bluey Dollarbuck" title also matches the coloured
+    # Bluey, Heelers and Grannies cards, so every plain snapshot looks ambiguous.
+    if (require_colour and query_tokens & _COLOUR_TOKENS
+            and not query_tokens & _COLOUR_IMPLIED_TOKENS
+            and not title_tokens & _COLOUR_TOKENS):
+        return False
     diff = (title_tokens & _NAMED_VARIANT_TOKENS) - (query_tokens & _NAMED_VARIANT_TOKENS)
     unrequested_names = {t for t in diff if not any(t in fam and (fam & query_tokens) for fam in _NAME_FAMILIES)}
     if unrequested_names:
@@ -665,7 +696,7 @@ def _product_matches_live_listing(title, coin, now=None):
     as_of = datetime.fromtimestamp(now, timezone.utc).strftime('%Y-%m-%d')
     return _product_matches_coin(
         {'title': normalized_title, 'date_sold': as_of}, live_coin,
-        now=now, max_age_days=None)
+        now=now, max_age_days=None, require_colour=True)
 
 
 def _price_domain_bounds(coin):

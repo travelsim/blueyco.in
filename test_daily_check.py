@@ -80,10 +80,54 @@ class TestDailyListingSnapshot(unittest.TestCase):
     def test_ambiguous_title_does_not_enter_snapshot(self):
         self.assertFalse(daily_check.uniquely_matches_product(
             "2026 $2 Bluey Sleepytime coloured coin", "s3_sleepytime_insert"))
-        self.assertFalse(daily_check.uniquely_matches_product(
-            "2024 $1 Bluey Dollarbuck coin", "s1_bluey"))
         self.assertTrue(daily_check.uniquely_matches_product(
             "2026 Bluey Sleepytime limited edition PNC", "76604949"))
+
+    def test_plain_uncirculated_title_belongs_to_bluey_only(self):
+        # A plain coin title used to match the coloured Bluey, Heelers and
+        # Grannies cards as well, which made every s1_bluey snapshot ambiguous.
+        for title in (
+            "2024 $1 Bluey Dollarbuck coin",
+            "2024 $1 Dollar Bluey DollarBucks - Bluey with baloon",
+            "2024 $1 Bluey Dollarbucks Uncirculated One Dollar Coin Bucks",
+        ):
+            self.assertTrue(daily_check.uniquely_matches_product(title, "s1_bluey"), title)
+            for coloured in ("s1_coloured_bluey", "s1_coloured_heelers", "s1_coloured_grannies"):
+                self.assertFalse(daily_check.uniquely_matches_product(title, coloured), title)
+
+    def test_colour_finish_is_required_and_spelling_is_one_family(self):
+        for title in (
+            "2024 Bluey Coloured Uncirculated Dollarbuck Coin Bluey card",
+            "2024 Bluey Color Uncirculated Dollarbuck Coin Bluey card",
+            "2024 Bluey Colour Uncirculated Dollarbuck Coin Bluey card",
+        ):
+            self.assertTrue(daily_check.uniquely_matches_product(title, "s1_coloured_bluey"), title)
+            self.assertFalse(daily_check.matches_product(title, "s1_bluey"), title)
+        # A colour title that names no character cannot be attributed.
+        self.assertFalse(daily_check.uniquely_matches_product(
+            "2024 Bluey Colour Uncirculated Dollarbuck Coin", "s1_coloured_bluey"))
+
+    def test_silver_and_proof_finishes_do_not_need_the_colour_word(self):
+        self.assertTrue(daily_check.uniquely_matches_product(
+            "2024 $1 Bluey Dollarbucks Fine Silver Proof Coin", "s1_proof_silver"))
+
+    def test_sold_record_gate_is_unchanged_by_the_live_colour_rule(self):
+        # The release is scoped to live matching: a sold record that a coloured
+        # product used to accept must still be accepted, otherwise a deploy
+        # could move a published median on its own.
+        from datetime import datetime, timezone
+        from api import prices
+        now = datetime(2026, 11, 28, tzinfo=timezone.utc).timestamp()
+        sold = {"title": "2024 Bluey Dollarbuck Uncirculated One Dollar Coin",
+                "date_sold": "20 Nov 2026"}
+        coin = daily_check.PRODUCTS["s1_coloured_bluey"]
+        self.assertTrue(prices._product_matches_coin(sold, coin, now=now))
+        self.assertFalse(prices._product_matches_live_listing(sold["title"], coin, now=now))
+        # A plain product still rejects a sold record that claims the finish.
+        plain = daily_check.PRODUCTS["s1_bluey"]
+        coloured_sold = {"title": "2024 Bluey Coloured Dollarbuck Coin",
+                         "date_sold": "20 Nov 2026"}
+        self.assertFalse(prices._product_matches_coin(coloured_sold, plain, now=now))
 
     def test_live_match_normalizes_seller_wording_and_rejects_quantity_lots(self):
         self.assertTrue(daily_check.matches_product(
