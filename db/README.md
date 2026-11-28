@@ -22,9 +22,12 @@ with the site's title matcher and accepts only canonical eBay item URLs with
 an item ID, title and price. Any failed page, changing result total, malformed
 row, title mismatch or duplicate ambiguity preserves that product's state. A
 successful empty snapshot is valid and moves disappeared observed listings to
-`likely_sold` for human review. It never confirms a sale. A reappearing listing
-returns to `available`. Manually supplied historical sales are not treated as
-observed active listings.
+`likely_sold` for human review. It never confirms a sale. An eBay item ID is
+claimed once, ever (2026-11-28): a listing already in the ledger may only
+continue an offer that is still live, so a reappearing or recycled ID is not
+republished, and a sold or excluded ID is never restored. Rows that predate
+the rule (`claimed_at IS NULL`) keep the old handling until first published.
+Manually supplied historical sales are not treated as observed active listings.
 
 For a bounded live pilot, pass `-ProductIds s1_bluey,s1_bingo` to the wrapper.
 Do not interpret an absent listing as a sale. A dated sold listing page or

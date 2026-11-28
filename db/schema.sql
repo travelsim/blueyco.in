@@ -20,10 +20,15 @@ CREATE TABLE IF NOT EXISTS listings (
     source_url   TEXT,
     status       TEXT NOT NULL DEFAULT 'available'
                  CHECK (status IN ('available', 'likely_sold', 'confirmed_sold', 'excluded')),
+    -- Set once, when the ID is first published as a live offer. NULL marks a
+    -- legacy row that predates the single-use rule; it keeps the old handling.
+    claimed_at   TIMESTAMPTZ,
     first_seen_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     last_seen_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
     imported_at   TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+-- Existing databases: CREATE TABLE IF NOT EXISTS never adds a column.
+ALTER TABLE listings ADD COLUMN IF NOT EXISTS claimed_at TIMESTAMPTZ;
 CREATE INDEX IF NOT EXISTS idx_listings_product ON listings (product_id);
 CREATE INDEX IF NOT EXISTS idx_listings_status ON listings (status);
 CREATE INDEX IF NOT EXISTS idx_listings_last_seen ON listings (last_seen_at DESC);

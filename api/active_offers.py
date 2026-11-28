@@ -26,22 +26,34 @@ def _listing_id(source, url):
     return match.group(1) if match else None
 
 
-def _blocked_ids(conn, product_id, listing_ids):
+def _blocked_ids(conn, product_id, source, listing_ids):
     """Listing IDs that must not be written as this product's current offers.
 
-    A listing ID belongs to exactly one product. The `listings` ledger is the
-    owner of record, so an ID held by another product, already sold, or
-    explicitly excluded is history, never a current ask. A live offer under
-    another product is ambiguous for the same reason.
+    A listing ID belongs to exactly one product and is claimed once, ever. The
+    `listings` ledger is the owner of record, so an ID held by another product,
+    already sold, or explicitly excluded is history, never a current ask.
+
+    A ledger ID may only continue an offer that is still live for the same
+    product and source. Once that offer has lapsed the ID is burned and a
+    recycled ID can never start a new offer. Rows with no claim record
+    (`claimed_at IS NULL`) predate this rule and are handled as before, so the
+    first sweep after the rule ships does not strand every historical listing.
     """
     ids = list(listing_ids)
     if not ids:
         return set()
+    live = {lid for (lid,) in conn.execute(
+        "SELECT listing_id FROM active_offers WHERE listing_id = ANY(%s) "
+        "AND product_id = %s AND source = %s AND expires_at > now()",
+        (ids, product_id, source)).fetchall()}
     blocked = set()
-    for lid, owner, status, sold in conn.execute(
-            "SELECT listing_id, product_id, status, date_sold FROM listings "
-            "WHERE listing_id = ANY(%s)", (ids,)).fetchall():
+    for lid, owner, status, sold, claimed in conn.execute(
+            "SELECT listing_id, product_id, status, date_sold, claimed_at "
+            "FROM listings WHERE listing_id = ANY(%s)", (ids,)).fetchall():
         if owner != product_id or status in BLOCKING_STATUSES or sold is not None:
+            blocked.add(lid)
+        elif claimed is not None and lid not in live:
+            # The claim has lapsed: a recycled ID is burned, never revived.
             blocked.add(lid)
     for (lid,) in conn.execute(
             "SELECT listing_id FROM active_offers WHERE listing_id = ANY(%s) "
@@ -69,8 +81,15 @@ def persist_snapshot(conn, product_id, source, options, complete, excluded_ids=(
     with conn.transaction():
         conn.execute("INSERT INTO products(product_id,name) VALUES (%s,%s) ON CONFLICT DO NOTHING",
                      (product_id, product_id))
-        for lid in _blocked_ids(conn, product_id, valid):
+        blocked = _blocked_ids(conn, product_id, source, valid)
+        for lid in blocked:
             valid.pop(lid, None)
+        if blocked:
+            # A re-seen ID whose history forbids a new claim must not keep
+            # serving as this product's current ask.
+            conn.execute("DELETE FROM active_offers WHERE product_id=%s AND source=%s "
+                         "AND listing_id = ANY(%s)",
+                         (product_id, source, sorted(blocked)))
         for lid, (title, price, postage, url) in valid.items():
             conn.execute("""INSERT INTO active_offers
                 (product_id,source,listing_id,title,price_aud,postage_aud,source_url,expires_at)
@@ -80,6 +99,13 @@ def persist_snapshot(conn, product_id, source, options, complete, excluded_ids=(
                 postage_aud=EXCLUDED.postage_aud,source_url=EXCLUDED.source_url,
                 last_seen_at=now(),expires_at=EXCLUDED.expires_at""",
                 (product_id, source, lid, title, price, postage, url, now + TTL))
+        # Publishing a live offer claims the listing ID once, ever. Every
+        # later reappearance has to continue this claim, not start a new one.
+        if valid:
+            conn.execute("UPDATE listings SET claimed_at = now() "
+                         "WHERE product_id = %s AND listing_id = ANY(%s) "
+                         "AND claimed_at IS NULL",
+                         (product_id, sorted(valid)))
         # A listing that has since sold or been excluded must stop serving as
         # this product's current ask, even if its cache row has not expired.
         conn.execute("DELETE FROM active_offers ao USING listings l "

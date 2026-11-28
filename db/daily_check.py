@@ -117,6 +117,52 @@ def snapshot_is_usable(prices_complete, options_complete, options, items,
     return True
 
 
+def apply_product_snapshot(conn, product_id, entry, items, excluded_ids=()):
+    """Write one product snapshot after evaluating listing history.
+
+    The single-use check runs before any ledger row is inserted or changed, so
+    an excluded or already-claimed ID can never be flipped back to available
+    and republished. Only IDs that pass the check are touched. Returns how many
+    rows moved to the unconfirmed review queue.
+    """
+    with conn.transaction():
+        conn.execute(
+            "INSERT INTO products(product_id, name) VALUES (%s,%s) "
+            "ON CONFLICT (product_id) DO NOTHING",
+            (product_id, entry.get("name") or product_id))
+        blocked = ACTIVE_OFFERS_API._blocked_ids(
+            conn, product_id, "ebay", items)
+        publishable = {lid: option for lid, option in items.items()
+                       if lid not in blocked}
+        for item_id, option in publishable.items():
+            result = conn.execute(
+                "INSERT INTO listings(listing_id, product_id, title, price_aud, "
+                "source, source_url, status) "
+                "VALUES (%s,%s,%s,%s,'browse_daily',%s,'available') "
+                "ON CONFLICT (listing_id) DO UPDATE SET "
+                "last_seen_at=now(), price_aud=EXCLUDED.price_aud, "
+                "status=CASE WHEN listings.status='confirmed_sold' "
+                "THEN 'confirmed_sold' ELSE 'available' END "
+                "WHERE listings.product_id=EXCLUDED.product_id "
+                "RETURNING listing_id",
+                (item_id, product_id,
+                 option.get("title") or option.get("name") or "",
+                 option.get("price"), option.get("url") or ""))
+            if result.fetchone() is None:
+                raise RuntimeError("item ID belongs to a different product")
+        ACTIVE_OFFERS_API.persist_snapshot(
+            conn, product_id, "ebay",
+            [{**option, "url": option.get("url")} for option in publishable.values()],
+            complete=True, excluded_ids=excluded_ids)
+        cur = conn.execute(
+            "UPDATE listings SET status='likely_sold' "
+            "WHERE product_id=%s AND status='available' "
+            "AND source='browse_daily' AND listing_id <> ALL(%s) "
+            "RETURNING listing_id",
+            (product_id, list(publishable)))
+        return len(cur.fetchall())
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("base", nargs="?", default="https://blueyco.in")
@@ -255,40 +301,9 @@ def main(argv=None):
                 try:
                     # A savepoint prevents a late uniqueness conflict from
                     # leaving a partially applied product snapshot.
-                    with conn.transaction():
-                        entry = snapshot["entry"]
-                        items = snapshot["items"]
-                        conn.execute(
-                            "INSERT INTO products(product_id, name) VALUES (%s,%s) "
-                            "ON CONFLICT (product_id) DO NOTHING",
-                            (pid, entry.get("name") or pid))
-                        for item_id, option in items.items():
-                            result = conn.execute(
-                                "INSERT INTO listings(listing_id, product_id, title, price_aud, "
-                                "source, source_url, status) "
-                                "VALUES (%s,%s,%s,%s,'browse_daily',%s,'available') "
-                                "ON CONFLICT (listing_id) DO UPDATE SET "
-                                "last_seen_at=now(), price_aud=EXCLUDED.price_aud, "
-                                "status=CASE WHEN listings.status='confirmed_sold' "
-                                "THEN 'confirmed_sold' ELSE 'available' END "
-                                "WHERE listings.product_id=EXCLUDED.product_id "
-                                "RETURNING listing_id",
-                                (item_id, pid, option.get("title") or option.get("name") or "",
-                                 option.get("price"), option.get("url") or ""))
-                            if result.fetchone() is None:
-                                raise RuntimeError("item ID belongs to a different product")
-                        ACTIVE_OFFERS_API.persist_snapshot(
-                            conn, pid, "ebay",
-                            [{**option, "url": option.get("url")} for option in items.values()],
-                            complete=True,
-                            excluded_ids=BUY_OPTIONS_API.EXCLUDED_EBAY_ITEMS.get(pid, ()))
-                        cur = conn.execute(
-                            "UPDATE listings SET status='likely_sold' "
-                            "WHERE product_id=%s AND status='available' "
-                            "AND source='browse_daily' AND listing_id <> ALL(%s) "
-                            "RETURNING listing_id",
-                            (pid, list(items)))
-                        moved_to_review += len(cur.fetchall())
+                    moved_to_review += apply_product_snapshot(
+                        conn, pid, snapshot["entry"], snapshot["items"],
+                        excluded_ids=BUY_OPTIONS_API.EXCLUDED_EBAY_ITEMS.get(pid, ()))
                     seen_products += 1
                 except RuntimeError as exc:
                     print(f"skip {pid}: {exc}; state preserved")
