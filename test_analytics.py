@@ -68,10 +68,13 @@ class TestVercelDeploymentConfiguration(unittest.TestCase):
         )
 
     def test_prototype_app_route_redirects_to_the_real_dashboard(self):
-        self.assertEqual(
+        # Other redirects (such as /coin/ product page tidying) may sit alongside it.
+        self.assertIn(
+            {"source": "/app", "destination": "/", "permanent": True},
             VERCEL_CONFIG["redirects"],
-            [{"source": "/app", "destination": "/", "permanent": True}],
         )
+        self.assertEqual([r for r in VERCEL_CONFIG["redirects"] if r["source"] == "/app"],
+                         [{"source": "/app", "destination": "/", "permanent": True}])
         self.assertFalse((ROOT / "app.html").exists())
 
     def test_python_312_is_pinned_in_project_metadata(self):

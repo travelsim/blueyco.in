@@ -151,6 +151,10 @@
   ],
   "rewrites": [
     {
+      "source": "/coin/:slug",
+      "destination": "/api/coin?slug=:slug"
+    },
+    {
       "source": "/((?!api(?:/|$)|_vercel(?:/|$)).*)",
       "destination": "/index.html"
     }
@@ -159,6 +163,21 @@
     {
       "source": "/app",
       "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/coin",
+      "destination": "/#all-coins",
+      "permanent": false
+    },
+    {
+      "source": "/coin/",
+      "destination": "/#all-coins",
+      "permanent": false
+    },
+    {
+      "source": "/coin/:slug/",
+      "destination": "/coin/:slug",
       "permanent": true
     }
   ]
