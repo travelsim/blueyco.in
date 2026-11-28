@@ -4051,7 +4051,9 @@ function buildCard(coin) {
   // estimateSource: 'asking' makes a live asking price the card estimate even when older sales exist.
   const asking = 'askingEstimate' in coin ? (coin.askingEstimate || { lowest: null }) : null;
   const askingPrimary = !!(asking && coin.estimateSource === 'asking' && asking.lowest != null);
-  const estimateBasis = askingPrimary ? asking.lowest : (hasMedian ? median : null);
+  const liveAsk = _liveAsking(coinEntry);
+  const liveAskPrimary = !!(liveAsk && !askingPrimary && _soldEvidenceThin(coinEntry, coin));
+  const estimateBasis = askingPrimary ? asking.lowest : liveAskPrimary ? liveAsk.value : (hasMedian ? median : null);
   const premium = estimateBasis != null ? calcPremium(estimateBasis, coin.mintPrice) : null;
   const askingPremium = ((!hasMedian || askingPrimary) && asking && asking.lowest != null && coin.mintPrice) ? calcPremium(asking.lowest, coin.mintPrice) : null;
   const guidePremium = (!hasMedian && guide && coin.mintPrice) ? calcPremium(guide, coin.mintPrice) : null;
@@ -4123,10 +4125,10 @@ function buildCard(coin) {
   const noSoldStampPrice = coin.id === 's1_xmas_stamp_pack_2024' && !hasMedian;
   const priceHeading = noSoldStampPrice ? 'No sold price yet' : 'Estimated value';
   const kickerText = priceHeading;
-  const priceValue = noSoldStampPrice ? null : askingPrimary ? asking.lowest : (!hasMedian && asking) ? asking.lowest : (hasMedian ? median : (guide != null ? guide : coin.mintPrice));
+  const priceValue = noSoldStampPrice ? null : askingPrimary ? asking.lowest : liveAskPrimary ? liveAsk.value : (!hasMedian && asking) ? asking.lowest : (hasMedian ? median : (guide != null ? guide : coin.mintPrice));
   priceCard.append(el('div', 'metric-kicker', kickerText));
   priceCard.append(el('div', 'metric-amount', priceValue == null ? '—' : formatAUD(priceValue)));
-  if ((hasMedian || guide != null) && coin.mintPrice != null) {
+  if ((hasMedian || guide != null || liveAskPrimary) && coin.mintPrice != null) {
     const issueRow = el('div', 'metric-issue-row');
     issueRow.append(el('span', 'metric-issue-label', `Issue ${formatAUD(coin.mintPrice)}`));
     if (premiumValue != null) {
@@ -4828,6 +4830,26 @@ function _currentSoldRecords(entry) {
   return _filterClientSoldOutliers(current, coin);
 }
 
+// A single sale, or nothing older than two months, is not a current market.
+function _soldEvidenceThin(entry, coin) {
+  const current = _currentSoldRecords(entry, coin);
+  if (current.length < 3) return true;
+  const newest = Math.max(...current.map(r => r.soldAt));
+  return Date.now() - newest > 60 * 24 * 60 * 60 * 1000;
+}
+
+// Live fixed-price Buy It Now figures, refreshed nightly from the offer ledger.
+function _liveAsking(entry) {
+  const asking = entry && entry.asking;
+  if (!asking || !(Number(asking.value) > 0)) return null;
+  return {
+    value: Number(asking.value),
+    lowest: Number(asking.lowest) > 0 ? Number(asking.lowest) : Number(asking.value),
+    median: Number(asking.median) > 0 ? Number(asking.median) : Number(asking.value),
+    count: Number(asking.count) || 0,
+  };
+}
+
 // Estimated value: the server median over the 90-day window when it exists,
 // otherwise a client median across current eBay AU and CoinXchange sales.
 function _referenceFromEntry(entry) {
@@ -4875,8 +4897,12 @@ function _referencePrice(coin) {
   const entry = coinData[coin.id] || {};
   const asking = 'askingEstimate' in coin ? (coin.askingEstimate || {}) : null;
   if (coin.estimateSource === 'asking' && asking && Number(asking.lowest) > 0) return Number(asking.lowest);
-  const live = _referenceFromEntry(entry, coin) ?? _historicalSoldMedian(entry, coin);
-  if (Number.isFinite(live) && live > 0) return live;
+  // Thin sold evidence (one sale, or nothing recent) is replaced by the live
+  // Buy It Now market rather than presenting one old sale as the value.
+  const live = _liveAsking(entry);
+  if (live && _soldEvidenceThin(entry, coin)) return live.value;
+  const liveSold = _referenceFromEntry(entry, coin) ?? _historicalSoldMedian(entry, coin);
+  if (Number.isFinite(liveSold) && liveSold > 0) return liveSold;
   return _guidePrice(coin);
 }
 

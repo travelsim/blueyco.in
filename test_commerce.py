@@ -119,11 +119,22 @@ class TestMedianPricing(unittest.TestCase):
         self.assertIn('function buildTrendChart(coin, records)', INDEX)
 
     def test_card_and_sort_use_the_reference_price(self):
-        self.assertIn('const estimateBasis = askingPrimary ? asking.lowest : (hasMedian ? median : null);', INDEX)
+        self.assertIn(
+            'const estimateBasis = askingPrimary ? asking.lowest : liveAskPrimary ? liveAsk.value : (hasMedian ? median : null);',
+            INDEX)
         self.assertIn('const premium = estimateBasis != null ? calcPremium(estimateBasis, coin.mintPrice) : null;', INDEX)
         self.assertIn("if (coin.estimateSource === 'asking' && asking && Number(asking.lowest) > 0) return Number(asking.lowest);", INDEX)
         self.assertIn('(_referencePrice(b) || 0) - (_referencePrice(a) || 0)', INDEX)
         self.assertIn('(_referencePrice(a) || Infinity) - (_referencePrice(b) || Infinity)', INDEX)
+
+    def test_thin_sold_evidence_falls_back_to_the_live_asking_market(self):
+        # One old sale must not be presented as the current market when live
+        # fixed-price asks exist.
+        self.assertIn('function _soldEvidenceThin(entry, coin)', INDEX)
+        self.assertIn('function _liveAsking(entry)', INDEX)
+        self.assertIn('const liveAskPrimary = !!(liveAsk && !askingPrimary && _soldEvidenceThin(coinEntry, coin));', INDEX)
+        self.assertIn('if (live && _soldEvidenceThin(entry, coin)) return live.value;', INDEX)
+        self.assertIn("if (current.length < 3) return true;", INDEX)
 
     def test_median_helper_ignores_missing_prices(self):
         self.assertIn('function _medianOfProducts(ebay)', INDEX)

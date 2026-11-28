@@ -337,9 +337,14 @@ def _trim_and_strip_payload(payload):
     stripped = _strip_seller_names(payload)
     if not isinstance(stripped, dict):
         return stripped
+    asking = _get_asking_estimates()
     for cid, entry in stripped.items():
         if not isinstance(entry, dict):
             continue
+        if asking:
+            estimate = asking.get(cid)
+            if isinstance(estimate, dict):
+                entry['asking'] = estimate
         ebay = entry.get('ebay')
         if isinstance(ebay, dict):
             ebay.pop('manual_import', None)
@@ -414,6 +419,36 @@ def _load_sold_publication():
         except Exception:
             continue
     return {}
+
+
+_ASKING_ESTIMATES = None
+
+
+def _get_asking_estimates():
+    """Live fixed-price ask figures per product, or {} when unavailable.
+
+    Written by scripts/refresh_asking_estimates.py. A missing or malformed
+    file must never break /api/prices: the card simply falls back to sold
+    evidence, which is the behaviour before this file existed.
+    """
+    global _ASKING_ESTIMATES
+    if _ASKING_ESTIMATES is None:
+        estimates = {}
+        for candidate in (
+            'asking_estimates.json',
+            '/var/task/asking_estimates.json',
+            os.path.join(os.path.dirname(__file__), '..', 'asking_estimates.json'),
+        ):
+            try:
+                with open(candidate, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                products = data.get('products') if isinstance(data, dict) else None
+                estimates = products if isinstance(products, dict) else {}
+                break
+            except Exception:
+                continue
+        _ASKING_ESTIMATES = estimates
+    return _ASKING_ESTIMATES
 
 
 def _load_manual():

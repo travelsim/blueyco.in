@@ -1,0 +1,470 @@
+{
+ "generatedAt": "2026-11-28T14:21:23+00:00",
+ "source": "active_offers",
+ "products": {
+  "s1_bluey": {
+   "count": 22,
+   "lowest": 2.5,
+   "median": 6.97,
+   "value": 6.97,
+   "delivered_lowest": 3.49,
+   "unknown_postage": 1
+  },
+  "s1_bingo": {
+   "count": 13,
+   "lowest": 4.4,
+   "median": 6.5,
+   "value": 6.5,
+   "delivered_lowest": 4.4,
+   "unknown_postage": 5
+  },
+  "s1_proof_coloured": {
+   "count": 4,
+   "lowest": 655.5,
+   "median": 691.75,
+   "value": 691.75,
+   "delivered_lowest": 655.5,
+   "unknown_postage": 4
+  },
+  "s1_impressions_pnc_colour": {
+   "count": 7,
+   "lowest": 210.0,
+   "median": 265.65,
+   "value": 265.65,
+   "delivered_lowest": 210.0,
+   "unknown_postage": 5
+  },
+  "s1_impressions_pnc_2coin": {
+   "count": 6,
+   "lowest": 210.0,
+   "median": 241.95,
+   "value": 241.95,
+   "delivered_lowest": 222.0,
+   "unknown_postage": 2
+  },
+  "s1_coloured_bluey": {
+   "count": 4,
+   "lowest": 125.0,
+   "median": 144.7,
+   "value": 144.7,
+   "delivered_lowest": 133.0,
+   "unknown_postage": 2
+  },
+  "s1_coloured_heelers": {
+   "count": 5,
+   "lowest": 108.0,
+   "median": 155.0,
+   "value": 155.0,
+   "delivered_lowest": 108.0,
+   "unknown_postage": 5
+  },
+  "s1_coloured_grannies": {
+   "count": 15,
+   "lowest": 93.98,
+   "median": 127.9,
+   "value": 127.9,
+   "delivered_lowest": 96.1,
+   "unknown_postage": 3
+  },
+  "s1_three_coin_set": {
+   "count": 15,
+   "lowest": 285.0,
+   "median": 371.7,
+   "value": 371.7,
+   "delivered_lowest": 285.0,
+   "unknown_postage": 15
+  },
+  "s1_card_heelers": {
+   "count": 6,
+   "lowest": 37.8,
+   "median": 49.0,
+   "value": 49.0,
+   "delivered_lowest": 37.8,
+   "unknown_postage": 6
+  },
+  "s1_card_muffinsocks": {
+   "count": 14,
+   "lowest": 30.0,
+   "median": 42.61,
+   "value": 42.61,
+   "delivered_lowest": 30.0,
+   "unknown_postage": 10
+  },
+  "s1_card_radfrisky": {
+   "count": 22,
+   "lowest": 22.96,
+   "median": 39.99,
+   "value": 39.99,
+   "delivered_lowest": 22.96,
+   "unknown_postage": 21
+  },
+  "s1_card_blueybingofriends": {
+   "count": 4,
+   "lowest": 49.99,
+   "median": 55.3,
+   "value": 55.3,
+   "delivered_lowest": 49.99,
+   "unknown_postage": 4
+  },
+  "s1_card_grannies": {
+   "count": 4,
+   "lowest": 50.0,
+   "median": 51.83,
+   "value": 51.83,
+   "delivered_lowest": 50.0,
+   "unknown_postage": 4
+  },
+  "s1_pnc_bluey": {
+   "count": 9,
+   "lowest": 38.0,
+   "median": 55.0,
+   "value": 55.0,
+   "delivered_lowest": 38.0,
+   "unknown_postage": 9
+  },
+  "s1_pnc_family": {
+   "count": 1,
+   "lowest": 59.99,
+   "median": 59.99,
+   "value": 59.99,
+   "delivered_lowest": 59.99,
+   "unknown_postage": 1
+  },
+  "s1_pnc_bingo": {
+   "count": 7,
+   "lowest": 34.62,
+   "median": 43.1,
+   "value": 43.1,
+   "delivered_lowest": 34.62,
+   "unknown_postage": 7
+  },
+  "s1_pnc_muffinsocks": {
+   "count": 1,
+   "lowest": 59.99,
+   "median": 59.99,
+   "value": 59.99,
+   "delivered_lowest": 59.99,
+   "unknown_postage": 1
+  },
+  "s1_pnc_radfrisky": {
+   "count": 10,
+   "lowest": 26.4,
+   "median": 39.48,
+   "value": 39.48,
+   "delivered_lowest": 26.4,
+   "unknown_postage": 10
+  },
+  "s1_pnc_blueyfriends": {
+   "count": 2,
+   "lowest": 49.5,
+   "median": 54.75,
+   "value": 49.5,
+   "delivered_lowest": 49.5,
+   "unknown_postage": 2
+  },
+  "s1_pnc_blueybingofriends": {
+   "count": 6,
+   "lowest": 35.0,
+   "median": 48.25,
+   "value": 48.25,
+   "delivered_lowest": 35.0,
+   "unknown_postage": 6
+  },
+  "s1_pnc_mumdad": {
+   "count": 7,
+   "lowest": 31.0,
+   "median": 54.95,
+   "value": 54.95,
+   "delivered_lowest": 31.0,
+   "unknown_postage": 7
+  },
+  "s1_pnc_grannies": {
+   "count": 2,
+   "lowest": 49.95,
+   "median": 54.97,
+   "value": 49.95,
+   "delivered_lowest": 49.95,
+   "unknown_postage": 2
+  },
+  "s2_xmas_silv": {
+   "count": 11,
+   "lowest": 292.2,
+   "median": 399.0,
+   "value": 399.0,
+   "delivered_lowest": 292.2,
+   "unknown_postage": 11
+  },
+  "s3_sleepytime": {
+   "count": 23,
+   "lowest": 23.96,
+   "median": 40.98,
+   "value": 40.98,
+   "delivered_lowest": 23.96,
+   "unknown_postage": 23
+  },
+  "s1_xmas_stamp_pack_2024": {
+   "count": 5,
+   "lowest": 24.95,
+   "median": 29.0,
+   "value": 29.0,
+   "delivered_lowest": 24.95,
+   "unknown_postage": 5
+  },
+  "s3_camping": {
+   "count": 30,
+   "lowest": 23.96,
+   "median": 36.38,
+   "value": 36.38,
+   "delivered_lowest": 23.96,
+   "unknown_postage": 30
+  },
+  "s1_card_bingo": {
+   "count": 12,
+   "lowest": 32.27,
+   "median": 39.99,
+   "value": 39.99,
+   "delivered_lowest": 32.27,
+   "unknown_postage": 1
+  },
+  "s3_babyrace": {
+   "count": 28,
+   "lowest": 26.14,
+   "median": 37.7,
+   "value": 37.7,
+   "delivered_lowest": 26.14,
+   "unknown_postage": 28
+  },
+  "s3_granny": {
+   "count": 28,
+   "lowest": 23.96,
+   "median": 40.0,
+   "value": 40.0,
+   "delivered_lowest": 23.96,
+   "unknown_postage": 28
+  },
+  "s3_proof_ab": {
+   "count": 94,
+   "lowest": 11.1,
+   "median": 229.97,
+   "value": 229.97,
+   "delivered_lowest": 11.1,
+   "unknown_postage": 94
+  },
+  "s3_till_bingo": {
+   "count": 33,
+   "lowest": 4.62,
+   "median": 8.0,
+   "value": 8.0,
+   "delivered_lowest": 4.62,
+   "unknown_postage": 33
+  },
+  "s3_pnc_bingo": {
+   "count": 1,
+   "lowest": 90.0,
+   "median": 90.0,
+   "value": 90.0,
+   "delivered_lowest": 90.0,
+   "unknown_postage": 1
+  },
+  "s3_pin_granny": {
+   "count": 3,
+   "lowest": 29.45,
+   "median": 37.8,
+   "value": 37.8,
+   "delivered_lowest": 29.45,
+   "unknown_postage": 3
+  },
+  "s3_pin_rain": {
+   "count": 5,
+   "lowest": 28.0,
+   "median": 45.0,
+   "value": 45.0,
+   "delivered_lowest": 28.0,
+   "unknown_postage": 5
+  },
+  "s3_pin_sleepytime": {
+   "count": 6,
+   "lowest": 24.5,
+   "median": 51.0,
+   "value": 51.0,
+   "delivered_lowest": 24.5,
+   "unknown_postage": 6
+  },
+  "s4_cricket_unc": {
+   "count": 107,
+   "lowest": 16.82,
+   "median": 32.5,
+   "value": 32.5,
+   "delivered_lowest": 16.82,
+   "unknown_postage": 107
+  },
+  "s4_cricket_proof": {
+   "count": 140,
+   "lowest": 154.4,
+   "median": 204.55,
+   "value": 204.55,
+   "delivered_lowest": 154.4,
+   "unknown_postage": 140
+  },
+  "s3_folder": {
+   "count": 15,
+   "lowest": 37.0,
+   "median": 69.6,
+   "value": 69.6,
+   "delivered_lowest": 37.0,
+   "unknown_postage": 15
+  },
+  "s3_folder_chase": {
+   "count": 4,
+   "lowest": 219.99,
+   "median": 226.5,
+   "value": 226.5,
+   "delivered_lowest": 228.0,
+   "unknown_postage": 1
+  },
+  "76604958": {
+   "count": 3,
+   "lowest": 365.0,
+   "median": 428.0,
+   "value": 428.0,
+   "delivered_lowest": 365.0,
+   "unknown_postage": 3
+  },
+  "76604951": {
+   "count": 8,
+   "lowest": 240.0,
+   "median": 294.5,
+   "value": 294.5,
+   "delivered_lowest": 240.0,
+   "unknown_postage": 8
+  },
+  "76604950": {
+   "count": 5,
+   "lowest": 220.0,
+   "median": 260.4,
+   "value": 260.4,
+   "delivered_lowest": 220.0,
+   "unknown_postage": 5
+  },
+  "76604949": {
+   "count": 5,
+   "lowest": 119.0,
+   "median": 126.84,
+   "value": 126.84,
+   "delivered_lowest": 119.0,
+   "unknown_postage": 5
+  },
+  "76605600": {
+   "count": 2,
+   "lowest": 300.0,
+   "median": 309.35,
+   "value": 300.0,
+   "delivered_lowest": 309.9,
+   "unknown_postage": 0
+  },
+  "s1_impressions_2coin_privy_minisheet_bluey": {
+   "count": 1,
+   "lowest": 120.0,
+   "median": 120.0,
+   "value": 120.0,
+   "delivered_lowest": 120.0,
+   "unknown_postage": 0
+  },
+  "s1_impressions_2coin_privy_minisheet_stripes": {
+   "count": 2,
+   "lowest": 143.8,
+   "median": 151.4,
+   "value": 143.8,
+   "delivered_lowest": 143.8,
+   "unknown_postage": 1
+  },
+  "s1_impressions_2coin_privy_minisheet_mumdad": {
+   "count": 1,
+   "lowest": 159.0,
+   "median": 159.0,
+   "value": 159.0,
+   "delivered_lowest": 167.26,
+   "unknown_postage": 0
+  },
+  "s1_impressions_2coin_privy_minisheet_grannies": {
+   "count": 2,
+   "lowest": 159.0,
+   "median": 164.12,
+   "value": 159.0,
+   "delivered_lowest": 159.0,
+   "unknown_postage": 0
+  },
+  "s1_impressions_2coin_privy_minisheet_radfrisky": {
+   "count": 1,
+   "lowest": 159.0,
+   "median": 159.0,
+   "value": 159.0,
+   "delivered_lowest": 167.26,
+   "unknown_postage": 0
+  },
+  "s1_impressions_2coin_privy_minisheet_blueyfriends": {
+   "count": 1,
+   "lowest": 199.99,
+   "median": 199.99,
+   "value": 199.99,
+   "delivered_lowest": 209.94,
+   "unknown_postage": 0
+  },
+  "s1_impressions_2coin_privy_minisheet_muffinsocks": {
+   "count": 1,
+   "lowest": 169.24,
+   "median": 169.24,
+   "value": 169.24,
+   "delivered_lowest": 182.68,
+   "unknown_postage": 0
+  },
+  "s1_impressions_2coin_privy_minisheet_set": {
+   "count": 1,
+   "lowest": 2500.0,
+   "median": 2500.0,
+   "value": 2500.0,
+   "delivered_lowest": 2555.0,
+   "unknown_postage": 0
+  },
+  "s1_card_mumdad": {
+   "count": 4,
+   "lowest": 48.35,
+   "median": 65.09,
+   "value": 65.09,
+   "delivered_lowest": 57.3,
+   "unknown_postage": 0
+  },
+  "s1_impressions_pnc_3coin": {
+   "count": 3,
+   "lowest": 249.99,
+   "median": 260.0,
+   "value": 260.0,
+   "delivered_lowest": 260.0,
+   "unknown_postage": 0
+  },
+  "s1_impressions_pnc_silver": {
+   "count": 2,
+   "lowest": 2799.98,
+   "median": 2899.97,
+   "value": 2799.98,
+   "delivered_lowest": 2799.98,
+   "unknown_postage": 0
+  },
+  "s1_card_stripes": {
+   "count": 5,
+   "lowest": 41.9,
+   "median": 44.95,
+   "value": 44.95,
+   "delivered_lowest": 41.9,
+   "unknown_postage": 0
+  },
+  "s1_card_blueyfriends": {
+   "count": 4,
+   "lowest": 42.25,
+   "median": 44.45,
+   "value": 44.45,
+   "delivered_lowest": 42.25,
+   "unknown_postage": 1
+  }
+ }
+}
