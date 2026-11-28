@@ -136,9 +136,8 @@ class TestCatalogIntegrity(unittest.TestCase):
     def test_community_and_events_section_present(self):
         self.assertIn('href="#events"', INDEX)
         self.assertIn('id="events"', INDEX)
-        self.assertIn('Melbourne Money Expo', INDEX)
-        self.assertIn('Sydney Money Expo', INDEX)
-        self.assertIn('Brisbane Money Expo', INDEX)
+        self.assertIn('Check the <a href="https://anda.com.au"', INDEX)
+        self.assertNotIn('14–15 November 2026', INDEX)
         self.assertIn('Petersham Coin & Stamp Fair', INDEX)
         self.assertIn('Moonee Ponds Coin Fair', INDEX)
         self.assertIn('r/AustralianCoins', INDEX)
