@@ -83,8 +83,10 @@ class TestCatalogIntegrity(unittest.TestCase):
         # Each entry is checked within its own catalogue line.
         raw = get_coins_raw()
         by_id = _coins_by_id(raw)
-        # 11956: $2 folder & five-coin set (15,000 produced, unlimited mintage)
-        self.assertRegex(by_id['s3_folder'], r"productCode:\s*'11956'.*issueQuantity:\s*15000")
+        # 11956: $2 folder & five-coin set. The report's 15,000 covers production to
+        # 30 June 2026 only; production continued, so it is kept as a part-year figure
+        # and not shown as the issue quantity (James, 29 Nov 2026).
+        self.assertRegex(by_id['s3_folder'], r"productCode:\s*'11956'.*issueQuantity:\s*null,\s*partialProduction:\s*15000")
         # Privy twins of the 2026 $2 cards (12001/03/05/07/09) were removed from
         # the catalogue as aliases; api/buy-options.py MERGED_INTO serves them
         # from the base products, so there is no catalogue line left to check.

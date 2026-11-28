@@ -97,7 +97,9 @@ class TestSupplyCardText(unittest.TestCase):
         # Mintage with its unit, and no separate Produced block.
         self.assertEqual(self.cards['s1_card_bluey'], ['Issued', '7,250', 'units'])
         self.assertEqual(self.cards['s1_bluey'], ['Issued', '1,250,000', 'units'])
-        self.assertEqual(self.cards['s3_folder'], ['Issued', '15,000', 'units'])
+        # The 2026 folder's 15,000 is a part-year figure (to 30 June 2026), so it is not an issue quantity.
+        self.assertEqual(self.cards['s3_folder'][:2], ['Produced', 'Not published'])
+        self.assertIn('15,000 sets made by 30 June 2026', self.cards['s3_folder'][2])
 
     def test_pin_covers_show_limited_edition_production_mintage(self):
         for coin_id in ('s3_pin_babyrace', 's3_pin_camping', 's3_pin_granny', 's3_pin_rain', 's3_pin_sleepytime'):
