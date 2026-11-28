@@ -164,5 +164,30 @@ class TestTrackingAndProjection(unittest.TestCase):
         self.assertEqual(reference, {'country': 'AU', 'postcode': '3000'})
 
 
+class TestEmptyResultPage(unittest.TestCase):
+    """eBay omits itemSummaries on a zero-match page; that is a valid empty page."""
+
+    def _page(self, payload):
+        def fake_urlopen(req, timeout=None):
+            return _FakeResponse(payload)
+
+        with mock.patch.object(legacy, 'EBAY_CLIENT_ID', 'test-client-id'), \
+                mock.patch.object(legacy, 'EBAY_CLIENT_SECRET', 'test-client-secret'), \
+                mock.patch.object(legacy, '_get_ebay_token', return_value='test-token'), \
+                mock.patch.object(legacy.urllib.request, 'urlopen', side_effect=fake_urlopen):
+            return legacy._ebay_browse_search_page('no matches here', limit=200)
+
+    def test_zero_total_without_item_summaries_is_empty_not_failure(self):
+        items, total, ok = self._page({'total': 0, 'limit': 200, 'offset': 0,
+                                       'href': 'https://api.ebay.com/buy/browse/v1/item_summary/search'})
+        self.assertTrue(ok)
+        self.assertEqual(items, [])
+        self.assertEqual(total, 0)
+
+    def test_missing_item_summaries_with_results_is_still_a_failure(self):
+        items, total, ok = self._page({'total': 5, 'limit': 200, 'offset': 0})
+        self.assertFalse(ok)
+
+
 if __name__ == '__main__':
     unittest.main()
