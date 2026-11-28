@@ -22,6 +22,8 @@ from api import prices  # noqa: E402
 class TestBuyOptions(unittest.TestCase):
     def setUp(self):
         buy_options._cache.clear()
+        buy_options._blocked.update(
+            {'ids': frozenset(), 'fetchedAt': 0.0, 'retryAt': 0.0, 'error': None})
 
     def test_every_retailer_yields_an_option(self):
         options, complete = buy_options.get_buy_options('s1_bluey', '2024 Bluey Dollarbuck Bluey')
@@ -320,6 +322,114 @@ class TestBuyOptions(unittest.TestCase):
 
     def test_unknown_coin_is_rejected(self):
         self.assertNotIn('does_not_exist', legacy.COIN_BY_ID)
+
+
+class TestLedgerBlockedPanel(unittest.TestCase):
+    """The public panel is scraper-driven, so the ledger has to gate it."""
+
+    SOLD = '167655058993'
+    LIVE = '116555000111'
+
+    def setUp(self):
+        buy_options._cache.clear()
+        buy_options._blocked.update(
+            {'ids': frozenset(), 'fetchedAt': 0.0, 'retryAt': 0.0, 'error': None})
+
+    def _options(self):
+        return [
+            {'retailer_id': 'ebay', 'name': 'eBay', 'price': 8.45,
+             'title': '2024 Bluey Dollarbuck single coin',
+             'url': f'https://www.ebay.com.au/itm/{self.SOLD}', 'postage': 0.0},
+            {'retailer_id': 'ebay', 'name': 'eBay', 'price': 12.95,
+             'title': '2024 Bluey Dollarbuck single coin',
+             'url': f'https://www.ebay.com.au/itm/{self.LIVE}', 'postage': 0.0},
+        ]
+
+    def _panel(self, database_url='postgresql://example/bluey'):
+        def fake_scrape(retailer, keywords, coin_id):
+            return [dict(o) for o in self._options()] if retailer.get('id') == 'ebay' else []
+
+        env = {'DATABASE_URL': database_url} if database_url else {}
+        with mock.patch.dict(os.environ, env, clear=False), \
+                mock.patch.object(buy_options, '_scrape', side_effect=fake_scrape), \
+                mock.patch.object(buy_options, '_fallback', return_value=[]):
+            if not database_url:
+                os.environ.pop('DATABASE_URL', None)
+            return buy_options.get_buy_options('s1_bluey', '2024 Bluey Dollarbuck Bluey')[0]
+
+    @staticmethod
+    def _ids(options):
+        return [buy_options._listing_key(o.get('url'))[1] for o in options
+                if buy_options._listing_key(o.get('url'))]
+
+    def test_confirmed_sold_id_is_dropped_and_live_id_retained(self):
+        with mock.patch.object(buy_options, '_fetch_blocked_ids',
+                               return_value=frozenset({self.SOLD})):
+            options = self._panel()
+        self.assertNotIn(self.SOLD, self._ids(options))
+        self.assertIn(self.LIVE, self._ids(options))
+
+    def test_missing_url_leaves_the_panel_unchanged(self):
+        baseline = self._panel(database_url=None)
+        self.assertEqual(buy_options._blocked['error'], 'no_database_url')
+        self.assertEqual(buy_options._blocked['ids'], frozenset())
+        self.assertIn(self.SOLD, self._ids(baseline))
+        self.assertIn(self.LIVE, self._ids(baseline))
+
+    def test_database_error_fails_open_with_the_same_panel(self):
+        baseline = self._panel(database_url=None)
+        buy_options._cache.clear()
+        buy_options._blocked.update(
+            {'ids': frozenset(), 'fetchedAt': 0.0, 'retryAt': 0.0, 'error': None})
+        with mock.patch.object(buy_options, '_fetch_blocked_ids',
+                               side_effect=RuntimeError('ledger down')):
+            options = self._panel()
+        self.assertEqual(self._ids(baseline), self._ids(options))
+        self.assertEqual(buy_options._blocked['error'], 'RuntimeError')
+
+    def test_blocked_set_is_cached_across_calls(self):
+        with mock.patch.object(buy_options, '_fetch_blocked_ids',
+                               return_value=frozenset({self.SOLD})) as fetch, \
+                mock.patch.dict(os.environ, {'DATABASE_URL': 'postgresql://example/bluey'}):
+            first = buy_options._blocked_listing_ids()
+            second = buy_options._blocked_listing_ids()
+        self.assertEqual(first, frozenset({self.SOLD}))
+        self.assertEqual(second, first)
+        fetch.assert_called_once()
+
+    def test_cached_blocked_set_survives_a_later_database_error(self):
+        with mock.patch.object(buy_options, '_fetch_blocked_ids',
+                               return_value=frozenset({self.SOLD})), \
+                mock.patch.dict(os.environ, {'DATABASE_URL': 'postgresql://example/bluey'}):
+            buy_options._blocked_listing_ids()
+            buy_options._blocked['fetchedAt'] -= buy_options.BLOCKED_TTL + 1
+            with mock.patch.object(buy_options, '_fetch_blocked_ids',
+                                   side_effect=RuntimeError('ledger down')):
+                still_blocked = buy_options._blocked_listing_ids()
+        self.assertEqual(still_blocked, frozenset({self.SOLD}))
+
+    def test_ledger_read_sets_a_transaction_local_timeout(self):
+        # Neon's pooled endpoint rejects `options=-c statement_timeout=` as a
+        # startup parameter; the timeout has to be a statement after connect.
+        calls = []
+
+        class Cursor:
+            def fetchall(self):
+                return [(TestLedgerBlockedPanel.SOLD,),
+                        (TestLedgerBlockedPanel.LIVE,)]
+
+        class Conn:
+            def __enter__(self): return self
+            def __exit__(self, *args): return False
+            def execute(self, sql, params=None):
+                calls.append(sql)
+                return Cursor()
+
+        with mock.patch('psycopg.connect', return_value=Conn()) as connect:
+            ids = buy_options._fetch_blocked_ids('postgresql://pooled/bluey')
+        self.assertEqual(ids, frozenset({self.SOLD, self.LIVE}))
+        self.assertNotIn('options', connect.call_args.kwargs)
+        self.assertTrue(any('statement_timeout' in sql for sql in calls))
 
 
 class TestQueryVariants(unittest.TestCase):

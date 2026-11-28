@@ -93,6 +93,75 @@ def _excluded(coin_id, option):
 _LISTING_URL = re.compile(r'/(itm|listing)/(\d+)')
 _SOURCE_BY_PATH = {'itm': 'ebay', 'listing': 'etsy'}
 
+# The scraper panel is independent of the published ledger, so an ID that is
+# sold, excluded or otherwise closed can still come back from a retailer
+# search. The blocked-id set is read from `listings` (read-only) and cached on
+# the same half-hour boundary as the panel itself.
+BLOCKED_TTL = CACHE_TTL
+# A 10s function budget with a 7s scrape deadline leaves little room: the
+# ledger read must never become the slowest thing in the panel.
+BLOCKED_TIMEOUT_MS = 1500
+# After a failed read, wait before trying again so a down database cannot add
+# its connect delay to every request.
+BLOCKED_RETRY_AFTER = 60
+_blocked = {'ids': frozenset(), 'fetchedAt': 0.0, 'retryAt': 0.0, 'error': None}
+
+
+def _fetch_blocked_ids(url):
+    """Listing ids the ledger forbids serving as a current ask.
+
+    Deliberately global, not per product: the panel shows a listing against a
+    coin, and an ID that is sold, excluded or dated sold is history regardless
+    of which product the scraper attached it to. `likely_sold` rows without a
+    sold date stay visible so the grandfathering of unclaimed legacy rows is
+    not widened into hiding stock that may still be live.
+    """
+    import psycopg
+    with psycopg.connect(url, connect_timeout=2) as conn:
+        # Neon's pooled endpoint rejects `options=-c statement_timeout=...` as a
+        # startup parameter, so the timeout is set as a transaction-local
+        # statement instead.
+        conn.execute(f'SET LOCAL statement_timeout = {BLOCKED_TIMEOUT_MS}')
+        rows = conn.execute(
+            "SELECT listing_id FROM listings "
+            "WHERE status IN ('excluded', 'confirmed_sold') "
+            "OR date_sold IS NOT NULL").fetchall()
+    return frozenset(str(row[0]) for row in rows)
+
+
+def _blocked_listing_ids():
+    """Blocked eBay ids, cached; fails open so the panel is never withheld.
+
+    A missing DATABASE_URL, a refused connection, a timeout or any query error
+    returns the last good set (or nothing) and logs. /api/buy-options must
+    always answer from the scrapers exactly as it does today.
+    """
+    now = time.time()
+    if _blocked['fetchedAt'] and now - _blocked['fetchedAt'] < BLOCKED_TTL:
+        return _blocked['ids']
+    if now < _blocked['retryAt']:
+        return _blocked['ids']
+    url = os.environ.get('DATABASE_URL')
+    if not url:
+        _blocked.update({'error': 'no_database_url'})
+        return _blocked['ids']
+    try:
+        ids = _fetch_blocked_ids(url)
+    except Exception as exc:
+        _blocked.update({'error': type(exc).__name__, 'retryAt': now + BLOCKED_RETRY_AFTER})
+        print(f"blocked listing read unavailable: {type(exc).__name__}")
+        return _blocked['ids']
+    _blocked.update({'ids': ids, 'fetchedAt': now, 'retryAt': 0.0, 'error': None})
+    return ids
+
+
+def _ledger_blocked(option, blocked):
+    """True when an option is an eBay item the ledger marks closed."""
+    if not blocked:
+        return False
+    key = _listing_key(option.get('url'))
+    return bool(key and key[0] == 'ebay' and key[1] in blocked)
+
 
 def _listing_key(url):
     """(marketplace, listing id) from an eBay or Etsy URL, for cross-source dedupe.
@@ -270,6 +339,11 @@ def get_buy_options(coin_id, keywords, tracking=False):
             print(f"active offer read unavailable: {type(exc).__name__}")
     else:
         _projection[coin_id] = {'source': 'scraper', 'error': 'projection_disabled'}
+    # Applied last so neither a retailer scrape nor a stored projection can
+    # serve an ID the ledger has closed.
+    blocked = _blocked_listing_ids()
+    if blocked:
+        final = [o for o in final if not _ledger_blocked(o, blocked)]
     if complete:
         _cache[coin_id] = {'options': final, 'fetchedAt': now}
     return final, complete
