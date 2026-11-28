@@ -45,7 +45,7 @@
 | `s1_pnc_set_ten` | **2024 $1 PNC 10-Cover Set** | $1 | 2024 | 1,000 | Unlimited/Open | $350 – $600 | - |
 | `s2_xmas_unc` | **2025 Bluey Christmas $1 Coloured Uncirculated Coin** | $1 | 2025 | 125,000 | 125,000 | $35 – $80 | 11982 |
 | `s2_xmas_silv` | **2025 Bluey Christmas $1 Coloured Silver Proof Coin** | $1 | 2025 | 10,000 | 10,000 | $250 – $700 | 11981 |
-| `s2_xmas_stamp_pack` | **Bluey 2024 Christmas Stamp Pack** | - | 2024 | TBD | Unlimited/Open | $20 – $40 | 76602869 |
+| `s1_xmas_stamp_pack_2024` | **2024 Bluey Christmas Stamp Pack** | - | 2024 | TBD | Unlimited/Open | $20 – $40 | 76602869 |
 | `s3_folder` | **Bluey 2026 $2 Collection Folder & Five-Coin Set** | $2 | 2026 | 15,000 | Unlimited/Open | $40 – $90 | 11956 |
 | `s3_rain_privy` | **Rain $2 Privy Mark Coin in Card** | $2 | 2026 | 20,000 | 20,500 | $80 – $200 | 12001 |
 | `s3_sleepytime_privy` | **Sleepytime $2 Privy Mark Coin in Card** | $2 | 2026 | 20,000 | 20,500 | $80 – $200 | 12003 |

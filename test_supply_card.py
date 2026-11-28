@@ -105,7 +105,7 @@ class TestSupplyCardText(unittest.TestCase):
                 self.assertEqual(self.cards[coin_id], ['Issued', '3,000', 'covers'])
 
     def test_products_without_any_figure_have_no_mintage(self):
-        for coin_id in ('s0_2020_stamp_pack', 's1_auspost_stamp_pack', 's2_xmas_stamp_pack',
+        for coin_id in ('s0_2020_stamp_pack', 's1_auspost_stamp_pack', 's1_xmas_stamp_pack_2024',
                         's3_stamp_pack', 's3_maxicard_pack', 's3_till_bluey', 's3_till_bingo',
                         's3_sleepytime_insert'):
             with self.subTest(coin=coin_id):

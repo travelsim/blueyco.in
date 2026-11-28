@@ -3572,7 +3572,7 @@ window.COINS = [
   // Series 2 — 2025 Christmas
   { id: 's2_xmas_unc', series: 'series2', name: '2025 Bluey Christmas $1 AlBr Coloured Uncirculated', keywords: 'christmas 2025 coloured', denomination: 1, year: 2025, mintage: 125000, mintPrice: 20, color: true, marketLow: 35, marketHigh: 80, productCode: '11982', issueQuantity: 125000 },
   { id: 's2_xmas_silv', series: 'series2', name: '2025 Bluey Christmas $1 Silver Coloured Proof', keywords: 'christmas 2025 silver proof', denomination: 1, year: 2025, mintage: 10000, mintPrice: 100, color: true, marketLow: 250, marketHigh: 700, productCode: '11981', issueQuantity: 10000 },
-  { id: 's2_xmas_stamp_pack', series: 'series2', name: '2024 Bluey Christmas Stamp Pack', keywords: '2024 Bluey Christmas stamp pack 76602869 1515714 Australia Post', denomination: null, year: 2024, mintage: null, mintageLabel: 'Stamp print quantity unpublished', mintPrice: 15, productCode: '76602869', color: '#5279a8', marketLow: 22, marketHigh: 32, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-393/stamp-bulletin-393.pdf', sourceLabel: 'Australia Post Stamp Bulletin 393 ↗' },
+  { id: 's1_xmas_stamp_pack_2024', series: 'series1', name: '2024 Bluey Christmas Stamp Pack', keywords: '2024 Bluey Christmas stamp pack 76602869 Australia Post', denomination: null, year: 2024, mintage: null, mintageLabel: 'Stamp print quantity unpublished', mintPrice: 15, productCode: '76602869', color: '#5279a8', marketLow: 22, marketHigh: 32, sourceUrl: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-393/stamp-bulletin-393.pdf', sourceLabel: 'Australia Post Stamp Bulletin 393 ↗' },
 
   // Series 3 — 2026 Bluey $2
   { id: 's3_folder', series: 'series3', name: '2026 Bluey $2 5-Coin Tube & Folder Set · Sealed', keywords: 'folder set 2026 rain sleepytime camping baby race granny mobile', denomination: 2, year: 2026, mintage: null, mintageLabel: 'Unlimited mintage', mintPrice: 34, color: true, marketLow: 50, marketHigh: 75, productCode: '11956', issueQuantity: 15000, sourceUrl: 'https://www.ramint.gov.au/about-us/whats-new/cheese-crackers-bluey-returns-new-coin-collection', collectionVariants: [{ label: 'State 1: Sealed tube', detail: 'Unopened five-coin tube plus the two coloured $2 till coins (Bluey and Bingo) that come with every set, and a 1-in-10 chance of the coloured Sleepytime coin.' }, { label: 'State 2: Opened tube', detail: 'The same seven coins with the tube opened: five uncirculated coins and the two coloured till coins.' }, { label: 'State 3: Complete set with hit', detail: 'The full set including the rare 1-in-10 coloured Sleepytime coin.' }], collectionNote: 'Every 2026 tube & folder set includes the two coloured $2 till coins (Bluey and Bingo) as well as the five uncirculated coins: seven coins in total. The rare third coloured coin, Sleepytime, is the 1-in-10 chase.' },
@@ -3911,7 +3911,7 @@ const COIN_PRODUCT_IMAGES = {
   s1_pnc_mumdad: { src: 'coin-images/2024-pnc-mum-dad.jpg', alt: 'Official Australia Post 2024 Mum and Dad (Chilli and Bandit) $1 postal numismatic cover', source: 'Australia Post collectables artwork, same design as the 2024 Mum and Dad PNC' },
   s2_xmas_unc: { src: 'coin-images/2025-unc.png', alt: '2025 Bluey Christmas $1 uncirculated coin in its presentation card', source: 'https://www.ramint.gov.au/about-us/whats-new/get-christmas-spirit-bluey' },
   s2_xmas_silv: { src: 'coin-images/2025-proof.png', alt: '2025 Bluey Christmas $1 silver proof coin in its bauble packaging', source: 'https://www.ramint.gov.au/about-us/whats-new/get-christmas-spirit-bluey' },
-  s2_xmas_stamp_pack: { src: 'coin-images/2024-xmas-stamp-pack.jpg', alt: 'Official Australia Post 2024 Bluey Christmas stamp pack folder and 20-stamp sheetlet', source: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-393/stamp-bulletin-393.pdf' },
+  s1_xmas_stamp_pack_2024: { src: 'coin-images/2024-xmas-stamp-pack.jpg', alt: 'Official Australia Post 2024 Bluey Christmas stamp pack folder and 20-stamp sheetlet', source: 'https://collectables.auspost.com.au/content/dam/collectables/stamp-bulletin/2024/stamp-bulletin-393/stamp-bulletin-393.pdf' },
   s3_folder: { src: 'coin-images/2026-folder-and-tube.png', alt: 'Bluey 2026 $2 Uncirculated Coin Collection folder standing beside its coin tube; includes five coins, seven coins to collect', source: 'https://ramint.runfair.com/en-US/au' },
   s3_folder_opened: { src: 'coin-images/2026-folder-set-opened.png', alt: '2026 five-coin folder with a standard Camping uncirculated $2 coin where the tube was', source: 'Derived composite of official Royal Australian Mint blog and folder imagery' },
   s3_folder_chase: { src: 'coin-images/2026-folder-set-chase.png', alt: '2026 five-coin folder with the special-coloured Sleepytime $2 coin where the tube was', source: 'Derived composite of official Royal Australian Mint blog, folder and coin imagery' },
@@ -3998,7 +3998,7 @@ function getCoinCategory(coin) {
       hint: 'Australia Post commemorative cover featuring an official episode enamel pin.'
     };
   }
-  if (coin.id === 's1_auspost_stamp_pack' || coin.id === 's3_maxicard_pack' || coin.id === 's0_2020_stamp_pack' || coin.id === 's2_xmas_stamp_pack' || coin.id === 's3_stamp_pack') {
+  if (coin.id === 's1_auspost_stamp_pack' || coin.id === 's3_maxicard_pack' || coin.id === 's0_2020_stamp_pack' || coin.id === 's1_xmas_stamp_pack_2024' || coin.id === 's3_stamp_pack') {
     return {
       type: 'stamps',
       badge: '📮 Australia Post Stamps',
@@ -4055,7 +4055,7 @@ function buildCard(coin) {
   const premium = estimateBasis != null ? calcPremium(estimateBasis, coin.mintPrice) : null;
   const askingPremium = ((!hasMedian || askingPrimary) && asking && asking.lowest != null && coin.mintPrice) ? calcPremium(asking.lowest, coin.mintPrice) : null;
   const guidePremium = (!hasMedian && guide && coin.mintPrice) ? calcPremium(guide, coin.mintPrice) : null;
-  const displayPremium = coin.id === 's2_xmas_stamp_pack' && !hasMedian ? null : (premium != null ? premium : (askingPremium != null ? askingPremium : guidePremium));
+  const displayPremium = coin.id === 's1_xmas_stamp_pack_2024' && !hasMedian ? null : (premium != null ? premium : (askingPremium != null ? askingPremium : guidePremium));
   const premiumValue = displayPremium == null ? null : Number(displayPremium);
 
   const card = el('div', 'coin-card');
@@ -4117,10 +4117,10 @@ function buildCard(coin) {
   const rarity = mintageRarity(coin);
   const metrics = el('div', 'coin-metrics');
   const priceCard = el('section', 'metric-card metric-price');
-  priceCard.setAttribute('aria-label', coin.id === 's2_xmas_stamp_pack' && !hasMedian
+  priceCard.setAttribute('aria-label', coin.id === 's1_xmas_stamp_pack_2024' && !hasMedian
     ? 'No sold price yet' : ((hasMedian || guide != null || asking) && coin.mintPrice != null
     ? 'Estimated value and gain from issue price' : 'Estimated value'));
-  const noSoldStampPrice = coin.id === 's2_xmas_stamp_pack' && !hasMedian;
+  const noSoldStampPrice = coin.id === 's1_xmas_stamp_pack_2024' && !hasMedian;
   const priceHeading = noSoldStampPrice ? 'No sold price yet' : 'Estimated value';
   const kickerText = priceHeading;
   const priceValue = noSoldStampPrice ? null : askingPrimary ? asking.lowest : (!hasMedian && asking) ? asking.lowest : (hasMedian ? median : (guide != null ? guide : coin.mintPrice));
@@ -4724,7 +4724,7 @@ function _isSetCatalogItem(coin) {
   if (!coin) return false;
   const cid = coin.id || '';
   if (['s1_10_coin_folder_set', 's1_10_coin_folder_opened', 's1_coloured_insert_variant',
-       's0_2020_stamp_pack', 's1_auspost_stamp_pack', 's1_three_coin_set', 's1_pnc_set_ten', 's2_xmas_stamp_pack', 's3_maxicard_pack', 's3_stamp_pack', 's3_folder', 's3_folder_opened', 's3_folder_chase'].includes(cid)) {
+       's0_2020_stamp_pack', 's1_auspost_stamp_pack', 's1_three_coin_set', 's1_pnc_set_ten', 's1_xmas_stamp_pack_2024', 's3_maxicard_pack', 's3_stamp_pack', 's3_folder', 's3_folder_opened', 's3_folder_chase'].includes(cid)) {
     return true;
   }
   const kw = ((coin.keywords || '') + ' ' + (coin.name || '')).toLowerCase();

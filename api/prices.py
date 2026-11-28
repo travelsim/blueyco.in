@@ -217,6 +217,10 @@ COINS = [
     {'id': 's1_coloured_insert_variant', 'ebay_kw': '2024 $1 Bluey special coloured coin folder tube set', 'search': '2024 $1 Bluey special coloured coin folder tube set'},
     {'id': 's0_2020_stamp_pack', 'ebay_kw': '2020 Bluey MyStamps stamp pack Australia Post', 'search': '2020 Bluey MyStamps stamp pack Australia Post'},
     {'id': 's1_auspost_stamp_pack', 'ebay_kw': '2024 Bluey MyStamps pack 12 house shaped stamps', 'search': '2024 Bluey MyStamps pack 12 house shaped stamps'},
+    # 2024 Australia Post release: Item 76602869, issued 1 November 2024,
+    # 20 x 65c festive MyStamps, RRP $15.00. Renamed from s2_xmas_stamp_pack,
+    # which wrongly implied a 2025 product; no 2025 stamp pack exists.
+    {'id': 's1_xmas_stamp_pack_2024', 'ebay_kw': '2024 Bluey Christmas stamp pack 76602869 Australia Post', 'search': '2024 Bluey Christmas stamp pack 76602869 Australia Post'},
     {'id': 's1_impressions_pnc_colour', 'ebay_kw': '2024 Bluey limited edition coloured coin PNC', 'search': '2024 Bluey limited edition coloured coin PNC'},
     {'id': 's1_impressions_pnc_2coin', 'ebay_kw': '2024 Bluey limited edition 2 coin PNC', 'search': '2024 Bluey limited edition 2 coin PNC'},
     {'id': 's1_impressions_pnc_3coin', 'ebay_kw': '2024 Bluey limited edition 3 coin PNC envelope privy', 'search': '2024 Bluey limited edition 3 coin PNC envelope privy'},
@@ -262,7 +266,6 @@ COINS = [
     # records from the 11428/11430 envelope PNCs, not dedupes).
     {'id': 's2_xmas_unc', 'ebay_kw': '2025 $1 Bluey Christmas coloured uncirculated coin', 'search': '2025 $1 Bluey Christmas coloured uncirculated coin'},
     {'id': 's2_xmas_silv', 'ebay_kw': '2025 $1 Bluey Christmas silver proof coin', 'search': '2025 $1 Bluey Christmas silver proof coin'},
-    {'id': 's2_xmas_stamp_pack', 'ebay_kw': '2024 Bluey Christmas stamp pack Australia Post', 'search': '2024 Bluey Christmas stamp pack Australia Post'},
     {'id': 's3_rain', 'ebay_kw': '2026 $2 Bluey Rain Privy Mark coin in card', 'search': '2026 $2 Bluey Rain Privy Mark coin in card'},
     {'id': 's3_sleepytime', 'ebay_kw': '2026 $2 Bluey Sleepytime Privy Mark coin in card', 'search': '2026 $2 Bluey Sleepytime Privy Mark coin in card'},
     {'id': 's3_camping', 'ebay_kw': '2026 $2 Bluey Camping Privy Mark coin in card', 'search': '2026 $2 Bluey Camping Privy Mark coin in card'},
