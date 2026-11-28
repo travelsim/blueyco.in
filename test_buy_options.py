@@ -408,8 +408,17 @@ class TestLedgerBlockedPanel(unittest.TestCase):
                 still_blocked = buy_options._blocked_listing_ids()
         self.assertEqual(still_blocked, frozenset({self.SOLD}))
 
-    def test_ledger_read_sets_a_transaction_local_timeout(self):
-        # Neon's pooled endpoint rejects `options=-c statement_timeout=` as a
+    def test_ledger_status_reports_the_applied_set(self):
+        self.assertEqual(buy_options.ledger_status(),
+                         {'source': 'listings', 'blocked': 0, 'error': None})
+        with mock.patch.object(buy_options, '_fetch_blocked_ids',
+                               return_value=frozenset({self.SOLD})), \
+                mock.patch.dict(os.environ, {'DATABASE_URL': 'postgresql://example/bluey'}):
+            buy_options._blocked_listing_ids()
+        self.assertEqual(buy_options.ledger_status(),
+                         {'source': 'listings', 'blocked': 1, 'error': None})
+
+    def test_ledger_read_sets_a_transaction_local_timeout(self):        # Neon's pooled endpoint rejects `options=-c statement_timeout=` as a
         # startup parameter; the timeout has to be a statement after connect.
         calls = []
 

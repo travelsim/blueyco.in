@@ -163,6 +163,16 @@ def _ledger_blocked(option, blocked):
     return bool(key and key[0] == 'ebay' and key[1] in blocked)
 
 
+def ledger_status():
+    """The ledger filter's own state, so enforcement is observable in production.
+
+    A count and an error name only: a panel that is showing a closed id can be
+    diagnosed from the response instead of inferred.
+    """
+    return {'source': 'listings', 'blocked': len(_blocked['ids']),
+            'error': _blocked['error']}
+
+
 def _listing_key(url):
     """(marketplace, listing id) from an eBay or Etsy URL, for cross-source dedupe.
 
@@ -387,6 +397,8 @@ class handler(BaseHTTPRequestHandler):
         projection = _projection.get(coin_id)
         if projection and not tracking:
             payload['projection'] = projection
+        if not tracking:
+            payload['ledger'] = ledger_status()
         self._json(200, payload, complete=complete, tracking=tracking)
 
     def do_GET(self):
