@@ -21,13 +21,14 @@ class TestProductImagesExist(unittest.TestCase):
 
 
 class TestDerivedImagesAreHonest(unittest.TestCase):
-    # The folder-set fixes are derived packshots: their credit must never
-    # claim to be official photography (Oct 2026: the coloured-variant alt
-    # text claimed an official RAM image over an empty folder render).
-    def test_folder_set_fixes_show_derived_credit(self):
+    # The folder-set products used derived composite packshots until 29 Nov 2026,
+    # when James asked for official images only. They now show the official
+    # folder photo, and no product may use a derived composite again.
+    def test_folder_set_products_show_official_images_not_composites(self):
         block = INDEX.split('const COIN_PRODUCT_IMAGES = {')[1].split('};')[0]
+        self.assertNotIn('Derived composite', block)
         for coin_id in ('s1_10_coin_folder_opened', 's1_coloured_insert_variant', 's3_folder_opened', 's3_folder_chase'):
             entry = re.search(rf"{coin_id}:\s*\{{[^}}]*\}}", block).group(0)
-            self.assertIn('Derived', entry)
-            self.assertNotIn('Official', entry)
+            self.assertNotRegex(entry, r"2024-coloured-insert-variant|2024-folder-set-opened|2026-folder-set-opened|2026-folder-set-chase")
+            self.assertRegex(entry, r"source: 'https://")
 
