@@ -7,6 +7,32 @@ from datetime import datetime, timedelta, timezone
 import psycopg
 
 TTL = timedelta(hours=24)
+BLOCKING_STATUSES = ('confirmed_sold', 'excluded')
+
+
+def _blocked_ids(conn, product_id, listing_ids):
+    """Listing IDs that must not be written as this product's current offers.
+
+    A listing ID belongs to exactly one product. The `listings` ledger is the
+    owner of record, so an ID held by another product, already sold, or
+    explicitly excluded is history, never a current ask. A live offer under
+    another product is ambiguous for the same reason.
+    """
+    ids = list(listing_ids)
+    if not ids:
+        return set()
+    blocked = set()
+    for lid, owner, status, sold in conn.execute(
+            "SELECT listing_id, product_id, status, date_sold FROM listings "
+            "WHERE listing_id = ANY(%s)", (ids,)).fetchall():
+        if owner != product_id or status in BLOCKING_STATUSES or sold is not None:
+            blocked.add(lid)
+    for (lid,) in conn.execute(
+            "SELECT listing_id FROM active_offers WHERE listing_id = ANY(%s) "
+            "AND product_id <> %s AND expires_at > now()",
+            (ids, product_id)).fetchall():
+        blocked.add(lid)
+    return blocked
 
 
 def persist_snapshot(conn, product_id, source, options, complete, excluded_ids=()):
@@ -28,6 +54,8 @@ def persist_snapshot(conn, product_id, source, options, complete, excluded_ids=(
     with conn.transaction():
         conn.execute("INSERT INTO products(product_id,name) VALUES (%s,%s) ON CONFLICT DO NOTHING",
                      (product_id, product_id))
+        for lid in _blocked_ids(conn, product_id, valid):
+            valid.pop(lid, None)
         for lid, (title, price, postage, url) in valid.items():
             conn.execute("""INSERT INTO active_offers
                 (product_id,source,listing_id,title,price_aud,postage_aud,source_url,expires_at)
@@ -37,7 +65,13 @@ def persist_snapshot(conn, product_id, source, options, complete, excluded_ids=(
                 postage_aud=EXCLUDED.postage_aud,source_url=EXCLUDED.source_url,
                 last_seen_at=now(),expires_at=EXCLUDED.expires_at""",
                 (product_id, source, lid, title, price, postage, url, now + TTL))
-        live_ids = list(valid)
+        # A listing that has since sold or been excluded must stop serving as
+        # this product's current ask, even if its cache row has not expired.
+        conn.execute("DELETE FROM active_offers ao USING listings l "
+                     "WHERE ao.product_id=%s AND ao.source=%s "
+                     "AND l.listing_id=ao.listing_id "
+                     "AND (l.status = ANY(%s) OR l.date_sold IS NOT NULL)",
+                     (product_id, source, list(BLOCKING_STATUSES)))
         conn.execute("DELETE FROM active_offers WHERE product_id=%s AND source=%s "
                      "AND expires_at < now()", (product_id, source))
     return len(valid)
