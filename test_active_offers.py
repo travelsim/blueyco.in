@@ -31,6 +31,8 @@ class FakeConnection:
     def execute(self, sql, params=None):
         self.calls.append((sql, params))
         return self
+    def fetchall(self): return []
+    def fetchone(self): return None
 
 
 class ActiveOfferTests(unittest.TestCase):
