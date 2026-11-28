@@ -90,6 +90,20 @@ def _excluded(coin_id, option):
     return bool(match and match.group(1) in banned)
 
 
+_LISTING_URL = re.compile(r'/(itm|listing)/(\d+)')
+_SOURCE_BY_PATH = {'itm': 'ebay', 'listing': 'etsy'}
+
+
+def _listing_key(url):
+    """(marketplace, listing id) from an eBay or Etsy URL, for cross-source dedupe.
+
+    IDs are only compared inside their own marketplace namespace, so an Etsy
+    listing can never be mistaken for an eBay item that happens to share digits.
+    """
+    match = _LISTING_URL.search(url or '')
+    return ((_SOURCE_BY_PATH[match.group(1)], match.group(2)) if match else None)
+
+
 def _manual():
     """Manual retailer price overrides, tolerating the serverless cwd."""
     for candidate in (
@@ -239,17 +253,17 @@ def get_buy_options(coin_id, keywords, tracking=False):
         try:
             from api import active_offers
             with active_offers.connect() as conn:
-                stored = active_offers.current_offers(conn, coin_id, 'ebay')
+                stored = active_offers.current_offers(conn, coin_id)
             _projection[coin_id] = {'source': 'active_offers', 'stored': len(stored)}
+            retailer_names = {'ebay': 'eBay', 'etsy': 'Etsy'}
             for lid, title, price, postage, url, source in stored:
-                option = {'retailer_id': 'ebay', 'name': 'eBay', 'title': title,
+                option = {'retailer_id': source,
+                          'name': retailer_names.get(source, 'eBay'), 'title': title,
                           'price': float(price), 'postage': float(postage) if postage is not None else None,
                           'available': True, 'price_type': 'asking', 'url': url,
                           'link_only': False, 'offer_source': 'active_offers'}
                 if not _excluded(coin_id, option) and not any(
-                        re.search(r'/itm/(\d+)', o.get('url') or '') and
-                        re.search(r'/itm/(\d+)', o.get('url') or '').group(1) == str(lid)
-                        for o in final):
+                        _listing_key(o.get('url')) == (source, str(lid)) for o in final):
                     final.insert(0, option)
         except Exception as exc:
             _projection[coin_id] = {'source': 'scraper', 'error': type(exc).__name__}

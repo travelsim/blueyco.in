@@ -56,5 +56,24 @@ class ActiveOfferTests(unittest.TestCase):
         self.assertEqual(sum('INSERT INTO active_offers' in call[0] for call in conn.calls),1)
         self.assertIn('Bluey coin revised', str(conn.calls))
 
+    def test_etsy_listing_url_is_written_under_etsy_source(self):
+        conn = FakeConnection()
+        rows = [{
+            'url': 'https://www.etsy.com/listing/1841151202/bluey-2024-limited-edition-2-coin-and',
+            'title': 'Bluey 2024 Limited Edition 2-Coin and minisheet collection - bingo',
+            'price': 179.10, 'postage': 10.50,
+        }]
+        self.assertEqual(active.persist_snapshot(conn, 'p', 'etsy', rows, True), 1)
+        insert = next(c for c in conn.calls if 'INSERT INTO active_offers' in c[0])
+        self.assertEqual(insert[1][1], 'etsy')
+        self.assertEqual(insert[1][2], '1841151202')
+        self.assertEqual(float(insert[1][5]), 10.50)
+
+    def test_source_id_namespaces_do_not_mix(self):
+        conn = FakeConnection()
+        rows = [{'url': 'https://www.ebay.com.au/itm/123456', 'title': 'not etsy', 'price': 1}]
+        self.assertEqual(active.persist_snapshot(conn, 'p', 'etsy', rows, True), 0)
+        self.assertFalse(any('INSERT INTO active_offers' in c[0] for c in conn.calls))
+
 
 if __name__ == '__main__': unittest.main()

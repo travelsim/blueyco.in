@@ -51,6 +51,34 @@ class TestBuyOptions(unittest.TestCase):
         self.assertEqual(buy_options._projection['s1_bluey'],
                          {'source': 'active_offers', 'stored': 1})
 
+    def test_neon_projection_serves_etsy_offer_as_etsy(self):
+        from api import active_offers
+
+        class Conn:
+            def __enter__(self): return self
+            def __exit__(self, *args): return False
+
+        listing_id = '1841151202'
+        stored_row = (
+            listing_id,
+            'Bluey 2024 Limited Edition 2-Coin and minisheet collection - bingo',
+            179.10, 10.50,
+            f'https://www.etsy.com/listing/{listing_id}/bluey-2024-limited-edition-2-coin-and',
+            'etsy',
+        )
+        with mock.patch.dict(os.environ, {'DATABASE_URL': 'postgresql://example/bluey'}), \
+                mock.patch.object(active_offers, 'connect', return_value=Conn()), \
+                mock.patch.object(active_offers, 'current_offers', return_value=[stored_row]):
+            options, _ = buy_options.get_buy_options(
+                's1_impressions_2coin_privy_minisheet_bingo',
+                '2024 Bluey limited edition 2 coin minisheet collection Bingo')
+        merged = [o for o in options if o.get('offer_source') == 'active_offers']
+        self.assertEqual(len(merged), 1)
+        self.assertEqual(merged[0]['retailer_id'], 'etsy')
+        self.assertEqual(merged[0]['name'], 'Etsy')
+        self.assertEqual(merged[0]['price'], 179.10)
+        self.assertEqual(merged[0]['postage'], 10.50)
+
     def test_priced_options_sort_before_link_only(self):
         options, _ = buy_options.get_buy_options('s1_bluey', '2024 Bluey Dollarbuck Bluey')
         seen_link_only = False
