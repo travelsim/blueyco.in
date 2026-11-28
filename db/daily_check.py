@@ -97,14 +97,22 @@ def matches_product(title, product_id, now=None):
     return PRICE_API._product_matches_live_listing(title, coin, now=now)
 
 
+def uniquely_matches_product(title, product_id, now=None):
+    """Reject titles that can belong to more than one canonical product."""
+    aliases = BUY_OPTIONS_API.MERGED_INTO
+    owners = {aliases.get(pid, pid) for pid, coin in PRODUCTS.items()
+              if PRICE_API._product_matches_live_listing(title, coin, now=now)}
+    return owners == {aliases.get(str(product_id), str(product_id))}
+
+
 def snapshot_is_usable(prices_complete, options_complete, options, items,
                        invalid_items=0, mismatched_items=0):
-    """Accept only complete, unambiguous product snapshots (including empty)."""
+    """Accept only nonempty, complete, unambiguous product snapshots."""
     if not prices_complete or not options_complete or not isinstance(options, list):
         return False
-    # The tracking-only API paginates each product query; an empty response is
-    # valid only when the endpoint independently reports every query complete.
-    if invalid_items or mismatched_items:
+    # Even a complete empty search can reflect weak queries or upstream filtering;
+    # preserve prior state until a nonempty snapshot corroborates the search.
+    if not items or invalid_items or mismatched_items:
         return False
     return True
 
@@ -193,7 +201,7 @@ def main(argv=None):
             unresolved += 1
             continue
         items, invalid = ebay_items(options) if isinstance(options, list) else ({}, 0)
-        mismatched = sum(not matches_product(
+        mismatched = sum(not uniquely_matches_product(
             option.get("title") or option.get("name") or "", pid)
             for option in items.values())
         usable = snapshot_is_usable(
