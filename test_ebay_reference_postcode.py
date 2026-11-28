@@ -75,7 +75,9 @@ def _fetch(item, capture=None):
             capture.append(req)
         return _FakeResponse(payload)
 
-    with mock.patch.object(legacy, '_get_ebay_token', return_value='test-token'), \
+    with mock.patch.object(legacy, 'EBAY_CLIENT_ID', 'test-client-id'), \
+            mock.patch.object(legacy, 'EBAY_CLIENT_SECRET', 'test-client-secret'), \
+            mock.patch.object(legacy, '_get_ebay_token', return_value='test-token'), \
             mock.patch.object(legacy.urllib.request, 'urlopen', side_effect=fake_urlopen):
         return legacy._ebay_browse_search_page('2026 Bingo 2 coin PNC', limit=5)
 
