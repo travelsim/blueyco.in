@@ -1440,13 +1440,20 @@ def _ebay_browse_search_page(keywords, limit=200, offset=0, sort='price'):
         print(f'eBay Browse API error: {type(e).__name__}')
         return [], None, False
 
-    if not isinstance(data, dict) or not isinstance(data.get('itemSummaries'), list):
+    if not isinstance(data, dict):
         return [], None, False
     try:
         total = int(data['total'])
     except (KeyError, TypeError, ValueError):
         return [], None, False
-    summaries = data['itemSummaries']
+    # eBay omits itemSummaries entirely when a query matches nothing; that is a
+    # valid empty page, not a malformed response. A missing list with a
+    # non-zero total is still treated as a failure.
+    summaries = data.get('itemSummaries')
+    if summaries is None and total == 0:
+        summaries = []
+    if not isinstance(summaries, list):
+        return [], None, False
     if total < 0 or offset > total or (not summaries and offset < total):
         return [], total, False
 
